@@ -18,7 +18,7 @@ function convertDBResultsToNestedStructure(array $dbResults=null)
     // This will be used to created dynamic variables. By using dynamic variables we are able to save well over
     // a hundred lines of code, but some readability is lost. For debugging in PHPStorm, which doesn't show
     // dynamic variables in its debugger window, you need to create them as watch variables to see the values.
-    $groupNames = array(
+    $groupVars = array(
         array('single'=>'inventor', 'array'=>'inventors', 'priorId'=>'priorInventorId', 'thisId'=>'thisInventorId', 'has'=>'hasInventor', 'keyId'=>'inventor_id', 'table'=>'inventor_flat'),
         array('single'=>'assignee', 'array'=>'assignees', 'priorId'=>'priorAssigneeId', 'thisId'=>'thisAssigneeId', 'has'=>'hasAssignee', 'keyId'=>'assignee_id', 'table'=>'assignee_flat'),
         array('single'=>'application', 'array'=>'applications', 'priorId'=>'priorApplicationId', 'thisId'=>'thisApplicationId', 'has'=>'hasApplication', 'keyId'=>'application_id', 'table'=>'application'),
@@ -38,7 +38,7 @@ function convertDBResultsToNestedStructure(array $dbResults=null)
     $patents = array();    // our top-level structure will be a list of patents
     $patent = array();     // dictionary of patent field/value pairs
 
-    foreach ($groupNames as $group) {
+    foreach ($groupVars as $group) {
         ${$group['priorId']} = '';      // the id of an entity in the prior row
         ${$group['thisId']} = null;     // the id of an entity in this row
         ${$group['single']} = array();  // dictionary of an entities field/value pairs
@@ -51,7 +51,7 @@ function convertDBResultsToNestedStructure(array $dbResults=null)
     // patent ID, but iterating straight through the list is probably most efficient
     foreach ($dbResults as $row) {
         $thisPatentId = $row['patent_id'];
-        foreach ($groupNames as $group) {
+        foreach ($groupVars as $group) {
             if (${$group['has']})
                 ${$group['thisId']} = $row[$group['keyId']];
         }
@@ -60,7 +60,7 @@ function convertDBResultsToNestedStructure(array $dbResults=null)
         // existing entity arrays to our results and then empty them out to start a new patent.
         if ($thisPatentId != $priorPatentId) {
             if ($priorPatentId != '') { //Need to skip the first time so we don't add the original empty structures
-                foreach ($groupNames as $group) {
+                foreach ($groupVars as $group) {
                     if (${$group['has']}) {
                         // Only add the entity to the entity list if it's not already in there
                         if (!in_array(${$group['single']}, ${$group['array']})) {
@@ -73,7 +73,7 @@ function convertDBResultsToNestedStructure(array $dbResults=null)
             }
             $patent = array();
             // Clear out the entity for the next patent (which is actually the one in this row, which we haven't processed yet
-            foreach ($groupNames as $group) {
+            foreach ($groupVars as $group) {
                 ${$group['array']} = array();
                 ${$group['priorId']} = '';
             }
@@ -87,7 +87,7 @@ function convertDBResultsToNestedStructure(array $dbResults=null)
                 if (!in_array($fieldValuePair, $patent))
                     $patent[$apiField] = $val;              // add the field/value to the patent
             }
-            foreach ($groupNames as $group) {
+            foreach ($groupVars as $group) {
                 if ($tableName == $group['table']) {
                     // If this row has different entity ID than the prior row, we need to add
                     // the prior entity to the entity list
@@ -109,7 +109,7 @@ function convertDBResultsToNestedStructure(array $dbResults=null)
     }
 
     // Check each entity type and see if there is an existing one that needs to be added to the entity array
-    foreach ($groupNames as $group) {
+    foreach ($groupVars as $group) {
         if (${$group['has']}) {
             // Only add the entity to the entity list if it's not already in there
             if (!in_array(${$group['single']}, ${$group['array']})) {
