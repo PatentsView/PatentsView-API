@@ -67,6 +67,7 @@ $FIELD_SPECS = array
     'uspc_mainclass_id' => array('table_name' => 'uspc_flat', 'field_name' => 'mainclass_id', 'datatype' => 'string'),
     'uspc_mainclass_text' => array('table_name' => 'uspc_flat', 'field_name' => 'mainclass_text', 'datatype' => 'string'),
     'uspc_mainclass_title' => array('table_name' => 'uspc_flat', 'field_name' => 'mainclass_title', 'datatype' => 'string'),
+    'uspc_sequence' => array('table_name' => 'uspc_flat', 'field_name' => 'sequence', 'datatype' => 'string'),
     'uspc_subclass_id' => array('table_name' => 'uspc_flat', 'field_name' => 'subclass_id', 'datatype' => 'string'),
     'uspc_subclass_text' => array('table_name' => 'uspc_flat', 'field_name' => 'subclass_text', 'datatype' => 'string'),
     'uspc_subclass_title' => array('table_name' => 'uspc_flat', 'field_name' => 'subclass_title', 'datatype' => 'string')

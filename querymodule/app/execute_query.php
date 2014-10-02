@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/QueryParser.php';
-require_once dirname(__FILE__) . '/query_database.php';
+require_once dirname(__FILE__) . '/DatabaseQuery.php';
 require_once dirname(__FILE__) . '/convertDBResultsToNestedStructure.php';
 require_once dirname(__FILE__) . '/parse_fields.php';
 
@@ -12,6 +12,6 @@ function executeQuery(array $queryParam=null, array $fieldsParam=null)
     $selectFieldSpecs = parseFieldList($fieldsParam);
     $dbQuery = new DatabaseQuery();
     $dbResults = $dbQuery->queryDatabase($whereClause, $selectFieldSpecs);
-    $results = convertDBResultsToNestedStructure($dbResults);
+    $results = convertDBResultsToNestedStructure($dbResults, $selectFieldSpecs);
     return $results;
 }

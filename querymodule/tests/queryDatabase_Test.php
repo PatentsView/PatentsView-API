@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__) . '/../app/query_database.php';
+require_once dirname(__FILE__) . '/../app/DatabaseQuery.php';
 require_once dirname(__FILE__) . '/../app/execute_query.php';
 require_once dirname(__FILE__) . '/../app/fieldSpecs.php';
 

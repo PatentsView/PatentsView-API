@@ -8,7 +8,7 @@ require_once dirname(__FILE__) . '/fieldSpecs.php';
  * @param array $dbResults
  * @return array
  */
-function convertDBResultsToNestedStructure(array $dbResults=null)
+function convertDBResultsToNestedStructure(array $dbResults=null, array $selectFieldSpecs=null)
 {
     global $FIELD_SPECS;
 
@@ -120,6 +120,30 @@ function convertDBResultsToNestedStructure(array $dbResults=null)
     }
 
     $patents[] = $patent;
+
+    // Now we go through all the field/value pairs and remove the ones that do not appear in the list of
+    // selected fields. This is because when we build the query we need to add ID fields. And we need to keep those
+    // when adding the field/value pairs (otherwise we would not get all the entities added, for example when the
+    // only has a last name and two different entities, determined by ID, might have the same name).
+
+    for ($p=0; $p<count($patents); $p++) {                                  // For each patent
+        foreach ($patents[$p] as $patentkey=>$patentval){                   // For each key/value pair of the patent
+            if (gettype($patentval) != "array") {                           // If not an array, then a patent attribute
+                if (!array_key_exists($patentkey, $selectFieldSpecs)) {     // If it's not in the field list...
+                    unset($patents[$p][$patentkey]);                        // ...delete it.
+                }
+            }
+            else {                                                          // Else it is an array of entities
+                for ($g=0; $g<count($patentval); $g++) {                    // For each entity
+                    foreach ($patentval[$g] as $groupkey=>$groupval) {      // For each key/value pair of the entity
+                        if (!array_key_exists($groupkey, $selectFieldSpecs)) {
+                            unset($patents[$p][$patentkey][$g][$groupkey]);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     return array('patents' => $patents, 'count' => count($patents));
 }
