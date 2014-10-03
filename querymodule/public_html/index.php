@@ -3,8 +3,6 @@
 require_once dirname(__FILE__) . '/../thirdparty/Slim/Slim/Slim.php';
 require_once dirname(__FILE__) . '/../app/config.php';
 
-// TODO Use the Slim framework's application mode
-
 \Slim\Slim::registerAutoloader();
 
 

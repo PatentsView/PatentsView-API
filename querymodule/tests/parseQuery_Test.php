@@ -69,12 +69,13 @@ class parseQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(sort($expectedFields), sort($pq->getFieldsUsed()));
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testInvalidAPIField()
     {
         $pq = new QueryParser();
-        $returnString = $pq->parse(json_decode('{"XYZ":"value"}', true));
-        $this->assertEquals("(FIELD_NOT_FOUND = 'value')", $returnString);
-        $this->assertEquals(array('XYZ'), $pq->getFieldsUsed());
+        $pq->parse(json_decode('{"XYZ":"value"}', true));
     }
 
 }

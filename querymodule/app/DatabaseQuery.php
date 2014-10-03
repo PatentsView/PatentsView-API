@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/fieldSpecs.php';
-require_once dirname(__FILE__) . '/../thirdparty/apache-log4php-2.3.0/logger.php';
+require_once dirname(__FILE__) . '/ErrorHandler.php';
 
 
 class DatabaseQuery
@@ -23,9 +23,7 @@ class DatabaseQuery
     public function queryDatabase($whereClause, array $selectFieldSpecs)
     {
         global $config;
-
-        Logger::configure(dirname(__FILE__) . '/logger_config.xml');
-        $log = Logger::getLogger('myLogger');
+        $errorHandler = ErrorHandler::getHandler();
 
         $this->selectFieldSpecs = $selectFieldSpecs;
         $this->initializeGroupVars();
@@ -33,8 +31,14 @@ class DatabaseQuery
         $selectString = $this->buildSelectString();
 
         $dbSettings = $config->getDbSettings();
-        $db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database]", $dbSettings['user'], $dbSettings['password']);
-        // TODO Do something real when the connection to the DB fails.
+        try {
+            $db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database]", $dbSettings['user'], $dbSettings['password']);
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        }
+        catch (PDOException $e) {
+            $errorHandler->sendError(500, "Failed to connect to database: $dbSettings[database].", $e);
+            throw new $e;
+        }
 
         $sqlQuery = "SELECT distinct $selectString " .
             'FROM patent ' .
@@ -53,13 +57,17 @@ class DatabaseQuery
         $sqlQuery .= 'order BY patent.id, inventor_flat.inventor_id, assignee_flat.assignee_id, ipcr.uuid, usapplicationcitation.uuid, ' .
             'uspatentcitation.uuid, uspc_flat.uspc_id';
 
-        $log->debug($sqlQuery);
+        $errorHandler->getLogger()->debug($sqlQuery);
 
-        $st = $db->query($sqlQuery, PDO::FETCH_ASSOC);
-        // TODO Handle error
+        try {
+            $st = $db->query($sqlQuery, PDO::FETCH_ASSOC);
+        }
+        catch (PDOException $e) {
+            $errorHandler->sendError(400, "Query execution failed.", $e);
+            throw new $e;
+        }
 
         $results = $st->fetchAll();
-        $log->debug($results);
 
         $st->closeCursor();
         return $results;

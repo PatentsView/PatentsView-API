@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__) . '/ErrorHandler.php';
 
 // These could be stored in a database instead of hardcoded here.
 
@@ -78,10 +79,9 @@ $FIELD_SPECS = array
 function getDBField($apiFieldName)
 {
     global $FIELD_SPECS;
-    try {
-        return $FIELD_SPECS[$apiFieldName]['table_name'] . '.' . $FIELD_SPECS[$apiFieldName]['field_name'];
-    } catch (Exception $e) {
-        // TODO Need to figure out what to do with these exceptions. For the API, it should return as a HTTP error code with a message.
-        return 'FIELD_NOT_FOUND';
+    if (!array_key_exists($apiFieldName, $FIELD_SPECS)) {
+        ErrorHandler::getHandler()->sendError(400, "Field name is invalid: $apiFieldName.",
+            "Field name not in FIELD_SPECS: $apiFieldName.");
     }
+    return $FIELD_SPECS[$apiFieldName]['table_name'] . '.' . $FIELD_SPECS[$apiFieldName]['field_name'];
 }

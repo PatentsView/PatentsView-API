@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User=>gregy
- * Date=>9/25/2014
- * Time=>11:30 AM
- */
 
 require_once dirname(__FILE__) . '/../app/convertDBResultsToNestedStructure.php';
 require_once dirname(__FILE__) . '/../app/fieldSpecs.php';
