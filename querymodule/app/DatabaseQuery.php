@@ -33,7 +33,7 @@ class DatabaseQuery
 
         $dbSettings = $config->getDbSettings();
         try {
-            $db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database]", $dbSettings['user'], $dbSettings['password']);
+            $db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password']);
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         catch (PDOException $e) {
