@@ -47,7 +47,7 @@ class parseQuery_Test extends PHPUnit_Framework_TestCase
     {
         $pq = new QueryParser();
         $returnString = $pq->parse(json_decode('{"inventor_last_name":["Hopper","Whitney"]}', true));
-        $this->assertEquals("(inventor_flat.name_last in ['Hopper', 'Whitney'])", $returnString);
+        $this->assertEquals("(inventor_flat.name_last in ('Hopper', 'Whitney'))", $returnString);
         $this->assertEquals(array('inventor_last_name'), $pq->getFieldsUsed());
     }
 
@@ -55,7 +55,7 @@ class parseQuery_Test extends PHPUnit_Framework_TestCase
     {
         $pq = new QueryParser();
         $returnString = $pq->parse(json_decode('{"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_text_any":{"patent_title":"garment"}},{"inventor_last_name":"Hopper"},{"patent_title":["cotton gin","COBOL"]}]}', true));
-        $this->assertEquals("((patent.date >= '2007-01-04') and match (patent.title) against ('garment' in boolean mode) and (inventor_flat.name_last = 'Hopper') and (patent.title in ['cotton gin', 'COBOL']))", $returnString);
+        $this->assertEquals("((patent.date >= '2007-01-04') and match (patent.title) against ('garment' in boolean mode) and (inventor_flat.name_last = 'Hopper') and (patent.title in ('cotton gin', 'COBOL')))", $returnString);
         $expectedFields = array('patent_title','inventor_last_name');
         $this->assertEquals(sort($expectedFields), sort($pq->getFieldsUsed()));
     }

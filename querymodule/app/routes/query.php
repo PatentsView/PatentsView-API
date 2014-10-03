@@ -29,6 +29,15 @@ $app->get(
             }
         }
 
+        // Look for an "s" parameter; it may not exist.
+        $sortParam = null;
+        if ($app->request->get('s') != null) {
+            $sortParam = json_decode($app->request->get('s'), true);
+            if ($sortParam == null) {
+                ErrorHandler::getHandler()->sendError(400, "'s' parameter: not valid json.", $app->request->get());
+            }
+        }
+
         // Look for an "o" parameter; it may not exist.
         $optionsParam = null;
         if ($app->request->get('o') != null) {
@@ -38,7 +47,7 @@ $app->get(
             }
         }
 
-        $results = executeQuery($queryParam, $fieldsParam);
+        $results = executeQuery($queryParam, $fieldsParam, $sortParam);
         $results = json_encode($results);
 
         $app->response->headers->set('Content-Type', 'application/json');
@@ -72,11 +81,15 @@ $app->post(
         if (array_key_exists('f', $bodyJSON))
             $fieldsParam = $bodyJSON['f'];
 
+        // Look for an "s" parameter; it may not exist.
+        if (array_key_exists('s', $bodyJSON))
+            $sortParam = $bodyJSON['s'];
+
         // Look for an "o" parameter; it may not exist.
         if (array_key_exists('o', $bodyJSON))
-            $fieldsParam = $bodyJSON['o'];
+            $optionsParam = $bodyJSON['o'];
 
-        $results = executeQuery($queryParam, $fieldsParam);
+        $results = executeQuery($queryParam, $fieldsParam, $sortParam);
         $results = json_encode($results);
 
         $app->response->headers->set('Content-Type', 'application/json');

@@ -20,7 +20,7 @@ class DatabaseQuery
 
     private $selectFieldSpecs;
 
-    public function queryDatabase($whereClause, array $selectFieldSpecs)
+    public function queryDatabase($whereClause, array $selectFieldSpecs, array $sortParam=null)
     {
         global $config;
         $errorHandler = ErrorHandler::getHandler();
@@ -29,6 +29,7 @@ class DatabaseQuery
         $this->initializeGroupVars();
         $this->determineSelectFields();
         $selectString = $this->buildSelectString();
+        $sortString = $this->buildSortString($sortParam);
 
         $dbSettings = $config->getDbSettings();
         try {
@@ -54,8 +55,7 @@ class DatabaseQuery
         if (strlen($whereClause) > 0) {
             $sqlQuery .= "WHERE $whereClause ";
         }
-        $sqlQuery .= 'order BY patent.id, inventor_flat.inventor_id, assignee_flat.assignee_id, ipcr.uuid, usapplicationcitation.uuid, ' .
-            'uspatentcitation.uuid, uspc_flat.uspc_id';
+        $sqlQuery .= "order BY $sortString patent.id";
 
         $errorHandler->getLogger()->debug($sqlQuery);
 
@@ -119,5 +119,35 @@ class DatabaseQuery
         }
 
         return $selectString;
+    }
+
+
+    private function buildSortString($sortParam)
+    {
+        global $FIELD_SPECS;
+        $orderString = '';
+        if ($sortParam != null) {
+            foreach ($sortParam as $sortField) {
+                $apiField = key($sortField);
+                $direction = current($sortField);
+                try {
+                    $fieldSpec = $FIELD_SPECS[$apiField];
+                }
+                catch (ErrorException $e) {
+                    ErrorHandler::getHandler()->sendError(400, "Invalid field for sorting: $apiField");
+                }
+                if ($fieldSpec['table_name'] == 'patent') {
+                    if (($direction != 'asc') and ($direction != 'desc'))
+                        ErrorHandler::getHandler()->sendError(400, "Not a valid direction for sorting: $direction");
+                    else {
+                        $orderString .= getDBField($apiField) . ' ' . $direction . ' ';
+                    }
+                } else {
+                    ErrorHandler::getHandler()->sendError(400, "Not a valid field for sorting, it must be a patent field: $apiField");
+                }
+            }
+            $orderString .= ', ';
+        }
+        return $orderString;
     }
 }

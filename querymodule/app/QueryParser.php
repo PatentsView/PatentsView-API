@@ -88,7 +88,7 @@ class QueryParser
         else {
             if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
             // TODO Need to check the field type and conditionally wrap the value in quotes. Or format as valid date.
-            $returnString = "($dbField in ['" . implode("', '", $val) . "'])";
+            $returnString = "($dbField in ('" . implode("', '", $val) . "'))";
         }
 
         return $returnString;
