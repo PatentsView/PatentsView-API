@@ -55,6 +55,7 @@ class DatabaseQuery
         if (strlen($whereClause) > 0) {
             $sqlQuery .= "WHERE $whereClause ";
         }
+        if ($sortString != '') $sortString .= ', ';
         $sqlQuery .= "order BY $sortString patent.id";
 
         $errorHandler->getLogger()->debug($sqlQuery);
@@ -140,13 +141,14 @@ class DatabaseQuery
                     if (($direction != 'asc') and ($direction != 'desc'))
                         ErrorHandler::getHandler()->sendError(400, "Not a valid direction for sorting: $direction");
                     else {
-                        $orderString .= getDBField($apiField) . ' ' . $direction . ' ';
+                        if ($orderString != '')
+                            $orderString .= ', ';
+                        $orderString .= getDBField($apiField) . ' ' . $direction;
                     }
                 } else {
                     ErrorHandler::getHandler()->sendError(400, "Not a valid field for sorting, it must be a patent field: $apiField");
                 }
             }
-            $orderString .= ', ';
         }
         return $orderString;
     }
