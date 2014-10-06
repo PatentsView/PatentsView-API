@@ -8,27 +8,29 @@ class DatabaseQuery
 {
 
     private $groupVars = array(
-        array('single' => 'patent', 'hasId' => 'alreadyHasPatentId', 'hasFields' => 'hasPatentFields', 'keyId' => 'patent_id', 'table' => 'patent'),
-        array('single' => 'inventor', 'hasId' => 'alreadyHasInventorId', 'hasFields' => 'hasInventorFields', 'keyId' => 'inventor_id', 'table' => 'inventor_flat'),
-        array('single' => 'assignee', 'hasId' => 'alreadyHasAssigneeId', 'hasFields' => 'hasAssigneeFields', 'keyId' => 'assignee_id', 'table' => 'assignee_flat'),
-        array('single' => 'application', 'hasId' => 'alreadyHasApplicationId', 'hasFields' => 'hasApplicationFields', 'keyId' => 'application_id', 'table' => 'application'),
-        array('single' => 'ipc', 'hasId' => 'alreadyHasIPCId', 'hasFields' => 'hasIPCFields', 'keyId' => 'ipc_id', 'table' => 'ipcr'),
-        array('single' => 'applicationcitation', 'hasId' => 'alreadyHasApplicationCitationId', 'hasFields' => 'hasApplicationCitationFields', 'keyId' => 'applicationcitation_id', 'table' => 'usapplicationcitation'),
-        array('single' => 'patentcitation', 'hasId' => 'alreadyHasPatentCitationId', 'hasFields' => 'hasPatentCitationFields', 'keyId' => 'patentcitation_id', 'table' => 'uspatentcitation'),
-        array('single' => 'uspc', 'hasId' => 'alreadyHasUSPCId', 'hasFields' => 'hasUSPCFields', 'keyId' => 'uspc_id', 'table' => 'uspc_flat')
+        array('single' => 'patent', 'hasId' => 'alreadyHasPatentId', 'hasFields' => 'hasPatentFields', 'keyId' => 'patent_id', 'table' => 'patent', 'join'=>''),
+        array('single' => 'inventor', 'hasId' => 'alreadyHasInventorId', 'hasFields' => 'hasInventorFields', 'keyId' => 'inventor_id', 'table' => 'inventor_flat', 'join'=>'left outer JOIN patent_inventor ON patent.id=patent_inventor.patent_id left outer JOIN inventor_flat ON patent_inventor.inventor_id=inventor_flat.inventor_id'),
+        array('single' => 'assignee', 'hasId' => 'alreadyHasAssigneeId', 'hasFields' => 'hasAssigneeFields', 'keyId' => 'assignee_id', 'table' => 'assignee_flat', 'join'=>'left outer join patent_assignee on patent.id=patent_assignee.patent_id left outer join assignee_flat on patent_assignee.assignee_id=assignee_flat.assignee_id'),
+        array('single' => 'application', 'hasId' => 'alreadyHasApplicationId', 'hasFields' => 'hasApplicationFields', 'keyId' => 'application_id', 'table' => 'application', 'join'=>'left outer join application on patent.id=application.patent_id'),
+        array('single' => 'ipc', 'hasId' => 'alreadyHasIPCId', 'hasFields' => 'hasIPCFields', 'keyId' => 'ipc_id', 'table' => 'ipcr', 'join'=>'left outer join ipcr on patent.id=ipcr.patent_id'),
+        array('single' => 'applicationcitation', 'hasId' => 'alreadyHasApplicationCitationId', 'hasFields' => 'hasApplicationCitationFields', 'keyId' => 'applicationcitation_id', 'table' => 'usapplicationcitation', 'join'=>'left outer join usapplicationcitation on patent.id=usapplicationcitation.patent_id'),
+        array('single' => 'patentcitation', 'hasId' => 'alreadyHasPatentCitationId', 'hasFields' => 'hasPatentCitationFields', 'keyId' => 'patentcitation_id', 'table' => 'uspatentcitation', 'join'=>'left outer join uspatentcitation on patent.id=uspatentcitation.patent_id'),
+        array('single' => 'uspc', 'hasId' => 'alreadyHasUSPCId', 'hasFields' => 'hasUSPCFields', 'keyId' => 'uspc_id', 'table' => 'uspc_flat', 'join'=>'left outer join uspc_flat on patent.id=uspc_flat.uspc_patent_id')
     );
 
     private $selectFieldSpecs;
+    private $sortFieldsUsed;
 
     private $db = null;
     private $errorHandler = null;
 
-    public function queryDatabase($whereClause, array $selectFieldSpecs, array $sortParam=null, array $options=null)
+    public function queryDatabase($whereClause, array $whereFieldsUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
     {
         global $FIELD_SPECS;
         $page = 1;
         $perPage = 25;
         $getAll = false;
+        $this->sortFieldsUsed = array();
 
         $this->errorHandler = ErrorHandler::getHandler();
 
@@ -38,18 +40,7 @@ class DatabaseQuery
         $selectString = $this->buildSelectString();
         $sortString = $this->buildSortString($sortParam);
         if ($sortString != '') $sortString .= ', ';
-
-
-        $from ='patent ' .
-            'left outer JOIN patent_inventor ON patent.id=patent_inventor.patent_id ' .
-            'left outer JOIN inventor_flat ON patent_inventor.inventor_id=inventor_flat.inventor_id ' .
-            'left outer join patent_assignee on patent.id=patent_assignee.patent_id ' .
-            'left outer join assignee_flat on patent_assignee.assignee_id=assignee_flat.assignee_id ' .
-            'left outer join application on patent.id=application.patent_id ' .
-            'left outer join ipcr on patent.id=ipcr.patent_id ' .
-            'left outer join usapplicationcitation on patent.id=usapplicationcitation.patent_id ' .
-            'left outer join uspatentcitation on patent.id=uspatentcitation.patent_id ' .
-            'left outer join uspc_flat on patent.id=uspc_flat.uspc_patent_id ';
+        $from = $this->buildFrom($whereFieldsUsed, $this->selectFieldSpecs, $this->sortFieldsUsed);
 
         if ($options != null) {
             if (array_key_exists('page', $options)) {
@@ -193,6 +184,7 @@ class DatabaseQuery
                         if ($orderString != '')
                             $orderString .= ', ';
                         $orderString .= getDBField($apiField) . ' ' . $direction;
+                        $this->sortFieldsUsed[] = $apiField;
                     }
                 } else {
                     ErrorHandler::getHandler()->sendError(400, "Not a valid field for sorting, it must be a patent field: $apiField");
@@ -201,4 +193,27 @@ class DatabaseQuery
         }
         return $orderString;
     }
+
+    private function buildFrom(array $whereFieldsUsed, array $selectFieldSpecs, array $sortFields)
+    {
+        global $FIELD_SPECS;
+        // Smerge all the fields into one array
+        $allFieldsUsed = array_merge($whereFieldsUsed, array_keys($selectFieldSpecs), $sortFields);
+        $allFieldsUsed = array_unique($allFieldsUsed);
+
+        $fromString = $this->groupVars[0]['table'];
+        $tablesAdded = array();
+
+        foreach ($allFieldsUsed as $apiField) {
+            if (!in_array($FIELD_SPECS[$apiField]['table_name'], $tablesAdded)) {
+                foreach ($this->groupVars as $group) {
+                    if ($group['table'] == $FIELD_SPECS[$apiField]['table_name'])
+                        $fromString .= ' ' . $group['join'] . ' ';
+                }
+                $tablesAdded[] = $FIELD_SPECS[$apiField]['table_name'];
+            }
+        }
+        return $fromString;
+    }
+
 }
