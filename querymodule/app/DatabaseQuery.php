@@ -20,29 +20,27 @@ class DatabaseQuery
 
     private $selectFieldSpecs;
 
-    public function queryDatabase($whereClause, array $selectFieldSpecs, array $sortParam=null)
+    private $db = null;
+    private $errorHandler = null;
+
+    public function queryDatabase($whereClause, array $selectFieldSpecs, array $sortParam=null, array $options=null)
     {
-        global $config;
-        $errorHandler = ErrorHandler::getHandler();
+        global $FIELD_SPECS;
+        $page = 1;
+        $perPage = 25;
+        $getAll = false;
+
+        $this->errorHandler = ErrorHandler::getHandler();
 
         $this->selectFieldSpecs = $selectFieldSpecs;
         $this->initializeGroupVars();
         $this->determineSelectFields();
         $selectString = $this->buildSelectString();
         $sortString = $this->buildSortString($sortParam);
+        if ($sortString != '') $sortString .= ', ';
 
-        $dbSettings = $config->getDbSettings();
-        try {
-            $db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password']);
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        }
-        catch (PDOException $e) {
-            $errorHandler->sendError(500, "Failed to connect to database: $dbSettings[database].", $e);
-            throw new $e;
-        }
 
-        $sqlQuery = "SELECT distinct $selectString " .
-            'FROM patent ' .
+        $from ='patent ' .
             'left outer JOIN patent_inventor ON patent.id=patent_inventor.patent_id ' .
             'left outer JOIN inventor_flat ON patent_inventor.inventor_id=inventor_flat.inventor_id ' .
             'left outer join patent_assignee on patent.id=patent_assignee.patent_id ' .
@@ -52,24 +50,75 @@ class DatabaseQuery
             'left outer join usapplicationcitation on patent.id=usapplicationcitation.patent_id ' .
             'left outer join uspatentcitation on patent.id=uspatentcitation.patent_id ' .
             'left outer join uspc_flat on patent.id=uspc_flat.uspc_patent_id ';
-        if (strlen($whereClause) > 0) {
-            $sqlQuery .= "WHERE $whereClause ";
-        }
-        if ($sortString != '') $sortString .= ', ';
-        $sqlQuery .= "order BY $sortString patent.id";
 
-        $errorHandler->getLogger()->debug($sqlQuery);
+        if ($options != null) {
+            if (array_key_exists('page', $options)) {
+                if ($options['page'] == -1)
+                    $getAll = true;
+                else
+                    $page = $options['page'];
+            }
+            if (array_key_exists('per_page', $options))
+                $perPage = $options['per_page'];
+        }
+
+        // If getAll, then just get all the data.
+        if ($getAll) {
+            $results = $this->runQuery("distinct $selectString", $from, $whereClause, $sortString);
+        }
+        // If get a range, then first get all the IDs, and then get the IDs in that range and use
+        // as the WHERE to get the data rows
+        else {
+            // Get the patentIDs
+            $selectPatentIdsString = "distinct " . getDBField($this->groupVars[0]['keyId']) . " as " .
+                $this->groupVars[0]['keyId'];
+            $results = $this->runQuery("distinct $selectPatentIdsString", $from, $whereClause, $sortString);
+
+            // Make sure they asked for a valid range.
+            if (($page-1)*$perPage > count($results))
+                $results = null;
+            else {
+                $patentIDs = array();
+                foreach (array_slice($results, ($page - 1) * $perPage, $perPage) as $row)
+                    $patentIDs[] = $row['patent_id'];
+
+                $whereClause = 'patent.id in ("' . join('","', $patentIDs) . '") ';
+                $selectString = "distinct $selectString";
+                $results = $this->runQuery("distinct $selectString", $from, $whereClause, $sortString);
+            }
+        }
+
+        return $results;
+    }
+
+    private function runQuery($select, $from, $where, $order)
+    {
+        global $config;
+
+        if ($this->db === null) {
+            $dbSettings = $config->getDbSettings();
+            try {
+                $this->db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password']);
+                $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                $this->errorHandler->sendError(500, "Failed to connect to database: $dbSettings[database].", $e);
+                throw new $e;
+            }
+        }
+
+        if (strlen($where) > 0) $where = "WHERE $where ";
+        $sqlQuery = "SELECT $select FROM $from $where ORDER BY $order patent.id";
+        $this->errorHandler->getLogger()->debug($sqlQuery);
 
         try {
-            $st = $db->query($sqlQuery, PDO::FETCH_ASSOC);
+            $st = $this->db->query($sqlQuery, PDO::FETCH_ASSOC);
         }
         catch (PDOException $e) {
-            $errorHandler->sendError(400, "Query execution failed.", $e);
+            $this->errorHandler->sendError(400, "Query execution failed.", $e);
             throw new $e;
         }
 
         $results = $st->fetchAll();
-
         $st->closeCursor();
         return $results;
     }

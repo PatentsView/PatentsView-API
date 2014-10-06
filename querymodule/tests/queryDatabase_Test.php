@@ -44,8 +44,39 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
             'assignee_last_name' => $FIELD_SPECS['assignee_last_name']
         );
         $dbQuery = new DatabaseQuery();
-        $results = $dbQuery->queryDatabase($whereClause, $selectFieldsSpecs);
+        $options = array('page'=>-1);
+        $results = $dbQuery->queryDatabase($whereClause, $selectFieldsSpecs, null, $options);
         $this->assertGreaterThan(10000, count($results));
     }
+    public function testQueryDatabaseWithPaging()
+    {
+        global $FIELD_SPECS;
+        $whereClause = "patent.id like '86%'";
+        $selectFieldsSpecs = array(
+            'patent_id' => $FIELD_SPECS['patent_id'],
+            'patent_type' => $FIELD_SPECS['patent_type'],
+            'patent_number' => $FIELD_SPECS['patent_number'],
+            'patent_country' => $FIELD_SPECS['patent_country'],
+            'patent_title' => $FIELD_SPECS['patent_title'],
+            'inventor_last_name' => $FIELD_SPECS['inventor_last_name'],
+            'assignee_last_name' => $FIELD_SPECS['assignee_last_name']
+        );
+        $dbQuery = new DatabaseQuery();
+        $options = array('page'=>1, 'per_page'=>25);
+        $resultsFirst = $dbQuery->queryDatabase($whereClause, $selectFieldsSpecs, null, $options);
+        $options = array('page'=>11, 'per_page'=>25);
+        $resultsSecond = $dbQuery->queryDatabase($whereClause, $selectFieldsSpecs, null, $options);
+        $options = array('page'=>6, 'per_page'=>50);
+        $resultsThird = $dbQuery->queryDatabase($whereClause, $selectFieldsSpecs, null, $options);
+        $this->assertNotEquals($resultsFirst[0],$resultsSecond[0]);
+        $this->assertEquals($resultsSecond[0],$resultsThird[0]);
+        $patentIds = array();
+        foreach ($resultsSecond as $row) $patentIds[$row['patent_id']] = 1;
+        $this->assertEquals(25, count($patentIds));
+        $patentIds = array();
+        foreach ($resultsThird as $row) $patentIds[$row['patent_id']] = 1;
+        $this->assertEquals(50, count($patentIds));
+    }
+
 }
  

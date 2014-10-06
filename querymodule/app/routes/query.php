@@ -47,7 +47,7 @@ $app->get(
             }
         }
 
-        $results = executeQuery($queryParam, $fieldsParam, $sortParam);
+        $results = executeQuery($queryParam, $fieldsParam, $sortParam, $optionsParam);
         $results = json_encode($results);
 
         $app->response->headers->set('Content-Type', 'application/json');
@@ -89,7 +89,7 @@ $app->post(
         if (array_key_exists('o', $bodyJSON))
             $optionsParam = $bodyJSON['o'];
 
-        $results = executeQuery($queryParam, $fieldsParam, $sortParam);
+        $results = executeQuery($queryParam, $fieldsParam, $sortParam, $optionsParam);
         $results = json_encode($results);
 
         $app->response->headers->set('Content-Type', 'application/json');
