@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/../app/execute_query.php';
-require_once dirname(__FILE__) . '/../app/fieldSpecs.php';
+require_once dirname(__FILE__) . '/../app/entitySpecs.php';
 
 class executeQuery_Test extends PHPUnit_Framework_TestCase
 {

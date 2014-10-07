@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/fieldSpecs.php';
+require_once dirname(__FILE__) . '/entitySpecs.php';
 
 
 class QueryParser

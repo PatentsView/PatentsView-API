@@ -1,22 +1,14 @@
 <?php
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/fieldSpecs.php';
+require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
 
 
 class DatabaseQuery
 {
 
-    private $groupVars = array(
-        array('single' => 'patent', 'hasId' => 'alreadyHasPatentId', 'hasFields' => 'hasPatentFields', 'keyId' => 'patent_id', 'table' => 'patent', 'join'=>''),
-        array('single' => 'inventor', 'hasId' => 'alreadyHasInventorId', 'hasFields' => 'hasInventorFields', 'keyId' => 'inventor_id', 'table' => 'inventor_flat', 'join'=>'left outer JOIN patent_inventor ON patent.id=patent_inventor.patent_id left outer JOIN inventor_flat ON patent_inventor.inventor_id=inventor_flat.inventor_id'),
-        array('single' => 'assignee', 'hasId' => 'alreadyHasAssigneeId', 'hasFields' => 'hasAssigneeFields', 'keyId' => 'assignee_id', 'table' => 'assignee_flat', 'join'=>'left outer join patent_assignee on patent.id=patent_assignee.patent_id left outer join assignee_flat on patent_assignee.assignee_id=assignee_flat.assignee_id'),
-        array('single' => 'application', 'hasId' => 'alreadyHasApplicationId', 'hasFields' => 'hasApplicationFields', 'keyId' => 'application_id', 'table' => 'application', 'join'=>'left outer join application on patent.id=application.patent_id'),
-        array('single' => 'ipc', 'hasId' => 'alreadyHasIPCId', 'hasFields' => 'hasIPCFields', 'keyId' => 'ipc_id', 'table' => 'ipcr', 'join'=>'left outer join ipcr on patent.id=ipcr.patent_id'),
-        array('single' => 'applicationcitation', 'hasId' => 'alreadyHasApplicationCitationId', 'hasFields' => 'hasApplicationCitationFields', 'keyId' => 'applicationcitation_id', 'table' => 'usapplicationcitation', 'join'=>'left outer join usapplicationcitation on patent.id=usapplicationcitation.patent_id'),
-        array('single' => 'patentcitation', 'hasId' => 'alreadyHasPatentCitationId', 'hasFields' => 'hasPatentCitationFields', 'keyId' => 'patentcitation_id', 'table' => 'uspatentcitation', 'join'=>'left outer join uspatentcitation on patent.id=uspatentcitation.patent_id'),
-        array('single' => 'uspc', 'hasId' => 'alreadyHasUSPCId', 'hasFields' => 'hasUSPCFields', 'keyId' => 'uspc_id', 'table' => 'uspc_flat', 'join'=>'left outer join uspc_flat on patent.id=uspc_flat.uspc_patent_id')
-    );
+    private $entitySpecs = array();
+    private $groupVars = array();
 
     private $selectFieldSpecs;
     private $sortFieldsUsed;
@@ -24,13 +16,15 @@ class DatabaseQuery
     private $db = null;
     private $errorHandler = null;
 
-    public function queryDatabase($whereClause, array $whereFieldsUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
+    public function queryDatabase(array $entitySpecs, $whereClause, array $whereFieldsUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
     {
-        global $FIELD_SPECS;
         $page = 1;
         $perPage = 25;
         $getAll = false;
         $this->sortFieldsUsed = array();
+        $this->entitySpecs = $entitySpecs;
+
+        $this->setupGroupVars();
 
         $this->errorHandler = ErrorHandler::getHandler();
 
@@ -39,7 +33,6 @@ class DatabaseQuery
         $this->determineSelectFields();
         $selectString = $this->buildSelectString();
         $sortString = $this->buildSortString($sortParam);
-        if ($sortString != '') $sortString .= ', ';
         $from = $this->buildFrom($whereFieldsUsed, $this->selectFieldSpecs, $this->sortFieldsUsed);
 
         if ($options != null) {
@@ -60,20 +53,20 @@ class DatabaseQuery
         // If get a range, then first get all the IDs, and then get the IDs in that range and use
         // as the WHERE to get the data rows
         else {
-            // Get the patentIDs
-            $selectPatentIdsString = "distinct " . getDBField($this->groupVars[0]['keyId']) . " as " .
+            // Get the primary entity IDs
+            $selectPrimaryEntityIdsString = "distinct " . getDBField($this->groupVars[0]['keyId']) . " as " .
                 $this->groupVars[0]['keyId'];
-            $results = $this->runQuery("distinct $selectPatentIdsString", $from, $whereClause, $sortString);
+            $results = $this->runQuery("distinct $selectPrimaryEntityIdsString", $from, $whereClause, $sortString);
 
             // Make sure they asked for a valid range.
             if (($page-1)*$perPage > count($results))
                 $results = null;
             else {
-                $patentIDs = array();
+                $primaryEntityIds = array();
                 foreach (array_slice($results, ($page - 1) * $perPage, $perPage) as $row)
-                    $patentIDs[] = $row['patent_id'];
+                    $primaryEntityIds[] = $row[$this->groupVars[0]['keyId']];
 
-                $whereClause = 'patent.id in ("' . join('","', $patentIDs) . '") ';
+                $whereClause = getDBField($this->groupVars[0]['keyId']) . ' in ("' . join('","', $primaryEntityIds) . '") ';
                 $selectString = "distinct $selectString";
                 $results = $this->runQuery("distinct $selectString", $from, $whereClause, $sortString);
             }
@@ -98,7 +91,7 @@ class DatabaseQuery
         }
 
         if (strlen($where) > 0) $where = "WHERE $where ";
-        $sqlQuery = "SELECT $select FROM $from $where ORDER BY $order patent.id";
+        $sqlQuery = "SELECT $select FROM $from $where ORDER BY $order";
         $this->errorHandler->getLogger()->debug($sqlQuery);
 
         try {
@@ -125,7 +118,7 @@ class DatabaseQuery
             foreach ($this->groupVars as $group) {
                 if ($dbInfo['field_name'] == $group['keyId'])
                     $this->{$group['hasId']} = true;
-                if ($dbInfo['table_name'] == $group['table'])
+                if ($dbInfo['table'] == $group['table'])
                     $this->{$group['hasFields']} = true;
             }
         }
@@ -137,7 +130,7 @@ class DatabaseQuery
         global $FIELD_SPECS;
 
         foreach ($this->groupVars as $group) {
-            if ($group['single'] == 'patent') {
+            if ($group['name'] == $this->groupVars[0]['name']) {
                 if (!$this->{$group['hasId']})
                     $this->selectFieldSpecs[$group['keyId']] = $FIELD_SPECS[$group['keyId']];
             } else {
@@ -150,13 +143,12 @@ class DatabaseQuery
 
     private function buildSelectString()
     {
-        global $FIELD_SPECS;
         $selectString = '';
 
         foreach ($this->selectFieldSpecs as $apiField => $dbInfo) {
             if ($selectString != '')
                 $selectString .= ', ';
-            $selectString .= "$dbInfo[table_name].$dbInfo[field_name] as $apiField";
+            $selectString .= "$dbInfo[table].$dbInfo[field_name] as $apiField";
         }
 
         return $selectString;
@@ -176,10 +168,13 @@ class DatabaseQuery
                 }
                 catch (ErrorException $e) {
                     ErrorHandler::getHandler()->sendError(400, "Invalid field for sorting: $apiField");
+                    throw $e;
                 }
-                if ($fieldSpec['table_name'] == 'patent') {
-                    if (($direction != 'asc') and ($direction != 'desc'))
+                if ($fieldSpec['table'] == $this->groupVars[0]['table']) {
+                    if (($direction != 'asc') and ($direction != 'desc')) {
                         ErrorHandler::getHandler()->sendError(400, "Not a valid direction for sorting: $direction");
+                        throw new ErrorException("Not a valid direction for sorting: $direction");
+                    }
                     else {
                         if ($orderString != '')
                             $orderString .= ', ';
@@ -187,10 +182,16 @@ class DatabaseQuery
                         $this->sortFieldsUsed[] = $apiField;
                     }
                 } else {
-                    ErrorHandler::getHandler()->sendError(400, "Not a valid field for sorting, it must be a patent field: $apiField");
+                    $msg = "Not a valid field for sorting, it must be a " . $this->groupVars[0]['name'] . " field: $apiField";
+                    ErrorHandler::getHandler()->sendError(400, $msg);
+                    throw new ErrorException($msg);
                 }
             }
         }
+
+        if ($orderString != '')
+            $orderString .= ', ';
+        $orderString .= getDBField($this->groupVars[0]['keyId']);
         return $orderString;
     }
 
@@ -201,19 +202,33 @@ class DatabaseQuery
         $allFieldsUsed = array_merge($whereFieldsUsed, array_keys($selectFieldSpecs), $sortFields);
         $allFieldsUsed = array_unique($allFieldsUsed);
 
-        $fromString = $this->groupVars[0]['table'];
-        $tablesAdded = array();
+        $fromString = '';
+        $joins = array();
 
-        foreach ($allFieldsUsed as $apiField) {
-            if (!in_array($FIELD_SPECS[$apiField]['table_name'], $tablesAdded)) {
-                foreach ($this->groupVars as $group) {
-                    if ($group['table'] == $FIELD_SPECS[$apiField]['table_name'])
-                        $fromString .= ' ' . $group['join'] . ' ';
-                }
-                $tablesAdded[] = $FIELD_SPECS[$apiField]['table_name'];
-            }
+        // We need to go through the entities in order so the joins are done in the same order as they appear
+        // in the entity specs.
+        foreach ($this->groupVars as $group)
+            foreach ($allFieldsUsed as $apiField)
+                if ($group['table'] == $FIELD_SPECS[$apiField]['table'])
+                    if (!in_array($group['join'], $joins))
+                        $joins[] = $group['join'];
+
+        foreach ($joins as $join) {
+            $fromString .= ' ' . $join . ' ';
         }
+
         return $fromString;
     }
+
+    private function setupGroupVars()
+    {
+
+        $this->groupVars = $this->entitySpecs;
+        foreach ($this->groupVars as &$group) {
+            $name = $group['name'];
+            $group['hasId'] = "alreadyHas{$name}Id";
+            $group['hasFields'] = "has{$name}Fields";
+        }
+   }
 
 }
