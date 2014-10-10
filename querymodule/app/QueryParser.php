@@ -1,12 +1,13 @@
 <?php
 
 require_once dirname(__FILE__) . '/entitySpecs.php';
+require_once dirname(__FILE__) . '/ErrorHandler.php';
 
 
 class QueryParser
 {
     private $COMPARISON_OPERATORS = array('_eq' => '=', '_neq' => '<>', '_gt' => '>', '_gte' => '>=', '_lt' => '<', '_lte' => '<=');
-    private $STRING_OPERATORS = array('_text_all' => '', '_text_any' => '', '_text_phrase' => '');
+    private $FULLTEXT_OPERATORS = array('_text_all' => '', '_text_any' => '', '_text_phrase' => '');
     private $JOIN_OPERATORS = array('_and' => 'and', '_or' => 'or');
     private $NEGATION_OPERATORS = array('_not' => 'not');
 
@@ -63,7 +64,7 @@ class QueryParser
             $rightHandString = $this->processQueryCriterion($rightHandValue);
             $returnString .= "$notString $rightHandString";
         } // If the operator for for full text searching, then it will be: { operator : { field : value } }
-        elseif (isset($this->STRING_OPERATORS[$operatorOrField])) {
+        elseif (isset($this->FULLTEXT_OPERATORS[$operatorOrField])) {
             $returnString .= $this->processTextSearch($operatorOrField, $rightHandValue);
         } // Otherwise it is not an operator, but a regular equality pair: { field : value } or { field : [ values, ... ] }
         else {
@@ -76,19 +77,54 @@ class QueryParser
 
     private function processPair($operator, $criterion)
     {
+        global $FIELD_SPECS;
         reset($criterion);
         $apiField = key($criterion);
         $val = current($criterion);
         $dbField = getDBField($apiField);
-
+        $datatype = $FIELD_SPECS[$apiField]['datatype'];
         // If of the type: { field : value }
         if (!is_array($val)) {
             $returnString = $this->processSimplePair($operator, $criterion);
         } // Else of the type { field : [value,...] }
         else {
             if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-            // TODO Need to check the field type and conditionally wrap the value in quotes. Or format as valid date.
-            $returnString = "($dbField in ('" . implode("', '", $val) . "'))";
+            if ($datatype == 'int') {
+                foreach ($val as $singleVal) {
+                    if (!is_numeric($singleVal)) {
+                        ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $singleVal.");
+                        throw new ErrorException("Invalid date provided: $singleVal.");
+                    }
+                }
+                $returnString = "($dbField in (" . implode(", ", $val) . "))";
+            }
+            elseif ($datatype == 'float') {
+                foreach ($val as $singleVal) {
+                    if (!is_float($singleVal)) {
+                        ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $singleVal.");
+                        throw new ErrorException("Invalid date provided: $singleVal.");
+                    }
+                }
+                $returnString = "($dbField in (" . implode(", ", $val) . "))";
+            }
+            elseif ($datatype == 'date') {
+                $dateVals = array();
+                foreach ($val as $singleVal) {
+                    if (strtotime($singleVal))
+                        $dateVals[] = date('Y-m-d', strtotime($singleVal));
+                    else {
+                        ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $singleVal.");
+                        throw new ErrorException("Invalid date provided: $singleVal.");
+                    }
+                }
+                $returnString = "($dbField in ('" . implode("', '", $dateVals) . "'))";
+            }
+            elseif (($datatype == 'string') or ($datatype == 'fulltext'))
+                $returnString = "($dbField in ('" . implode("', '", $val) . "'))";
+            else {
+                ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' found for '$apiField'.");
+                throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
+            }
         }
 
         return $returnString;
@@ -97,23 +133,58 @@ class QueryParser
 
     private function processSimplePair($operator, $criterion)
     {
+        global $FIELD_SPECS;
         reset($criterion);
         $apiField = key($criterion);
         $val = current($criterion);
         $dbField = getDBField($apiField);
+        $datatype = $FIELD_SPECS[$apiField]['datatype'];
         if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
         $operatorString = $this->COMPARISON_OPERATORS[$operator];
-        // TODO Need to check the field type and conditionally wrap the value in quotes. Or format as valid date.
-        return "($dbField $operatorString '$val')";
+        if ($datatype == 'float') {
+            if (!is_float($val)) {
+                ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $val.");
+                throw new ErrorException("Invalid integer value provided: $val.");
+            }
+            $returnString = "($dbField $operatorString $val)";
+        }
+        elseif ($datatype == 'int') {
+            if (!is_numeric($val)) {
+                ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $val.");
+                throw new ErrorException("Invalid integer value provided: $val.");
+            }
+            $returnString = "($dbField $operatorString $val)";
+        }
+        elseif ($datatype == 'date') {
+            if (!strtotime($val)) {
+                ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $val.");
+                throw new ErrorException("Invalid date provided: $val.");
+            }
+            $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
+        }
+        elseif (($datatype == 'string') or ($datatype == 'fulltext'))
+            $returnString = "($dbField $operatorString '$val')";
+        else {
+            ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' found for '$apiField'.");
+            throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
+        }
+        return $returnString;
     }
 
     private function processTextSearch($operator, $criterion)
     {
+        global $FIELD_SPECS;
         $returnString = '';
         reset($criterion);
         $apiField = key($criterion);
         $val = current($criterion);
         $dbField = getDBField($apiField);
+
+        if ($FIELD_SPECS[$apiField]['datatype'] != 'fulltext') {
+            ErrorHandler::getHandler()->sendError(400, "The operation '$operator' is not valid on '$apiField''.");
+            throw new ErrorException("The operation '$operator' is not valid on '$apiField''.");
+        }
+
         if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
         if ($operator == '_text_phrase') {
             $returnString = "match ($dbField) against ('\"$val\"' in boolean mode)";
