@@ -6,6 +6,7 @@ require_once dirname(__FILE__) . '/ErrorHandler.php';
 
 class DatabaseQuery
 {
+    private $total_found=0;
 
     private $entitySpecs = array();
     private $groupVars = array();
@@ -15,6 +16,11 @@ class DatabaseQuery
 
     private $db = null;
     private $errorHandler = null;
+
+    public function getTotalFound()
+    {
+        return $this->total_found;
+    }
 
     public function queryDatabase(array $entitySpecs, $whereClause, array $whereFieldsUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
     {
@@ -37,18 +43,19 @@ class DatabaseQuery
 
         if ($options != null) {
             if (array_key_exists('page', $options)) {
-                if ($options['page'] == -1)
-                    $getAll = true;
-                else
-                    $page = $options['page'];
+                $page = $options['page'];
             }
             if (array_key_exists('per_page', $options))
-                $perPage = $options['per_page'];
+                if ($options['per_page'] == -1)
+                    $getAll = true;
+                else
+                    $perPage = $options['per_page'];
         }
 
         // If getAll, then just get all the data.
         if ($getAll) {
             $results = $this->runQuery("distinct $selectString", $from, $whereClause, $sortString);
+            $this->total_found = count($results);
         }
         // If get a range, then first get all the IDs, and then get the IDs in that range and use
         // as the WHERE to get the data rows
@@ -57,6 +64,7 @@ class DatabaseQuery
             $selectPrimaryEntityIdsString = "distinct " . getDBField($this->groupVars[0]['keyId']) . " as " .
                 $this->groupVars[0]['keyId'];
             $results = $this->runQuery("distinct $selectPrimaryEntityIdsString", $from, $whereClause, $sortString);
+            $this->total_found = count($results);
 
             // Make sure they asked for a valid range.
             if (($page-1)*$perPage > count($results))
@@ -68,7 +76,7 @@ class DatabaseQuery
 
                 $whereClause = getDBField($this->groupVars[0]['keyId']) . ' in ("' . join('","', $primaryEntityIds) . '") ';
                 $selectString = "distinct $selectString";
-                $results = $this->runQuery("distinct $selectString", $from, $whereClause, $sortString);
+                $results = $this->runQuery("$selectString", $from, $whereClause, $sortString);
             }
         }
 
@@ -96,14 +104,14 @@ class DatabaseQuery
 
         try {
             $st = $this->db->query($sqlQuery, PDO::FETCH_ASSOC);
+            $results = $st->fetchAll();
+            $st->closeCursor();
         }
-        catch (PDOException $e) {
+        catch (Exception $e) {
             $this->errorHandler->sendError(400, "Query execution failed.", $e);
             throw new $e;
         }
 
-        $results = $st->fetchAll();
-        $st->closeCursor();
         return $results;
     }
 

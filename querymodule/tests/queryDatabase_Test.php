@@ -48,7 +48,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
             'assignee_last_name' => $FIELD_SPECS['assignee_last_name']
         );
         $dbQuery = new DatabaseQuery();
-        $options = array('page'=>-1);
+        $options = array('per_page'=>-1);
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $whereClause, $whereFieldsUsed, $selectFieldsSpecs, null, $options);
         $this->assertGreaterThan(10000, count($results));
     }

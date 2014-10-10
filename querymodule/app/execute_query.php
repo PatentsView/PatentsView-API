@@ -15,5 +15,6 @@ function executeQuery(array $queryParam=null, array $fieldsParam=null, array $so
     $dbQuery = new DatabaseQuery();
     $dbResults = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $whereClause, $pq->getFieldsUsed(), $selectFieldSpecs, $sortParam, $optionsParam);
     $results = convertDBResultsToNestedStructure($PATENT_ENTITY_SPECS, $dbResults, $selectFieldSpecs);
+    $results['total_found'] = $dbQuery->getTotalFound();
     return $results;
 }
