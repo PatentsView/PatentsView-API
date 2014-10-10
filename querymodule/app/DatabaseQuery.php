@@ -55,7 +55,10 @@ class DatabaseQuery
         // If getAll, then just get all the data.
         if ($getAll) {
             $results = $this->runQuery("distinct $selectString", $from, $whereClause, $sortString);
-            $this->total_found = count($results);
+            $primaryEntityIds = array();
+            foreach ($results as $row)
+                $primaryEntityIds[$row[$this->groupVars[0]['keyId']]] = 1;
+            $this->total_found = count($primaryEntityIds);
         }
         // If get a range, then first get all the IDs, and then get the IDs in that range and use
         // as the WHERE to get the data rows

@@ -124,10 +124,22 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     public function testLargeReturnSet()
     {
         $queryString = '{"_gte":{"patent_number":"8000000"}}';
-        $decoded = json_decode($queryString, true);
-        $results = executeQuery($decoded, null);
+        $decodedQueryString = json_decode($queryString, true);
+        $decodedFieldString = json_decode('["patent_number","inventor_last_name]"', true);
+        $results = executeQuery($decodedQueryString, $decodedFieldString);
         $this->assertEquals(25, $results['count']);
         $this->assertGreaterThan(5000, $results['total_found']);
+    }
+
+    public function testLargeReturnSetNoPaging()
+    {
+        $queryString = '{"_gte":{"patent_number":"8000000"}}';
+        $decodedQueryString = json_decode($queryString, true);
+        $decodedFieldString = json_decode('["patent_number","inventor_last_name"]', true);
+        $decodedOptionString = json_decode('{"per_page":-1}', true);
+        $results = executeQuery($decodedQueryString, $decodedFieldString, null, $decodedOptionString);
+        $this->assertGreaterThan(5000, $results['count']);
+        $this->assertEquals($results['count'], $results['total_found']);
     }
 
 
