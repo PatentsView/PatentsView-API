@@ -66,7 +66,7 @@ class DatabaseQuery
             // Get the primary entity IDs
             $selectPrimaryEntityIdsString = "distinct " . getDBField($this->groupVars[0]['keyId']) . " as " .
                 $this->groupVars[0]['keyId'];
-            $results = $this->runQuery("$selectPrimaryEntityIdsString", $from, $whereClause, $sortString);
+            $results = $this->runQuery("distinct $selectPrimaryEntityIdsString", $from, $whereClause, $sortString);
             $this->total_found = count($results);
 
             // Make sure they asked for a valid range.
