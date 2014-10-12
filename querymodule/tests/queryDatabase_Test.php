@@ -48,7 +48,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
             'assignee_last_name' => $FIELD_SPECS['assignee_last_name']
         );
         $dbQuery = new DatabaseQuery();
-        $options = array('per_page'=>-1);
+        $options = array('per_page'=>10000);
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $whereClause, $whereFieldsUsed, $selectFieldsSpecs, null, $options);
         $this->assertGreaterThan(6000, count($results['patents']));
     }
@@ -128,5 +128,23 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $dbQuery = new DatabaseQuery();
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $whereClause, $whereFieldsUsed, $selectFieldsSpecs, $sort);
     }
+
+    public  function testQueryDatabaseAllFieldsMaxPageSize()
+    {
+        global $FIELD_SPECS;
+        global $PATENT_ENTITY_SPECS;
+        $selectFieldSpecs = $FIELD_SPECS;
+        $options = array('page'=>1, 'per_page'=>10000);
+        $dbQuery = new DatabaseQuery();
+        $memUsed = memory_get_usage();
+        $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, null, array(), $selectFieldSpecs, null, $options);
+        $memUsed = memory_get_usage();
+        if (count($results['patents']) < 10000) {
+            $this->assertEquals($dbQuery->getTotalFound(), count($results['patents']));
+        }
+        else {
+            $this->assertEquals(10000, count($results['patents']));
+            $this->assertGreaterThanOrEqual(10000, $dbQuery->getTotalFound());
+        }
+    }
 }
- 

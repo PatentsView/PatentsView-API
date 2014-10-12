@@ -28,7 +28,6 @@ class DatabaseQuery
         $this->errorHandler = ErrorHandler::getHandler();
         $page = 1;
         $perPage = 25;
-        $getAll = false;
         $this->sortFieldsUsed = array();
 
         $this->entitySpecs = $entitySpecs;
@@ -39,8 +38,8 @@ class DatabaseQuery
                 $page = $options['page'];
             }
             if (array_key_exists('per_page', $options))
-                if ($options['per_page'] == -1)
-                    $getAll = true;
+                if (($options['per_page'] > 10000) or ($options['per_page'] < 1))
+                    $this->errorHandler->sendError(400, "Per_page must be a positive number not to exceed 10,000.", $options);
                 else
                     $perPage = $options['per_page'];
         }
@@ -91,7 +90,7 @@ class DatabaseQuery
         $fromEntity = $this->entitySpecs[0]['join'] .
             ' inner join PVSupport.QueryResults qr on ' . getDBField($this->entitySpecs[0]['keyId']) . '= qr.EntityId';
         $whereEntity = "qr.QueryDefId=$queryDefId";
-        if (!$getAll)
+        if ($perPage < $this->total_found)
             $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
         $sortEntity = 'qr.sequence';
         $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortEntity);
@@ -108,7 +107,7 @@ class DatabaseQuery
                     ' inner join PVSupport.QueryResults qr on ' . getDBField($this->entitySpecs[0]['keyId']) . '= qr.EntityId';
                 $fromEntity .= ' ' . $entitySpec['join'];
                 $whereEntity = "qr.QueryDefId=$queryDefId";
-                if (!$getAll)
+                if ($perPage < $this->total_found)
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
                 $sortEntity = 'qr.sequence';
                 $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortEntity);
