@@ -143,5 +143,15 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(isset($results['patents'][0]['inventors']));
     }
 
+    public function testAllFieldsMaxPage()
+    {
+        global $FIELD_SPECS;
+        $query = array();
+        $fieldList = array_keys($FIELD_SPECS);
+        $decodedOptionString = json_decode('{"per_page":10000}', true);
+        $results = executeQuery($query, $fieldList, null, $decodedOptionString);
+        $this->assertGreaterThan(5000, $results['count']);
+    }
+
 
 }
