@@ -140,6 +140,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $results = executeQuery($decodedQueryString, $decodedFieldString, null, $decodedOptionString);
         $this->assertGreaterThan(5000, $results['count']);
         $this->assertEquals($results['count'], $results['total_found']);
+        $this->assertTrue(isset($results['patents'][0]['inventors']));
     }
 
 
