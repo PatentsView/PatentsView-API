@@ -121,6 +121,16 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('uspc_subclass_id', $results['patents'][0]['uspcs'][0]);
     }
 
+    public function testStringBegins()
+    {
+        $queryString = '{"_begins":{"patent_number":"867760"}}';
+        $expected = '{"patents":[{"patent_number":"8677600"},{"patent_number":"8677601"},{"patent_number":"8677602"},{"patent_number":"8677603"},{"patent_number":"8677604"},{"patent_number":"8677605"},{"patent_number":"8677606"},{"patent_number":"8677607"},{"patent_number":"8677608"},{"patent_number":"8677609"}],"count":10,"total_found":10}';
+        $decoded = json_decode($queryString, true);
+        $results = executeQuery($decoded, null);
+        $encoded = json_encode($results);
+        $this->assertEquals($expected, $encoded);
+    }
+
     public function testLargeReturnSet()
     {
         $queryString = '{"_gte":{"patent_number":"8000000"}}';

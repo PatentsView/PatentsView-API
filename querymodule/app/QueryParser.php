@@ -7,6 +7,7 @@ require_once dirname(__FILE__) . '/ErrorHandler.php';
 class QueryParser
 {
     private $COMPARISON_OPERATORS = array('_eq' => '=', '_neq' => '<>', '_gt' => '>', '_gte' => '>=', '_lt' => '<', '_lte' => '<=');
+    private $STRING_OPERATORS = array('_eq' => '', '_neq' => '', '_begins' => '', '_contains' => '');
     private $FULLTEXT_OPERATORS = array('_text_all' => '', '_text_any' => '', '_text_phrase' => '');
     private $JOIN_OPERATORS = array('_and' => 'and', '_or' => 'or');
     private $NEGATION_OPERATORS = array('_not' => 'not');
@@ -47,6 +48,10 @@ class QueryParser
         // If the operator is a comparison, then the right hand value will be a simple pair: { operator : { field : value } }
         if (isset($this->COMPARISON_OPERATORS[$operatorOrField])) {
             $returnString .= $this->processSimplePair($operatorOrField, $rightHandValue);
+        }
+        // If the operator is for strings, then the right hand value will be a simple pair: { operator : { field : value } }
+        elseif (isset($this->STRING_OPERATORS[$operatorOrField])) {
+            $returnString .= $this->processStringPair($operatorOrField, $rightHandValue);
         } // If the operator is a join, then the right hand value will be a list of criteria: { operator : [ criterion, ... ] }
         elseif (isset($this->JOIN_OPERATORS[$operatorOrField])) {
             $returnString .= '(';
@@ -165,7 +170,33 @@ class QueryParser
         elseif (($datatype == 'string') or ($datatype == 'fulltext'))
             $returnString = "($dbField $operatorString '$val')";
         else {
-            ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' found for '$apiField'.");
+            ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
+            throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
+        }
+        return $returnString;
+    }
+
+    private function processStringPair($operator, $criterion)
+    {
+        global $FIELD_SPECS;
+        reset($criterion);
+        $apiField = key($criterion);
+        $val = current($criterion);
+        $dbField = getDBField($apiField);
+        $datatype = $FIELD_SPECS[$apiField]['datatype'];
+        if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+        if ($datatype == 'string') {
+            if ($operator == '_eq')
+                $returnString = "($dbField = '$val'')";
+            elseif ($operator == '_neq')
+                $returnString = "($dbField <> '$val'')";
+            elseif ($operator == '_begins')
+                $returnString = "($dbField like '$val%')";
+            elseif ($operator == '_begins')
+                $returnString = "($dbField like '%$val%')";
+        }
+        else {
+            ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
             throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
         }
         return $returnString;

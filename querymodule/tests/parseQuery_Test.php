@@ -69,6 +69,24 @@ class parseQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(sort($expectedFields), sort($pq->getFieldsUsed()));
     }
 
+    public function testStringNotEqual()
+    {
+        $pq = new QueryParser();
+        $returnString = $pq->parse(json_decode('{"_neq":{"inventor_last_name":"Whitney"}}', true));
+        $this->assertEquals("(inventor_flat.name_last <> 'Whitney')", $returnString);
+        $expectedFields = array('patent_title','inventor_last_name');
+        $this->assertEquals(sort($expectedFields), sort($pq->getFieldsUsed()));
+    }
+
+    public function testStringBegins()
+    {
+        $pq = new QueryParser();
+        $returnString = $pq->parse(json_decode('{"_begins":{"inventor_last_name":"Whit"}}', true));
+        $this->assertEquals("(inventor_flat.name_last like 'Whit%')", $returnString);
+        $expectedFields = array('patent_title','inventor_last_name');
+        $this->assertEquals(sort($expectedFields), sort($pq->getFieldsUsed()));
+    }
+
     /**
      * @expectedException Exception
      */
