@@ -15,6 +15,8 @@ class QueryParser
     private $fieldsUsed;
     private $whereClause;
 
+    private $fieldSpecs;
+
     public function getFieldsUsed()
     {
         return $this->fieldsUsed;
@@ -25,8 +27,9 @@ class QueryParser
         return $this->whereClause;
     }
 
-    public function parse(array $query)
+    public function parse(array $fieldSpecs, array $query)
     {
+        $this->fieldSpecs = $fieldSpecs;
         $this->whereClause = '';
         $this->fieldsUsed = array();
         // There should only be one pair in this array
@@ -82,12 +85,11 @@ class QueryParser
 
     private function processPair($operator, $criterion)
     {
-        global $FIELD_SPECS;
         reset($criterion);
         $apiField = key($criterion);
         $val = current($criterion);
-        $dbField = getDBField($apiField);
-        $datatype = $FIELD_SPECS[$apiField]['datatype'];
+        $dbField = getDBField($this->fieldSpecs, $apiField);
+        $datatype = $this->fieldSpecs[$apiField]['datatype'];
         // If of the type: { field : value }
         if (!is_array($val)) {
             $returnString = $this->processSimplePair($operator, $criterion);
@@ -138,12 +140,11 @@ class QueryParser
 
     private function processSimplePair($operator, $criterion)
     {
-        global $FIELD_SPECS;
         reset($criterion);
         $apiField = key($criterion);
         $val = current($criterion);
-        $dbField = getDBField($apiField);
-        $datatype = $FIELD_SPECS[$apiField]['datatype'];
+        $dbField = getDBField($this->fieldSpecs, $apiField);
+        $datatype = $this->fieldSpecs[$apiField]['datatype'];
         if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
         $operatorString = $this->COMPARISON_OPERATORS[$operator];
         if ($datatype == 'float') {
@@ -178,12 +179,11 @@ class QueryParser
 
     private function processStringPair($operator, $criterion)
     {
-        global $FIELD_SPECS;
         reset($criterion);
         $apiField = key($criterion);
         $val = current($criterion);
-        $dbField = getDBField($apiField);
-        $datatype = $FIELD_SPECS[$apiField]['datatype'];
+        $dbField = getDBField($this->fieldSpecs, $apiField);
+        $datatype = $this->fieldSpecs[$apiField]['datatype'];
         if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
         if ($datatype == 'string') {
             if ($operator == '_begins')
@@ -200,14 +200,13 @@ class QueryParser
 
     private function processTextSearch($operator, $criterion)
     {
-        global $FIELD_SPECS;
         $returnString = '';
         reset($criterion);
         $apiField = key($criterion);
         $val = current($criterion);
-        $dbField = getDBField($apiField);
+        $dbField = getDBField($this->fieldSpecs, $apiField);
 
-        if ($FIELD_SPECS[$apiField]['datatype'] != 'fulltext') {
+        if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
             ErrorHandler::getHandler()->sendError(400, "The operation '$operator' is not valid on '$apiField''.");
             throw new ErrorException("The operation '$operator' is not valid on '$apiField''.");
         }

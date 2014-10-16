@@ -10,6 +10,7 @@ class DatabaseQuery
 
     private $entitySpecs = array();
     private $entityGroupVars = array();
+    private $fieldSpecs;
 
     private $selectFieldSpecs;
     private $sortFieldsUsed;
@@ -22,7 +23,7 @@ class DatabaseQuery
         return $this->total_found;
     }
 
-    public function queryDatabase(array $entitySpecs, $whereClause, array $whereFieldsUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
+    public function queryDatabase(array $entitySpecs, array $fieldSpecs, $whereClause, array $whereFieldsUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
     {
         $memUsed = memory_get_usage();
         $this->errorHandler = ErrorHandler::getHandler();
@@ -31,6 +32,7 @@ class DatabaseQuery
         $this->sortFieldsUsed = array();
 
         $this->entitySpecs = $entitySpecs;
+        $this->fieldSpecs = $fieldSpecs;
         $this->setupGroupVars();
 
         if ($options != null) {
@@ -51,7 +53,7 @@ class DatabaseQuery
         $sortString = $this->buildSortString($sortParam);
 
         // Get the QueryDefId for this where clause
-        $stringToHash = "query::$whereClause::sort::$sortString";
+        $stringToHash = "key::" . $this->entitySpecs[0]['keyId'] . "::query::$whereClause::sort::$sortString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%u', $whereHash);
 
@@ -68,7 +70,7 @@ class DatabaseQuery
             $insertStatement = 'PVSupport.QueryResults (QueryDefId, Sequence, EntityId)';
             $selectPrimaryEntityIdsString =
                 "distinct $queryDefId, @row_number:=@row_number+1 as sequence, " .
-                getDBField($this->entityGroupVars[0]['keyId']) . " as " . $this->entityGroupVars[0]['keyId'];
+                getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . " as " . $this->entityGroupVars[0]['keyId'];
             $this->runInsertSelect($insertStatement,
                 $selectPrimaryEntityIdsString,
                 $from . ',(select @row_number:=0) temprownum',
@@ -77,9 +79,9 @@ class DatabaseQuery
         }
 
         // First find out how many there are in the complete set.
-        $selectStringForEntity = 'count(*) as total_found';
+        $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . ') as total_found';
         $fromEntity = $this->entitySpecs[0]['join'] .
-            ' inner join PVSupport.QueryResults qr on ' . getDBField($this->entitySpecs[0]['keyId']) . '= qr.EntityId';
+            ' inner join PVSupport.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
         $whereEntity = "qr.QueryDefId=$queryDefId";
         $countResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, null);
         $this->total_found = intval($countResults[0]['total_found']);
@@ -88,7 +90,7 @@ class DatabaseQuery
         $results = array();
         $selectStringForEntity = $this->buildSelectStringForEntity($this->entitySpecs[0]);
         $fromEntity = $this->entitySpecs[0]['join'] .
-            ' inner join PVSupport.QueryResults qr on ' . getDBField($this->entitySpecs[0]['keyId']) . '= qr.EntityId';
+            ' inner join PVSupport.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
         $whereEntity = "qr.QueryDefId=$queryDefId";
         if ($perPage < $this->total_found)
             $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
@@ -101,10 +103,10 @@ class DatabaseQuery
         foreach (array_slice($this->entitySpecs,1) as $entitySpec) {
             $tempSelect = $this->buildSelectStringForEntity($entitySpec);
             if ($tempSelect != '') { // If there aren't any fields to get back, then skip the group.
-                $selectStringForEntity = getDBField($this->entitySpecs[0]['keyId']) . ' as ' . $this->entitySpecs[0]['keyId'];
+                $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . ' as ' . $this->entitySpecs[0]['keyId'];
                 $selectStringForEntity .= ", $tempSelect";
                 $fromEntity = $this->entitySpecs[0]['join'] .
-                    ' inner join PVSupport.QueryResults qr on ' . getDBField($this->entitySpecs[0]['keyId']) . '= qr.EntityId';
+                    ' inner join PVSupport.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
                 $fromEntity .= ' ' . $entitySpec['join'];
                 $whereEntity = "qr.QueryDefId=$queryDefId";
                 if ($perPage < $this->total_found)
@@ -273,15 +275,13 @@ class DatabaseQuery
 
     private function determineSelectFields()
     {
-        global $FIELD_SPECS;
-
         foreach ($this->entityGroupVars as $group) {
             if ($group['entity_name'] == $this->entityGroupVars[0]['entity_name']) {
                 if (!$this->{$group['hasId']})
-                    $this->selectFieldSpecs[$group['keyId']] = $FIELD_SPECS[$group['keyId']];
+                    $this->selectFieldSpecs[$group['keyId']] = $this->fieldSpecs[$group['keyId']];
             } else {
                 if ($this->{$group['hasFields']} and !$this->{$group['hasId']})
-                    $this->selectFieldSpecs[$group['keyId']] = $FIELD_SPECS[$group['keyId']];
+                    $this->selectFieldSpecs[$group['keyId']] = $this->fieldSpecs[$group['keyId']];
             }
         }
     }
@@ -318,14 +318,13 @@ class DatabaseQuery
 
     private function buildSortString($sortParam)
     {
-        global $FIELD_SPECS;
         $orderString = '';
         if ($sortParam != null) {
             foreach ($sortParam as $sortField) {
                 $apiField = key($sortField);
                 $direction = current($sortField);
                 try {
-                    $fieldSpec = $FIELD_SPECS[$apiField];
+                    $fieldSpec = $this->fieldSpecs[$apiField];
                 }
                 catch (ErrorException $e) {
                     ErrorHandler::getHandler()->sendError(400, "Invalid field for sorting: $apiField");
@@ -339,7 +338,7 @@ class DatabaseQuery
                     else {
                         if ($orderString != '')
                             $orderString .= ', ';
-                        $orderString .= getDBField($apiField) . ' ' . $direction;
+                        $orderString .= getDBField($this->fieldSpecs, $apiField) . ' ' . $direction;
                         $this->sortFieldsUsed[] = $apiField;
                     }
                 } else {
@@ -352,13 +351,12 @@ class DatabaseQuery
 
         if ($orderString != '')
             $orderString .= ', ';
-        $orderString .= getDBField($this->entityGroupVars[0]['keyId']);
+        $orderString .= getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']);
         return $orderString;
     }
 
     private function buildFrom(array $whereFieldsUsed, array $selectFieldSpecs, array $sortFields)
     {
-        global $FIELD_SPECS;
         // Smerge all the fields into one array
         $allFieldsUsed = array_merge($whereFieldsUsed, array_keys($selectFieldSpecs), $sortFields);
         $allFieldsUsed = array_unique($allFieldsUsed);
@@ -370,7 +368,7 @@ class DatabaseQuery
         // in the entity specs.
         foreach ($this->entityGroupVars as $group)
             foreach ($allFieldsUsed as $apiField)
-                if ($group['table'] == $FIELD_SPECS[$apiField]['table'])
+                if ($group['table'] == $this->fieldSpecs[$apiField]['table'])
                     if (!in_array($group['join'], $joins))
                         $joins[] = $group['join'];
 

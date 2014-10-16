@@ -11,8 +11,6 @@ require_once dirname(__FILE__) . '/entitySpecs.php';
  */
 function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults=null, array $selectFieldSpecs=null)
 {
-    global $FIELD_SPECS;
-
     // This function relies heavily on the concept of grouped items. The results from the API is expected to be an array of
     // primary entities, and within each primary entity there may be an array of entities (inventors, assignees, classes, etc.).
 
@@ -98,7 +96,7 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults=
 /*
 function convertDBResultsToNestedStructure_SingleQuery(array $entitySpecs, array $dbResults=null, array $selectFieldSpecs=null)
 {
-    global $FIELD_SPECS;
+    global $PATENT_FIELD_SPECS;
 
     // This function relies heavily on the concept of grouped items. The results from the API is expected to be an array of
     // primary entities, and within each primary entity there may be an array of entities (inventors, assignees, classes, etc.).
@@ -169,7 +167,7 @@ function convertDBResultsToNestedStructure_SingleQuery(array $entitySpecs, array
         }
 
         foreach ($row as $apiField => $val) {               // Look through all the field/value pairs
-            $fieldSpec = $FIELD_SPECS[$apiField];           // Get the field spec for it
+            $fieldSpec = $PATENT_FIELD_SPECS[$apiField];           // Get the field spec for it
             $tableName = $fieldSpec['table'];
             $fieldValuePair = array($apiField, $val);       // Create an array for it
             if ($tableName == $primaryEntity['table']) {   // If the field is for a primary entity.
