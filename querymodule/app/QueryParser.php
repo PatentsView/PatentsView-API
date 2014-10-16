@@ -7,7 +7,7 @@ require_once dirname(__FILE__) . '/ErrorHandler.php';
 class QueryParser
 {
     private $COMPARISON_OPERATORS = array('_eq' => '=', '_neq' => '<>', '_gt' => '>', '_gte' => '>=', '_lt' => '<', '_lte' => '<=');
-    private $STRING_OPERATORS = array('_eq' => '', '_neq' => '', '_begins' => '', '_contains' => '');
+    private $STRING_OPERATORS = array('_begins' => '', '_contains' => '');
     private $FULLTEXT_OPERATORS = array('_text_all' => '', '_text_any' => '', '_text_phrase' => '');
     private $JOIN_OPERATORS = array('_and' => 'and', '_or' => 'or');
     private $NEGATION_OPERATORS = array('_not' => 'not');
@@ -186,13 +186,9 @@ class QueryParser
         $datatype = $FIELD_SPECS[$apiField]['datatype'];
         if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
         if ($datatype == 'string') {
-            if ($operator == '_eq')
-                $returnString = "($dbField = '$val'')";
-            elseif ($operator == '_neq')
-                $returnString = "($dbField <> '$val'')";
-            elseif ($operator == '_begins')
+            if ($operator == '_begins')
                 $returnString = "($dbField like '$val%')";
-            elseif ($operator == '_begins')
+            elseif ($operator == '_contains')
                 $returnString = "($dbField like '%$val%')";
         }
         else {
