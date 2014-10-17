@@ -266,7 +266,7 @@ class DatabaseQuery
             foreach ($this->entityGroupVars as $group) {
                 if ($dbInfo['field_name'] == $group['keyId'])
                     $this->{$group['hasId']} = true;
-                if ($dbInfo['table'] == $group['table'])
+                if ($dbInfo['entity_name'] == $group['entity_name'])
                     $this->{$group['hasFields']} = true;
             }
         }
@@ -330,7 +330,7 @@ class DatabaseQuery
                     ErrorHandler::getHandler()->sendError(400, "Invalid field for sorting: $apiField");
                     throw $e;
                 }
-                if ($fieldSpec['table'] == $this->entityGroupVars[0]['table']) {
+                if ($fieldSpec['entity_name'] == $this->entityGroupVars[0]['entity_name']) {
                     if (($direction != 'asc') and ($direction != 'desc')) {
                         ErrorHandler::getHandler()->sendError(400, "Not a valid direction for sorting: $direction");
                         throw new ErrorException("Not a valid direction for sorting: $direction");
@@ -368,7 +368,7 @@ class DatabaseQuery
         // in the entity specs.
         foreach ($this->entityGroupVars as $group)
             foreach ($allFieldsUsed as $apiField)
-                if ($group['table'] == $this->fieldSpecs[$apiField]['table'])
+                if ($group['entity_name'] == $this->fieldSpecs[$apiField]['entity_name'])
                     if (!in_array($group['join'], $joins))
                         $joins[] = $group['join'];
 

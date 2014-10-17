@@ -91,7 +91,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $queryString = '{"patent_number":"8677601"}';
-        $fieldList = array("ipc_main_group","appcit_category","inventor_last_name","patcit_category","uspc_mainclass_id","uspc_subclass_id","assignee_organization");
+        $fieldList = array("ipc_main_group","appcit_category","inventor_last_name","cited_patent_category","uspc_mainclass_id","uspc_subclass_id","assignee_organization");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, $fieldList);
         $this->assertEquals(1, count($results['patents']));
@@ -103,8 +103,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('ipc_main_group', $results['patents'][0]['IPCs'][0]);
         $this->assertArrayHasKey('application_citations', $results['patents'][0]);
         $this->assertArrayHasKey('appcit_category', $results['patents'][0]['application_citations'][0]);
-        $this->assertArrayHasKey('patent_citations', $results['patents'][0]);
-        $this->assertArrayHasKey('patcit_category', $results['patents'][0]['patent_citations'][0]);
+        $this->assertArrayHasKey('cited_patents', $results['patents'][0]);
+        $this->assertArrayHasKey('cited_patent_category', $results['patents'][0]['cited_patents'][0]);
         $this->assertArrayHasKey('uspcs', $results['patents'][0]);
         $this->assertArrayHasKey('uspc_mainclass_id', $results['patents'][0]['uspcs'][0]);
         $this->assertArrayHasKey('uspc_subclass_id', $results['patents'][0]['uspcs'][0]);
@@ -129,8 +129,10 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('ipc_main_group', $results['patents'][0]['IPCs'][0]);
         $this->assertArrayHasKey('application_citations', $results['patents'][0]);
         $this->assertArrayHasKey('appcit_category', $results['patents'][0]['application_citations'][0]);
-        $this->assertArrayHasKey('patent_citations', $results['patents'][0]);
-        $this->assertArrayHasKey('patcit_category', $results['patents'][0]['patent_citations'][0]);
+        $this->assertArrayHasKey('cited_patents', $results['patents'][0]);
+        $this->assertArrayHasKey('cited_patent_category', $results['patents'][0]['cited_patents'][0]);
+        $this->assertArrayHasKey('citedby_patents', $results['patents'][0]);
+        $this->assertArrayHasKey('citedby_patent_category', $results['patents'][0]['citedby_patents'][0]);
         $this->assertArrayHasKey('uspcs', $results['patents'][0]);
         $this->assertArrayHasKey('uspc_mainclass_id', $results['patents'][0]['uspcs'][0]);
         $this->assertArrayHasKey('uspc_subclass_id', $results['patents'][0]['uspcs'][0]);

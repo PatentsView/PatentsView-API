@@ -8,7 +8,9 @@ $PATENT_ENTITY_SPECS = array(
     array('entity_name'=>'application', 'group_name'=>'applications', 'keyId'=>'app_id', 'table'=>'application', 'join'=>'left outer join application on patent.id=application.patent_id'),
     array('entity_name'=>'ipc', 'group_name'=>'IPCs', 'keyId'=>'ipc_id', 'table'=>'ipcr', 'join'=>'left outer join ipcr on patent.id=ipcr.patent_id'),
     array('entity_name'=>'applicationcitation', 'group_name'=>'application_citations', 'keyId'=>'appcit_id', 'table'=>'usapplicationcitation', 'join'=>'left outer join usapplicationcitation on patent.id=usapplicationcitation.patent_id'),
-    array('entity_name'=>'patentcitation', 'group_name'=>'patent_citations', 'keyId'=>'patcit_id', 'table'=>'uspatentcitation', 'join'=>'left outer join uspatentcitation on patent.id=uspatentcitation.patent_id'),
+    array('entity_name'=>'cited_patent', 'group_name'=>'cited_patents', 'keyId'=>'cited_patent_uuid', 'table'=>'uspatentcitation', 'join'=>'left outer join uspatentcitation on patent.id=uspatentcitation.patent_id'),
+    //Todo: When the new "cited by" table is ready, this needs to change.
+    array('entity_name'=>'citedby_patent', 'group_name'=>'citedby_patents', 'keyId'=>'citedby_patent_uuid', 'table'=>'uspatentcitation2', 'join'=>'left outer join uspatentcitation as uspatentcitation2 on patent.id=uspatentcitation2.citation_id'),
     array('entity_name'=>'uspc', 'group_name'=>'uspcs', 'keyId'=>'uspc_id', 'table'=>'uspc_flat', 'join'=>'left outer join uspc_flat on patent.id=uspc_flat.uspc_patent_id')
 );
 
@@ -21,7 +23,9 @@ $PATENT_FIELD_SPECS = array
     'app_id' => array('entity_name'=>'application', 'table' => 'application', 'field_name' => 'id', 'datatype' => 'string'),
     'ipc_id' => array('entity_name'=>'ipc', 'table' => 'ipcr', 'field_name' => 'uuid', 'datatype' => 'string'),
     'appcit_id' => array('entity_name'=>'applicationcitation', 'table' => 'usapplicationcitation', 'field_name' => 'uuid', 'datatype' => 'string'),
-    'patcit_id' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'uuid', 'datatype' => 'string'),
+    'cited_patent_uuid' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'uuid', 'datatype' => 'string'),
+    //Todo: When the new "cited by" table is ready, this needs to change.
+    'citedby_patent_uuid' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'uuid', 'datatype' => 'string'),
     'uspc_id' => array('entity_name'=>'uspc', 'table' => 'uspc_flat', 'field_name' => 'uspc_id', 'datatype' => 'string'),
 
 
@@ -44,7 +48,6 @@ $PATENT_FIELD_SPECS = array
     'assignee_last_name' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'name_last', 'datatype' => 'string'),
     'assignee_latitude' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'latitude', 'datatype' => 'float'),
     'assignee_longitude' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'longitude', 'datatype' => 'float'),
-    'assignee_last_name' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'name_last', 'datatype' => 'string'),
     'assignee_nationality' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'nationality', 'datatype' => 'string'),
     'assignee_organization' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'organization', 'datatype' => 'string'),
     'assignee_state' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'state', 'datatype' => 'string'),
@@ -67,18 +70,36 @@ $PATENT_FIELD_SPECS = array
     'ipc_symbol_position' => array('entity_name'=>'ipc', 'table' => 'ipcr', 'field_name' => 'symbol_position', 'datatype' => 'string'),
     'ipc_version_indicator' => array('entity_name'=>'ipc', 'table' => 'ipcr', 'field_name' => 'ipc_version_indicator', 'datatype' => 'string'),
     'patent_abstract' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'abstract', 'datatype' => 'fulltext'),
+    //ToDo: Need to change to use actual field for patent_city once it is added to the DB
+    'patent_city' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'country', 'datatype' => 'string'),
     'patent_country' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'country', 'datatype' => 'string'),
     'patent_date' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'date', 'datatype' => 'date'),
     'patent_kind' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'Kind', 'datatype' => 'string'),
+    //ToDo: Need to change to use actual field for patent_latitude once it is added to the DB
+    'patent_latitude' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'num_claims', 'datatype' => 'float'),
+    //ToDo: Need to change to use actual field for patent_longitude once it is added to the DB
+    'patent_longitude' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'num_claims', 'datatype' => 'float'),
+    //ToDo: Need to change to use actual field for patent_num_citations once it is added to the DB
+    'patent_num_citations' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'num_claims', 'datatype' => 'int'),
     'patent_num_claims' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'num_claims', 'datatype' => 'int'),
     'patent_number' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'number', 'datatype' => 'string'),
     'patent_title' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'title', 'datatype' => 'fulltext'),
     'patent_type' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'type', 'datatype' => 'string'),
-    'patcit_category' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'category', 'datatype' => 'string'),
-    'patcit_date' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'date', 'datatype' => 'date'),
-    'patcit_kind' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'kind', 'datatype' => 'string'),
-    'patcit_name' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'name', 'datatype' => 'string'),
-    'patcit_sequence' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'sequence', 'datatype' => 'int'),
+    'cited_patent_category' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'category', 'datatype' => 'string'),
+    'cited_patent_date' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'date', 'datatype' => 'date'),
+    'cited_patent_id' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'citation_id', 'datatype' => 'string'),
+    'cited_patent_kind' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'kind', 'datatype' => 'string'),
+    'cited_patent_name' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'name', 'datatype' => 'string'),
+    'cited_patent_sequence' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'sequence', 'datatype' => 'int'),
+    //Todo: When the new "cited by" table is ready, these need to change.
+    'citedby_patent_category' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'category', 'datatype' => 'string'),
+    'citedby_patent_date' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'date', 'datatype' => 'date'),
+    'citedby_patent_id' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'patent_id', 'datatype' => 'string'),
+    'citedby_patent_kind' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'kind', 'datatype' => 'string'),
+    'citedby_patent_name' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'name', 'datatype' => 'string'),
+    'citedby_patent_sequence' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'sequence', 'datatype' => 'int'),
+    //Todo: This is not using the right field - need title added to the citedby table
+    'citedby_patent_title' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'name', 'datatype' => 'string'),
     'uspc_mainclass_id' => array('entity_name'=>'uspc', 'table' => 'uspc_flat', 'field_name' => 'mainclass_id', 'datatype' => 'string'),
     'uspc_mainclass_text' => array('entity_name'=>'uspc', 'table' => 'uspc_flat', 'field_name' => 'mainclass_text', 'datatype' => 'string'),
     'uspc_mainclass_title' => array('entity_name'=>'uspc', 'table' => 'uspc_flat', 'field_name' => 'mainclass_title', 'datatype' => 'string'),
@@ -96,7 +117,9 @@ $INVENTOR_ENTITY_SPECS = array(
     array('entity_name'=>'application', 'group_name'=>'applications', 'keyId'=>'app_id', 'table'=>'application', 'join'=>'left outer join application on patent_inventor.patent_id=application.patent_id'),
     array('entity_name'=>'ipc', 'group_name'=>'IPCs', 'keyId'=>'ipc_id', 'table'=>'ipcr', 'join'=>'left outer join ipcr on patent_inventor.patent_id=ipcr.patent_id'),
     array('entity_name'=>'applicationcitation', 'group_name'=>'application_citations', 'keyId'=>'appcit_id', 'table'=>'usapplicationcitation', 'join'=>'left outer join usapplicationcitation on patent_inventor.patent_id=usapplicationcitation.patent_id'),
-    array('entity_name'=>'patentcitation', 'group_name'=>'patent_citations', 'keyId'=>'patcit_id', 'table'=>'uspatentcitation', 'join'=>'left outer join uspatentcitation on patent_inventor.patent_idid=uspatentcitation.patent_id'),
+    array('entity_name'=>'cited_patent', 'group_name'=>'cited_patents', 'keyId'=>'cited_patent_id', 'table'=>'uspatentcitation', 'join'=>'left outer join uspatentcitation on patent_inventor.patent_idid=uspatentcitation.patent_id'),
+    //Todo: When the new "cited by" table is ready, this needs to change.
+    array('entity_name'=>'citedby_patent', 'group_name'=>'citedby_patents', 'keyId'=>'citedby_patent_uuid', 'table'=>'uspatentcitation2', 'join'=>'left outer join uspatentcitation as uspatentcitation2 on patent.id=uspatentcitation2.citation_id'),
     array('entity_name'=>'uspc', 'group_name'=>'uspcs', 'keyId'=>'uspc_id', 'table'=>'uspc_flat', 'join'=>'left outer join uspc_flat on patent_inventor.patent_id=uspc_flat.uspc_patent_id')
 );
 
@@ -109,7 +132,9 @@ $INVENTOR_FIELD_SPECS = array
     'app_id' => array('entity_name'=>'application', 'table' => 'application', 'field_name' => 'id', 'datatype' => 'string'),
     'ipc_id' => array('entity_name'=>'ipc', 'table' => 'ipcr', 'field_name' => 'uuid', 'datatype' => 'string'),
     'appcit_id' => array('entity_name'=>'applicationcitation', 'table' => 'usapplicationcitation', 'field_name' => 'uuid', 'datatype' => 'string'),
-    'patcit_id' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'uuid', 'datatype' => 'string'),
+    'cited_patent_id' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'uuid', 'datatype' => 'string'),
+    //Todo: When the new "cited by" table is ready, this needs to change.
+    'citedby_patent_uuid' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'uuid', 'datatype' => 'string'),
     'uspc_id' => array('entity_name'=>'uspc', 'table' => 'uspc_flat', 'field_name' => 'uspc_id', 'datatype' => 'string'),
 
 
@@ -132,7 +157,6 @@ $INVENTOR_FIELD_SPECS = array
     'assignee_last_name' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'name_last', 'datatype' => 'string'),
     'assignee_latitude' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'latitude', 'datatype' => 'float'),
     'assignee_longitude' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'longitude', 'datatype' => 'float'),
-    'assignee_last_name' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'name_last', 'datatype' => 'string'),
     'assignee_nationality' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'nationality', 'datatype' => 'string'),
     'assignee_organization' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'organization', 'datatype' => 'string'),
     'assignee_state' => array('entity_name'=>'assignee', 'table' => 'assignee_flat', 'field_name' => 'state', 'datatype' => 'string'),
@@ -162,11 +186,20 @@ $INVENTOR_FIELD_SPECS = array
     'patent_number' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'number', 'datatype' => 'string'),
     'patent_title' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'title', 'datatype' => 'fulltext'),
     'patent_type' => array('entity_name'=>'patent', 'table' => 'patent', 'field_name' => 'type', 'datatype' => 'string'),
-    'patcit_category' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'category', 'datatype' => 'string'),
-    'patcit_date' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'date', 'datatype' => 'date'),
-    'patcit_kind' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'kind', 'datatype' => 'string'),
-    'patcit_name' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'name', 'datatype' => 'string'),
-    'patcit_sequence' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'sequence', 'datatype' => 'int'),
+    'cited_patent_category' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'category', 'datatype' => 'string'),
+    'cited_patent_date' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'date', 'datatype' => 'date'),
+    'cited_patent_kind' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'kind', 'datatype' => 'string'),
+    'cited_patent_name' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'name', 'datatype' => 'string'),
+    'cited_patent_sequence' => array('entity_name'=>'patentcitation', 'table' => 'uspatentcitation', 'field_name' => 'sequence', 'datatype' => 'int'),
+    //Todo: When the new "cited by" table is ready, these need to change.
+    'citedby_patent_category' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'category', 'datatype' => 'string'),
+    'citedby_patent_date' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'date', 'datatype' => 'date'),
+    'citedby_patent_id' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'patent_id', 'datatype' => 'string'),
+    'citedby_patent_kind' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'kind', 'datatype' => 'string'),
+    'citedby_patent_name' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'name', 'datatype' => 'string'),
+    'citedby_patent_sequence' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'sequence', 'datatype' => 'int'),
+    //Todo: This is not using the right field - need title added to the citedby table
+    'citedby_patent_title' => array('entity_name'=>'citedby_patent', 'table' => 'uspatentcitation2', 'field_name' => 'name', 'datatype' => 'string'),
     'uspc_mainclass_id' => array('entity_name'=>'uspc', 'table' => 'uspc_flat', 'field_name' => 'mainclass_id', 'datatype' => 'string'),
     'uspc_mainclass_text' => array('entity_name'=>'uspc', 'table' => 'uspc_flat', 'field_name' => 'mainclass_text', 'datatype' => 'string'),
     'uspc_mainclass_title' => array('entity_name'=>'uspc', 'table' => 'uspc_flat', 'field_name' => 'mainclass_title', 'datatype' => 'string'),
