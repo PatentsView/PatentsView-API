@@ -205,7 +205,7 @@ class DatabaseQuery
             $st->closeCursor();
         }
         catch (Exception $e) {
-            $this->errorHandler->sendError(400, "Query execution failed.", $e);
+            $this->errorHandler->sendError(500, "Query execution failed.", $e);
             throw new $e;
         }
 
@@ -227,7 +227,7 @@ class DatabaseQuery
             $st->closeCursor();
         }
         catch (Exception $e) {
-            $this->errorHandler->sendError(400, "Insert select execution failed.", $e);
+            $this->errorHandler->sendError(500, "Insert select execution failed.", $e);
             throw new $e;
         }
 
@@ -248,7 +248,7 @@ class DatabaseQuery
             $st->closeCursor();
         }
         catch (Exception $e) {
-            $this->errorHandler->sendError(400, "Insert execution failed.", $e);
+            $this->errorHandler->sendError(500, "Insert execution failed.", $e);
             throw new $e;
         }
 
