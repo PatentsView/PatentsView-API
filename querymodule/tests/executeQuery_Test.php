@@ -14,8 +14,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"_or":[{"patent_number":"8677601"},{"patent_number":"8677602"}]}';
-        $expected = '{"patents":[{"patent_number":"8677601"},{"patent_number":"8677602"}],"count":2,"total_found":2}';
+        $queryString = '{"_or":[{"patent_number":"8202600"},{"patent_number":"8202601"}]}';
+        $expected = '{"patents":[{"patent_number":"8202600"},{"patent_number":"8202601"}],"count":2,"total_found":2}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -26,9 +26,9 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"_or":[{"patent_number":"8677601"},{"patent_number":"8677602"}]}';
-        $fieldList = array("patent_id", "patent_type", "patent_number", "patent_country", "patent_title", "inventor_last_name", "assignee_last_name");
-        $expected = '{"patents":[{"patent_id":"8677601","patent_type":"utility","patent_number":"8677601","patent_country":"US","patent_title":"Prosthetic heart valve, prosthetic heart valve assembly and method for making same","inventors":[{"inventor_last_name":"Millwee"},{"inventor_last_name":"Shay"},{"inventor_last_name":"Majkrzak"},{"inventor_last_name":"Young"},{"inventor_last_name":"Kupumbati"}],"assignees":[{"assignee_last_name":""}]},{"patent_id":"8677602","patent_type":"utility","patent_number":"8677602","patent_country":"US","patent_title":"Method of making a flexible device shaft with angled spiral wrap","inventors":[{"inventor_last_name":"Dayton"},{"inventor_last_name":"Boutillette"}],"assignees":[{"assignee_last_name":""}]}],"count":2,"total_found":2}';
+        $queryString = '{"_or":[{"patent_number":"8202600"},{"patent_number":"8202601"}]}';
+        $fieldList = array("patent_id", "patent_type", "patent_number", "patent_title", "inventor_last_name", "assignee_last_name");
+        $expected = '{"patents":[{"patent_id":"8202600","patent_type":"utility","patent_number":"8202600","patent_title":"Artificial leather, base to be used in the leather, and processes for production of both","inventors":[{"inventor_last_name":"Okada"},{"inventor_last_name":"Ichihashi"}],"assignees":[{"assignee_last_name":null}]},{"patent_id":"8202601","patent_type":"utility","patent_number":"8202601","patent_title":"Honeycomb structure and manufacturing method of the honeycomb structure","inventors":[{"inventor_last_name":"Ohno"},{"inventor_last_name":"Kunieda"},{"inventor_last_name":"Ido"}],"assignees":[{"assignee_last_name":null}]}],"count":2,"total_found":2}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, $fieldList);
         $encoded = json_encode($results);
@@ -52,8 +52,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         //TODO This test will fail when run against a different database
-        $queryString = '{"_text_phrase":{"patent_title":"mesh node"}}';
-        $expected = '{"patents":[{"patent_title":"Method for notifying about\/avoiding congestion situation of data transmission in wireless mesh network, and mesh node for the same"}],"count":1,"total_found":1}';
+        $queryString = '{"_text_phrase":{"patent_title":"cement composite"}}';
+        $expected = '{"patents":[{"patent_title":"Treatment for cement composite articles"}],"count":1,"total_found":1}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -65,8 +65,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         //TODO This test will fail when run against a different database
-        $queryString = '{"_text_any":{"patent_title":"mesh node"}}';
-        $expected = '{"patents":[{"patent_title":"Surgical mesh maker"},{"patent_title":"Sensor node voltage clamping circuit and method"},{"patent_title":"Method for notifying about\/avoiding congestion situation of data transmission in wireless mesh network, and mesh node for the same"},{"patent_title":"Configuring a wireless mesh network of communication devices with packet message transmission, and routing packet message transmission in such a network"},{"patent_title":"Optical wavelength division node"},{"patent_title":"Distance metric estimating system, coordinate calculating node, distance metric estimating method, and program"},{"patent_title":"Method, system, and node for node interconnection on content delivery network"},{"patent_title":"Intermediary node with distribution capability and communication network with federated metering capability"}],"count":8,"total_found":8}';
+        $queryString = '{"_text_any":{"patent_title":"cement composite"}}';
+        $expected = '{"patents":[{"patent_title":"Composite building panel"},{"patent_title":"Composite hollow fiber type separation membranes processes for the preparation thereof and their use"},{"patent_title":"Method of making a composite panel of a foam material"},{"patent_title":"Method for making a composite component using a transverse tape"},{"patent_title":"Preparation of a silicone rubber-polyester composite products"},{"patent_title":"Composite membrane"},{"patent_title":"Composite film"},{"patent_title":"Composite polymer\/desiccant coatings for IC encapsulation"},{"patent_title":"Composite materials having improved fracture toughness"},{"patent_title":"Composite sign post"},{"patent_title":"Light metallic composite material and method for producing thereof"},{"patent_title":"Process of producing a composite membrane"},{"patent_title":"High strength cured cement article and process for manufacturing the same"},{"patent_title":"Unsaturated copolymer resin composite"},{"patent_title":"Composite vacuum evaporation coil"},{"patent_title":"Polymer composite bat"},{"patent_title":"Composite bone marrow graft material with method and kit"},{"patent_title":"Concrete comprising organic fibres dispersed in a cement matrix, concrete cement matrix and premixes"},{"patent_title":"Composite membrane and method for making the same"},{"patent_title":"Production of composite mouldings"},{"patent_title":"Method and apparatus for making composite parts"},{"patent_title":"Curable liquid sealant used as vacuum bag in composite manufacturing"},{"patent_title":"Method and apparatus for manufacturing ceramic-based composite member"},{"patent_title":"Method for fabricating ceramic matrix composite"},{"patent_title":"Light scattering sheet, light scattering composite sheet, and liquid crystal display"}],"count":25,"total_found":79}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -78,8 +78,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         //TODO This test will fail when run against a different database
-        $queryString = '{"_text_all":{"patent_title":"mesh network"}}';
-        $expected = '{"patents":[{"patent_title":"Method for notifying about\/avoiding congestion situation of data transmission in wireless mesh network, and mesh node for the same"},{"patent_title":"Configuring a wireless mesh network of communication devices with packet message transmission, and routing packet message transmission in such a network"}],"count":2,"total_found":2}';
+        $queryString = '{"_text_all":{"patent_title":"cement composite"}}';
+        $expected = '{"patents":[{"patent_title":"Treatment for cement composite articles"}],"count":1,"total_found":1}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -90,7 +90,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"patent_number":"8677601"}';
+        $queryString = '{"patent_number":"8202600"}';
         $fieldList = array("ipc_main_group","appcit_category","inventor_last_name","cited_patent_category","uspc_mainclass_id","uspc_subclass_id","assignee_organization");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, $fieldList);
@@ -114,7 +114,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"patent_number":"8677601"}';
+        $queryString = '{"patent_number":"8202600"}';
         $fieldList = array_keys($PATENT_FIELD_SPECS);
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, $fieldList);
@@ -142,8 +142,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"_begins":{"patent_number":"867760"}}';
-        $expected = '{"patents":[{"patent_number":"8677600"},{"patent_number":"8677601"},{"patent_number":"8677602"},{"patent_number":"8677603"},{"patent_number":"8677604"},{"patent_number":"8677605"},{"patent_number":"8677606"},{"patent_number":"8677607"},{"patent_number":"8677608"},{"patent_number":"8677609"}],"count":10,"total_found":10}';
+        $queryString = '{"_begins":{"patent_number":"820260"}}';
+        $expected = '{"patents":[{"patent_number":"8202600"},{"patent_number":"8202601"},{"patent_number":"8202602"},{"patent_number":"8202603"},{"patent_number":"8202604"},{"patent_number":"8202605"},{"patent_number":"8202606"},{"patent_number":"8202607"},{"patent_number":"8202608"},{"patent_number":"8202609"}],"count":10,"total_found":10}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -172,7 +172,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $decodedOptionString = json_decode('{"per_page":10000}', true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decodedQueryString, $decodedFieldString, null, $decodedOptionString);
         $this->assertGreaterThan(5000, $results['count']);
-        $this->assertEquals($results['count'], $results['total_found']);
+        $this->assertGreaterThanOrEqual($results['count'], $results['total_found']);
         $this->assertTrue(isset($results['patents'][0]['inventors']));
     }
 

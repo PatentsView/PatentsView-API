@@ -15,20 +15,19 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $whereClause = "patent.id like '867760%'";
+        $whereClause = "patent.patent_number like '820260%'";
         $whereFieldsUsed = array('patent_id');
         $selectFieldsSpecs = array(
             'patent_id' => $PATENT_FIELD_SPECS['patent_id'],
             'patent_type' => $PATENT_FIELD_SPECS['patent_type'],
             'patent_number' => $PATENT_FIELD_SPECS['patent_number'],
-            'patent_country' => $PATENT_FIELD_SPECS['patent_country'],
             'patent_title' => $PATENT_FIELD_SPECS['patent_title'],
             'inventor_last_name' => $PATENT_FIELD_SPECS['inventor_last_name'],
             'assignee_last_name' => $PATENT_FIELD_SPECS['assignee_last_name']
         );
         $dbQuery = new DatabaseQuery();
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, $selectFieldsSpecs);
-        $expected = json_decode('{"patents":[{"patent_id":"8677600","patent_type":"utility","patent_number":"8677600","patent_country":"US","patent_title":"Methods of dispensing and making porous material with growth enhancing element"},{"patent_id":"8677601","patent_type":"utility","patent_number":"8677601","patent_country":"US","patent_title":"Prosthetic heart valve, prosthetic heart valve assembly and method for making same"},{"patent_id":"8677602","patent_type":"utility","patent_number":"8677602","patent_country":"US","patent_title":"Method of making a flexible device shaft with angled spiral wrap"},{"patent_id":"8677603","patent_type":"utility","patent_number":"8677603","patent_country":"US","patent_title":"Drop maker for sap collection system"},{"patent_id":"8677604","patent_type":"utility","patent_number":"8677604","patent_country":"US","patent_title":"Method of manufacturing boundary acoustic wave device"},{"patent_id":"8677605","patent_type":"utility","patent_number":"8677605","patent_country":"US","patent_title":"Method for manufacturing sensor unit"},{"patent_id":"8677606","patent_type":"utility","patent_number":"8677606","patent_country":"US","patent_title":"Method for assembling a rotor with permanent magnets"},{"patent_id":"8677607","patent_type":"utility","patent_number":"8677607","patent_country":"US","patent_title":"Method of manufacturing magnetoresistive element"},{"patent_id":"8677608","patent_type":"utility","patent_number":"8677608","patent_country":"US","patent_title":"Method for manufacturing iron core and apparatus for manufacturing iron core"},{"patent_id":"8677609","patent_type":"utility","patent_number":"8677609","patent_country":"US","patent_title":"Method for producing a circuit-breaker pole part"}],"inventors":[{"patent_id":"8677600","inventor_last_name":"Jr.","inventor_id":"8677600-1"},{"patent_id":"8677600","inventor_last_name":"Singer","inventor_id":"8677600-2"},{"patent_id":"8677601","inventor_last_name":"Millwee","inventor_id":"8677601-1"},{"patent_id":"8677601","inventor_last_name":"Shay","inventor_id":"8677601-2"},{"patent_id":"8677601","inventor_last_name":"Majkrzak","inventor_id":"8677601-3"},{"patent_id":"8677601","inventor_last_name":"Young","inventor_id":"8677601-4"},{"patent_id":"8677601","inventor_last_name":"Kupumbati","inventor_id":"8677601-5"},{"patent_id":"8677602","inventor_last_name":"Dayton","inventor_id":"8677602-1"},{"patent_id":"8677602","inventor_last_name":"Boutillette","inventor_id":"8677602-2"},{"patent_id":"8677603","inventor_last_name":"Reynolds","inventor_id":"8677603-1"},{"patent_id":"8677604","inventor_last_name":"Kando","inventor_id":"8677604-1"},{"patent_id":"8677605","inventor_last_name":"Lim","inventor_id":"8677605-1"},{"patent_id":"8677605","inventor_last_name":"Goh","inventor_id":"8677605-2"},{"patent_id":"8677606","inventor_last_name":"Desiron","inventor_id":"8677606-1"},{"patent_id":"8677607","inventor_last_name":"Yanagisawa","inventor_id":"8677607-1"},{"patent_id":"8677607","inventor_last_name":"Hirose","inventor_id":"8677607-2"},{"patent_id":"8677607","inventor_last_name":"Saruki","inventor_id":"8677607-3"},{"patent_id":"8677608","inventor_last_name":"Akita","inventor_id":"8677608-1"},{"patent_id":"8677608","inventor_last_name":"Furusawa","inventor_id":"8677608-2"},{"patent_id":"8677609","inventor_last_name":"Shang","inventor_id":"8677609-1"}],"assignees":[{"patent_id":"8677600","assignee_last_name":"","assignee_id":"ad87f29b5aa3d8c0bcbf86bc0ed69b8d"},{"patent_id":"8677601","assignee_last_name":"","assignee_id":"ba63daad7af208753ccc1e7383c11281"},{"patent_id":"8677602","assignee_last_name":"","assignee_id":"60ab17c614bc80bfbddd5b3c4bae3ea3"},{"patent_id":"8677603","assignee_last_name":null,"assignee_id":null},{"patent_id":"8677604","assignee_last_name":"","assignee_id":"545147830daddf3dbcc15397ee38fc31"},{"patent_id":"8677605","assignee_last_name":"","assignee_id":"dfb22487d8089f003b2b092aeec21823"},{"patent_id":"8677606","assignee_last_name":"","assignee_id":"02b31f7d03b24c5c86e6d365d6b17133"},{"patent_id":"8677607","assignee_last_name":"","assignee_id":"22817f7a619b8a60fd4aec1a5166ddc6"},{"patent_id":"8677608","assignee_last_name":"","assignee_id":"50b9f7425f3c324d06c53ca449075086"},{"patent_id":"8677609","assignee_last_name":"","assignee_id":"847ef656a074289a8fbee02b3d7c6e73"}]}', true);
+        $expected = json_decode('{"patents":[{"patent_id":"8202600","patent_type":"utility","patent_number":"8202600","patent_title":"Artificial leather, base to be used in the leather, and processes for production of both"},{"patent_id":"8202601","patent_type":"utility","patent_number":"8202601","patent_title":"Honeycomb structure and manufacturing method of the honeycomb structure"},{"patent_id":"8202602","patent_type":"utility","patent_number":"8202602","patent_title":"Honeycomb segment with spacer and honeycomb structure"},{"patent_id":"8202603","patent_type":"utility","patent_number":"8202603","patent_title":"Elastic sheet structure"},{"patent_id":"8202604","patent_type":"utility","patent_number":"8202604","patent_title":"Pneumatic tire and method of production of same"},{"patent_id":"8202605","patent_type":"utility","patent_number":"8202605","patent_title":"Absorbent paper product having non-embossed surface features"},{"patent_id":"8202606","patent_type":"utility","patent_number":"8202606","patent_title":"Insulation structure for resistor grids"},{"patent_id":"8202607","patent_type":"utility","patent_number":"8202607","patent_title":"Nano diamond containing intermediate transfer members"},{"patent_id":"8202608","patent_type":"utility","patent_number":"8202608","patent_title":"Electret composition and method for printing"},{"patent_id":"8202609","patent_type":"utility","patent_number":"8202609","patent_title":"Absorbent material with wet strength containing wax"}],"inventors":[{"patent_id":"8202600","inventor_last_name":"Okada","inventor_id":"15417"},{"patent_id":"8202600","inventor_last_name":"Ichihashi","inventor_id":"15418"},{"patent_id":"8202601","inventor_last_name":"Ido","inventor_id":"15421"},{"patent_id":"8202601","inventor_last_name":"Ohno","inventor_id":"15419"},{"patent_id":"8202601","inventor_last_name":"Kunieda","inventor_id":"15420"},{"patent_id":"8202602","inventor_last_name":"Shindo","inventor_id":"15422"},{"patent_id":"8202603","inventor_last_name":"Chang","inventor_id":"15423"},{"patent_id":"8202604","inventor_last_name":"Tomoi","inventor_id":"15424"},{"patent_id":"8202605","inventor_last_name":"Ostendorf","inventor_id":"15425"},{"patent_id":"8202605","inventor_last_name":"Spitzer","inventor_id":"15426"},{"patent_id":"8202606","inventor_last_name":"Krahn","inventor_id":"15427"},{"patent_id":"8202607","inventor_last_name":"Wu","inventor_id":"15428"},{"patent_id":"8202608","inventor_last_name":"Senft","inventor_id":"15429"},{"patent_id":"8202608","inventor_last_name":"Thayer","inventor_id":"15430"},{"patent_id":"8202609","inventor_last_name":"Ducker","inventor_id":"15431"},{"patent_id":"8202609","inventor_last_name":"Harlen","inventor_id":"15432"},{"patent_id":"8202609","inventor_last_name":"Varney","inventor_id":"15433"}],"assignees":[{"patent_id":"8202600","assignee_last_name":null,"assignee_id":"276"},{"patent_id":"8202601","assignee_last_name":null,"assignee_id":"4228"},{"patent_id":"8202602","assignee_last_name":null,"assignee_id":"5988"},{"patent_id":"8202603","assignee_last_name":null,"assignee_id":"713"},{"patent_id":"8202604","assignee_last_name":null,"assignee_id":"5144"},{"patent_id":"8202605","assignee_last_name":null,"assignee_id":"3363"},{"patent_id":"8202606","assignee_last_name":null,"assignee_id":"668"},{"patent_id":"8202607","assignee_last_name":null,"assignee_id":"5607"},{"patent_id":"8202608","assignee_last_name":null,"assignee_id":null},{"patent_id":"8202609","assignee_last_name":null,"assignee_id":"5485"}]}', true);
         $this->assertEquals($expected, $results);
     }
 
@@ -42,7 +41,6 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
             'patent_id' => $PATENT_FIELD_SPECS['patent_id'],
             'patent_type' => $PATENT_FIELD_SPECS['patent_type'],
             'patent_number' => $PATENT_FIELD_SPECS['patent_number'],
-            'patent_country' => $PATENT_FIELD_SPECS['patent_country'],
             'patent_title' => $PATENT_FIELD_SPECS['patent_title'],
             'inventor_last_name' => $PATENT_FIELD_SPECS['inventor_last_name'],
             'assignee_last_name' => $PATENT_FIELD_SPECS['assignee_last_name']
@@ -57,13 +55,12 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $whereClause = "patent.id like '86%'";
+        $whereClause = "patent.patent_number like '82%'";
         $whereFieldsUsed = array('patent_id');
         $selectFieldsSpecs = array(
             'patent_id' => $PATENT_FIELD_SPECS['patent_id'],
             'patent_type' => $PATENT_FIELD_SPECS['patent_type'],
             'patent_number' => $PATENT_FIELD_SPECS['patent_number'],
-            'patent_country' => $PATENT_FIELD_SPECS['patent_country'],
             'patent_title' => $PATENT_FIELD_SPECS['patent_title'],
             'inventor_last_name' => $PATENT_FIELD_SPECS['inventor_last_name'],
             'assignee_last_name' => $PATENT_FIELD_SPECS['assignee_last_name']
@@ -89,21 +86,20 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $whereClause = "patent.id like '867760%'";
+        $whereClause = "patent.patent_number like '820260%'";
         $whereFieldsUsed = array('patent_id');
         $sort = array(array('patent_title'=>'asc'));
         $selectFieldsSpecs = array(
             'patent_id' => $PATENT_FIELD_SPECS['patent_id'],
             'patent_type' => $PATENT_FIELD_SPECS['patent_type'],
             'patent_number' => $PATENT_FIELD_SPECS['patent_number'],
-            'patent_country' => $PATENT_FIELD_SPECS['patent_country'],
             'patent_title' => $PATENT_FIELD_SPECS['patent_title'],
             'inventor_last_name' => $PATENT_FIELD_SPECS['inventor_last_name'],
             'assignee_last_name' => $PATENT_FIELD_SPECS['assignee_last_name']
         );
         $dbQuery = new DatabaseQuery();
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, $selectFieldsSpecs, $sort);
-        $expected = json_decode('{"patents":[{"patent_id":"8677600","patent_type":"utility","patent_number":"8677600","patent_country":"US","patent_title":"Methods of dispensing and making porous material with growth enhancing element"},{"patent_id":"8677601","patent_type":"utility","patent_number":"8677601","patent_country":"US","patent_title":"Prosthetic heart valve, prosthetic heart valve assembly and method for making same"},{"patent_id":"8677602","patent_type":"utility","patent_number":"8677602","patent_country":"US","patent_title":"Method of making a flexible device shaft with angled spiral wrap"},{"patent_id":"8677603","patent_type":"utility","patent_number":"8677603","patent_country":"US","patent_title":"Drop maker for sap collection system"},{"patent_id":"8677604","patent_type":"utility","patent_number":"8677604","patent_country":"US","patent_title":"Method of manufacturing boundary acoustic wave device"},{"patent_id":"8677605","patent_type":"utility","patent_number":"8677605","patent_country":"US","patent_title":"Method for manufacturing sensor unit"},{"patent_id":"8677606","patent_type":"utility","patent_number":"8677606","patent_country":"US","patent_title":"Method for assembling a rotor with permanent magnets"},{"patent_id":"8677607","patent_type":"utility","patent_number":"8677607","patent_country":"US","patent_title":"Method of manufacturing magnetoresistive element"},{"patent_id":"8677608","patent_type":"utility","patent_number":"8677608","patent_country":"US","patent_title":"Method for manufacturing iron core and apparatus for manufacturing iron core"},{"patent_id":"8677609","patent_type":"utility","patent_number":"8677609","patent_country":"US","patent_title":"Method for producing a circuit-breaker pole part"}],"inventors":[{"patent_id":"8677600","inventor_last_name":"Jr.","inventor_id":"8677600-1"},{"patent_id":"8677600","inventor_last_name":"Singer","inventor_id":"8677600-2"},{"patent_id":"8677601","inventor_last_name":"Millwee","inventor_id":"8677601-1"},{"patent_id":"8677601","inventor_last_name":"Shay","inventor_id":"8677601-2"},{"patent_id":"8677601","inventor_last_name":"Majkrzak","inventor_id":"8677601-3"},{"patent_id":"8677601","inventor_last_name":"Young","inventor_id":"8677601-4"},{"patent_id":"8677601","inventor_last_name":"Kupumbati","inventor_id":"8677601-5"},{"patent_id":"8677602","inventor_last_name":"Dayton","inventor_id":"8677602-1"},{"patent_id":"8677602","inventor_last_name":"Boutillette","inventor_id":"8677602-2"},{"patent_id":"8677603","inventor_last_name":"Reynolds","inventor_id":"8677603-1"},{"patent_id":"8677604","inventor_last_name":"Kando","inventor_id":"8677604-1"},{"patent_id":"8677605","inventor_last_name":"Lim","inventor_id":"8677605-1"},{"patent_id":"8677605","inventor_last_name":"Goh","inventor_id":"8677605-2"},{"patent_id":"8677606","inventor_last_name":"Desiron","inventor_id":"8677606-1"},{"patent_id":"8677607","inventor_last_name":"Yanagisawa","inventor_id":"8677607-1"},{"patent_id":"8677607","inventor_last_name":"Hirose","inventor_id":"8677607-2"},{"patent_id":"8677607","inventor_last_name":"Saruki","inventor_id":"8677607-3"},{"patent_id":"8677608","inventor_last_name":"Akita","inventor_id":"8677608-1"},{"patent_id":"8677608","inventor_last_name":"Furusawa","inventor_id":"8677608-2"},{"patent_id":"8677609","inventor_last_name":"Shang","inventor_id":"8677609-1"}],"assignees":[{"patent_id":"8677600","assignee_last_name":"","assignee_id":"ad87f29b5aa3d8c0bcbf86bc0ed69b8d"},{"patent_id":"8677601","assignee_last_name":"","assignee_id":"ba63daad7af208753ccc1e7383c11281"},{"patent_id":"8677602","assignee_last_name":"","assignee_id":"60ab17c614bc80bfbddd5b3c4bae3ea3"},{"patent_id":"8677603","assignee_last_name":null,"assignee_id":null},{"patent_id":"8677604","assignee_last_name":"","assignee_id":"545147830daddf3dbcc15397ee38fc31"},{"patent_id":"8677605","assignee_last_name":"","assignee_id":"dfb22487d8089f003b2b092aeec21823"},{"patent_id":"8677606","assignee_last_name":"","assignee_id":"02b31f7d03b24c5c86e6d365d6b17133"},{"patent_id":"8677607","assignee_last_name":"","assignee_id":"22817f7a619b8a60fd4aec1a5166ddc6"},{"patent_id":"8677608","assignee_last_name":"","assignee_id":"50b9f7425f3c324d06c53ca449075086"},{"patent_id":"8677609","assignee_last_name":"","assignee_id":"847ef656a074289a8fbee02b3d7c6e73"}]}', true);
+        $expected = json_decode('{"patents":[{"patent_id":"8202600","patent_type":"utility","patent_number":"8202600","patent_title":"Artificial leather, base to be used in the leather, and processes for production of both"},{"patent_id":"8202601","patent_type":"utility","patent_number":"8202601","patent_title":"Honeycomb structure and manufacturing method of the honeycomb structure"},{"patent_id":"8202602","patent_type":"utility","patent_number":"8202602","patent_title":"Honeycomb segment with spacer and honeycomb structure"},{"patent_id":"8202603","patent_type":"utility","patent_number":"8202603","patent_title":"Elastic sheet structure"},{"patent_id":"8202604","patent_type":"utility","patent_number":"8202604","patent_title":"Pneumatic tire and method of production of same"},{"patent_id":"8202605","patent_type":"utility","patent_number":"8202605","patent_title":"Absorbent paper product having non-embossed surface features"},{"patent_id":"8202606","patent_type":"utility","patent_number":"8202606","patent_title":"Insulation structure for resistor grids"},{"patent_id":"8202607","patent_type":"utility","patent_number":"8202607","patent_title":"Nano diamond containing intermediate transfer members"},{"patent_id":"8202608","patent_type":"utility","patent_number":"8202608","patent_title":"Electret composition and method for printing"},{"patent_id":"8202609","patent_type":"utility","patent_number":"8202609","patent_title":"Absorbent material with wet strength containing wax"}],"inventors":[{"patent_id":"8202600","inventor_last_name":"Okada","inventor_id":"15417"},{"patent_id":"8202600","inventor_last_name":"Ichihashi","inventor_id":"15418"},{"patent_id":"8202601","inventor_last_name":"Ohno","inventor_id":"15419"},{"patent_id":"8202601","inventor_last_name":"Kunieda","inventor_id":"15420"},{"patent_id":"8202601","inventor_last_name":"Ido","inventor_id":"15421"},{"patent_id":"8202602","inventor_last_name":"Shindo","inventor_id":"15422"},{"patent_id":"8202603","inventor_last_name":"Chang","inventor_id":"15423"},{"patent_id":"8202604","inventor_last_name":"Tomoi","inventor_id":"15424"},{"patent_id":"8202605","inventor_last_name":"Ostendorf","inventor_id":"15425"},{"patent_id":"8202605","inventor_last_name":"Spitzer","inventor_id":"15426"},{"patent_id":"8202606","inventor_last_name":"Krahn","inventor_id":"15427"},{"patent_id":"8202607","inventor_last_name":"Wu","inventor_id":"15428"},{"patent_id":"8202608","inventor_last_name":"Senft","inventor_id":"15429"},{"patent_id":"8202608","inventor_last_name":"Thayer","inventor_id":"15430"},{"patent_id":"8202609","inventor_last_name":"Ducker","inventor_id":"15431"},{"patent_id":"8202609","inventor_last_name":"Harlen","inventor_id":"15432"},{"patent_id":"8202609","inventor_last_name":"Varney","inventor_id":"15433"}],"assignees":[{"patent_id":"8202600","assignee_last_name":null,"assignee_id":"276"},{"patent_id":"8202601","assignee_last_name":null,"assignee_id":"4228"},{"patent_id":"8202602","assignee_last_name":null,"assignee_id":"5988"},{"patent_id":"8202603","assignee_last_name":null,"assignee_id":"713"},{"patent_id":"8202604","assignee_last_name":null,"assignee_id":"5144"},{"patent_id":"8202605","assignee_last_name":null,"assignee_id":"3363"},{"patent_id":"8202606","assignee_last_name":null,"assignee_id":"668"},{"patent_id":"8202607","assignee_last_name":null,"assignee_id":"5607"},{"patent_id":"8202608","assignee_last_name":null,"assignee_id":null},{"patent_id":"8202609","assignee_last_name":null,"assignee_id":"5485"}]}', true);
         $this->assertEquals($expected, $results);
     }
 
@@ -113,20 +109,37 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $whereClause = "patent.id like '867760%'";
+        $whereClause = "patent.patent_number like '820260%'";
         $whereFieldsUsed = array('patent_id');
         $sort = array(array('inventor_id'=>'asc'));
         $selectFieldsSpecs = array(
             'patent_id' => $PATENT_FIELD_SPECS['patent_id'],
             'patent_type' => $PATENT_FIELD_SPECS['patent_type'],
             'patent_number' => $PATENT_FIELD_SPECS['patent_number'],
-            'patent_country' => $PATENT_FIELD_SPECS['patent_country'],
             'patent_title' => $PATENT_FIELD_SPECS['patent_title'],
             'inventor_last_name' => $PATENT_FIELD_SPECS['inventor_last_name'],
             'assignee_last_name' => $PATENT_FIELD_SPECS['assignee_last_name']
         );
         $dbQuery = new DatabaseQuery();
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, $selectFieldsSpecs, $sort);
+    }
+
+    public  function testQueryDatabaseAllFields()
+    {
+        global $PATENT_ENTITY_SPECS;
+        global $PATENT_FIELD_SPECS;
+        $selectFieldSpecs = $PATENT_FIELD_SPECS;
+        $dbQuery = new DatabaseQuery();
+        $memUsed = memory_get_usage();
+        $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, null, array(), $selectFieldSpecs, null);
+        $memUsed = memory_get_usage();
+        if (count($results['patents']) < 25) {
+            $this->assertEquals($dbQuery->getTotalFound(), count($results['patents']));
+        }
+        else {
+            $this->assertEquals(25, count($results['patents']));
+            $this->assertGreaterThanOrEqual(25, $dbQuery->getTotalFound());
+        }
     }
 
     public  function testQueryDatabaseAllFieldsMaxPageSize()

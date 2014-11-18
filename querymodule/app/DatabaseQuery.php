@@ -53,7 +53,7 @@ class DatabaseQuery
         $sortString = $this->buildSortString($sortParam);
 
         // Get the QueryDefId for this where clause
-        $stringToHash = "key::" . $this->entitySpecs[0]['keyId'] . "::query::$whereClause::sort::$sortString";
+        $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause::sort->$sortString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%u', $whereHash);
 
@@ -69,13 +69,15 @@ class DatabaseQuery
             // Get all the primary entity IDs and insert into the cached results table
             $insertStatement = 'PVSupport.QueryResults (QueryDefId, Sequence, EntityId)';
             $selectPrimaryEntityIdsString =
-                "distinct $queryDefId, @row_number:=@row_number+1 as sequence, " .
-                getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . " as " . $this->entityGroupVars[0]['keyId'];
+                "distinct $queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
+            if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = '';
+            if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
             $this->runInsertSelect($insertStatement,
                 $selectPrimaryEntityIdsString,
-                $from . ',(select @row_number:=0) temprownum',
-                $whereClause,
-                $sortString);
+                '(SELECT distinct @order_num:=@order_num+1, '. getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
+                    $from . ', (select @order_num:=0) tempordernum ' . $whereInsert . $sortInsert . ') XX, (select @row_number:=0) temprownum',
+                null,
+                '@order_num');
         }
 
         // First find out how many there are in the complete set.
@@ -280,7 +282,7 @@ class DatabaseQuery
                 if (!$this->{$group['hasId']})
                     $this->selectFieldSpecs[$group['keyId']] = $this->fieldSpecs[$group['keyId']];
             } else {
-                if ($this->{$group['hasFields']} and !$this->{$group['hasId']})
+                if ($this->{$group['hasFields']} and !$this->{$group['hasId']} and array_key_exists($group['keyId'],$this->fieldSpecs))
                     $this->selectFieldSpecs[$group['keyId']] = $this->fieldSpecs[$group['keyId']];
             }
         }
