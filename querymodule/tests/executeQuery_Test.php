@@ -14,8 +14,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"_or":[{"patent_number":"8202600"},{"patent_number":"8202601"}]}';
-        $expected = '{"patents":[{"patent_number":"8202600"},{"patent_number":"8202601"}],"count":2,"total_found":2}';
+        $queryString = '{"_or":[{"patent_number":"8407900"},{"patent_number":"8407901"}]}';
+        $expected = '{"patents":[{"patent_number":"8407900"},{"patent_number":"8407901"}],"count":2,"total_found":2}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -26,9 +26,9 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"_or":[{"patent_number":"8202600"},{"patent_number":"8202601"}]}';
+        $queryString = '{"_or":[{"patent_number":"8407900"},{"patent_number":"8407901"}]}';
         $fieldList = array("patent_id", "patent_type", "patent_number", "patent_title", "inventor_last_name", "assignee_last_name");
-        $expected = '{"patents":[{"patent_id":"8202600","patent_type":"utility","patent_number":"8202600","patent_title":"Artificial leather, base to be used in the leather, and processes for production of both","inventors":[{"inventor_last_name":"Okada"},{"inventor_last_name":"Ichihashi"}],"assignees":[{"assignee_last_name":null}]},{"patent_id":"8202601","patent_type":"utility","patent_number":"8202601","patent_title":"Honeycomb structure and manufacturing method of the honeycomb structure","inventors":[{"inventor_last_name":"Ohno"},{"inventor_last_name":"Kunieda"},{"inventor_last_name":"Ido"}],"assignees":[{"assignee_last_name":null}]}],"count":2,"total_found":2}';
+        $expected = '{"patents":[{"patent_id":"8407900","patent_type":"utility","patent_number":"8407900","patent_title":"Shaving cartridge having mostly elastomeric wings","inventors":[{"inventor_last_name":"Johnson"}],"assignees":[{"assignee_last_name":null}]},{"patent_id":"8407901","patent_type":"utility","patent_number":"8407901","patent_title":"Drive mechanism for a reciprocating tool","inventors":[{"inventor_last_name":"Oberheim"}],"assignees":[{"assignee_last_name":null}]}],"count":2,"total_found":2}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, $fieldList);
         $encoded = json_encode($results);
@@ -52,8 +52,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         //TODO This test will fail when run against a different database
-        $queryString = '{"_text_phrase":{"patent_title":"cement composite"}}';
-        $expected = '{"patents":[{"patent_title":"Treatment for cement composite articles"}],"count":1,"total_found":1}';
+        $queryString = '{"_text_phrase":{"patent_title":"lead wire"}}';
+        $expected = '{"patents":[{"patent_title":"Protective structure for terminal lead wire of coil"},{"patent_title":"Fused lead wire for ballast protection"},{"patent_title":"Lead wire implanting apparatus"},{"patent_title":"Spindle motor having connecting mechanism connecting lead wire and circuit board, and storage disk drive having the same"},{"patent_title":"Surface heating system and method using heating cables and a single feed cold lead wire"}],"count":5,"total_found":5}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -65,8 +65,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         //TODO This test will fail when run against a different database
-        $queryString = '{"_text_any":{"patent_title":"cement composite"}}';
-        $expected = '{"patents":[{"patent_title":"Composite building panel"},{"patent_title":"Composite hollow fiber type separation membranes processes for the preparation thereof and their use"},{"patent_title":"Method of making a composite panel of a foam material"},{"patent_title":"Method for making a composite component using a transverse tape"},{"patent_title":"Preparation of a silicone rubber-polyester composite products"},{"patent_title":"Composite membrane"},{"patent_title":"Composite film"},{"patent_title":"Composite polymer\/desiccant coatings for IC encapsulation"},{"patent_title":"Composite materials having improved fracture toughness"},{"patent_title":"Composite sign post"},{"patent_title":"Light metallic composite material and method for producing thereof"},{"patent_title":"Process of producing a composite membrane"},{"patent_title":"High strength cured cement article and process for manufacturing the same"},{"patent_title":"Unsaturated copolymer resin composite"},{"patent_title":"Composite vacuum evaporation coil"},{"patent_title":"Polymer composite bat"},{"patent_title":"Composite bone marrow graft material with method and kit"},{"patent_title":"Concrete comprising organic fibres dispersed in a cement matrix, concrete cement matrix and premixes"},{"patent_title":"Composite membrane and method for making the same"},{"patent_title":"Production of composite mouldings"},{"patent_title":"Method and apparatus for making composite parts"},{"patent_title":"Curable liquid sealant used as vacuum bag in composite manufacturing"},{"patent_title":"Method and apparatus for manufacturing ceramic-based composite member"},{"patent_title":"Method for fabricating ceramic matrix composite"},{"patent_title":"Light scattering sheet, light scattering composite sheet, and liquid crystal display"}],"count":25,"total_found":79}';
+        $queryString = '{"_text_any":{"patent_title":"lead wire"}}';
+        $expected = '{"patents":[{"patent_title":"Tandem projectiles connected by a wire"},{"patent_title":"Wire saw"},{"patent_title":"Method of bonding gold or gold alloy wire to lead tin solder"},{"patent_title":"Wire harness mounting structure for motor vehicle door"},{"patent_title":"Lead-in wire for compact fluorescent lamps"},{"patent_title":"Electrical devices command system, single wire bus and smart dual controller arrangement therefor"},{"patent_title":"Apparatus for cutting a lead"},{"patent_title":"Method of forming lead terminals on aluminum or aluminum alloy cables"},{"patent_title":"Method of controlled rod or wire rolling of alloy steel"},{"patent_title":"Heat wire airflow meter"},{"patent_title":"Bonding wire ball formation"},{"patent_title":"Method and apparatus for preparing a bonding wire"},{"patent_title":"Wire pulling guide"},{"patent_title":"Secondary lead production"},{"patent_title":"Lead-oxide paste mix for battery grids and method of preparation"},{"patent_title":"Lead frame"},{"patent_title":"Wire harness apparatus for instrument panel"},{"patent_title":"Method and apparatus for optical fiber\/wire payout simulation"},{"patent_title":"Hybrid lead trim die"},{"patent_title":"Pacemaker wire dressing"},{"patent_title":"Method and apparatus for forming wire mesh cages"},{"patent_title":"Wire connect and disconnect indicator"},{"patent_title":"Method for the refining of lead"},{"patent_title":"Apparatus and method for the production of oxides of lead"},{"patent_title":"Multiple lead probe for integrated circuits in wafer form"}],"count":25,"total_found":588}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -78,8 +78,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         //TODO This test will fail when run against a different database
-        $queryString = '{"_text_all":{"patent_title":"cement composite"}}';
-        $expected = '{"patents":[{"patent_title":"Treatment for cement composite articles"}],"count":1,"total_found":1}';
+        $queryString = '{"_text_all":{"patent_title":"lead wire"}}';
+        $expected = '{"patents":[{"patent_title":"Method of bonding gold or gold alloy wire to lead tin solder"},{"patent_title":"Lead-in wire for compact fluorescent lamps"},{"patent_title":"Protective structure for terminal lead wire of coil"},{"patent_title":"Fused lead wire for ballast protection"},{"patent_title":"Lead wire implanting apparatus"},{"patent_title":"Sealing structure for wire lead-out hole"},{"patent_title":"Spindle motor having connecting mechanism connecting lead wire and circuit board, and storage disk drive having the same"},{"patent_title":"Stimulation and sensing lead with non-coiled wire construction"},{"patent_title":"Surface heating system and method using heating cables and a single feed cold lead wire"}],"count":9,"total_found":9}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -90,7 +90,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"patent_number":"8202600"}';
+        $queryString = '{"patent_number":"8407900"}';
         $fieldList = array("ipc_main_group","appcit_category","inventor_last_name","cited_patent_category","uspc_mainclass_id","uspc_subclass_id","assignee_organization");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, $fieldList);
@@ -114,7 +114,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"patent_number":"8202600"}';
+        $queryString = '{"patent_number":"8407900"}';
         $fieldList = array_keys($PATENT_FIELD_SPECS);
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, $fieldList);
@@ -142,8 +142,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"_begins":{"patent_number":"820260"}}';
-        $expected = '{"patents":[{"patent_number":"8202600"},{"patent_number":"8202601"},{"patent_number":"8202602"},{"patent_number":"8202603"},{"patent_number":"8202604"},{"patent_number":"8202605"},{"patent_number":"8202606"},{"patent_number":"8202607"},{"patent_number":"8202608"},{"patent_number":"8202609"}],"count":10,"total_found":10}';
+        $queryString = '{"_begins":{"patent_number":"840790"}}';
+        $expected = '{"patents":[{"patent_number":"8407900"},{"patent_number":"8407901"},{"patent_number":"8407902"},{"patent_number":"8407903"},{"patent_number":"8407904"},{"patent_number":"8407905"},{"patent_number":"8407906"},{"patent_number":"8407907"},{"patent_number":"8407908"},{"patent_number":"8407909"}],"count":10,"total_found":10}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -191,7 +191,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $INVENTOR_ENTITY_SPECS;
         global $INVENTOR_FIELD_SPECS;
-        $queryString = '{"patent_number":"8677523"}';
+        $queryString = '{"patent_number":"8407900"}';
         $fieldList = array("inventor_id", "inventor_last_name", "patent_number");
         $expected = '{"inventors":[{"inventor_id":"8677523-1","inventor_last_name":"Tsukada","patents":[{"patent_number":"8677523"},{"patent_number":"8677524"}]},{"inventor_id":"8677523-2","inventor_last_name":"Kume","patents":[{"patent_number":"8677523"},{"patent_number":"8677524"}]},{"inventor_id":"8677523-3","inventor_last_name":"Kawakami","patents":[{"patent_number":"8677523"},{"patent_number":"8677524"}]},{"inventor_id":"8677523-4","inventor_last_name":"Nakamura","patents":[{"patent_number":"8677523"},{"patent_number":"8677524"}]},{"inventor_id":"8677523-5","inventor_last_name":"Ueda","patents":[{"patent_number":"8677523"}]}],"count":5,"total_found":5}';
         $decoded = json_decode($queryString, true);
