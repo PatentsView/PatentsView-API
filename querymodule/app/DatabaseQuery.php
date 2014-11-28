@@ -74,8 +74,8 @@ class DatabaseQuery
             if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
             $this->runInsertSelect($insertStatement,
                 $selectPrimaryEntityIdsString,
-                '(SELECT distinct @order_num:=@order_num+1, '. getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
-                    $from . ', (select @order_num:=0) tempordernum ' . $whereInsert . $sortInsert . ') XX, (select @row_number:=0) temprownum',
+                '(SELECT distinct '. getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
+                    $from . ' ' . $whereInsert . $sortInsert . ') XX, (select @row_number:=0) temprownum',
                 null,
                 '@order_num');
         }
