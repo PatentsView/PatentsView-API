@@ -210,13 +210,13 @@ function FormatResults($formatParam, $results)
 {
     if ($formatParam == 'xml') {
         $xml = new SimpleXMLElement('<root/>');
-        $results = array_to_xml($results, $xml)->asXML();
+        $results = array_to_xml($results, $xml, 'XXX')->asXML();
         return $results;
     } else
         $results = json_encode($results);return $results;
 }
 
-function array_to_xml(array $arr, SimpleXMLElement $xml) {
+function array_to_xml(array $arr, SimpleXMLElement $xml, $parentTag) {
     foreach ($arr as $k => $v) {
 
         $attrArr = array();
@@ -231,7 +231,8 @@ function array_to_xml(array $arr, SimpleXMLElement $xml) {
 
         if (is_array($v)) {
             if (is_numeric($k)) {
-                array_to_xml($v, $xml);
+                $child = $xml->addChild(substr($parentTag,0,-1)); #Stripping last character which is expected to be an 's'.
+                array_to_xml($v, $child, $tag);
             } else {
                 $child = $xml->addChild($tag);
                 if (isset($attrArr)) {
@@ -239,7 +240,7 @@ function array_to_xml(array $arr, SimpleXMLElement $xml) {
                         $child->addAttribute($attrArrV[0],$attrArrV[1]);
                     }
                 }
-                array_to_xml($v, $child);
+                array_to_xml($v, $child, $tag);
             }
         } else {
             $child = $xml->addChild($tag, $v);
