@@ -10,11 +10,10 @@ $app->get(
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam) = CheckGetParameters($app);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
 
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = json_encode($results);
-
+        $results = FormatResults($formatParam, $results);
         $app->response->setBody($results);
     }
 );
@@ -26,11 +25,10 @@ $app->post(
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam) = CheckPostParameters($app);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
 
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = json_encode($results);
-
+        $results = FormatResults($formatParam, $results);
         $app->response->setBody($results);
     }
 );
@@ -41,11 +39,10 @@ $app->get(
         global $INVENTOR_ENTITY_SPECS;
         global $INVENTOR_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam) = CheckGetParameters($app);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
 
         $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = json_encode($results);
-
+        $results = FormatResults($formatParam, $results);
         $app->response->setBody($results);
     }
 );
@@ -57,11 +54,10 @@ $app->post(
         global $INVENTOR_ENTITY_SPECS;
         global $INVENTOR_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam) = CheckPostParameters($app);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
 
         $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = json_encode($results);
-
+        $results = FormatResults($formatParam, $results);
         $app->response->setBody($results);
     }
 );
@@ -73,11 +69,10 @@ $app->get(
         global $ASSIGNEE_ENTITY_SPECS;
         global $ASSIGNEE_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam) = CheckGetParameters($app);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
 
         $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = json_encode($results);
-
+        $results = FormatResults($formatParam, $results);
         $app->response->setBody($results);
     }
 );
@@ -89,11 +84,10 @@ $app->post(
         global $ASSIGNEE_ENTITY_SPECS;
         global $ASSIGNEE_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam) = CheckPostParameters($app);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
 
         $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = json_encode($results);
-
+        $results = FormatResults($formatParam, $results);
         $app->response->setBody($results);
     }
 );
@@ -142,17 +136,22 @@ function CheckGetParameters($app)
         }
     }
 
+    $formatParam = 'json';
     // Look for a "format" parameter; it may not exist.
     if ($app->request->get('format') != null) {
-        if ($app->request->get('format') == 'json')
+        if ($app->request->get('format') == 'json') {
+            $formatParam = 'json';
             $app->contentType('application/json; charset=utf-8');
-        elseif ($app->request->get('format') == 'xml')
+        }
+        elseif ($app->request->get('format') == 'xml') {
+            $formatParam = 'xml';
             $app->contentType('application/xml; charset=utf-8');
+        }
         else
             ErrorHandler::getHandler()->sendError(400, "Invalid option for 'format' parameter: use either 'json' or 'xml'.", $app->request->get());
     }
 
-    return array($queryParam, $fieldsParam, $sortParam, $optionsParam);
+    return array($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam);
 }
 
 function CheckPostParameters($app)
@@ -189,15 +188,68 @@ function CheckPostParameters($app)
     if (array_key_exists('o', $bodyJSON))
         $optionsParam = $bodyJSON['o'];
 
+    $formatParam = 'json';
     // Look for a "format" parameter; it may not exist.
     if (array_key_exists('format', $bodyJSON)) {
-        if ($bodyJSON['format'] == 'json')
+        if ($bodyJSON['format'] == 'json') {
+            $formatParam = 'json';
             $app->contentType('application/json; charset=utf-8');
-        elseif ($bodyJSON['format'] == 'xml')
+        }
+        elseif ($bodyJSON['format'] == 'xml') {
+            $formatParam = 'xml';
             $app->contentType('application/xml; charset=utf-8');
+        }
         else
             ErrorHandler::getHandler()->sendError(400, "Invalid option for 'format' parameter: use either 'json' or 'xml'.", $app->request->get());
     }
 
-    return array($queryParam, $fieldsParam, $sortParam, $optionsParam);
+    return array($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam);
+}
+
+function FormatResults($formatParam, $results)
+{
+    if ($formatParam == 'xml') {
+        $xml = new SimpleXMLElement('<root/>');
+        $results = array_to_xml($results, $xml)->asXML();
+        return $results;
+    } else
+        $results = json_encode($results);return $results;
+}
+
+function array_to_xml(array $arr, SimpleXMLElement $xml) {
+    foreach ($arr as $k => $v) {
+
+        $attrArr = array();
+        $kArray = explode(' ',$k);
+        $tag = array_shift($kArray);
+
+        if (count($kArray) > 0) {
+            foreach($kArray as $attrValue) {
+                $attrArr[] = explode('=',$attrValue);
+            }
+        }
+
+        if (is_array($v)) {
+            if (is_numeric($k)) {
+                array_to_xml($v, $xml);
+            } else {
+                $child = $xml->addChild($tag);
+                if (isset($attrArr)) {
+                    foreach($attrArr as $attrArrV) {
+                        $child->addAttribute($attrArrV[0],$attrArrV[1]);
+                    }
+                }
+                array_to_xml($v, $child);
+            }
+        } else {
+            $child = $xml->addChild($tag, $v);
+            if (isset($attrArr)) {
+                foreach($attrArr as $attrArrV) {
+                    $child->addAttribute($attrArrV[0],$attrArrV[1]);
+                }
+            }
+        }
+    }
+
+    return $xml;
 }
