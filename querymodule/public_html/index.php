@@ -13,6 +13,8 @@ $app = new \Slim\Slim(array(
     'mode' => $config::MODE
 ));
 
+$app->contentType('application/json; charset=utf-8');
+
 // Only invoked if mode is "production"
 $app->configureMode('production', function () use ($app) {
     $app->config(array(
