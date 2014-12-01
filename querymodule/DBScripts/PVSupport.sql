@@ -2,11 +2,11 @@
 -- Host:                         
 -- Server version:               5.6.21-log - MySQL Community Server (GPL)
 -- Server OS:                    Linux
--- HeidiSQL Version:             9.1.0.4867
+-- HeidiSQL Version:             8.3.0.4694
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS `QueryResults` (
   `QueryDefId` bigint(20) unsigned NOT NULL,
   `Sequence` int(11) unsigned NOT NULL,
   `EntityId` varchar(50) NOT NULL,
-  KEY `QueryDefId_Sequence` (`QueryDefId`,`Sequence`)
+  KEY `QueryDefId_Sequence` (`QueryDefId`,`Sequence`),
+  KEY `EntityId` (`EntityId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
