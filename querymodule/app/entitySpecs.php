@@ -16,10 +16,9 @@ $PATENT_ENTITY_SPECS = array(
     array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_id', 'table'=>'assignee', 'join'=>'left outer join patent_assignee on patent.patent_id=patent_assignee.patent_id left outer join assignee ON patent_assignee.assignee_id=assignee.assignee_id left outer JOIN assignee_location on assignee.assignee_id=assignee_location.assignee_id'),
     array('entity_name'=>'application', 'group_name'=>'applications', 'keyId'=>'app_id', 'table'=>'application', 'join'=>'left outer join application on patent.patent_id=application.patent_id'),
     array('entity_name'=>'ipc', 'group_name'=>'IPCs', 'keyId'=>'', 'table'=>'ipcr', 'join'=>'left outer join ipcr on patent.patent_id=ipcr.patent_id'),
-    array('entity_name'=>'applicationcitation', 'group_name'=>'application_citations', 'keyId'=>'', 'table'=>'usapplicationcitation', 'join'=>'left outer join usapplicationcitation on patent.patent_id=usapplicationcitation.patent_id left outer join application appcit_app on usapplicationcitation.application_id=appcit_app.application_id'),
-    array('entity_name'=>'cited_patent', 'group_name'=>'cited_patents', 'keyId'=>'', 'table'=>'uspatentcitation', 'join'=>'left outer join uspatentcitation on patent.patent_id=uspatentcitation.citing_patent_id'),
-    //Todo: Figure out difference between uspatentcitation and uscitedpatent and if both are needed.
-    array('entity_name'=>'citedby_patent', 'group_name'=>'citedby_patents', 'keyId'=>'', 'table'=>'uscitedpatent', 'join'=>'left outer join uscitedpatent as uscitedpatent on patent.patent_id=uscitedpatent.cited_patent_id'),
+    array('entity_name'=>'applicationcitation', 'group_name'=>'application_citations', 'keyId'=>'', 'table'=>'usapplicationcitation', 'join'=>'left outer join usapplicationcitation on patent.patent_id=usapplicationcitation.citing_patent_id left outer join application appcit_app on usapplicationcitation.cited_application_id=appcit_app.application_id'),
+    array('entity_name'=>'cited_patent', 'group_name'=>'cited_patents', 'keyId'=>'', 'table'=>'patentcit_fromciting_tocited', 'join'=>'left outer join uspatentcitation as patentcit_fromciting_tocited on patent.patent_id=patentcit_fromciting_tocited.citing_patent_id left outer join patent as citedpatent on patentcit_fromciting_tocited.cited_patent_id=citedpatent.patent_id'),
+    array('entity_name'=>'citedby_patent', 'group_name'=>'citedby_patents', 'keyId'=>'', 'table'=>'patentcit_fromcited_tociting', 'join'=>'left outer join uspatentcitation as patentcit_fromcited_tociting on patent.patent_id=patentcit_fromcited_tociting.cited_patent_id left outer join patent as citingpatent on patentcit_fromcited_tociting.citing_patent_id=citingpatent.patent_id'),
     //Todo: Do we need both the uspc and uspc_current?
     array('entity_name'=>'uspc', 'group_name'=>'uspcs', 'keyId'=>'uspc_id', 'table'=>'uspc_current', 'join'=>'left outer join uspc_current on patent.patent_id=uspc_current.patent_id')
 );
@@ -38,9 +37,6 @@ $PATENT_FIELD_SPECS = array
     'uspc_id' => array('entity_name'=>'uspc', 'table' => 'uspc_current', 'field_name' => 'id', 'datatype' => 'string'),
 
 
-    // If you need to replace these entries, you can copy paste from a table in MSWord and then run this regex replace:
-    // ^(.+)\t(.+)\t(.+)$
-    // \t'$1' => array('table' => '$2', 'field_name' => '$3', 'datatype' => 'string'),
     'app_country' => array('entity_name'=>'application', 'table' => 'application', 'field_name' => 'country', 'datatype' => 'string'),
     'app_date' => array('entity_name'=>'application', 'table' => 'application', 'field_name' => 'date', 'datatype' => 'date'),
     'app_number' => array('entity_name'=>'application', 'table' => 'application', 'field_name' => 'number', 'datatype' => 'string'),
@@ -67,17 +63,17 @@ $PATENT_FIELD_SPECS = array
     'assignee_state' => array('entity_name'=>'assignee', 'table' => 'assignee_location', 'field_name' => 'state', 'datatype' => 'string'),
     'assignee_type' => array('entity_name'=>'assignee', 'table' => 'assignee', 'field_name' => 'type', 'datatype' => 'string'),
     'assignee_years_active' => array('entity_name'=>'assignee', 'table' => 'assignee', 'field_name' => 'years_active', 'datatype' => 'int'),
-    'citedby_patent_category' => array('entity_name'=>'citedby_patent', 'table' => 'uscitedpatent', 'field_name' => 'category', 'datatype' => 'string'),
-    'citedby_patent_date' => array('entity_name'=>'citedby_patent', 'table' => 'uscitedpatent', 'field_name' => 'date', 'datatype' => 'date'),
-    'citedby_patent_kind' => array('entity_name'=>'citedby_patent', 'table' => 'uscitedpatent', 'field_name' => 'kind', 'datatype' => 'string'),
-    'citedby_patent_number' => array('entity_name'=>'citedby_patent', 'table' => 'uscitedpatent', 'field_name' => 'citing_patent_id', 'datatype' => 'string'),
-    'citedby_patent_title' => array('entity_name'=>'citedby_patent', 'table' => 'uscitedpatent', 'field_name' => 'title', 'datatype' => 'string'),
-    'cited_patent_category' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'category', 'datatype' => 'string'),
-    'cited_patent_date' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'date', 'datatype' => 'date'),
-    'cited_patent_kind' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'kind', 'datatype' => 'string'),
-    'cited_patent_number' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'cited_patent_id', 'datatype' => 'string'),
-    'cited_patent_sequence' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'sequence', 'datatype' => 'int'),
-    'cited_patent_title' => array('entity_name'=>'cited_patent', 'table' => 'uspatentcitation', 'field_name' => 'title', 'datatype' => 'string'),
+    'citedby_patent_category' => array('entity_name'=>'citedby_patent', 'table' => 'patentcit_fromcited_tociting', 'field_name' => 'category', 'datatype' => 'string'),
+    'citedby_patent_date' => array('entity_name'=>'citedby_patent', 'table' => 'citingpatent', 'field_name' => 'date', 'datatype' => 'date'),
+    'citedby_patent_kind' => array('entity_name'=>'citedby_patent', 'table' => 'citingpatent', 'field_name' => 'kind', 'datatype' => 'string'),
+    'citedby_patent_number' => array('entity_name'=>'citedby_patent', 'table' => 'citingpatent', 'field_name' => 'number', 'datatype' => 'string'),
+    'citedby_patent_title' => array('entity_name'=>'citedby_patent', 'table' => 'citingpatent', 'field_name' => 'title', 'datatype' => 'string'),
+    'cited_patent_category' => array('entity_name'=>'cited_patent', 'table' => 'patentcit_fromciting_tocited', 'field_name' => 'category', 'datatype' => 'string'),
+    'cited_patent_date' => array('entity_name'=>'cited_patent', 'table' => 'citedpatent', 'field_name' => 'date', 'datatype' => 'date'),
+    'cited_patent_kind' => array('entity_name'=>'cited_patent', 'table' => 'citedpatent', 'field_name' => 'kind', 'datatype' => 'string'),
+    'cited_patent_number' => array('entity_name'=>'cited_patent', 'table' => 'citedpatent', 'field_name' => 'number', 'datatype' => 'string'),
+    'cited_patent_sequence' => array('entity_name'=>'cited_patent', 'table' => 'patentcit_fromciting_tocited', 'field_name' => 'sequence', 'datatype' => 'int'),
+    'cited_patent_title' => array('entity_name'=>'cited_patent', 'table' => 'citedpatent', 'field_name' => 'title', 'datatype' => 'string'),
     'inventor_city' => array('entity_name'=>'inventor', 'table' => 'inventor_location', 'field_name' => 'city', 'datatype' => 'string'),
     'inventor_country' => array('entity_name'=>'inventor', 'table' => 'inventor_location', 'field_name' => 'country', 'datatype' => 'string'),
     'inventor_first_name' => array('entity_name'=>'inventor', 'table' => 'inventor', 'field_name' => 'name_first', 'datatype' => 'string'),

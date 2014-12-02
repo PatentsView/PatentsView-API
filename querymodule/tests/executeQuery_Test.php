@@ -91,7 +91,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $queryString = '{"patent_number":"8407900"}';
-        $fieldList = array("ipc_main_group","appcit_category","inventor_last_name","cited_patent_category","uspc_mainclass_id","uspc_subclass_id","assignee_organization");
+        $fieldList = array("ipc_main_group","appcit_category","inventor_last_name","cited_patent_category","uspc_mainclass_id","uspc_subclass_id","assignee_organization","citedby_patent_number");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, $fieldList);
         $this->assertEquals(1, count($results['patents']));
@@ -105,6 +105,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('appcit_category', $results['patents'][0]['application_citations'][0]);
         $this->assertArrayHasKey('cited_patents', $results['patents'][0]);
         $this->assertArrayHasKey('cited_patent_category', $results['patents'][0]['cited_patents'][0]);
+        $this->assertArrayHasKey('citedby_patents', $results['patents'][0]);
+        $this->assertArrayHasKey('citedby_patent_number', $results['patents'][0]['citedby_patents'][0]);
         $this->assertArrayHasKey('uspcs', $results['patents'][0]);
         $this->assertArrayHasKey('uspc_mainclass_id', $results['patents'][0]['uspcs'][0]);
         $this->assertArrayHasKey('uspc_subclass_id', $results['patents'][0]['uspcs'][0]);
@@ -210,6 +212,26 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertGreaterThan(10000, $results['total_found']);
     }
 
+    public function testAllGroupsInventor()
+    {
+        global $INVENTOR_ENTITY_SPECS;
+        global $INVENTOR_FIELD_SPECS;
+        $queryString = '{"patent_number":"8407902"}';
+        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization");
+        $decoded = json_decode($queryString, true);
+        $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertEquals(3, count($results['inventors']));
+        $this->assertArrayHasKey('patents', $results['inventors'][0]);
+        $this->assertArrayHasKey('patent_number', $results['inventors'][0]['patents'][0]);
+        $this->assertArrayHasKey('assignees', $results['inventors'][0]);
+        $this->assertArrayHasKey('assignee_organization', $results['inventors'][0]['assignees'][0]);
+        $this->assertArrayHasKey('IPCs', $results['inventors'][0]);
+        $this->assertArrayHasKey('ipc_main_group', $results['inventors'][0]['IPCs'][0]);
+        $this->assertArrayHasKey('uspcs', $results['inventors'][0]);
+        $this->assertArrayHasKey('uspc_mainclass_id', $results['inventors'][0]['uspcs'][0]);
+        $this->assertArrayHasKey('uspc_subclass_id', $results['inventors'][0]['uspcs'][0]);
+    }
+
     public function testNormalAssignee()
     {
         global $ASSIGNEE_ENTITY_SPECS;
@@ -232,5 +254,26 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $query, $fieldList);
         $this->assertGreaterThan(10000, $results['total_found']);
     }
+
+    public function testAllGroupsAssignee()
+    {
+        global $ASSIGNEE_ENTITY_SPECS;
+        global $ASSIGNEE_FIELD_SPECS;
+        $queryString = '{"patent_number":"8407902"}';
+        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization");
+        $decoded = json_decode($queryString, true);
+        $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertEquals(1, count($results['assignees']));
+        $this->assertArrayHasKey('patents', $results['assignees'][0]);
+        $this->assertArrayHasKey('patent_number', $results['assignees'][0]['patents'][0]);
+        $this->assertArrayHasKey('inventors', $results['assignees'][0]);
+        $this->assertArrayHasKey('inventor_last_name', $results['assignees'][0]['inventors'][0]);
+        $this->assertArrayHasKey('IPCs', $results['assignees'][0]);
+        $this->assertArrayHasKey('ipc_main_group', $results['assignees'][0]['IPCs'][0]);
+        $this->assertArrayHasKey('uspcs', $results['assignees'][0]);
+        $this->assertArrayHasKey('uspc_mainclass_id', $results['assignees'][0]['uspcs'][0]);
+        $this->assertArrayHasKey('uspc_subclass_id', $results['assignees'][0]['uspcs'][0]);
+    }
+
 }
 
