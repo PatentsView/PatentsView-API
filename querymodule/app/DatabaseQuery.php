@@ -332,7 +332,7 @@ class DatabaseQuery
                     ErrorHandler::getHandler()->sendError(400, "Invalid field for sorting: $apiField");
                     throw $e;
                 }
-                if ($fieldSpec['entity_name'] == $this->entityGroupVars[0]['entity_name']) {
+                if (strtolower($fieldSpec['sort']) == 'y') {
                     if (($direction != 'asc') and ($direction != 'desc')) {
                         ErrorHandler::getHandler()->sendError(400, "Not a valid direction for sorting: $direction");
                         throw new ErrorException("Not a valid direction for sorting: $direction");
@@ -344,7 +344,7 @@ class DatabaseQuery
                         $this->sortFieldsUsed[] = $apiField;
                     }
                 } else {
-                    $msg = "Not a valid field for sorting, it must be a " . $this->entityGroupVars[0]['entity_name'] . " field: $apiField";
+                    $msg = "Not a valid field for sorting: $apiField";
                     ErrorHandler::getHandler()->sendError(400, $msg);
                     throw new ErrorException($msg);
                 }
