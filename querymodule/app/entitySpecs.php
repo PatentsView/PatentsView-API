@@ -27,8 +27,8 @@ function getDBField(array $fieldSpecs, $apiFieldName)
 
 $PATENT_ENTITY_SPECS = array(
     array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'join'=>'patent'),
-    array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_id', 'join'=>'left outer JOIN patent_inventor ON patent.patent_id=patent_inventor.patent_id left outer JOIN inventor ON patent_inventor.inventor_id=inventor.inventor_id left outer join inventor_location ON inventor.inventor_id=inventor_location.inventor_id'),
-    array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_id', 'join'=>'left outer join patent_assignee on patent.patent_id=patent_assignee.patent_id left outer join assignee ON patent_assignee.assignee_id=assignee.assignee_id left outer JOIN assignee_location on assignee.assignee_id=assignee_location.assignee_id'),
+    array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'join'=>'left outer JOIN patent_inventor ON patent.patent_id=patent_inventor.patent_id left outer JOIN inventor ON patent_inventor.inventor_id=inventor.inventor_id left outer join inventor_location ON inventor.inventor_id=inventor_location.inventor_id'),
+    array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>'left outer join patent_assignee on patent.patent_id=patent_assignee.patent_id left outer join assignee ON patent_assignee.assignee_id=assignee.assignee_id left outer JOIN assignee_location on assignee.assignee_id=assignee_location.assignee_id'),
     array('entity_name'=>'application', 'group_name'=>'applications', 'keyId'=>'app_id', 'join'=>'left outer join application on patent.patent_id=application.patent_id'),
     array('entity_name'=>'ipc', 'group_name'=>'IPCs', 'keyId'=>'', 'join'=>'left outer join ipcr on patent.patent_id=ipcr.patent_id'),
     array('entity_name'=>'applicationcitation', 'group_name'=>'application_citations', 'keyId'=>'', 'join'=>'left outer join usapplicationcitation on patent.patent_id=usapplicationcitation.citing_patent_id left outer join application appcit_app on usapplicationcitation.cited_application_id=appcit_app.application_id'),
@@ -67,7 +67,8 @@ $PATENT_FIELD_SPECS = array
     'assignee_city' => array('entity_name'=>'assignee', 'table' => 'assignee_location', 'column_name' => 'city', 'datatype' => 'string', 'sort' => 'n'),
     'assignee_country' => array('entity_name'=>'assignee', 'table' => 'assignee_location', 'column_name' => 'country', 'datatype' => 'string', 'sort' => 'n'),
     'assignee_first_name' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'name_first', 'datatype' => 'string', 'sort' => 'n'),
-    'assignee_id' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'assignee_id', 'datatype' => 'string', 'sort' => 'n'),
+    'assignee_id' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'persistent_assignee_id', 'datatype' => 'string', 'sort' => 'n'),
+    'assignee_key_id' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'assignee_id', 'datatype' => 'int', 'sort' => 'n'),
     'assignee_lastknown_city' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'lastknown_city', 'datatype' => 'string', 'sort' => 'n'),
     'assignee_lastknown_country' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'lastknown_country', 'datatype' => 'string', 'sort' => 'n'),
     'assignee_lastknown_latitude' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'lastknown_latitude', 'datatype' => 'float', 'sort' => 'n'),
@@ -95,7 +96,8 @@ $PATENT_FIELD_SPECS = array
     'inventor_city' => array('entity_name'=>'inventor', 'table' => 'inventor_location', 'column_name' => 'city', 'datatype' => 'string', 'sort' => 'n'),
     'inventor_country' => array('entity_name'=>'inventor', 'table' => 'inventor_location', 'column_name' => 'country', 'datatype' => 'string', 'sort' => 'n'),
     'inventor_first_name' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'name_first', 'datatype' => 'string', 'sort' => 'n'),
-    'inventor_id' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'inventor_id', 'datatype' => 'string', 'sort' => 'n'),
+    'inventor_id' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'persistent_inventor_id', 'datatype' => 'string', 'sort' => 'n'),
+    'inventor_key_id' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'inventor_id', 'datatype' => 'int', 'sort' => 'n'),
     'inventor_last_name' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'name_last', 'datatype' => 'string', 'sort' => 'n'),
     'inventor_lastknown_city' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'lastknown_city', 'datatype' => 'string', 'sort' => 'n'),
     'inventor_lastknown_country' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'lastknown_country', 'datatype' => 'string', 'sort' => 'n'),
@@ -153,9 +155,9 @@ $PATENT_FIELD_SPECS = array
 );
 
 $INVENTOR_ENTITY_SPECS = array(
-    array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_id', 'join'=>' inventor left outer JOIN inventor_location on inventor.inventor_id=inventor_location.inventor_id left outer join patent_inventor on inventor.inventor_id=patent_inventor.inventor_id'),
+    array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'join'=>' inventor left outer JOIN inventor_location on inventor.inventor_id=inventor_location.inventor_id left outer join patent_inventor on inventor.inventor_id=patent_inventor.inventor_id'),
     array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'join'=>'left outer JOIN patent on patent_inventor.patent_id=patent.patent_id'),
-    array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_id', 'join'=>'left outer join patent_assignee on patent_inventor.patent_id=patent_assignee.patent_id left outer join assignee ON patent_assignee.assignee_id=assignee.assignee_id left outer JOIN assignee_location on assignee.assignee_id=assignee_location.assignee_id'),
+    array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>'left outer join patent_assignee on patent_inventor.patent_id=patent_assignee.patent_id left outer join assignee ON patent_assignee.assignee_id=assignee.assignee_id left outer JOIN assignee_location on assignee.assignee_id=assignee_location.assignee_id'),
     array('entity_name'=>'application', 'group_name'=>'applications', 'keyId'=>'app_id', 'join'=>'left outer join application on patent_inventor.patent_id=application.patent_id'),
     array('entity_name'=>'ipc', 'group_name'=>'IPCs', 'keyId'=>'', 'join'=>'left outer join ipcr on patent_inventor.patent_id=ipcr.patent_id'),
     array('entity_name'=>'uspc', 'group_name'=>'uspcs', 'keyId'=>'uspc_id', 'join'=>'left outer join uspc_current on patent_inventor.patent_id=uspc_current.patent_id')
@@ -171,7 +173,8 @@ $INVENTOR_FIELD_SPECS = array
     'assignee_city' => array('entity_name'=>'assignee', 'table' => 'assignee_location', 'column_name' => 'city', 'datatype' => 'string', 'sort' => 'n'),
     'assignee_country' => array('entity_name'=>'assignee', 'table' => 'assignee_location', 'column_name' => 'country', 'datatype' => 'string', 'sort' => 'n'),
     'assignee_first_name' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'name_first', 'datatype' => 'string', 'sort' => 'n'),
-    'assignee_id' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'assignee_id', 'datatype' => 'string', 'sort' => 'n'),
+    'assignee_id' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'persistent_assignee_id', 'datatype' => 'string', 'sort' => 'n'),
+    'assignee_key_id' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'assignee_id', 'datatype' => 'int', 'sort' => 'n'),
     'assignee_lastknown_city' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'lastknown_city', 'datatype' => 'string', 'sort' => 'n'),
     'assignee_lastknown_country' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'lastknown_country', 'datatype' => 'string', 'sort' => 'n'),
     'assignee_lastknown_latitude' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'lastknown_latitude', 'datatype' => 'float', 'sort' => 'n'),
@@ -188,7 +191,8 @@ $INVENTOR_FIELD_SPECS = array
     'inventor_city' => array('entity_name'=>'inventor', 'table' => 'inventor_location', 'column_name' => 'city', 'datatype' => 'string', 'sort' => 'n'),
     'inventor_country' => array('entity_name'=>'inventor', 'table' => 'inventor_location', 'column_name' => 'country', 'datatype' => 'string', 'sort' => 'n'),
     'inventor_first_name' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'name_first', 'datatype' => 'string', 'sort' => 'y'),
-    'inventor_id' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'inventor_id', 'datatype' => 'string', 'sort' => 'y'),
+    'inventor_id' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'persistent_inventor_id', 'datatype' => 'string', 'sort' => 'y'),
+    'inventor_key_id' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'inventor_id', 'datatype' => 'int', 'sort' => 'y'),
     'inventor_last_name' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'name_last', 'datatype' => 'string', 'sort' => 'y'),
     'inventor_lastknown_city' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'lastknown_city', 'datatype' => 'string', 'sort' => 'y'),
     'inventor_lastknown_country' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'lastknown_country', 'datatype' => 'string', 'sort' => 'y'),
@@ -243,9 +247,9 @@ $INVENTOR_FIELD_SPECS = array
 
 
 $ASSIGNEE_ENTITY_SPECS = array(
-    array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_id', 'join'=>' assignee left outer JOIN assignee_location on assignee.assignee_id=assignee_location.assignee_id left outer join patent_assignee on assignee.assignee_id=patent_assignee.assignee_id'),
+    array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>' assignee left outer JOIN assignee_location on assignee.assignee_id=assignee_location.assignee_id left outer join patent_assignee on assignee.assignee_id=patent_assignee.assignee_id'),
     array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'join'=>'left outer JOIN patent on patent_assignee.patent_id=patent.patent_id'),
-    array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_id', 'join'=>'left outer join patent_inventor on patent_assignee.patent_id=patent_inventor.patent_id left outer join inventor ON patent_inventor.inventor_id=inventor.inventor_id left outer JOIN inventor_location on inventor.inventor_id=inventor_location.inventor_id'),
+    array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'join'=>'left outer join patent_inventor on patent_assignee.patent_id=patent_inventor.patent_id left outer join inventor ON patent_inventor.inventor_id=inventor.inventor_id left outer JOIN inventor_location on inventor.inventor_id=inventor_location.inventor_id'),
     array('entity_name'=>'application', 'group_name'=>'applications', 'keyId'=>'app_id', 'join'=>'left outer join application on patent_assignee.patent_id=application.patent_id'),
     array('entity_name'=>'ipc', 'group_name'=>'IPCs', 'keyId'=>'', 'join'=>'left outer join ipcr on patent_assignee.patent_id=ipcr.patent_id'),
     array('entity_name'=>'uspc', 'group_name'=>'uspcs', 'keyId'=>'uspc_id', 'join'=>'left outer join uspc_current on patent_assignee.patent_id=uspc_current.patent_id')
@@ -261,7 +265,8 @@ $ASSIGNEE_FIELD_SPECS = array
     'assignee_city' => array('entity_name'=>'assignee', 'table' => 'assignee_location', 'column_name' => 'city', 'datatype' => 'string', 'sort' => 'n'),
     'assignee_country' => array('entity_name'=>'assignee', 'table' => 'assignee_location', 'column_name' => 'country', 'datatype' => 'string', 'sort' => 'n'),
     'assignee_first_name' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'name_first', 'datatype' => 'string', 'sort' => 'y'),
-    'assignee_id' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'assignee_id', 'datatype' => 'string', 'sort' => 'y'),
+    'assignee_id' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'persistent_assignee_id', 'datatype' => 'string', 'sort' => 'y'),
+    'assignee_key_id' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'assignee_id', 'datatype' => 'int', 'sort' => 'y'),
     'assignee_lastknown_city' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'lastknown_city', 'datatype' => 'string', 'sort' => 'y'),
     'assignee_lastknown_country' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'lastknown_country', 'datatype' => 'string', 'sort' => 'y'),
     'assignee_lastknown_latitude' => array('entity_name'=>'assignee', 'table' => 'assignee', 'column_name' => 'lastknown_latitude', 'datatype' => 'float', 'sort' => 'y'),
@@ -278,7 +283,8 @@ $ASSIGNEE_FIELD_SPECS = array
     'inventor_city' => array('entity_name'=>'inventor', 'table' => 'inventor_location', 'column_name' => 'city', 'datatype' => 'string', 'sort' => 'n'),
     'inventor_country' => array('entity_name'=>'inventor', 'table' => 'inventor_location', 'column_name' => 'country', 'datatype' => 'string', 'sort' => 'n'),
     'inventor_first_name' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'name_first', 'datatype' => 'string', 'sort' => 'n'),
-    'inventor_id' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'inventor_id', 'datatype' => 'string', 'sort' => 'n'),
+    'inventor_id' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'persistent_inventor_id', 'datatype' => 'string', 'sort' => 'n'),
+    'inventor_key_id' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'inventor_id', 'datatype' => 'int', 'sort' => 'n'),
     'inventor_last_name' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'name_last', 'datatype' => 'string', 'sort' => 'n'),
     'inventor_lastknown_city' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'lastknown_city', 'datatype' => 'string', 'sort' => 'n'),
     'inventor_lastknown_country' => array('entity_name'=>'inventor', 'table' => 'inventor', 'column_name' => 'lastknown_country', 'datatype' => 'string', 'sort' => 'n'),
