@@ -264,11 +264,11 @@ class DatabaseQuery
             $this->{$group['hasFields']} = false;
         }
 
-        foreach ($this->selectFieldSpecs as $apiField => $dbInfo) {
+        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
             foreach ($this->entityGroupVars as $group) {
-                if ($dbInfo['field_name'] == $group['keyId'])
+                if ($fieldInfo['column_name'] == $group['keyId'])
                     $this->{$group['hasId']} = true;
-                if ($dbInfo['entity_name'] == $group['entity_name'])
+                if ($fieldInfo['entity_name'] == $group['entity_name'])
                     $this->{$group['hasFields']} = true;
             }
         }
@@ -293,10 +293,10 @@ class DatabaseQuery
     {
         $selectString = '';
 
-        foreach ($this->selectFieldSpecs as $apiField => $dbInfo) {
+        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
             if ($selectString != '')
                 $selectString .= ', ';
-            $selectString .= "$dbInfo[table].$dbInfo[field_name] as $apiField";
+            $selectString .= "$fieldInfo[table].$fieldInfo[column_name] as $apiField";
         }
 
         return $selectString;
@@ -306,11 +306,11 @@ class DatabaseQuery
     {
         $selectString = '';
 
-        foreach ($this->selectFieldSpecs as $apiField => $dbInfo) {
-            if ($dbInfo['entity_name'] == $entitySpec['entity_name']) {
+        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
+            if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
                 if ($selectString != '')
                     $selectString .= ', ';
-                $selectString .= "$dbInfo[table].$dbInfo[field_name] as $apiField";
+                $selectString .= "$fieldInfo[table].$fieldInfo[column_name] as $apiField";
             }
         }
 
