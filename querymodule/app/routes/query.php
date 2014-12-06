@@ -13,7 +13,7 @@ $app->get(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
 
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results);
+        $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
@@ -28,7 +28,7 @@ $app->post(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
 
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results);
+        $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
@@ -42,7 +42,7 @@ $app->get(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
 
         $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results);
+        $results = FormatResults($formatParam, $results, $INVENTOR_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
@@ -57,7 +57,7 @@ $app->post(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
 
         $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results);
+        $results = FormatResults($formatParam, $results, $INVENTOR_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
@@ -72,7 +72,7 @@ $app->get(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
 
         $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results);
+        $results = FormatResults($formatParam, $results, $ASSIGNEE_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
@@ -87,7 +87,7 @@ $app->post(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
 
         $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results);
+        $results = FormatResults($formatParam, $results, $ASSIGNEE_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
@@ -102,7 +102,7 @@ $app->get(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
 
         $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results);
+        $results = FormatResults($formatParam, $results, $CPC_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
@@ -117,7 +117,7 @@ $app->post(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
 
         $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results);
+        $results = FormatResults($formatParam, $results, $CPC_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
@@ -132,7 +132,7 @@ $app->get(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
 
         $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results);
+        $results = FormatResults($formatParam, $results, $USPC_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
@@ -147,7 +147,7 @@ $app->post(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
 
         $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results);
+        $results = FormatResults($formatParam, $results, $USPC_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
@@ -266,17 +266,17 @@ function CheckPostParameters($app)
     return array($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam);
 }
 
-function FormatResults($formatParam, $results)
+function FormatResults($formatParam, $results, $entitySpecs)
 {
     if ($formatParam == 'xml') {
         $xml = new SimpleXMLElement('<root/>');
-        $results = array_to_xml($results, $xml, 'XXX')->asXML();
+        $results = array_to_xml($results, $xml, 'XXX', $entitySpecs)->asXML();
         return $results;
     } else
         $results = json_encode($results);return $results;
 }
 
-function array_to_xml(array $arr, SimpleXMLElement $xml, $parentTag) {
+function array_to_xml(array $arr, SimpleXMLElement $xml, $parentTag, $entitySpecs) {
     foreach ($arr as $k => $v) {
 
         $attrArr = array();
@@ -291,8 +291,12 @@ function array_to_xml(array $arr, SimpleXMLElement $xml, $parentTag) {
 
         if (is_array($v)) {
             if (is_numeric($k)) {
-                $child = $xml->addChild(substr($parentTag,0,-1)); #Stripping last character which is expected to be an 's'.
-                array_to_xml($v, $child, $tag);
+                $childTag = substr($parentTag,0,-1); #Stripping last character which is expected to be an 's'. Doing this case we don't find the tag in the entity specs.
+                foreach ($entitySpecs as $entity)
+                    if ($entity['group_name']==$parentTag)
+                        $childTag = $entity['entity_name'];
+                $child = $xml->addChild($childTag);
+                array_to_xml($v, $child, $tag, $entitySpecs);
             } else {
                 $child = $xml->addChild($tag);
                 if (isset($attrArr)) {
@@ -300,7 +304,7 @@ function array_to_xml(array $arr, SimpleXMLElement $xml, $parentTag) {
                         $child->addAttribute($attrArrV[0],$attrArrV[1]);
                     }
                 }
-                array_to_xml($v, $child, $tag);
+                array_to_xml($v, $child, $tag, $entitySpecs);
             }
         } else {
             $v = str_replace('&','&amp;',$v);
