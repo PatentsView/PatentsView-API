@@ -123,6 +123,36 @@ $app->post(
 );
 
 
+$app->get(
+    '/uspc_mainclasses/query',
+    function () use ($app) {
+        global $USPC_ENTITY_SPECS;
+        global $USPC_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
+
+        $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results);
+        $app->response->setBody($results);
+    }
+);
+
+
+$app->post(
+    '/uspc_mainclasses/query',
+    function () use ($app) {
+        global $USPC_ENTITY_SPECS;
+        global $USPC_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
+
+        $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results);
+        $app->response->setBody($results);
+    }
+);
+
+
 function CheckGetParameters($app)
 {
 // Make sure the 'q' parameter exists.
