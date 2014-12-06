@@ -275,5 +275,50 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('uspc_subclass_id', $results['assignees'][0]['uspcs'][0]);
     }
 
+    public function testNormalCPCSubsection()
+    {
+        global $CPC_ENTITY_SPECS;
+        global $CPC_FIELD_SPECS;
+        $queryString = '{"cpc_subsection_id":"G12"}';
+        $fieldList = array("cpc_subsection_id", "cpc_subsection_title", "assignee_organization", "assignee_last_name", "patent_number");
+        $expected = '{"cpc_subsections":[{"cpc_subsection_id":"G12","cpc_subsection_title":"Instrument details","assignees":[{"assignee_organization":"Wirth Gallo Messtechnik AG","assignee_last_name":null},{"assignee_organization":"LITEF GmbH","assignee_last_name":null},{"assignee_organization":"Mannesmann AG","assignee_last_name":null},{"assignee_organization":"Electro Scientific Industries, Inc.","assignee_last_name":null}],"patents":[{"patent_number":"4914961"},{"patent_number":"4924749"},{"patent_number":"6601532"},{"patent_number":"6606961"},{"patent_number":"7886449"}]}],"count":1,"total_found":1}';
+        $decoded = json_decode($queryString, true);
+        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $decoded, $fieldList);
+        $encoded = json_encode($results);
+        $this->assertEquals($expected, $encoded);
+    }
+
+    public function testAllFieldsCPCSubsection()
+    {
+        global $CPC_ENTITY_SPECS;
+        global $CPC_FIELD_SPECS;
+        $query = array();
+        $fieldList = array_keys($CPC_FIELD_SPECS);
+        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $query, $fieldList);
+        $this->assertGreaterThan(100, $results['total_found']);
+    }
+
+    public function testAllGroupsCPCSubsection()
+    {
+        global $CPC_ENTITY_SPECS;
+        global $CPC_FIELD_SPECS;
+        $queryString = '{"patent_number":"8407902"}';
+        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","cpc_subsection_id","cpc_subgroup_id");
+        $decoded = json_decode($queryString, true);
+        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertEquals(2, count($results['cpc_subsections']));
+        $this->assertArrayHasKey('cpc_subgroups', $results['cpc_subsections'][0]);
+        $this->assertArrayHasKey('cpc_subgroup_id', $results['cpc_subsections'][0]['cpc_subgroups'][0]);
+        $this->assertArrayHasKey('patents', $results['cpc_subsections'][0]);
+        $this->assertArrayHasKey('patent_number', $results['cpc_subsections'][0]['patents'][0]);
+        $this->assertArrayHasKey('inventors', $results['cpc_subsections'][0]);
+        $this->assertArrayHasKey('inventor_last_name', $results['cpc_subsections'][0]['inventors'][0]);
+        $this->assertArrayHasKey('IPCs', $results['cpc_subsections'][0]);
+        $this->assertArrayHasKey('ipc_main_group', $results['cpc_subsections'][0]['IPCs'][0]);
+        $this->assertArrayHasKey('uspcs', $results['cpc_subsections'][0]);
+        $this->assertArrayHasKey('uspc_mainclass_id', $results['cpc_subsections'][0]['uspcs'][0]);
+        $this->assertArrayHasKey('uspc_subclass_id', $results['cpc_subsections'][0]['uspcs'][0]);
+    }
+
 }
 

@@ -93,6 +93,36 @@ $app->post(
 );
 
 
+$app->get(
+    '/cpc_subsections/query',
+    function () use ($app) {
+        global $CPC_ENTITY_SPECS;
+        global $CPC_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
+
+        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results);
+        $app->response->setBody($results);
+    }
+);
+
+
+$app->post(
+    '/cpc_subsections/query',
+    function () use ($app) {
+        global $CPC_ENTITY_SPECS;
+        global $CPC_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
+
+        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results);
+        $app->response->setBody($results);
+    }
+);
+
+
 function CheckGetParameters($app)
 {
 // Make sure the 'q' parameter exists.
@@ -243,6 +273,7 @@ function array_to_xml(array $arr, SimpleXMLElement $xml, $parentTag) {
                 array_to_xml($v, $child, $tag);
             }
         } else {
+            $v = str_replace('&','&amp;',$v);
             $child = $xml->addChild($tag, $v);
             if (isset($attrArr)) {
                 foreach($attrArr as $attrArrV) {
