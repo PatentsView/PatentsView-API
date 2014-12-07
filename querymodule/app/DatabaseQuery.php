@@ -11,6 +11,7 @@ class DatabaseQuery
     private $entitySpecs = array();
     private $entityGroupVars = array();
     private $fieldSpecs;
+    private $entitySpecificWhereClauses = array();
 
     private $selectFieldSpecs;
     private $sortFieldsUsed;
@@ -18,18 +19,21 @@ class DatabaseQuery
     private $db = null;
     private $errorHandler = null;
 
+    private $matchedSubentitiesOnly = false;
+
     public function getTotalFound()
     {
         return $this->total_found;
     }
 
-    public function queryDatabase(array $entitySpecs, array $fieldSpecs, $whereClause, array $whereFieldsUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
+    public function queryDatabase(array $entitySpecs, array $fieldSpecs, $whereClause, array $whereFieldsUsed, array $entitySpecificWhereClauses, $onlyAndsWereUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
     {
         $memUsed = memory_get_usage();
         $this->errorHandler = ErrorHandler::getHandler();
         $page = 1;
         $perPage = 25;
         $this->sortFieldsUsed = array();
+        $this->entitySpecificWhereClauses = $entitySpecificWhereClauses;
 
         $this->entitySpecs = $entitySpecs;
         $this->fieldSpecs = $fieldSpecs;
@@ -44,6 +48,12 @@ class DatabaseQuery
                     $this->errorHandler->sendError(400, "Per_page must be a positive number not to exceed 10,000.", $options);
                 else
                     $perPage = $options['per_page'];
+            if (array_key_exists('matched_subentities_only', $options)) {
+                $this->matchedSubentitiesOnly = strtolower($options['matched_subentities_only']) === 'true';
+                # When the matched_subentities_only option is used, we need to check that all the criteria were 'and'ed together
+                if ($this->matchedSubentitiesOnly && !$onlyAndsWereUsed)
+                    $this->errorHandler->sendError(400, "When using the 'matched_subentities_only' option, the query criteria cannot contain any 'or's.", $options);
+            }
         }
 
         $this->selectFieldSpecs = $selectFieldSpecs;
@@ -113,6 +123,8 @@ class DatabaseQuery
                 $whereEntity = "qr.QueryDefId=$queryDefId";
                 if ($perPage < $this->total_found)
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
+                if ($this->matchedSubentitiesOnly && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '')
+                    $whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
                 $sortEntity = 'qr.sequence';
                 $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortEntity);
                 $results[$entitySpec['group_name']] = $entityResults;

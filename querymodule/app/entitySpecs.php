@@ -15,8 +15,7 @@ function getDBField(array $fieldSpecs, $apiFieldName)
  *              subentities.
  * entity_name: name for this entity type. Used internal for an individual entity. Used externally as the name for
  *              individual units of this entity
- * group_name:  plural name for the group. Used internal for aggregating into groups. Must end with an 's' due to a
- *              piece of code depending on that.
+ * group_name:  plural name for the group. Used internal for aggregating into groups and for external output.
  * keyId:       The field in the FIELD_SPECS that is a unique identifier. Could be blank for those entity types
  *              that are not really considered individual entities, but are more of a list of grouped attributes
  * join:        The SQL join statement that will bring in the data for this entity type when connected with the
