@@ -278,7 +278,7 @@ class DatabaseQuery
 
         foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
             foreach ($this->entityGroupVars as $group) {
-                if ($fieldInfo['column_name'] == $group['keyId'])
+                if ($apiField == $group['keyId'])
                     $this->{$group['hasId']} = true;
                 if ($fieldInfo['entity_name'] == $group['entity_name'])
                     $this->{$group['hasFields']} = true;
@@ -308,7 +308,7 @@ class DatabaseQuery
         foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
             if ($selectString != '')
                 $selectString .= ', ';
-            $selectString .= "$fieldInfo[table].$fieldInfo[column_name] as $apiField";
+            $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
         }
 
         return $selectString;
@@ -322,7 +322,7 @@ class DatabaseQuery
             if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
                 if ($selectString != '')
                     $selectString .= ', ';
-                $selectString .= "$fieldInfo[table].$fieldInfo[column_name] as $apiField";
+                    $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
             }
         }
 
