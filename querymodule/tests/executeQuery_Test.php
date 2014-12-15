@@ -217,7 +217,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $INVENTOR_ENTITY_SPECS;
         global $INVENTOR_FIELD_SPECS;
         $queryString = '{"patent_number":"8407902"}';
-        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization");
+        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","location_city","coinventor_id","year_num_patents_for_inventor");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $decoded, $fieldList);
         $this->assertEquals(3, count($results['inventors']));
@@ -225,11 +225,17 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('patent_number', $results['inventors'][0]['patents'][0]);
         $this->assertArrayHasKey('assignees', $results['inventors'][0]);
         $this->assertArrayHasKey('assignee_organization', $results['inventors'][0]['assignees'][0]);
+        $this->assertArrayHasKey('coinventors', $results['inventors'][0]);
+        $this->assertArrayHasKey('coinventor_id', $results['inventors'][0]['coinventors'][0]);
+        $this->assertArrayHasKey('locations', $results['inventors'][0]);
+        $this->assertArrayHasKey('location_city', $results['inventors'][0]['locations'][0]);
         $this->assertArrayHasKey('IPCs', $results['inventors'][0]);
         $this->assertArrayHasKey('ipc_main_group', $results['inventors'][0]['IPCs'][0]);
         $this->assertArrayHasKey('uspcs', $results['inventors'][0]);
         $this->assertArrayHasKey('uspc_mainclass_id', $results['inventors'][0]['uspcs'][0]);
         $this->assertArrayHasKey('uspc_subclass_id', $results['inventors'][0]['uspcs'][0]);
+        $this->assertArrayHasKey('years', $results['inventors'][0]);
+        $this->assertArrayHasKey('year_num_patents_for_inventor', $results['inventors'][0]['years'][0]);
     }
 
     public function testNormalAssignee()
@@ -260,7 +266,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $ASSIGNEE_ENTITY_SPECS;
         global $ASSIGNEE_FIELD_SPECS;
         $queryString = '{"patent_number":"8407902"}';
-        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization");
+        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","location_city","year_num_patents_for_assignee");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $decoded, $fieldList);
         $this->assertEquals(1, count($results['assignees']));
@@ -268,11 +274,15 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('patent_number', $results['assignees'][0]['patents'][0]);
         $this->assertArrayHasKey('inventors', $results['assignees'][0]);
         $this->assertArrayHasKey('inventor_last_name', $results['assignees'][0]['inventors'][0]);
+        $this->assertArrayHasKey('locations', $results['assignees'][0]);
+        $this->assertArrayHasKey('location_city', $results['assignees'][0]['locations'][0]);
         $this->assertArrayHasKey('IPCs', $results['assignees'][0]);
         $this->assertArrayHasKey('ipc_main_group', $results['assignees'][0]['IPCs'][0]);
         $this->assertArrayHasKey('uspcs', $results['assignees'][0]);
         $this->assertArrayHasKey('uspc_mainclass_id', $results['assignees'][0]['uspcs'][0]);
         $this->assertArrayHasKey('uspc_subclass_id', $results['assignees'][0]['uspcs'][0]);
+        $this->assertArrayHasKey('years', $results['assignees'][0]);
+        $this->assertArrayHasKey('year_num_patents_for_assignee', $results['assignees'][0]['years'][0]);
     }
 
     public function testNormalCPCSubsection()
@@ -292,17 +302,18 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $CPC_ENTITY_SPECS;
         global $CPC_FIELD_SPECS;
-        $query = array();
+        $queryString = '{"cpc_subsection_id":"B41"}';
+        $decoded = json_decode($queryString, true);
         $fieldList = array_keys($CPC_FIELD_SPECS);
-        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $query, $fieldList);
-        $this->assertGreaterThan(100, $results['total_found']);
+        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertGreaterThanOrEqual(1, $results['total_found']);
     }
 
     public function testAllGroupsCPCSubsection()
     {
         global $CPC_ENTITY_SPECS;
         global $CPC_FIELD_SPECS;
-        $queryString = '{"patent_number":"8407902"}';
+        $queryString = '{"cpc_subsection_id":"B41"}';
         $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","cpc_subsection_id","cpc_subgroup_id");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $decoded, $fieldList);
@@ -318,9 +329,11 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('uspcs', $results['cpc_subsections'][0]);
         $this->assertArrayHasKey('uspc_mainclass_id', $results['cpc_subsections'][0]['uspcs'][0]);
         $this->assertArrayHasKey('uspc_subclass_id', $results['cpc_subsections'][0]['uspcs'][0]);
+        $this->assertArrayHasKey('years', $results['cpc_subsections'][0]);
+        $this->assertArrayHasKey('year_num_patents_for_cpc_subsection', $results['cpc_subsections'][0]['years'][0]);
     }
 
-    public function testNormalCUSPCMainclass()
+    public function testNormalUSPCMainclass()
     {
         global $USPC_ENTITY_SPECS;
         global $USPC_FIELD_SPECS;
@@ -337,21 +350,22 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $USPC_ENTITY_SPECS;
         global $USPC_FIELD_SPECS;
-        $query = array();
+        $queryString = '{"uspc_mainclass_id":"292"}';
+        $decoded = json_decode($queryString, true);
         $fieldList = array_keys($USPC_FIELD_SPECS);
-        $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $query, $fieldList);
-        $this->assertGreaterThan(100, $results['total_found']);
+        $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertGreaterThanOrEqual(1, $results['total_found']);
     }
 
     public function testAllGroupsUSPCMainclass()
     {
         global $USPC_ENTITY_SPECS;
         global $USPC_FIELD_SPECS;
-        $queryString = '{"patent_number":"8407902"}';
-        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","cpc_subsection_id");
+        $queryString = '{"uspc_mainclass_id":"292"}';
+        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","cpc_subsection_id","year_num_patents_for_uspc_mainclass");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $decoded, $fieldList);
-        $this->assertEquals(2, count($results['uspc_mainclasses']));
+        $this->assertEquals(1, count($results['uspc_mainclasses']));
         $this->assertArrayHasKey('uspc_mainclass_id', $results['uspc_mainclasses'][0]);
         $this->assertArrayHasKey('uspc_subclass_id', $results['uspc_mainclasses'][0]['uspc_subclasses'][0]);
         $this->assertArrayHasKey('cpcs', $results['uspc_mainclasses'][0]);
@@ -362,6 +376,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('inventor_last_name', $results['uspc_mainclasses'][0]['inventors'][0]);
         $this->assertArrayHasKey('IPCs', $results['uspc_mainclasses'][0]);
         $this->assertArrayHasKey('ipc_main_group', $results['uspc_mainclasses'][0]['IPCs'][0]);
+        $this->assertArrayHasKey('years', $results['uspc_mainclasses'][0]);
+        $this->assertArrayHasKey('year_num_patents_for_uspc_mainclass', $results['uspc_mainclasses'][0]['years'][0]);
     }
 
 }

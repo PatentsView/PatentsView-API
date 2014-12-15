@@ -199,11 +199,11 @@ function CheckGetParameters($app)
     $formatParam = 'json';
     // Look for a "format" parameter; it may not exist.
     if ($app->request->get('format') != null) {
-        if ($app->request->get('format') == 'json') {
+        if (strtolower($app->request->get('format')) == 'json') {
             $formatParam = 'json';
             $app->contentType('application/json; charset=utf-8');
         }
-        elseif ($app->request->get('format') == 'xml') {
+        elseif (strtolower($app->request->get('format')) == 'xml') {
             $formatParam = 'xml';
             $app->contentType('application/xml; charset=utf-8');
         }
@@ -268,7 +268,7 @@ function CheckPostParameters($app)
 
 function FormatResults($formatParam, $results, $entitySpecs)
 {
-    if ($formatParam == 'xml') {
+    if (strtolower($formatParam) == 'xml') {
         $xml = new SimpleXMLElement('<root/>');
         $results = array_to_xml($results, $xml, 'XXX', $entitySpecs)->asXML();
         return $results;
