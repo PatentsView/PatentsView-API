@@ -11,7 +11,7 @@ def main():
           <html xmlns="http://www.w3.org/1999/xhtml">
           <head>
           <title>PatentsView Query Module API</title>
-          <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
           <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
           </head>
           <body>
