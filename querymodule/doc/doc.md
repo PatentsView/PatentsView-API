@@ -1,4 +1,9 @@
 # PatentsView Query Module API
+
+PatentsView is a data visualization and analysis initiative intended to increase the value, utility, and transparency of US patent data.  The PatentsView database longitudinally links inventors, their organizations, addresses and activity using 1976-2014 data from the USPTO.  For more information on the algorithm used to create inventor identities, see [https://github.com/CSSIP-AIR/InventorDisambiguator](https://github.com/CSSIP-AIR/InventorDisambiguator).
+
+The PatentsView API is developed with support of the USPTO and is open to the public.  The API is intended to enable researchers and developers to examine the dynamics of inventor patenting activity over time and space, study regional trends in innovative activity, and track patterns of patent citations.
+
 ## Table of Contents
 
 <ul>
@@ -156,23 +161,23 @@ Note: To aid in understanding the structure of the queries below and while creat
         "_text_any" : {simple_pair}
         "_text_phrase" : {simple_pair}
         "_not" : {criterion}
-        "_and" : [{criterion},…]
-        "_or" : [{criterion},…]
+        "_and" : [{criterion}, ...]
+        "_or" : [{criterion}, ...]
     pair
         simple_pair
-        "field" : [value,…]
+        "field" : [value, ...]
     simple_pair
         "field" : value
 
 #### <a name="single_criterion"></a> Single Criterion
 
-The basic criterion, which checks for equality, has the format: `{<field>:<value>}`, where `<field>` is the name of a database field and `<value>` is the value the field will be compared to for equality (see “[Field List]()” for a list of fields and their value data types). For example, this query string will return the patent with the patent number of 7861317:
+The basic criterion, which checks for equality, has the format: `{<field>:<value>}`, where `<field>` is the name of a database field and `<value>` is the value the field will be compared to for equality (see &ldquo;[Field List]()&rdquo; for a list of fields and their value data types). For example, this query string will return the patent with the patent number of 7861317:
 
 `q={"patent_number":"7861317"}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patent_number%22:7861317}"></a>
 
 #### <a name="joining_criteria"></a> Joining Criteria
 
-There can be multiple criteria within a query by using a join operator (`_and`, `_or`) and putting the criteria in an array using square brackets (“`[`“ and “`]`”). The following has multiple criteria, and will return patents that have “Whitney” as an inventor and a grant date of January 4, 2007:
+There can be multiple criteria within a query by using a join operator (`_and`, `_or`) and putting the criteria in an array using square brackets (&ldquo;`[`&rdquo; and &ldquo;`]`&rdquo;). The following has multiple criteria, and will return patents that have &ldquo;Whitney&rdquo; as an inventor and a grant date of January 4, 2007:
 
 `q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json=={%22_and%22:[{%22inventor_last_name%22:%22Whitney%22},{%22patent_date%22:%222007-01-04%22}]}"></a>
 
@@ -181,19 +186,19 @@ There can be multiple criteria within a query by using a join operator (`_and`, 
 Comparison operators can be used to compare a field to a value using comparators besides just equality. The available comparison operators are:
 
 * Integer, float, date, and string
-    * `_eq` – equal to
-    * `_neq` – not equal to
-    * `_gt` – greater than
-    * `_gte` – greater than or equal to
-    * `_lt` – less than
-    * `_lte` – less than or equal to
+    * `_eq` &mdash; equal to
+    * `_neq` &mdash; not equal to
+    * `_gt` &mdash; greater than
+    * `_gte` &mdash; greater than or equal to
+    * `_lt` &mdash; less than
+    * `_lte` &mdash; less than or equal to
 * String
-    * `_begins` – the string begins with the value string
-    * `_contains` – the string contains the value string
+    * `_begins` &mdash; the string begins with the value string
+    * `_contains` &mdash; the string contains the value string
 * Full text
-    * `_text_all` – the text contains all the words in the value string
-    * `_text_any` – the text contains any of the words in the value string
-    * `_text_phrase` – the text contains all the exact phrase of the value string
+    * `_text_all` &mdash; the text contains all the words in the value string
+    * `_text_any` &mdash; the text contains any of the words in the value string
+    * `_text_phrase` &mdash; the text contains all the exact phrase of the value string
 
 To specify a comparison operator for a criterion, nest the element containing the criterion inside an element that uses the comparison operator. For example, this query string will return all patents that have a grant date on or after January 4, 2007:
 
@@ -209,7 +214,7 @@ Negation does the opposite of the specified comparison. To specify the negation 
 
 #### <a name="value_arrays"></a> Value Arrays
 
-If the value of a criterion is an array, then the query will accept a match of any one of the array values. For example, this query will return all patents that have “Whitney” or “Hopper” as an inventor:
+If the value of a criterion is an array, then the query will accept a match of any one of the array values. For example, this query will return all patents that have &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; as an inventor:
 
 `q={"inventor_last_name":["Whitney","Hopper"]}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22inventor_last_name%22:[%22Whitney%22,%22Hopper%22]}"></a>
 
@@ -221,11 +226,11 @@ These elements, criteria, arrays, and operators can be combined to define robust
 
 * Patents with a grant date in 2007.
     * `q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22_lte%22:{%22patent_date%22:%222007-12-31%22}}]}"></a>
-* Patents with an inventor with the last name of “Whitney” or “Hopper” and not a design patent and with a grant date in 2007.
+* Patents with an inventor with the last name of &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; and not a design patent and with a grant date in 2007.
     * `q={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22inventor_last_name%22:[%22Whitney%22,%22Hopper%22]},{%22_not%22:{%22patent_type%22:%22design%22}},{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22_lte%22:{%22patent_date%22:%222007-12-31%22}}]}"></a>
-* Patents with an inventor with the last name of “Whitney” or “Hopper” or with a title that contains “cotton” or “gin” or “COBOL”.
+* Patents with an inventor with the last name of &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; or with a title that contains &ldquo;cotton&rdquo; or &ldquo;gin&rdquo; or &ldquo;COBOL&rdquo;.
     * `q={"_or":[{"inventor_last_name":["Whitney","Hopper"]},{"_text_any":{"patent_title":"COBOL cotton gin"}}]}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_or%22:[{%22name_last%22:[%22Whitney%22,%22Hopper%22]},{%22_contains%22:{%22title%22:%22cotton%20gin%22}},{%22_contains%22:{%22title%22:%22COBOL%22}}]}"></a>
-* Patents with an inventor with the last name of “Whitney” and with “cotton gin” in the title, or with an inventor with the last name of “Hopper” and with “COBOL” in the title.
+* Patents with an inventor with the last name of &ldquo;Whitney&rdquo; and with &ldquo;cotton gin&rdquo; in the title, or with an inventor with the last name of &ldquo;Hopper&rdquo; and with &ldquo;COBOL&rdquo; in the title.
     * `q={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json=={%22_or%22:[{%22_and%22:[{%22inventor_last_name%22:%22Whitney%22},{%22_text_phrase%22:{%22patent_title%22:%22cotton%20gin%22}}]},{%22_and%22:[{%22inventor_last_name%22:%22Hopper%22},{%22_text_all%22:{%22patent_title%22:%22COBOL%22}}]}]}"></a>
 
 #### <a name="formats"></a> Formats
@@ -234,7 +239,7 @@ Dates are expected to be in ISO 8601 date format: YYYY-MM-DD.
 
 ### <a name="field_list_format"></a> Field List Format
 
-The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return the fields used in the query criteria. See “[Field List](#patent_field_list)” for the fields available for the results. The following example would return the patent numbers, inventor names, and dates for patents that meet the query criteria:
+The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return the fields used in the query criteria. See &ldquo;[Field List](#patent_field_list)&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and dates for patents that meet the query criteria:
 
     f=["patent_number","inventor_last_name","patent_date"]
 
@@ -242,9 +247,9 @@ The field list parameter is a JSON array of the names of the fields to be return
 
 The options parameter is a JSON formatted object of options to modify the query or results. Available options are:
 
-* `page` and `per_page` – customize how may patents to return per page and which page.
+* `page` and `per_page` &mdash; customize how may patents to return per page and which page.
 * `coinventors` - whether coinventor data should be shown when using inventor fields in the query. Defaults to `true` if not provided.
-* TBD – other options, for example other one-to-many relationships like classes, etc.
+* TBD &mdash; other options, for example other one-to-many relationships like classes, etc.
 
 #### <a name="pagination"></a> Pagination
 
@@ -260,13 +265,13 @@ The `coinventor` option is provided to indicate whether coinventor data should b
 
 1. an inventor field is used in the query, and
 1. an inventor field (not necessarily the same one) is used in the output, and
-1. the inventor field in the query encompassed by an “and” join operator.
+1. the inventor field in the query encompassed by an &ldquo;and&rdquo; join operator.
 
 For example, consider this query and output field list:
 
 `q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}&amp;f=[%22patent_number%22,%22patent_date%22,%22inventor_last_name%22]"></a>
 
-The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name “Whitney”. By default or when `{"coinventors":true}`, the results will include all data for all inventors for the patents. However if `{"coinventors":false}`, the results will only include the inventor data for the inventor “Whitney”. Note that if the patent has multiple inventors that meet the inventor criteria, then each matching inventor will be included in the results. Also note that if the inventor field in the query is encompassed by an “or” join operator, then the coinventor parameter cannot be false.
+The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when `{"coinventors":true}`, the results will include all data for all inventors for the patents. However if `{"coinventors":false}`, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. Note that if the patent has multiple inventors that meet the inventor criteria, then each matching inventor will be included in the results. Also note that if the inventor field in the query is encompassed by an &ldquo;or&rdquo; join operator, then the coinventor parameter cannot be false.
 
 ##### <a name="query_string_example"></a> Example
 
@@ -323,7 +328,7 @@ However if the query were changed to exclude coinventor data, then the query and
 
 The sort parameter is a JSON formatted array of objects that specifies the sort order for the returned results. If empty or not provided, the default sort order will be ascending by patent number.
 
-Each object in the array should be a pair, with the pair’s key is one of the patent fields, and the value is either “asc” or “desc”, to indicate ascending or descending sort, respectively. A couple examples should suffice for understanding:
+Each object in the array should be a pair, with the pair's key is one of the patent fields, and the value is either &ldquo;asc&rdquo; or &ldquo;desc&rdquo;, to indicate ascending or descending sort, respectively. A couple examples should suffice for understanding:
 
 * `s=[{"patent_num_claims":"desc"}`
     * Primary sort is by `patent_num_claims` in ascending order, so that patents with the most claims will be first, and those with least claims will be last.
@@ -353,11 +358,11 @@ Each object in the array should be a pair, with the pair’s key is one of the pat
 
 ### <a name="response_status_codes" ></a> Response Status codes
 
-When the query parameters are all valid, the API will return results formatted per “[Results Format](#results_format)” with an HTTP status code of 200. The results will be in the body of the response.
+When the query parameters are all valid, the API will return results formatted per &ldquo;[Results Format](#results_format)&rdquo; with an HTTP status code of 200. The results will be in the body of the response.
 
-An HTTP status code of 400 will be returned when the query parameters are not valid, typically either because they are not in valid JSON format, or a specified field or value is not valid. The “status reason” in the header will contain the error message. 
+An HTTP status code of 400 will be returned when the query parameters are not valid, typically either because they are not in valid JSON format, or a specified field or value is not valid. The &ldquo;status reason&rdquo; in the header will contain the error message. 
 
-An HTTP status code of 500 will be returned when there is an internal error with the processing of the query. The “status reason” in the header will contain the error message.
+An HTTP status code of 500 will be returned when there is an internal error with the processing of the query. The &ldquo;status reason&rdquo; in the header will contain the error message.
 
 ### <a name="patent_field_list"></a> Patent Field List
 
@@ -673,8 +678,8 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results. Available options are:
 <ul>
-<li>page – return only the Nth page of results. Defaults to 1.</li>
-<li>per_page – the size of each page to return. Defaults to 25.</li>
+<li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
+<li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
 <td>string, optional <br/> example: <code>{"page": 2, "per_page": 50}</code></td>
