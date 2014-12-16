@@ -68,9 +68,9 @@ The PatentsView API is developed with support of the USPTO and is open to the pu
 
 ## <a name="patents_query"></a> Patents Query
 
-<code>***GET*** /querymodule/v0/patents/query?q{,f,o,s}</code>
+<code>***GET*** /api/patents/query?q{,f,o,s}</code>
 
-<code>***POST*** /querymodule/v0/patents/query</code>
+<code>***POST*** /api/patents/query</code>
 
 This will search for patents matching the query string (`q`) and returning the data fields listed in the field string (`f`) sorted by the fields in the sort string (`s`) using options provided in the option string (`o`).
 
@@ -483,9 +483,9 @@ An HTTP status code of 500 will be returned when there is an internal error with
 
 ## <a name="inventors_query"></a> Inventors Query
 
-<code>***GET*** /querymodule/v0/inventors/query?q{,f,o,s}</code>
+<code>***GET*** /api/inventors/query?q{,f,o,s}</code>
 
-<code>***POST*** /querymodule/v0/inventors/query</code>
+<code>***POST*** /api/inventors/query</code>
 
 This will search for inventors matching the query string (`q`) and returning the data fields listed in the field string (`f`) sorted by the fields in the sort string (`s`) using options provided in the option string (`o`).
 
@@ -644,9 +644,9 @@ with the body containing:
 
 ## <a name="assignees_query"></a> Assignees Query
 
-<code>***GET*** /querymodule/v0/assignees/query?q{,f,o,s}</code>
+<code>***GET*** /api/assignees/query?q{,f,o,s}</code>
 
-<code>***POST*** /querymodule/v0/assignees/query</code>
+<code>***POST*** /api/assignees/query</code>
 
 This will search for assignees matching the query string (`q`) and returning the data fields listed in the field string (f) sorted by the fields in the sort string (`s`) using options provided in the option string (`o`).
 
