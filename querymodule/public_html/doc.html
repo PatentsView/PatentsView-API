@@ -1,0 +1,1219 @@
+
+          <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+              "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+          <html xmlns="http://www.w3.org/1999/xhtml">
+          <head>
+          <title>PatentsView Query Module API</title>
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+          <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+          </head>
+          <body>
+          <h1>PatentsView Query Module API</h1>
+<p>PatentsView is a data visualization and analysis initiative intended to increase the value, utility, and transparency of US patent data.  The PatentsView database longitudinally links inventors, their organizations, addresses and activity using 1976-2014 data from the USPTO.  For more information on the algorithm used to create inventor identities, see <a href="https://github.com/CSSIP-AIR/InventorDisambiguator">https://github.com/CSSIP-AIR/InventorDisambiguator</a>.</p>
+<p>The PatentsView API is developed with support of the USPTO and is open to the public.  The API is intended to enable researchers and developers to examine the dynamics of inventor patenting activity over time and space, study regional trends in innovative activity, and track patterns of patent citations.</p>
+<p>The PatentsView API is currently under development and is not intended for public release.</p>
+<h2>Table of Contents</h2>
+<ul>
+<li>
+<a href="#patents_query">Patents Query</a>
+<ul>
+<li>
+<a href="#query_string_format">Query String Format</a> 
+<ul>
+<li><a href="#query_string_syntax">Syntax</a> </li>
+<li><a href="#single_criterion">Single Criterion</a> </li>
+<li><a href="#joining_criteria">Joining Criteria</a> </li>
+<li><a href="#comparison_operators">Comparison Operators</a> </li>
+<li><a href="#negation">Negation</a> </li>
+<li><a href="#value_arrays">Value Arrays</a> </li>
+<li><a href="#complex_combinations">Complex Combinations</a> </li>
+<li><a href="#formats">Formats</a> </li>
+</ul>
+</li>
+<li>
+<a href="#field_list_format">Field List Format</a> 
+</li>
+<li>
+<a href="#options_parameter">Options Parameter</a> 
+<ul>
+<li><a href="#pagination">Pagination</a> </li>
+<li><a href="#coinventor">Coinventor</a> </li>
+<li><a href="#query_string_example">Example</a> </li>
+</ul>
+</li>
+<li>
+<a href="#sort_parameter">Sort Parameter</a> 
+</li>
+<li>
+<a href="#results_format">Results Format</a> 
+<ul>
+<li><a href="#results_format_json">JSON</a> </li>
+<li><a href="#results_format_xml">XML</a> </li>
+</ul>
+</li>
+<li>
+<a href="#response_status_codes">Response Status codes</a> 
+</li>
+<li>
+<a href="#patent_field_list">Patent Field List</a> 
+</li>
+</ul>
+</li>
+<li>
+
+<a href="#inventors_query">Inventors Query</a> 
+<ul>
+<li><a href="#inventor_field_list">Inventor Field List</a> </li>
+</ul>
+</li>
+
+<li>
+<a href="#assignees_query">Assignees Query</a> 
+<ul>
+<li><a href="#assignee_field_list">Assignee Field List</a> </li>
+</ul>
+</li>
+
+<li>
+<a href="#cpc_subsections_query">CPC Subsections Query</a> 
+<ul>
+<li><a href="#cpc_subsection_field_list">CPC Subsection Field List</a> </li>
+</ul>
+</li>
+
+<li>
+<a href="#uspc_mainclasses_query">USPC Mainclasses Query</a> 
+<ul>
+<li><a href="#uspc_mainclass_field_list">USPC Mainclass Field List</a> </li>
+</ul>
+</li>
+
+</ul>
+
+<h2><a name="patents_query"></a> Patents Query</h2>
+<p><code><strong><em>GET</em></strong> /api/patents/query?q{,f,o,s}</code></p>
+<p><code><strong><em>POST</em></strong> /api/patents/query</code></p>
+<p>This will search for patents matching the query string (<code>q</code>) and returning the data fields listed in the field string (<code>f</code>) sorted by the fields in the sort string (<code>s</code>) using options provided in the option string (<code>o</code>).</p>
+<p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
+<table>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Details</th>
+</tr>
+
+<tr>
+<td><code>q</code></td>
+<td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
+<td> string, required<br/> example: <code>q={"inventor_last_name":"Whitney"}</code></td>
+</tr>
+
+<tr>
+<td><code>f</code></td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter plus the patent number.</td>
+<td>string, optional <br/> example: <code>f=["patent_number", "date"]</code></td>
+</tr>
+
+<tr>
+<td><code>s</code></td>
+<td>JSON formatted array of objects to sort the results. if not provided, defaults to the unique, internal patent identifier.</td>
+<td>string, optional <br/> example: <code>s=[{"patent_number":"desc"}]</code></td>
+</tr>
+
+<tr>
+<td><code>o</code></td>
+<td>JSON formatted object of options to modify the query or results.  Available options are:
+<ul>
+<li>coinventors &mdash; Whether coinventor data should be shown when using inventor fields in the query. Defaults to true if not provided.  <em>Not yet implemented.</em></li>
+<li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
+<li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
+</ul>
+</td>
+<td>string, optional <br/> example: <code>o={"coinventors": true, "page": 2, "per_page": 50}</code> </td>
+</tr>
+
+<tr>
+<td><code>format</code></td>
+<td>Specifies the response data format. If not provided, defaults to JSON. Available options are:
+<ul>
+<li><code>json</code></li>
+<li><code>xml</code></li>
+</ul>
+</td>
+<td>string, optional <br/> example: <code>format=xml</code></td>
+</tr>
+
+</table>
+
+<p>An example of a complete API call using the GET verb is:</p>
+<pre><code>https://api.patentsview.org/api/v0/patents/query?q={"_gte":{"patent_date":"2007-01-04"}}&amp;amp;f=["patent_number","patent_date"]
+</code></pre>
+<p>An example of the equivalent API call using the POST verb is:</p>
+<pre><code>https://api.patentsview.org/api/v0/patents/query
+</code></pre>
+<p>with the body containing:</p>
+<pre><code>{"q":{"_gte":{"patent_date":"2007-01-04"}},"f":["patent_number","patent_date"]}
+</code></pre>
+<h3><a name="query_string_format"></a> Query String Format</h3>
+<p>The query string is always a single JSON object: <code>{}</code>, with properties and contained objects that determine the criteria for the query. </p>
+<p>Note: To aid in understanding the structure of the queries below and while creating your own, it is helpful to use JSON validators and visual parsers, like <a href="http://www.jsoneditoronline.org/">http://www.jsoneditoronline.org/</a> and <a href="http://jsonlint.com/">http://jsonlint.com/</a>. Clicking on the <span class="fa fa-external-link"></span> icons below display the JSON in JSON Editor Online.</p>
+<h4><a name="query_string_syntax"></a> Syntax</h4>
+<pre><code>q={criterion}
+criterion
+    pair
+    "_eq" : {simple_pair}
+    "_neq" : {simple_pair}
+    "_gt" : {simple_pair}
+    "_gte" : {simple_pair}
+    "_lt" : {simple_pair}
+    "_lte" : {simple_pair}
+    "_begins" : {simple_pair}
+    "_contains" : {simple_pair}
+    "_text_all" : {simple_pair}
+    "_text_any" : {simple_pair}
+    "_text_phrase" : {simple_pair}
+    "_not" : {criterion}
+    "_and" : [{criterion}, ...]
+    "_or" : [{criterion}, ...]
+pair
+    simple_pair
+    "field" : [value, ...]
+simple_pair
+    "field" : value
+</code></pre>
+<h4><a name="single_criterion"></a> Single Criterion</h4>
+<p>The basic criterion, which checks for equality, has the format: <code>{&lt;field&gt;:&lt;value&gt;}</code>, where <code>&lt;field&gt;</code> is the name of a database field and <code>&lt;value&gt;</code> is the value the field will be compared to for equality (see &ldquo;<a href="">Field List</a>&rdquo; for a list of fields and their value data types). For example, this query string will return the patent with the patent number of 7861317:</p>
+<p><code>q={"patent_number":"7861317"}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patent_number%22:7861317}"></a></p>
+<h4><a name="joining_criteria"></a> Joining Criteria</h4>
+<p>There can be multiple criteria within a query by using a join operator (<code>_and</code>, <code>_or</code>) and putting the criteria in an array using square brackets (&ldquo;<code>[</code>&rdquo; and &ldquo;<code>]</code>&rdquo;). The following has multiple criteria, and will return patents that have &ldquo;Whitney&rdquo; as an inventor and a grant date of January 4, 2007:</p>
+<p><code>q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json=={%22_and%22:[{%22inventor_last_name%22:%22Whitney%22},{%22patent_date%22:%222007-01-04%22}]}"></a></p>
+<h4><a name="comparison_operators"></a> Comparison Operators</h4>
+<p>Comparison operators can be used to compare a field to a value using comparators besides just equality. The available comparison operators are:</p>
+<ul>
+<li>Integer, float, date, and string<ul>
+<li><code>_eq</code> &mdash; equal to</li>
+<li><code>_neq</code> &mdash; not equal to</li>
+<li><code>_gt</code> &mdash; greater than</li>
+<li><code>_gte</code> &mdash; greater than or equal to</li>
+<li><code>_lt</code> &mdash; less than</li>
+<li><code>_lte</code> &mdash; less than or equal to</li>
+</ul>
+</li>
+<li>String<ul>
+<li><code>_begins</code> &mdash; the string begins with the value string</li>
+<li><code>_contains</code> &mdash; the string contains the value string</li>
+</ul>
+</li>
+<li>Full text<ul>
+<li><code>_text_all</code> &mdash; the text contains all the words in the value string</li>
+<li><code>_text_any</code> &mdash; the text contains any of the words in the value string</li>
+<li><code>_text_phrase</code> &mdash; the text contains all the exact phrase of the value string</li>
+</ul>
+</li>
+</ul>
+<p>To specify a comparison operator for a criterion, nest the element containing the criterion inside an element that uses the comparison operator. For example, this query string will return all patents that have a grant date on or after January 4, 2007:</p>
+<p><code>q={"_gte":{"patent_date":"2007-01-04"}}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_gte%22:{%22patent_date%22:%222007-01-04%22}}"></a></p>
+<p>Note that <code>q={"_eq":{"patent_date":"2007-01-04"}}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_eq%22:{%22patent_date%22:%222007-01-04%22}}"></a> is functionally equivalent to <code>q={"patent_date":"2007-01-04"}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patent_date%22:%222007-01-04%22}"></a>.</p>
+<h4><a name="negation"></a> Negation</h4>
+<p>Negation does the opposite of the specified comparison. To specify the negation operator for a criterion, nest the element containing the criterion inside an element that uses the negation operator: <code>_not</code>. For example, this query string will return all patents that are not design patents:</p>
+<p><code>q={"_not":{"patent_type":"design"}}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_not%22:{%22patent_type%22:%22design%22}}"></a></p>
+<h4><a name="value_arrays"></a> Value Arrays</h4>
+<p>If the value of a criterion is an array, then the query will accept a match of any one of the array values. For example, this query will return all patents that have &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; as an inventor:</p>
+<p><code>q={"inventor_last_name":["Whitney","Hopper"]}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22inventor_last_name%22:[%22Whitney%22,%22Hopper%22]}"></a></p>
+<p>Note that this is functionally equivalent to: <code>q={"_or":[{"inventor_last_name":"Whitney"},{"inventor_last_name":"Hopper"}]}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_or%22:[{%22inventor_last_name%22:%22Whitney%22},{%22inventor_last_name%22:%22Hopper%22}]}"></a></p>
+<h4><a name="complex_combinations"></a> Complex Combinations</h4>
+<p>These elements, criteria, arrays, and operators can be combined to define robust queries. Here are a few examples: </p>
+<ul>
+<li>Patents with a grant date in 2007.<ul>
+<li><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22_lte%22:{%22patent_date%22:%222007-12-31%22}}]}"></a></li>
+</ul>
+</li>
+<li>Patents with an inventor with the last name of &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; and not a design patent and with a grant date in 2007.<ul>
+<li><code>q={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22inventor_last_name%22:[%22Whitney%22,%22Hopper%22]},{%22_not%22:{%22patent_type%22:%22design%22}},{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22_lte%22:{%22patent_date%22:%222007-12-31%22}}]}"></a></li>
+</ul>
+</li>
+<li>Patents with an inventor with the last name of &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; or with a title that contains &ldquo;cotton&rdquo; or &ldquo;gin&rdquo; or &ldquo;COBOL&rdquo;.<ul>
+<li><code>q={"_or":[{"inventor_last_name":["Whitney","Hopper"]},{"_text_any":{"patent_title":"COBOL cotton gin"}}]}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_or%22:[{%22name_last%22:[%22Whitney%22,%22Hopper%22]},{%22_contains%22:{%22title%22:%22cotton%20gin%22}},{%22_contains%22:{%22title%22:%22COBOL%22}}]}"></a></li>
+</ul>
+</li>
+<li>Patents with an inventor with the last name of &ldquo;Whitney&rdquo; and with &ldquo;cotton gin&rdquo; in the title, or with an inventor with the last name of &ldquo;Hopper&rdquo; and with &ldquo;COBOL&rdquo; in the title.<ul>
+<li><code>q={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json=={%22_or%22:[{%22_and%22:[{%22inventor_last_name%22:%22Whitney%22},{%22_text_phrase%22:{%22patent_title%22:%22cotton%20gin%22}}]},{%22_and%22:[{%22inventor_last_name%22:%22Hopper%22},{%22_text_all%22:{%22patent_title%22:%22COBOL%22}}]}]}"></a></li>
+</ul>
+</li>
+</ul>
+<h4><a name="formats"></a> Formats</h4>
+<p>Dates are expected to be in ISO 8601 date format: YYYY-MM-DD.</p>
+<h3><a name="field_list_format"></a> Field List Format</h3>
+<p>The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return the fields used in the query criteria. See &ldquo;<a href="#patent_field_list">Field List</a>&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and dates for patents that meet the query criteria:</p>
+<pre><code>f=["patent_number","inventor_last_name","patent_date"]
+</code></pre>
+<h3><a name="options_parameter"></a> Options Parameter</h3>
+<p>The options parameter is a JSON formatted object of options to modify the query or results. Available options are:</p>
+<ul>
+<li><code>page</code> and <code>per_page</code> &mdash; customize how may patents to return per page and which page.</li>
+<li><code>coinventors</code> - whether coinventor data should be shown when using inventor fields in the query. Defaults to <code>true</code> if not provided.</li>
+<li>TBD &mdash; other options, for example other one-to-many relationships like classes, etc.</li>
+</ul>
+<h4><a name="pagination"></a> Pagination</h4>
+<p>By default the API will return the first 25 results. The <code>page</code> and <code>per_page</code> options can be used to customize the set of results that is returned.</p>
+<ul>
+<li>The <code>page</code> option is 1-based and omitting the <code>page</code> option will return the first page of results.</li>
+<li>The <code>per_page</code> option specifies the number of results per page; it defaults to 25 and has a maximum of 10,000.</li>
+<li>An example for specifying pagination in the options parameter is: <code>o={"page":2,"per_page":50}</code></li>
+</ul>
+<h4><a name="coinventor"></a> Coinventor</h4>
+<p>The <code>coinventor</code> option is provided to indicate whether coinventor data should be included in the results in a special case when:</p>
+<ol>
+<li>an inventor field is used in the query, and</li>
+<li>an inventor field (not necessarily the same one) is used in the output, and</li>
+<li>the inventor field in the query encompassed by an &ldquo;and&rdquo; join operator.</li>
+</ol>
+<p>For example, consider this query and output field list:</p>
+<p><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}&amp;f=[%22patent_number%22,%22patent_date%22,%22inventor_last_name%22]"></a></p>
+<p>The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when <code>{"coinventors":true}</code>, the results will include all data for all inventors for the patents. However if <code>{"coinventors":false}</code>, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. Note that if the patent has multiple inventors that meet the inventor criteria, then each matching inventor will be included in the results. Also note that if the inventor field in the query is encompassed by an &ldquo;or&rdquo; join operator, then the coinventor parameter cannot be false.</p>
+<h5><a name="query_string_example"></a> Example</h5>
+<p>Consider this example. Assume the database only has the following content:</p>
+<p>Patents:</p>
+<table>
+<tr>
+<th>PATENT_NUMBER</th>
+<th>NUMBER</th> 
+<th>DATE</th>
+</tr>
+
+<tr>
+<td>PAT1</td>
+<td>7861317</td>
+<td>1/21/2007</td>
+</tr>
+</table>
+
+<p>Inventors:</p>
+<table>
+<tr>
+<th>INVENTOR_ID</th><th>PATENT_NUMBER</th><th>NAME_FIRST</th><th>NAME_LAST</th>
+</tr>
+<tr>
+<td>INV1</td><td>pat1</td><td>Grace</td><td>Hopper</td>
+</tr>
+<tr>
+<td>INV2</td><td>pat1</td><td>Eli</td><td>Whitney</td>
+</tr>
+<tr>
+<td>INV3</td><td>pat1</td><td>Willis</td><td>Carrier</td>
+</tr>
+</table>
+
+<p>Also assume this query:</p>
+<p><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a></p>
+<p>The results would include the following (keeping in mind that coinventor data is included by default):</p>
+<p><code>{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Hopper"},{"inventor_last_name":"Whitney"},{"inventor_last_name":"Carrier"}]}],"count":1,"total_found":1}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Hopper%22},{%22inventor_last_name%22:%22Whitney%22},{%22inventor_last_name%22:%22Carrier%22}]}],%22count%22:1,%22total_found%22:1}"></a></p>
+<p>However if the query were changed to exclude coinventor data, then the query and results would be as such:</p>
+<p><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"coinventors":false}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a></p>
+<p><code>{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Whitney"}]}],"count":1,"total_found":1}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Whitney%22}]}],%22count%22:1,%22total_found%22:1}"></a></p>
+<h3><a name="sort_parameter"></a> Sort Parameter</h3>
+<p>The sort parameter is a JSON formatted array of objects that specifies the sort order for the returned results. If empty or not provided, the default sort order will be ascending by patent number.</p>
+<p>Each object in the array should be a pair, with the pair's key is one of the patent fields, and the value is either &ldquo;asc&rdquo; or &ldquo;desc&rdquo;, to indicate ascending or descending sort, respectively. A couple examples should suffice for understanding:</p>
+<ul>
+<li><code>s=[{"patent_num_claims":"desc"}</code><ul>
+<li>Primary sort is by <code>patent_num_claims</code> in ascending order, so that patents with the most claims will be first, and those with least claims will be last.</li>
+</ul>
+</li>
+<li><code>s=[{"patent_date":"desc"},{"patent_number":"asc"}]</code><ul>
+<li>Primary sort is by <code>patent_date</code> in descending order, secondarily by <code>patent_number</code> in ascending order.</li>
+</ul>
+</li>
+</ul>
+<h3><a name="results_format"></a> Results Format</h3>
+<h4><a name="results_format_json"></a> JSON</h4>
+<h5><a name="results_format_json_syntax"></a> Syntax</h5>
+<pre><code>{"patents":[patent[,...]], "count":count, "total_found":total_found}
+patent
+    {[key_value_pair[,...]][,related_group[,...]]}
+related_group
+    "entity_name":[related_entity[,...]]
+related_entity
+    {key_value_pair[,...]}
+entity_name
+    { inventors | assignees | applications | application_citations | cited_patents | citedby_patents | ipcs | uspcs }
+key_value_pair
+    "field_name":value
+        Where field_name is from the table of fields below.
+</code></pre>
+<h5><a name="results_format_json_example"></a> Example</h5>
+<p><code>{"patents":[{"patent_number":"pat1","date":"2007-01-27","inventors":[{"inventor_last_name":"Hopper"},{"inventor_last_name":"Whitney"},{"inventor_last_name":"Carrier"}]}],"count":1,"total_found":1}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Hopper%22},{%22inventor_last_name%22:%22Whitney%22},{%22inventor_last_name%22:%22Carrier%22}]}],%22count%22:1,%22total_found%22:1}"></a></p>
+<h4><a name="results_format_xml"></a> XML</h4>
+<h5><a name="results_format_xml_syntax"></a> Syntax</h5>
+<h5><a name="results_format_xml_example"></a> Example</h5>
+<pre><code>&lt;root&gt;
+    &lt;patents&gt;
+        &lt;patent&gt;
+            &lt;patent_number&gt;pat1&lt;/patent_number&gt;
+            &lt;inventors&gt;
+                &lt;inventor&gt;
+                    &lt;inventor_last_name&gt;Hopper&lt;/inventor_last_name&gt;
+                &lt;/inventor&gt;
+                &lt;inventor&gt;
+                    &lt;inventor_last_name&gt;Carrier&lt;/inventor_last_name&gt;
+                &lt;/inventor&gt;
+            &lt;/inventors&gt;
+        &lt;/patent&gt;
+    &lt;/patents&gt;
+    &lt;count&gt;1&lt;/count&gt;
+    &lt;total_found&gt;1&lt;/total_found&gt;
+&lt;/root&gt;
+</code></pre>
+<h3><a name="response_status_codes" ></a> Response Status codes</h3>
+<p>When the query parameters are all valid, the API will return results formatted per &ldquo;<a href="#results_format">Results Format</a>&rdquo; with an HTTP status code of 200. The results will be in the body of the response.</p>
+<p>An HTTP status code of 400 will be returned when the query parameters are not valid, typically either because they are not in valid JSON format, or a specified field or value is not valid. The &ldquo;status reason&rdquo; in the header will contain the error message. </p>
+<p>An HTTP status code of 500 will be returned when there is an internal error with the processing of the query. The &ldquo;status reason&rdquo; in the header will contain the error message.</p>
+<h3><a name="patent_field_list"></a> Patent Field List</h3>
+<table>
+<tr>
+<th>API Field Name</th>
+<th>Group</th>
+<th>Type</th>
+<th>Query</th>
+<th>Return</th>
+<th>Sort</th>
+</tr>
+
+<tr><td>app_country</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_date</td><td>applications</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_id</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_number</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_type</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>appcit_app_number</td><td>application_citations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>appcit_category</td><td>application_citations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>appcit_date</td><td>application_citations</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>appcit_kind</td><td>application_citations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>appcit_name</td><td>application_citations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>appcit_sequence</td><td>application_citations</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_first_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_last_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_years_active</td><td>assignee</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>citedby_patent_category</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>citedby_patent_date</td><td>citedby_patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>citedby_patent_kind</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>citedby_patent_number</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>citedby_patent_title</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cited_patent_category</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cited_patent_date</td><td>cited_patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cited_patent_kind</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cited_patent_number</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cited_patent_sequence</td><td>cited_patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>cited_patent_title</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_category</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_group_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_group_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_sequence</td><td>cpcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_section_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subgroup_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subgroup_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subsection_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subsection_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_assignees</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_inventors</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_patents</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_years_active</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_first_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_last_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_years_active</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_action_date</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_class**</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_classification_data_source</td><td>ipcs</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_classification_value</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_main_group</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_section</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_sequence</td><td>ipcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_subclass</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_subgroup</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_symbol_position</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_total_num_assignees</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_total_num_inventors</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_version_indicator</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_years_active</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_abstract</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_date</td><td>patents</td><td>date</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_firstnamed_city</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_firstnamed_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_firstnamed_latitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_firstnamed_longitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_firstnamed_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_kind</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_num_cited_by_us_patents</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_num_combined_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_num_foreign_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_num_us_application_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_num_us_patent_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_num_claims</td><td>patents</td><td>integer</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_title</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_sequence</td><td>uspcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_subclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_subclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_inventors</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_patents</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_years_active</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+</table>
+
+<table>
+<tr><td>*</td> <td>= unique identifier</td></tr>
+<tr><td>**</td> <td>= not yet implemented</td></tr>
+</table>
+
+<h2><a name="inventors_query"></a> Inventors Query</h2>
+<p><code><strong><em>GET</em></strong> /api/inventors/query?q{,f,o,s}</code></p>
+<p><code><strong><em>POST</em></strong> /api/inventors/query</code></p>
+<p>This will search for inventors matching the query string (<code>q</code>) and returning the data fields listed in the field string (<code>f</code>) sorted by the fields in the sort string (<code>s</code>) using options provided in the option string (<code>o</code>).</p>
+<p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
+<table>
+
+<tr><td>Name</td><td>Description</td><td>Details</td></tr>
+
+<tr>
+<td><code>q</code></td>
+<td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
+<td>string, required <br/> example: <code>{"inventor_last_name":"Whitney"}</code></td>
+</tr>
+
+<tr>
+<td><code>f</code></td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>string, optional <br/> example: <code>["patent_number", "date"]</code></td>
+</tr>
+
+<tr>
+<td><code>s</code></td>
+<td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal inventor identifier.</td>
+<td>string, optional <br/> example: <code>[{"inventor_last_name":"desc"}]</code></td>
+</tr>
+
+<tr>
+<td><code>o</code></td>
+<td>JSON formatted object of options to modify the query or results. Available options are:
+<ul>
+<li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
+<li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
+</ul>
+</td>
+<td>string, optional <br/> example: <code>{"page": 2, "per_page": 50}</code></td>
+</tr>
+
+<tr>
+<td><code>format</code></td>
+<td>Specifies the response data format. If not provided, defaults to JSON. Available options are:
+<ul>
+<li>json</li>
+<li>xml</li>
+</ul>
+</td>
+<td>string, optional <br/> example: <code>format=xml</code></td>
+</tr>
+
+</table>
+
+<p>An example of a complete API call using the GET verb is:</p>
+<pre><code>https://api.patentsview.org/api/v0/inventors/query?q={"inventor_last_name":"Young"}&amp;f=["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]
+</code></pre>
+<p>An example of the equivalent API call using the POST verb is:</p>
+<pre><code>https://api.patentsview.org/api/v0/inventors/query
+</code></pre>
+<p>with the body containing:</p>
+<pre><code>{"q":{"inventor_last_name":"Young"},"f":["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]}
+</code></pre>
+<h3><a name="inventor_field_list"></a> Inventor Field List</h3>
+<table>
+
+<tr><th>API Field Name</th><th>Group</th><th>Type</th><th>Query</th><th>Return</th><th>Sort</th></tr>
+
+<tr><td>app_country</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_date</td><td>applications</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_id</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_number</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_type</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>assignee_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_first_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_last_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_num_patents_for_inventor</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_years_active</td><td>assignee</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>coinventor_city</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_country</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_first_name</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_id*</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_last_name</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_lastknown_city</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_lastknown_country</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_lastknown_latitude</td><td>coinventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_lastknown_longitude</td><td>coinventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_lastknown_state</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_latitude</td><td>coinvetnros</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_longitude</td><td>coinvetnros</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_num_patents_for_inventor</td><td>coinventors</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_total_num_patents</td><td>coinventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_years_active</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>cpc_category</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_group_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_group_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_section_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subgroup_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subgroup_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subsection_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subsection_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_assignees</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_inventors</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_patents</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_years_active</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>inventor_first_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_last_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_years_active</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+
+<tr><td>ipc_action_date</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_class</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_classification_data_source</td><td>ipcs</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_classification_value</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_main_group</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_section</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_sequence</td><td>ipcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_subclass</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_subgroup</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_symbol_position</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_total_num_assignees</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_total_num_inventors</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_version_indicator</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_years_active</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>location_city</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>location_country</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>location_latitude</td><td>locations</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>location_longitude</td><td>locations</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>location_state</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>patent_abstract</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_date</td><td>patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_city</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_latitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_longitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_kind</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_cited_by_us_patents</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_combined_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_foreign_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_us_application_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_us_patent_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_claims</td><td>patents</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_title</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+
+<tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_num_patents_for_inventor</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_sequence</td><td>uspcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_subclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_subclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_inventors</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_patents</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_years_active</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>year_id</td><td>years</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>year_num_patents_for_inventor</td><td>years</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+
+</table>
+
+<table>
+<tr><td>*</td> <td>= unique identifier</td></tr>
+<tr><td>**</td> <td>= not yet implemented</td></tr>
+</table>
+
+<h2><a name="assignees_query"></a> Assignees Query</h2>
+<p><code><strong><em>GET</em></strong> /api/assignees/query?q{,f,o,s}</code></p>
+<p><code><strong><em>POST</em></strong> /api/assignees/query</code></p>
+<p>This will search for assignees matching the query string (<code>q</code>) and returning the data fields listed in the field string (f) sorted by the fields in the sort string (<code>s</code>) using options provided in the option string (<code>o</code>).</p>
+<p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
+<table>
+
+<tr><th>Name</th><th>Description</th><th>Details</th></tr>
+
+<tr>
+<td><code>q</code></td>
+<td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
+<td>string, required <br/> example: <code>{"inventor_last_name":"Whitney"}</code></td>
+</tr>
+
+<tr>
+<td><code>f</code></td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>string, optional <br/> example: <code>["patent_number", "date"]</code></td>
+</tr>
+
+<tr>
+<td><code>s</code></td>
+<td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal inventor identifier. string, optional</td>
+<td>example: <code>[{"assignee_organization":"desc"}]</code></td>
+</tr>
+
+<tr>
+<td><code>o</code></td>
+<td>JSON formatted object of options to modify the query or results. Available options are:
+<ul>
+<li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
+<li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
+</ul>
+</td>
+<td>string, optional <br/> example: <code>{"page": 2, "per_page": 50}</code></td>
+</tr>
+
+<tr>
+<td><code>format</code></td>
+<td>Specifies the response data format. If not provided, defaults to JSON. Available options are:
+<ul>
+<li><code>json</code></li>
+<li><code>xml</code></li>
+</ul>
+</td>
+<td>string, optional <br/> example: <code>format=xml</code></td>
+</tr>
+
+</table>
+
+<p>An example of a complete API call using the GET verb is:</p>
+<pre><code>https://api.patentsview.org/api/v0/assignees/query?q={"_begins":{"assignee_organization":"Race"}}&amp;f=["patent_number","patent_date","assignee_organization","assignee_id"]
+</code></pre>
+<p>An example of the equivalent API call using the POST verb is:</p>
+<pre><code>https://api.patentsview.org/api/v0/assignees/query
+</code></pre>
+<p>with the body containing:</p>
+<pre><code>{"q":{"_begins":{"assignee_organization":"Race"}},"f":["patent_number","patent_date","assignee_organization","assignee_id"]}
+</code></pre>
+<h3><a name="assignee_field_list"></a> Assignee Field List</h3>
+<table>
+
+<tr><th>API Field Name</th><th>Group</th><th>Type</th><th>Query</th><th>Return</th><th>Sort</th></tr>
+<tr><td>app_country</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_date</td><td>applications</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_id</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_number</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_type</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>assignee_first_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_last_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_years_active</td><td>assignee</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+
+<tr><td>cpc_category</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_group_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_group_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_section_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subgroup_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subgroup_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subsection_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subsection_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_assignees</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_inventors</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_patents</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_years_active</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>inventor_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_first_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_last_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_num_patents_for_assignee</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_years_active</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>ipc_action_date</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_class</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_classification_data_source</td><td>ipcs</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_classification_value</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_main_group</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_section</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_sequence</td><td>ipcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_subclass</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_subgroup</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_symbol_position</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_total_num_assignees</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_total_num_inventors</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_version_indicator</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_years_active</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>location_city</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>location_country</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>location_latitude</td><td>locations</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>location_longitude</td><td>locations</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>location_state</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>patent_abstract</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_date</td><td>patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_city</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_latitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_longitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_kind</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_cited_by_us_patents</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_combined_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_foreign_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_us_application_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_us_patent_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_claims</td><td>patents</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_title</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+
+<tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_num_patents_for_assignee</td><td>uspcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_sequence</td><td>uspcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_subclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_subclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_inventors</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_years_active</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>year_id</td><td>years</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>year_num_patents_for_assignee</td><td>years</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+
+</table>
+
+<table>
+<tr><td>*</td> <td>= unique identifier</td></tr>
+<tr><td>**</td> <td>= not yet implemented</td></tr>
+</table>
+
+<h2><a name="cpc_subsections_query"></a> CPC Subsections Query</h2>
+<p><code><strong><em>GET</em></strong> /api/cpc_subsections/query?q{,f,o,s}</code></p>
+<p><code><strong><em>POST</em></strong> /api/cpc_subsections/query</code></p>
+<p>This will search for CPC (Cooperative Patent Classification) subsections matching the query string (<code>q</code>) and returning the data fields listed in the field string (<code>f</code>) sorted by the fields in the sort string (<code>s</code>) using options provided in the option string (<code>o</code>).</p>
+<p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
+<table>
+
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Details</th>
+</tr>
+
+<tr>
+<td><code>q</code></td>
+<td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
+<td>string, required<br/> example: <code>{"cpc_subsection_id":"G12"}</code></td>
+</tr>
+
+<tr>
+<td><code>f</code></td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>string, optional<br/> example: <code>["cpc_subsection_id", "cpc_subsection_title","cpc_total_num_patents"]</code></td>
+</tr>
+
+<tr>
+<td><code>s</code></td>
+<td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal inventor identifier.</td>
+<td>string, optional<br/> example: <code>[{"cpc_total_num_patents":"desc"}]</code></td>
+</tr>
+
+<tr>
+<td><code>o</code></td>
+<td>JSON formatted object of options to modify the query or results. Available options are:
+<ul>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the entity-specific query criteria should be included in the results. Defaults to true if not provided. </li>
+<li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
+<li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
+</ul>
+</td>
+<td>string, optional<br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code></td>
+</tr>
+
+<tr>
+<td><code>format</code></td>
+<td>Specifies the response data format. If not provided, defaults to JSON. Available options are:
+<ul>
+<li><code>json</code></li>
+<li><code>xml</code></li>
+</ul>
+</td>
+<td>string, optional<br/> example: <code>format=xml</code></td>
+</tr>
+
+</table>
+
+<p>An example of a complete API call using the GET verb is:</p>
+<pre><code>https://api.patentsview.org/api/v0/cpc_subsections/query?q={"cpc_subsection_id":"G12"}&amp;f=["cpc_subsection_id","cpc_subsection_title","cpc_num__total_num_patents"]
+</code></pre>
+<p>An example of the equivalent API call using the POST verb is:</p>
+<pre><code>https://api.patentsview.org/api/v0/cpc_subsections/query
+</code></pre>
+<p>with the body containing:</p>
+<pre><code>{"q":{"cpc_subsection_id":"G12"},"f":["cpc_subsection_id", "cpc_subsection_title","cpc_num__total_num_patents"]}
+</code></pre>
+<h3><a name="cpc_subsection_field_list"></a> CPC Subsection Field List</h3>
+<table>
+
+<tr>
+<th>API Field Name</th>
+<th>Group</th>
+<th>Type</th>
+<th>Query</th>
+<th>Return</th>
+<th>Sort</th>
+</tr>
+
+<tr><td>app_country</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_date</td><td>applications</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_id</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_number</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_type</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_first_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_id*</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_last_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_num_patents_for_cpc_subsection</td><td>assignees</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_years_active</td><td>assignee</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_group_id</td><td>cpc_subgroups</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_group_title</td><td>cpc_subgroups</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subgroup_id</td><td>cpc_subgroups</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subgroup_title</td><td>cpc_subgroups</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_category</td><td>cpc_subsections</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>cpc_section_id</td><td>cpc_subsections</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>cpc_subsection_id*</td><td>cpc_subsections</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>cpc_subsection_title</td><td>cpc_subsections</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>cpc_total_num_assignees</td><td>cpc_subsections</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>cpc_total_num_inventors</td><td>cpc_subsections</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>cpc_total_num_patents</td><td>cpc_subsections</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>cpc_years_active</td><td>cpc_subsections</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_first_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_id*</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_last_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_num_patents_for_cpcsubsection</td><td>inventors</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_years_active</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_action_date</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_class</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_classification_data_source</td><td>ipcs</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_classification_value</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_main_group</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_section</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_subclass</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_subgroup</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_symbol_position</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_total_num_assignees</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_total_num_inventors</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_version_indicator</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_years_active</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_abstract</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_date</td><td>patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_city</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_latitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_longitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_id*</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_kind</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_cited_by_us_patents</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_combined_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_foreign_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_us_application_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_us_patent_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_claims</td><td>patents</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_title</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_subclass_id*</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_subclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_inventors</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_total_num_patents</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_years_active</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>year_id</td><td>years</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>year_num_patents_for_cpcsubsection</td><td>years</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+
+<table>
+<tr><td>*</td> <td>= unique identifier</td></tr>
+<tr><td>**</td> <td>= not yet implemented</td></tr>
+</table>
+
+</table>
+
+<h2><a name="uspc_mainclasses_query"></a> USPC Mainclasses Query</h2>
+<p><code><strong><em>GET</em></strong> /api/uspc_mainclasses/query?q{,f,o,s}</code></p>
+<p><code><strong><em>POST</em></strong> /api/uspc_mainclasses/query</code></p>
+<p>This will search for USPC (United States Patent Classification) mainclasses matching the query string (<code>q</code>) and returning the data fields listed in the field string (<code>f</code>) sorted by the fields in the sort string (<code>s</code>) using options provided in the option string (<code>o</code>).</p>
+<p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
+<table>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Details</th>
+</tr>
+
+<tr>
+<td><code>q</code></td>
+<td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
+<td>string, required<br/> example: <code>{"uspc_mainclass_id":"292"}</code></td>
+</tr>
+
+<tr>
+<td><code>f</code></td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>string, optional<br/> example: <code>["uspc_mainclass_id", "uspc_mainclass_title","uspc_total_num_patents"]</code></td>
+</tr>
+
+<tr>
+<td><code>s</code></code>
+<td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal inventor identifier.</td>
+<td<string, optional<br/> example: <code>[{"uspc_total_num_patents":"desc"}]</code></td>
+</tr>
+
+<tr>
+<td><code>o</code></td>
+<td>JSON formatted object of options to modify the query or results. Available options are:
+<ul>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the entity-specific query criteria should be included in the results. Defaults to true if not provided.</li>
+<li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
+<li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
+</ul>
+</td>
+<td>string, optional<br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code></td>
+</tr>
+
+<tr>
+<td><code>format</code></td>
+<td>Specifies the response data format. If not provided, defaults to JSON. Available options are:
+<ul>
+<li>json</li>
+<li>xml</li>
+</ul>
+</td>
+<td>string, optional<br/> example: <code>format=xml</code></td>
+</tr>
+
+</table>
+
+<p>An example of a complete API call using the GET verb is:</p>
+<pre><code>https://api.patentsview.org/api/v0/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_num__total_num_patents"]
+</code></pre>
+<p>An example of the equivalent API call using the POST verb is:</p>
+<pre><code>https://api.patentsview.org/api/v0/uspc_mainclasses/query
+</code></pre>
+<p>with the body containing:</p>
+<pre><code>{"q":{"uspc_mainclass_id":"292"},"f":["uspc_mainclass_id", "uspc_mainclass_title","uspc_num__total_num_patents"]}
+</code></pre>
+<h3><a name="uspc_mainclass_field_list"></a> USPC Mainclass Field List</h3>
+<table>
+<tr>
+<th>API Field Name</th>
+<th>Group</th>
+<th>Type</th>
+<th>Query</th>
+<th>Return</th>
+<th>Sort</th>
+</tr>
+
+<tr><td>app_country</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_date</td><td>applications</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_id</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_number</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_type</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_first_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_id*</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_last_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_num_patents_for_uspc_mainclass</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_years_active</td><td>assignee</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_category</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_group_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_group_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_section_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subgroup_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subgroup_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subsection_id*</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_subsection_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_assignees</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_inventors</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_total_num_patents</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_years_active</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_first_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_id*</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_last_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_num_patents_for_uspc_mainclass</td><td>inventors</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_years_active</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_action_date</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_class</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_classification_data_source</td><td>ipcs</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_classification_value</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_main_group</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_section</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_subclass</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_subgroup</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_symbol_position</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_total_num_assignees</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_total_num_inventors</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_version_indicator</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_years_active</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_abstract</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_date</td><td>patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_city</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_latitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_longitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_firstnamed_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_id*</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_kind</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_cited_by_us_patents</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_combined_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_foreign_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_us_application_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_us_patent_citations</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_num_claims</td><td>patents</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_title</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_mainclass_id</td><td>uspc_mainclasses</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>uspc_mainclass_title</td><td>uspc_mainclasses</td><td>full text</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>uspc_total_num_assignees</td><td>uspc_mainclasses</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>uspc_total_num_inventors</td><td>uspc_mainclasses</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>uspc_total_num_patents</td><td>uspc_mainclasses</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>uspc_years_active</td><td>uspc_mainclasses</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>uspc_subclass_id*</td><td>uspc_subclasses</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_subclass_title</td><td>uspc_subclasses</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>year_id</td><td>years</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>year_num_patents_for_uspc_mainclass</td><td>years</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
+
+</table>
+
+<table>
+<tr><td>*</td> <td>= unique identifier</td></tr>
+<tr><td>**</td> <td>= not yet implemented</td></tr>
+</table>
+          </body>
+          </html>
+          

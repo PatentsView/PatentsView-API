@@ -152,6 +152,14 @@ $app->post(
     }
 );
 
+$app->get(
+  '/',
+  function () use ($app) {
+      $app->contentType('application/html; charset=utf-8');
+      $app->response->redirect('doc.html', 303);
+  }
+);
+
 
 function CheckGetParameters($app)
 {
