@@ -5,7 +5,7 @@ $config = null; // We're doing this here so it can be instantiated once but used
 final class Config
 {
 
-    const MODE = 'development'; // options are "development", "staging", "production"
+    const MODE = 'staging'; // options are "development", "staging", "production"
 
     private static $instance;
 
@@ -29,8 +29,9 @@ final class Config
         $user = 'UserName';
         $pass = 'TheSecretPassword';
         $database = 'TheDatabaseToUse';
+        $supportDatabase = 'PVSupport_dev';
 
-        return array('host' => $host, 'user' => $user, 'password' => $pass, 'database' => $database);
+        return array('host' => $host, 'user' => $user, 'password' => $pass, 'database' => $database, 'supportDatabase' => $supportDatabase);
     }
 
 
