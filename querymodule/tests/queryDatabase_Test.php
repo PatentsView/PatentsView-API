@@ -32,8 +32,8 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(10, count($results['assignees']));
     }
 
-    #Todo: not tested on full DB yet
-    public function testQueryDatabase_EmptyWhere()
+    #Todo: Way too slow. Need to consider putting a limit 100000 on the total number of entities found. Otherwise the insert into the QueryResults is too slow.
+/*    public function testQueryDatabase_EmptyWhere()
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
@@ -51,7 +51,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $options = array('per_page'=>10000);
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldsSpecs, null, $options);
         $this->assertGreaterThan(6000, count($results['patents']));
-    }
+    }*/
 
     public function testQueryDatabaseWithPaging()
     {
@@ -153,6 +153,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         }
     }
 
+    #Todo: Slow - 1.5m
     public  function testQueryDatabaseAllFieldsMaxPageSize()
     {
         global $PATENT_ENTITY_SPECS;
@@ -174,7 +175,8 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function testQueryDatabaseInventorCombo1()
+    #Todo: Slow - 6.5m, 1.5m total patents
+/*    public function testQueryDatabaseInventorCombo1()
     {
         global $INVENTOR_ENTITY_SPECS;
         global $INVENTOR_FIELD_SPECS;
@@ -192,7 +194,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $encoded = json_encode($results);
         $this->assertEquals(25, count($results['inventors']));
         $this->assertEquals(47, count($results['patents']));
-    }
+    }*/
 
     public function testQueryDatabaseInventorCombo2()
     {

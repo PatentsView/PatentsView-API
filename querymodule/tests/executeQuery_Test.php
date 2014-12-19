@@ -51,7 +51,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        //TODO This test will fail when run against a different database
         $queryString = '{"_text_phrase":{"patent_title":"lead wire"}}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
@@ -65,7 +64,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        //TODO This test will fail when run against a different database
         $queryString = '{"_text_any":{"patent_title":"lead wire"}}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
@@ -80,7 +78,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        //TODO This test will fail when run against a different database
         $queryString = '{"_text_all":{"patent_title":"lead wire"}}';
         $expected = '{"patents":[{"patent_title":"Wire lead straightening device"},{"patent_title":"Small magnet wire to lead wire termination"},{"patent_title":"Lead wire forming apparatus for incandescent filaments"},{"patent_title":"Ceramic envelope plug and lead wire and seal"},{"patent_title":"Heart pacer lead wire with break-away needle"},{"patent_title":"Wire lead bonding tool"},{"patent_title":"Motor lead guide and lead wire attaching means"},{"patent_title":"Hermetic lead wire"},{"patent_title":"Anode and cathode lead wire assembly for solid electrolytic capacitors"},{"patent_title":"Stator coil winding and lead wire connection"},{"patent_title":"Crimping and wire lead insertion machine"},{"patent_title":"Forced air furnace motor lead wire protection"},{"patent_title":"Wire lead and solder removal tool"},{"patent_title":"Crimping and wire lead insertion machine having improved insertion means"},{"patent_title":"Wire straightening mechanism for wire lead production apparatus"},{"patent_title":"Wire gathering mechanism for wire lead production apparatus"},{"patent_title":"Lead wire cutter"},{"patent_title":"Wire lead clamping mechanism for wire lead production apparatus"},{"patent_title":"Anode and cathode lead wire assembly for solid electrolytic capacitors"},{"patent_title":"Lamp lead to wire attachment for integral string sets"},{"patent_title":"Tungsten halogen lamp having lead-in wire comprising tantalum alloy"},{"patent_title":"Component lead wire cutting equipment"},{"patent_title":"Horn loudspeaker with particular suspension and lead wire passage"},{"patent_title":"Lead wire forming apparatus for electric parts"},{"patent_title":"Wire lead forming machine"}],"count":25,"total_found":280}';
         $decoded = json_decode($queryString, true);
@@ -161,8 +158,9 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
 
     public function testLargeReturnSet()
     {
-        # First run: 32s on full DB, most of the time spent on inserting into PVSupport.QueryResults
-        # Second run: <1s
+        #Todo: Slow
+        # First run: 22s on full DB, most of the time spent on inserting into PVSupport.QueryResults
+        # Second run: 1s
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $queryString = '{"_gte":{"patent_number":"8000000"}}';
@@ -175,7 +173,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
 
     public function testLargeReturnSetLargePage()
     {
-        # First run: 10s on full DB
+        #Todo: Slow
+        # First run: 20s on full DB
         #Second run: 2s
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
@@ -190,6 +189,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     }
 
     #Todo: Out of memory when per_page is 10000. Ok at 2000: PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 64 bytes) in C:\Greg\SourceCode\PatentsView-API\querymodule\app\convertDBResultsToNestedStructure.php on line 77
+    #Still takes 45s
     public function testAllFieldsMaxPage()
     {
         global $PATENT_ENTITY_SPECS;
@@ -257,6 +257,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('year_num_patents_for_inventor', $results['inventors'][0]['years'][0]);
     }
 
+    #Todo: Slow
     public function testNormalAssignee()
     {
         global $ASSIGNEE_ENTITY_SPECS;
@@ -323,7 +324,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     }
 
     #Todo: This is slow. When I remove the location data it is much faster. Slowdown primarily due to data volume. 3.4m first time.
-    public function testAllFieldsCPCSubsection()
+/*    public function testAllFieldsCPCSubsection()
     {
         global $CPC_ENTITY_SPECS;
         global $CPC_FIELD_SPECS;
@@ -333,13 +334,15 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $decoded, $fieldList);
         $this->assertGreaterThanOrEqual(1, $results['total_found']);
     }
+*/
 
-    public function testAllGroupsCPCSubsection()
+    #Todo: Slow, hopefully due to just year being calculated rather than an explicit field. Retest after that has changed.
+/*    public function testAllGroupsCPCSubsection()
     {
         global $CPC_ENTITY_SPECS;
         global $CPC_FIELD_SPECS;
         $queryString = '{"cpc_subsection_id":"B41"}';
-        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","cpc_subsection_id","cpc_subgroup_id");
+        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","cpc_subsection_id","cpc_subgroup_id","year_id");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $decoded, $fieldList);
         $this->assertEquals(1, count($results['cpc_subsections']));
@@ -356,8 +359,9 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('uspc_subclass_id', $results['cpc_subsections'][0]['uspcs'][0]);
         $this->assertArrayHasKey('years', $results['cpc_subsections'][0]);
         $this->assertArrayHasKey('year_num_patents_for_cpc_subsection', $results['cpc_subsections'][0]['years'][0]);
-    }
+    }*/
 
+    #Todo: Slow 14s
     public function testNormalUSPCMainclass()
     {
         global $USPC_ENTITY_SPECS;
@@ -372,7 +376,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     }
 
     #Todo: This is slow. When I remove the location data it is much faster. Slowdown primarily due to data volume.
-    public function testAllFieldsUSPCMainclass()
+/*    public function testAllFieldsUSPCMainclass()
     {
         global $USPC_ENTITY_SPECS;
         global $USPC_FIELD_SPECS;
@@ -381,10 +385,10 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $fieldList = array_keys($USPC_FIELD_SPECS);
         $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $decoded, $fieldList);
         $this->assertGreaterThanOrEqual(1, $results['total_found']);
-    }
+    }*/
 
     #Todo: Slow, hopefully due to just year being calculated rather than an explicit field. Retest after that has changed.
-    public function testAllGroupsUSPCMainclass()
+/*    public function testAllGroupsUSPCMainclass()
     {
         global $USPC_ENTITY_SPECS;
         global $USPC_FIELD_SPECS;
@@ -406,6 +410,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('years', $results['uspc_mainclasses'][0]);
         $this->assertArrayHasKey('year_num_patents_for_uspc_mainclass', $results['uspc_mainclasses'][0]['years'][0]);
     }
-
+*/
 }
 
