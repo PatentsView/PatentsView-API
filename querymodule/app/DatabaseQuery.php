@@ -313,16 +313,9 @@ class DatabaseQuery
         $selectString = '';
 
         foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
-            if (strtolower($fieldInfo['query']) === 'y') {
-                if ($selectString != '')
-                    $selectString .= ', ';
-                $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
-            }
-            else {
-                $msg = "Not a valid field for querying: $apiField";
-                ErrorHandler::getHandler()->sendError(400, $msg);
-                throw new ErrorException($msg);
-            }
+            if ($selectString != '')
+                $selectString .= ', ';
+            $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
         }
 
         return $selectString;
@@ -334,16 +327,9 @@ class DatabaseQuery
 
         foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
             if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
-                if (strtolower($fieldInfo['query']) === 'y') {
-                    if ($selectString != '')
-                        $selectString .= ', ';
-                    $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
-                }
-                else {
-                    $msg = "Not a valid field for querying: $apiField";
-                    ErrorHandler::getHandler()->sendError(400, $msg);
-                    throw new ErrorException($msg);
-                }
+                if ($selectString != '')
+                    $selectString .= ', ';
+                $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
             }
         }
 

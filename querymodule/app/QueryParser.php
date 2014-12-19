@@ -106,48 +106,55 @@ class QueryParser
         $returnString = null;
         $apiField = key($criterion);
         if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            $val = current($criterion);
-            $dbField = getDBField($this->fieldSpecs, $apiField);
-            $datatype = $this->fieldSpecs[$apiField]['datatype'];
-            // If of the type: { field : value }
-            if (!is_array($val)) {
-                $returnString = $this->processSimplePair($operator, $criterion);
-            } // Else of the type { field : [value,...] }
-            else {
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                if ($datatype == 'int') {
-                    foreach ($val as $singleVal) {
-                        if (!is_numeric($singleVal)) {
-                            ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $singleVal.");
-                            throw new ErrorException("Invalid date provided: $singleVal.");
-                        }
-                    }
-                    $returnString = "($dbField in (" . implode(", ", $val) . "))";
-                } elseif ($datatype == 'float') {
-                    foreach ($val as $singleVal) {
-                        if (!is_float($singleVal)) {
-                            ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $singleVal.");
-                            throw new ErrorException("Invalid date provided: $singleVal.");
-                        }
-                    }
-                    $returnString = "($dbField in (" . implode(", ", $val) . "))";
-                } elseif ($datatype == 'date') {
-                    $dateVals = array();
-                    foreach ($val as $singleVal) {
-                        if (strtotime($singleVal))
-                            $dateVals[] = date('Y-m-d', strtotime($singleVal));
-                        else {
-                            ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $singleVal.");
-                            throw new ErrorException("Invalid date provided: $singleVal.");
-                        }
-                    }
-                    $returnString = "($dbField in ('" . implode("', '", $dateVals) . "'))";
-                } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
-                    $returnString = "($dbField in ('" . implode("', '", $val) . "'))";
+            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                $val = current($criterion);
+                $dbField = getDBField($this->fieldSpecs, $apiField);
+                $datatype = $this->fieldSpecs[$apiField]['datatype'];
+                // If of the type: { field : value }
+                if (!is_array($val)) {
+                    $returnString = $this->processSimplePair($operator, $criterion);
+                } // Else of the type { field : [value,...] }
                 else {
-                    ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' found for '$apiField'.");
-                    throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
+                    if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                    if ($datatype == 'int') {
+                        foreach ($val as $singleVal) {
+                            if (!is_numeric($singleVal)) {
+                                ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $singleVal.");
+                                throw new ErrorException("Invalid date provided: $singleVal.");
+                            }
+                        }
+                        $returnString = "($dbField in (" . implode(", ", $val) . "))";
+                    } elseif ($datatype == 'float') {
+                        foreach ($val as $singleVal) {
+                            if (!is_float($singleVal)) {
+                                ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $singleVal.");
+                                throw new ErrorException("Invalid date provided: $singleVal.");
+                            }
+                        }
+                        $returnString = "($dbField in (" . implode(", ", $val) . "))";
+                    } elseif ($datatype == 'date') {
+                        $dateVals = array();
+                        foreach ($val as $singleVal) {
+                            if (strtotime($singleVal))
+                                $dateVals[] = date('Y-m-d', strtotime($singleVal));
+                            else {
+                                ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $singleVal.");
+                                throw new ErrorException("Invalid date provided: $singleVal.");
+                            }
+                        }
+                        $returnString = "($dbField in ('" . implode("', '", $dateVals) . "'))";
+                    } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
+                        $returnString = "($dbField in ('" . implode("', '", $val) . "'))";
+                    else {
+                        ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' found for '$apiField'.");
+                        throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
+                    }
                 }
+            }
+            else {
+                $msg = "Not a valid field for querying: $apiField";
+                ErrorHandler::getHandler()->sendError(400, $msg);
+                throw new ErrorException($msg);
             }
         }
 
@@ -161,34 +168,41 @@ class QueryParser
         $returnString = null;
         $apiField = key($criterion);
         if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            $val = current($criterion);
-            $dbField = getDBField($this->fieldSpecs, $apiField);
-            $datatype = $this->fieldSpecs[$apiField]['datatype'];
-            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-            $operatorString = $this->COMPARISON_OPERATORS[$operator];
-            if ($datatype == 'float') {
-                if (!is_float($val)) {
-                    ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $val.");
-                    throw new ErrorException("Invalid integer value provided: $val.");
+            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                $val = current($criterion);
+                $dbField = getDBField($this->fieldSpecs, $apiField);
+                $datatype = $this->fieldSpecs[$apiField]['datatype'];
+                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                $operatorString = $this->COMPARISON_OPERATORS[$operator];
+                if ($datatype == 'float') {
+                    if (!is_float($val)) {
+                        ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $val.");
+                        throw new ErrorException("Invalid integer value provided: $val.");
+                    }
+                    $returnString = "($dbField $operatorString $val)";
+                } elseif ($datatype == 'int') {
+                    if (!is_numeric($val)) {
+                        ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $val.");
+                        throw new ErrorException("Invalid integer value provided: $val.");
+                    }
+                    $returnString = "($dbField $operatorString $val)";
+                } elseif ($datatype == 'date') {
+                    if (!strtotime($val)) {
+                        ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $val.");
+                        throw new ErrorException("Invalid date provided: $val.");
+                    }
+                    $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
+                } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
+                    $returnString = "($dbField $operatorString '$val')";
+                else {
+                    ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
+                    throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
                 }
-                $returnString = "($dbField $operatorString $val)";
-            } elseif ($datatype == 'int') {
-                if (!is_numeric($val)) {
-                    ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $val.");
-                    throw new ErrorException("Invalid integer value provided: $val.");
-                }
-                $returnString = "($dbField $operatorString $val)";
-            } elseif ($datatype == 'date') {
-                if (!strtotime($val)) {
-                    ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $val.");
-                    throw new ErrorException("Invalid date provided: $val.");
-                }
-                $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
-            } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
-                $returnString = "($dbField $operatorString '$val')";
+            }
             else {
-                ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
-                throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
+                $msg = "Not a valid field for querying: $apiField";
+                ErrorHandler::getHandler()->sendError(400, $msg);
+                throw new ErrorException($msg);
             }
         }
         return $returnString;
@@ -201,18 +215,25 @@ class QueryParser
         $returnString = null;
         $apiField = key($criterion);
         if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            $val = current($criterion);
-            $dbField = getDBField($this->fieldSpecs, $apiField);
-            $datatype = $this->fieldSpecs[$apiField]['datatype'];
-            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-            if ($datatype == 'string') {
-                if ($operator == '_begins')
-                    $returnString = "($dbField like '$val%')";
-                elseif ($operator == '_contains')
-                    $returnString = "($dbField like '%$val%')";
-            } else {
-                ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
-                throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
+            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                $val = current($criterion);
+                $dbField = getDBField($this->fieldSpecs, $apiField);
+                $datatype = $this->fieldSpecs[$apiField]['datatype'];
+                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                if ($datatype == 'string') {
+                    if ($operator == '_begins')
+                        $returnString = "($dbField like '$val%')";
+                    elseif ($operator == '_contains')
+                        $returnString = "($dbField like '%$val%')";
+                } else {
+                    ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
+                    throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
+                }
+            }
+            else {
+                $msg = "Not a valid field for querying: $apiField";
+                ErrorHandler::getHandler()->sendError(400, $msg);
+                throw new ErrorException($msg);
             }
         }
         return $returnString;
@@ -224,23 +245,30 @@ class QueryParser
         $returnString = null;
         $apiField = key($criterion);
         if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            $val = current($criterion);
-            $dbField = getDBField($this->fieldSpecs, $apiField);
+            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                $val = current($criterion);
+                $dbField = getDBField($this->fieldSpecs, $apiField);
 
-            if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
-                ErrorHandler::getHandler()->sendError(400, "The operation '$operator' is not valid on '$apiField''.");
-                throw new ErrorException("The operation '$operator' is not valid on '$apiField''.");
+                if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
+                    ErrorHandler::getHandler()->sendError(400, "The operation '$operator' is not valid on '$apiField''.");
+                    throw new ErrorException("The operation '$operator' is not valid on '$apiField''.");
+                }
+
+                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                if ($operator == '_text_phrase') {
+                    $returnString = "match ($dbField) against ('\"$val\"' in boolean mode)";
+                } elseif ($operator == '_text_any') {
+                    $returnString = "match ($dbField) against ('$val' in boolean mode)";
+                } elseif ($operator == '_text_all') {
+                    $val = '+' . $val;
+                    $val = str_replace(' ', ' +', $val);
+                    $returnString = "match ($dbField) against ('$val' in boolean mode)";
+                }
             }
-
-            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-            if ($operator == '_text_phrase') {
-                $returnString = "match ($dbField) against ('\"$val\"' in boolean mode)";
-            } elseif ($operator == '_text_any') {
-                $returnString = "match ($dbField) against ('$val' in boolean mode)";
-            } elseif ($operator == '_text_all') {
-                $val = '+' . $val;
-                $val = str_replace(' ', ' +', $val);
-                $returnString = "match ($dbField) against ('$val' in boolean mode)";
+            else {
+                $msg = "Not a valid field for querying: $apiField";
+                ErrorHandler::getHandler()->sendError(400, $msg);
+                throw new ErrorException($msg);
             }
         }
         return $returnString;
