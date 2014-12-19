@@ -8,82 +8,35 @@ The PatentsView API is currently under development and is not intended for publi
 
 ## Table of Contents
 
-<ul>
-<li>
-<a href="#patents_query">Patents Query</a>
-<ul>
-<li>
-<a href="#query_string_format">Query String Format</a> 
-<ul>
-<li><a href="#query_string_syntax">Syntax</a> </li>
-<li><a href="#single_criterion">Single Criterion</a> </li>
-<li><a href="#joining_criteria">Joining Criteria</a> </li>
-<li><a href="#comparison_operators">Comparison Operators</a> </li>
-<li><a href="#negation">Negation</a> </li>
-<li><a href="#value_arrays">Value Arrays</a> </li>
-<li><a href="#complex_combinations">Complex Combinations</a> </li>
-<li><a href="#formats">Formats</a> </li>
-</ul>
-</li>
-<li>
-<a href="#field_list_format">Field List Format</a> 
-</li>
-<li>
-<a href="#options_parameter">Options Parameter</a> 
-<ul>
-<li><a href="#pagination">Pagination</a> </li>
-<li><a href="#coinventor">Coinventor</a> </li>
-<li><a href="#query_string_example">Example</a> </li>
-</ul>
-</li>
-<li>
-<a href="#sort_parameter">Sort Parameter</a> 
-</li>
-<li>
-<a href="#results_format">Results Format</a> 
-<ul>
-<li><a href="#results_format_json">JSON</a> </li>
-<li><a href="#results_format_xml">XML</a> </li>
-</ul>
-</li>
-<li>
-<a href="#response_status_codes">Response Status codes</a> 
-</li>
-<li>
-<a href="#patent_field_list">Patent Field List</a> 
-</li>
-</ul>
-</li>
-<li>
-
-<a href="#inventors_query">Inventors Query</a> 
-<ul>
-<li><a href="#inventor_field_list">Inventor Field List</a> </li>
-</ul>
-</li>
-
-<li>
-<a href="#assignees_query">Assignees Query</a> 
-<ul>
-<li><a href="#assignee_field_list">Assignee Field List</a> </li>
-</ul>
-</li>
-
-<li>
-<a href="#cpc_subsections_query">CPC Subsections Query</a> 
-<ul>
-<li><a href="#cpc_subsection_field_list">CPC Subsection Field List</a> </li>
-</ul>
-</li>
-
-<li>
-<a href="#uspc_mainclasses_query">USPC Mainclasses Query</a> 
-<ul>
-<li><a href="#uspc_mainclass_field_list">USPC Mainclass Field List</a> </li>
-</ul>
-</li>
-
-</ul>
+* <a href="#patents_query">Patents Query</a>
+	* <a href="#query_string_format">Query String Format</a> 
+		* <a href="#query_string_syntax">Syntax</a>
+		* <a href="#single_criterion">Single Criterion</a>
+		* <a href="#joining_criteria">Joining Criteria</a>
+		* <a href="#comparison_operators">Comparison Operators</a>
+		* <a href="#negation">Negation</a>
+		* <a href="#value_arrays">Value Arrays</a>
+		* <a href="#complex_combinations">Complex Combinations</a>
+		* <a href="#formats">Formats</a>
+	* <a href="#field_list_format">Field List Format</a> 
+	* <a href="#options_parameter">Options Parameter</a> 
+		* <a href="#pagination">Pagination</a>
+		* <a href="#matched_subentities_only">Matched Subentities Only</a>
+		* <a href="#query_string_example">Example</a>
+	* <a href="#sort_parameter">Sort Parameter</a> 
+	* <a href="#results_format">Results Format</a> 
+		* <a href="#results_format_json">JSON</a>
+		* <a href="#results_format_xml">XML</a>
+	* <a href="#response_status_codes">Response Status codes</a> 
+	* <a href="#patent_field_list">Patent Field List</a> 
+* <a href="#inventors_query">Inventors Query</a> 
+	* <a href="#inventor_field_list">Inventor Field List</a>
+* <a href="#assignees_query">Assignees Query</a> 
+	* <a href="#assignee_field_list">Assignee Field List</a>
+* <a href="#cpc_subsections_query">CPC Subsections Query</a> 
+	* <a href="#cpc_subsection_field_list">CPC Subsection Field List</a>
+* <a href="#uspc_mainclasses_query">USPC Mainclasses Query</a> 
+	* <a href="#uspc_mainclass_field_list">USPC Mainclass Field List</a>
 
 ## <a name="patents_query"></a> Patents Query
 
@@ -124,12 +77,12 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>coinventors &mdash; Whether coinventor data should be shown when using inventor fields in the query. Defaults to true if not provided.  <em>Not yet implemented.</em></li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"coinventors": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
 </tr>
 
 <tr>
@@ -217,7 +170,7 @@ Comparison operators can be used to compare a field to a value using comparators
 * Full text
     * `_text_all` &mdash; the text contains all the words in the value string
     * `_text_any` &mdash; the text contains any of the words in the value string
-    * `_text_phrase` &mdash; the text contains all the exact phrase of the value string
+    * `_text_phrase` &mdash; the text contains the exact phrase of the value string
 
 To specify a comparison operator for a criterion, nest the element containing the criterion inside an element that uses the comparison operator. For example, this query string will return all patents that have a grant date on or after January 4, 2007:
 
@@ -278,19 +231,15 @@ By default the API will return the first 25 results. The `page` and `per_page` o
 * The `per_page` option specifies the number of results per page; it defaults to 25 and has a maximum of 10,000.
 * An example for specifying pagination in the options parameter is: `o={"page":2,"per_page":50}`
 
-#### <a name="coinventor"></a> Coinventor
+#### <a name="matched_subentities_only"></a> Matched Subentities Only
 
-The `coinventor` option is provided to indicate whether coinventor data should be included in the results in a special case when:
+The `matched_subentities_only` option is provided to indicate whether only those subentities that match their subentity-specific criteria shoul be included in the results. By default, all subentities will be included for each parent entity that matches the criteria.
 
-1. an inventor field is used in the query, and
-1. an inventor field (not necessarily the same one) is used in the output, and
-1. the inventor field in the query encompassed by an &ldquo;and&rdquo; join operator.
-
-For example, consider this query and output field list:
+This is easiest to understand with an example, so consider this query:
 
 `q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}&amp;f=[%22patent_number%22,%22patent_date%22,%22inventor_last_name%22]"></a>
 
-The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when `{"coinventors":true}`, the results will include all data for all inventors for the patents. However if `{"coinventors":false}`, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. Note that if the patent has multiple inventors that meet the inventor criteria, then each matching inventor will be included in the results. Also note that if the inventor field in the query is encompassed by an &ldquo;or&rdquo; join operator, then the coinventor parameter cannot be false.
+The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when `{"matched_subentities_only":false}`, the results will include all data for all inventors for the patents. However if `{"matched_subentities_only":true}`, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. Note that if the patent has multiple inventors that meet the inventor criteria, then each matching inventor will be included in the results. Also note that if the inventor field in the query is encompassed by an &ldquo;or&rdquo; join operator, then the matched_subentities_only parameter cannot be true.
 
 ##### <a name="query_string_example"></a> Example
 
@@ -333,13 +282,13 @@ Also assume this query:
 
 `q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a>
 
-The results would include the following (keeping in mind that coinventor data is included by default):
+The results would include the following (keeping in mind that all subentity (i.e. inventor) data is included by default):
 
 `{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Hopper"},{"inventor_last_name":"Whitney"},{"inventor_last_name":"Carrier"}]}],"count":1,"total_found":1}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Hopper%22},{%22inventor_last_name%22:%22Whitney%22},{%22inventor_last_name%22:%22Carrier%22}]}],%22count%22:1,%22total_found%22:1}"></a>
 
-However if the query were changed to exclude coinventor data, then the query and results would be as such:
+However if the query were changed to included only matched subentity data, then the query and results would be as such (including only the inventor with the last name of "Whitney":
 
-`q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]&o={"coinventors":false}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a>
+`q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]&o={"matched_subentities_only":true}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a>
 
 `{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Whitney"}]}],"count":1,"total_found":1}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Whitney%22}]}],%22count%22:1,%22total_found%22:1}"></a>
 
@@ -368,7 +317,7 @@ Each object in the array should be a pair, with the pair's key is one of the pat
     related_entity
         {key_value_pair[,...]}
     entity_name
-        { inventors | assignees | applications | application_citations | cited_patents | citedby_patents | ipcs | uspcs }
+        { inventors | assignees | applications | application_citations | cited_patents | citedby_patents | ipcs | uspc_mainclasses | cpc_subsections }
     key_value_pair
         "field_name":value
             Where field_name is from the table of fields below.
@@ -421,11 +370,11 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <th>Sort</th>
 </tr>
 
-<tr><td>app_country</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>app_date</td><td>applications</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>app_id</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>app_number</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>app_type</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>app_country</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>app_date</td><td>applications</td><td>date</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>app_id</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>app_number</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>app_type</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>appcit_app_number</td><td>application_citations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>appcit_category</td><td>application_citations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>appcit_date</td><td>application_citations</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -448,7 +397,7 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>assignee_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_years_active</td><td>assignee</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_years_active</td><td>assignee</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_category</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_date</td><td>citedby_patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_kind</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -487,9 +436,9 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>inventor_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_years_active</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_years_active</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_action_date</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>ipc_class**</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_class</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_classification_data_source</td><td>ipcs</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_classification_value</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_main_group</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -501,7 +450,7 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>ipc_total_num_assignees</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_total_num_inventors</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_version_indicator</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>ipc_years_active</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_years_active</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_abstract</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_date</td><td>patents</td><td>date</td><td>Y</td><td>Y</td><td>Y</td></tr>
@@ -529,7 +478,7 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_inventors</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_patents</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>uspc_years_active</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_years_active</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 
 </table>
 
@@ -573,13 +522,14 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 
 <tr>
 <td><code>o</code></td>
-<td>JSON formatted object of options to modify the query or results. Available options are:
+<td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>{"page": 2, "per_page": 50}</code></td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
 </tr>
 
 <tr>
@@ -636,7 +586,7 @@ with the body containing:
 <tr><td>assignee_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_years_active</td><td>assignee</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_years_active</td><td>assignee</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 
 <tr><td>coinventor_city</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>coinventor_country</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -676,7 +626,7 @@ with the body containing:
 <tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
 <tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
-<tr><td>inventor_years_active</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_years_active</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 
 <tr><td>ipc_action_date</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_class</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -684,14 +634,13 @@ with the body containing:
 <tr><td>ipc_classification_value</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_main_group</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_section</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>ipc_sequence</td><td>ipcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_subclass</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_subgroup</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_symbol_position</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_total_num_assignees</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_total_num_inventors</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_version_indicator</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>ipc_years_active</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_years_active</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 
 <tr><td>location_city</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>location_country</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -722,13 +671,12 @@ with the body containing:
 <tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_num_patents_for_inventor</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>uspc_sequence</td><td>uspcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_subclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_subclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_inventors</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_patents</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>uspc_years_active</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_years_active</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 
 <tr><td>year_id</td><td>years</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>year_num_patents_for_inventor</td><td>years</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -774,13 +722,14 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 
 <tr>
 <td><code>o</code></td>
-<td>JSON formatted object of options to modify the query or results. Available options are:
+<td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>{"page": 2, "per_page": 50}</code></td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
 </tr>
 
 <tr>
@@ -819,7 +768,7 @@ with the body containing:
 <tr><td>app_number</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>app_type</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 
-<tr><td>assignee_first_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_first_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>assignee_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>assignee_last_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
@@ -830,7 +779,7 @@ with the body containing:
 <tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
-<tr><td>assignee_years_active</td><td>assignee</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_years_active</td><td>assignee</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 
 <tr><td>cpc_category</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_group_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -860,7 +809,7 @@ with the body containing:
 <tr><td>inventor_num_patents_for_assignee</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_years_active</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_years_active</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 
 <tr><td>ipc_action_date</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_class</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -868,14 +817,13 @@ with the body containing:
 <tr><td>ipc_classification_value</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_main_group</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_section</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>ipc_sequence</td><td>ipcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_subclass</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_subgroup</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_symbol_position</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_total_num_assignees</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_total_num_inventors</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_version_indicator</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>ipc_years_active</td><td>ipcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>ipc_years_active</td><td>ipcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 
 <tr><td>location_city</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>location_country</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -906,12 +854,11 @@ with the body containing:
 <tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_num_patents_for_assignee</td><td>uspcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>uspc_sequence</td><td>uspcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_subclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_subclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_inventors</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>uspc_years_active</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_years_active</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 
 <tr><td>year_id</td><td>years</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>year_num_patents_for_assignee</td><td>years</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -961,14 +908,14 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 
 <tr>
 <td><code>o</code></td>
-<td>JSON formatted object of options to modify the query or results. Available options are:
+<td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the entity-specific query criteria should be included in the results. Defaults to true if not provided. </li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional<br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code></td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
 </tr>
 
 <tr>
@@ -1147,15 +1094,16 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 
 <tr>
 <td><code>o</code></td>
-<td>JSON formatted object of options to modify the query or results. Available options are:
+<td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the entity-specific query criteria should be included in the results. Defaults to true if not provided.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional<br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code></td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
 </tr>
+
 
 <tr>
 <td><code>format</code></td>
