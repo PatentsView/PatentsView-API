@@ -47,6 +47,18 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $encoded);
     }
 
+    /**
+     * @expectedException ErrorException
+     */
+    public function testInvalidQueryField()
+    {
+        global $PATENT_ENTITY_SPECS;
+        global $PATENT_FIELD_SPECS;
+        $queryString = '{"patent_abstract":"abc"}';
+        $decoded = json_decode($queryString, true);
+        $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
+    }
+
     public function testTextPhrase()
     {
         global $PATENT_ENTITY_SPECS;
