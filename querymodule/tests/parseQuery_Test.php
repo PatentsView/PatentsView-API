@@ -8,18 +8,18 @@ class parseQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_FIELD_SPECS;
         $pq = new QueryParser();
-        $returnString = $pq->parse($PATENT_FIELD_SPECS, json_decode('{"patent_type":"design"}', true), 'all');
-        $this->assertEquals("(patent.type = 'design')", $returnString);
-        $this->assertEquals(array('patent_type'), $pq->getFieldsUsed());
+        $returnString = $pq->parse($PATENT_FIELD_SPECS, json_decode('{"patent_number":"abc"}', true), 'all');
+        $this->assertEquals("(patent.number = 'abc')", $returnString);
+        $this->assertEquals(array('patent_number'), $pq->getFieldsUsed());
     }
 
     public function testJoin()
     {
         global $PATENT_FIELD_SPECS;
         $pq = new QueryParser();
-        $returnString = $pq->parse($PATENT_FIELD_SPECS, json_decode('{"_and":[{"patent_type":"design"},{"inventor_last_name":"Hopper"}]}', true), 'all');
-        $this->assertEquals("((patent.type = 'design') and (inventor.name_last = 'Hopper'))", $returnString);
-        $expectedFields = array('patent_type','inventor_last_name');
+        $returnString = $pq->parse($PATENT_FIELD_SPECS, json_decode('{"_and":[{"patent_number":"abc"},{"inventor_last_name":"Hopper"}]}', true), 'all');
+        $this->assertEquals("((patent.number = 'abc') and (inventor.name_last = 'Hopper'))", $returnString);
+        $expectedFields = array('patent_number','inventor_last_name');
         sort($expectedFields);
         $usedFields = $pq->getFieldsUsed();
         sort($usedFields);
@@ -30,18 +30,18 @@ class parseQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_FIELD_SPECS;
         $pq = new QueryParser();
-        $returnString = $pq->parse($PATENT_FIELD_SPECS, json_decode('{"_lt":{"patent_type":"design"}}', true), 'all');
-        $this->assertEquals("(patent.type < 'design')", $returnString);
-        $this->assertEquals(array('patent_type'), $pq->getFieldsUsed());
+        $returnString = $pq->parse($PATENT_FIELD_SPECS, json_decode('{"_lt":{"patent_number":"abc"}}', true), 'all');
+        $this->assertEquals("(patent.number < 'abc')", $returnString);
+        $this->assertEquals(array('patent_number'), $pq->getFieldsUsed());
     }
 
     public function testNegation()
     {
         global $PATENT_FIELD_SPECS;
         $pq = new QueryParser();
-        $returnString = $pq->parse($PATENT_FIELD_SPECS, json_decode('{"_not":{"patent_type":"design"}}', true), 'all');
-        $this->assertEquals("not (patent.type = 'design')", $returnString);
-        $this->assertEquals(array('patent_type'), $pq->getFieldsUsed());
+        $returnString = $pq->parse($PATENT_FIELD_SPECS, json_decode('{"_not":{"patent_number":"abc"}}', true), 'all');
+        $this->assertEquals("not (patent.number = 'abc')", $returnString);
+        $this->assertEquals(array('patent_number'), $pq->getFieldsUsed());
     }
 
     public function testValueList()
