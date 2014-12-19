@@ -6,7 +6,7 @@
         <param name="file" value="../logs/myLog.log" />
     </appender>
     <root>
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender_ref ref="myAppender" />
     </root>
 </configuration>
