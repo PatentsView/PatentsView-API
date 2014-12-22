@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__) . '/../execute_query.php';
+require_once dirname(__FILE__) . '/../executeQuery.php';
 require_once dirname(__FILE__) . '/../ErrorHandler.php';
 require_once dirname(__FILE__) . '/../entitySpecs.php';
 

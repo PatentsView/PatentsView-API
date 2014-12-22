@@ -2,7 +2,7 @@
 require_once dirname(__FILE__) . '/QueryParser.php';
 require_once dirname(__FILE__) . '/DatabaseQuery.php';
 require_once dirname(__FILE__) . '/convertDBResultsToNestedStructure.php';
-require_once dirname(__FILE__) . '/parse_fields.php';
+require_once dirname(__FILE__) . '/parseFieldList.php';
 
 function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam=null, array $fieldsParam=null, array $sortParam=null, array $optionsParam=null)
 {

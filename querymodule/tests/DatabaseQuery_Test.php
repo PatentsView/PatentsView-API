@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/../app/DatabaseQuery.php';
-require_once dirname(__FILE__) . '/../app/execute_query.php';
+require_once dirname(__FILE__) . '/../app/executeQuery.php';
 require_once dirname(__FILE__) . '/../app/entitySpecs.php';
 
 class queryDatabase_Test extends PHPUnit_Framework_TestCase
@@ -175,12 +175,12 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         }
     }
 
-    #Todo: Slow - 6.5m, 1.5m total patents
-/*    public function testQueryDatabaseInventorCombo1()
+    #Todo: Slow - 1.1m, 1.5m total patents
+    public function testQueryDatabaseInventorCombo1()
     {
         global $INVENTOR_ENTITY_SPECS;
         global $INVENTOR_FIELD_SPECS;
-        $whereClause = "patent.date >= '2007-01-04'";
+        $whereClause = "patent.year >= 2007";
         $whereFieldsUsed = array('patent_date');
         $sort = array(array('inventor_last_name'=>'desc'));
         $selectFieldsSpecs = array(
@@ -194,7 +194,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $encoded = json_encode($results);
         $this->assertEquals(25, count($results['inventors']));
         $this->assertEquals(47, count($results['patents']));
-    }*/
+    }
 
     public function testQueryDatabaseInventorCombo2()
     {
