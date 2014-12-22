@@ -152,6 +152,7 @@ $PATENT_FIELD_SPECS = array
     'patent_num_us_patent_citations' => array('entity_name'=>'patent', 'column_name' => 'patent.num_us_patents_cited', 'datatype' => 'int', 'query' => 'y', 'sort' => 'y'),
     'patent_num_claims' => array('entity_name'=>'patent', 'column_name' => 'patent.num_claims', 'datatype' => 'int', 'query' => 'n', 'sort' => 'y'),
     'patent_number' => array('entity_name'=>'patent', 'column_name' => 'patent.number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'y'),
+    'patent_processing_time' => array('entity_name'=>'patent', 'column_name' => 'patent.patent_processing_days', 'datatype' => 'int', 'query' => 'y', 'sort' => 'y'),
     'patent_title' => array('entity_name'=>'patent', 'column_name' => 'patent.title', 'datatype' => 'fulltext', 'query' => 'y', 'sort' => 'y'),
     'patent_type' => array('entity_name'=>'patent', 'column_name' => 'patent.type', 'datatype' => 'string', 'query' => 'n', 'sort' => 'y'),
     'uspc_mainclass_id' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.mainclass_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
