@@ -95,14 +95,14 @@ class DatabaseQuery
                 $this->runInsertSelect($insertStatement,
                     $selectPrimaryEntityIdsString,
                     '(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
-                    $fromInsert . ' ' . $whereInsert . $sortInsert . ') XX, (select @row_number:=0) temprownum',
+                    $fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
                     null,
                     null);
                 $this->commitTransaction();
             }
             catch (Exception $e) {
                 $this->rollbackTransaction();
-                throw $e;
+                throw new $e;
             }
         }
 
