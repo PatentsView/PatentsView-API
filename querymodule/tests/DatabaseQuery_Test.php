@@ -153,7 +153,6 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         }
     }
 
-    #Todo: Slow - 1.5m
     public  function testQueryDatabaseAllFieldsMaxPageSize()
     {
         global $PATENT_ENTITY_SPECS;

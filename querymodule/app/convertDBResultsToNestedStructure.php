@@ -70,16 +70,18 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults=
         foreach (array_slice($groupVars, 1) as $group) {
             if (isset($dbResults[$group['group_name']])) {
                 ${$group['group_name']} = array();
-                foreach (${$group['byPrimaryEntityId']}[${$primaryEntityGroup['thisId']}] as $groupRow) {
-                    ${$group['entity_name']} = $groupRow;
-                    unset(${$group['entity_name']}[$primaryEntityGroup['keyId']]);
-                    // Check to make sure the field was in the original field list, and not a field we added
-                    foreach ($groupRow as $apiField=>$val)
-                        if (!isset($selectFieldSpecs[$apiField]))
-                            unset(${$group['entity_name']}[$apiField]);
-                    ${$group['group_name']}[] = ${$group['entity_name']};
+                if (array_key_exists(${$primaryEntityGroup['thisId']}, ${$group['byPrimaryEntityId']})) {
+                    foreach (${$group['byPrimaryEntityId']}[${$primaryEntityGroup['thisId']}] as $groupRow) {
+                        ${$group['entity_name']} = $groupRow;
+                        unset(${$group['entity_name']}[$primaryEntityGroup['keyId']]);
+                        // Check to make sure the field was in the original field list, and not a field we added
+                        foreach ($groupRow as $apiField => $val)
+                            if (!isset($selectFieldSpecs[$apiField]))
+                                unset(${$group['entity_name']}[$apiField]);
+                        ${$group['group_name']}[] = ${$group['entity_name']};
+                    }
+                    ${$primaryEntityGroup['entity_name']}[$group['group_name']] = ${$group['group_name']};
                 }
-                ${$primaryEntityGroup['entity_name']}[$group['group_name']] = ${$group['group_name']};
             }
         }
         ${$primaryEntityGroup['group_name']}[] = ${$primaryEntityGroup['entity_name']};

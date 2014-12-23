@@ -292,7 +292,7 @@ $INVENTOR_FIELD_SPECS = array
     'uspc_total_num_inventors' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
     'uspc_total_num_patents' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
     'uspc_years_active' => array('entity_name'=>'uspc', 'column_name' => 'concat(year(uspc_current.first_seen_date),\'-\',year(uspc_current.last_seen_date))', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
-    'year_id' => array('entity_name'=>'year', 'column_name' => 'patent_year.year)', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
+    'year_id' => array('entity_name'=>'year', 'column_name' => 'patent_year.year', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
     'year_num_patents_for_inventor' => array('entity_name'=>'year', 'column_name' => '(select count(distinct patent_yearX.patent_id) from patent_inventor as patent_inventor_yearX left outer join patent as patent_yearX on patent_inventor_yearX.patent_id=patent_yearX.patent_id where patent_yearX.year=patent_year.year and patent_inventor_yearX.inventor_id=patent_inventor.inventor_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n')
 
 );
