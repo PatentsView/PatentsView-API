@@ -349,13 +349,13 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     }
 */
 
-    #Todo: Slow, hopefully due to just year being calculated rather than an explicit field. Retest after that has changed.
-/*    public function testAllGroupsCPCSubsection()
+    #Todo: Slow 17s
+    public function testAllGroupsCPCSubsection()
     {
         global $CPC_ENTITY_SPECS;
         global $CPC_FIELD_SPECS;
         $queryString = '{"cpc_subsection_id":"B41"}';
-        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","cpc_subsection_id","cpc_subgroup_id","year_id");
+        $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","cpc_subsection_id","cpc_subgroup_id","year_id","year_num_patents_for_cpc_subsection");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $decoded, $fieldList);
         $this->assertEquals(1, count($results['cpc_subsections']));
@@ -372,9 +372,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('uspc_subclass_id', $results['cpc_subsections'][0]['uspcs'][0]);
         $this->assertArrayHasKey('years', $results['cpc_subsections'][0]);
         $this->assertArrayHasKey('year_num_patents_for_cpc_subsection', $results['cpc_subsections'][0]['years'][0]);
-    }*/
+    }
 
-    #Todo: Slow 14s
     public function testNormalUSPCMainclass()
     {
         global $USPC_ENTITY_SPECS;
@@ -400,8 +399,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertGreaterThanOrEqual(1, $results['total_found']);
     }*/
 
-    #Todo: Slow, hopefully due to just year being calculated rather than an explicit field. Retest after that has changed.
-/*    public function testAllGroupsUSPCMainclass()
+    public function testAllGroupsUSPCMainclass()
     {
         global $USPC_ENTITY_SPECS;
         global $USPC_FIELD_SPECS;
@@ -423,6 +421,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('years', $results['uspc_mainclasses'][0]);
         $this->assertArrayHasKey('year_num_patents_for_uspc_mainclass', $results['uspc_mainclasses'][0]['years'][0]);
     }
-*/
+
 }
 
