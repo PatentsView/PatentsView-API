@@ -50,7 +50,7 @@ class DatabaseQuery
                 $page = $options['page'];
             }
             if (array_key_exists('per_page', $options))
-                if (($options['per_page'] > 10000) or ($options['per_page'] < 1))
+                if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1))
                     $this->errorHandler->sendError(400, "Per_page must be a positive number not to exceed 10,000.", $options);
                 else
                     $perPage = $options['per_page'];

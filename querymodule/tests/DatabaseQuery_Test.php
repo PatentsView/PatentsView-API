@@ -158,20 +158,21 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
+        global $config;
         $selectFieldSpecs = $PATENT_FIELD_SPECS;
-        $options = array('page'=>1, 'per_page'=>10000);
+        $options = array('page'=>1, 'per_page'=>$config->getMaxPageSize());
         $dbQuery = new DatabaseQuery();
         $memUsed = memory_get_usage();
         $whereClause = "patent.number like '82%'";
         $whereFieldsUsed = array('patent_number');
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldSpecs, null, $options);
         $memUsed = memory_get_usage();
-        if (count($results['patents']) < 10000) {
+        if (count($results['patents']) < $config->getMaxPageSize()) {
             $this->assertEquals($dbQuery->getTotalFound(), count($results['patents']));
         }
         else {
-            $this->assertEquals(10000, count($results['patents']));
-            $this->assertGreaterThanOrEqual(10000, $dbQuery->getTotalFound());
+            $this->assertEquals($config->getMaxPageSize(), count($results['patents']));
+            $this->assertGreaterThanOrEqual($config->getMaxPageSize(), $dbQuery->getTotalFound());
         }
     }
 

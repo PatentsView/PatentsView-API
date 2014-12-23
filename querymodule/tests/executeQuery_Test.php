@@ -54,7 +54,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"patent_abstract":"abc"}';
+        $queryString = '{"patent_type":"abc"}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
     }
@@ -190,10 +190,11 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         #Second run: 2s
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
+        global $config;
         $queryString = '{"_gte":{"patent_number":"8000000"}}';
         $decodedQueryString = json_decode($queryString, true);
         $decodedFieldString = json_decode('["patent_number","inventor_last_name"]', true);
-        $decodedOptionString = json_decode('{"per_page":10000}', true);
+        $decodedOptionString = json_decode('{"per_page":'.$config->getMaxPageSize().'}', true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decodedQueryString, $decodedFieldString, null, $decodedOptionString);
         $this->assertGreaterThan(5000, $results['count']);
         $this->assertGreaterThanOrEqual($results['count'], $results['total_found']);
