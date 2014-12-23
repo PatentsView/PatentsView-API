@@ -78,24 +78,32 @@ class DatabaseQuery
         $results = $this->runQuery('QueryDefID, QueryString', $this->supportDatabase . '.QueryDef', "QueryDefID=$queryDefId", null);
         //TODO Need to handle a hash collision
         if (count($results) == 0) {
-            // Ad an entry for the query
-            $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
-            $this->runInsert($insertStatement, array(':queryDefId'=>$queryDefId, ':whereClause'=>$stringToHash));
+            // Add an entry for the query
+            try {
+                $this->startTransaction();
+                $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
+                $this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
 
-            // Get all the primary entity IDs and insert into the cached results table
-            #Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
-            $insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
-            $selectPrimaryEntityIdsString =
-                "$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
-            if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = "";
-            if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
-            $fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId']=>$this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
-            $this->runInsertSelect($insertStatement,
-                $selectPrimaryEntityIdsString,
-                '(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
-                $fromInsert . ' ' . $whereInsert . $sortInsert . ') XX, (select @row_number:=0) temprownum',
-                null,
-                null);
+                // Get all the primary entity IDs and insert into the cached results table
+                #Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
+                $insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
+                $selectPrimaryEntityIdsString =
+                    "$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
+                if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = "";
+                if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
+                $fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
+                $this->runInsertSelect($insertStatement,
+                    $selectPrimaryEntityIdsString,
+                    '(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
+                    $fromInsert . ' ' . $whereInsert . $sortInsert . ') XX, (select @row_number:=0) temprownum',
+                    null,
+                    null);
+                $this->commitTransaction();
+            }
+            catch (Exception $e) {
+                $this->rollbackTransaction();
+                throw $e;
+            }
         }
 
         // First find out how many there are in the complete set.
@@ -141,75 +149,6 @@ class DatabaseQuery
 
         return $results;
     }
-
-
-    // This was the function that was used when we did one large all combined join with all fields.
-    // GY 2014-10-11: Just keeping it here for reference for a short time. If we don't come back to it, then we can delete it.
-/*
-    public function queryDatabase_SingleQuery(array $entitySpecs, $whereClause, array $whereFieldsUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
-    {
-        $page = 1;
-        $perPage = 25;
-        $getAll = false;
-        $this->sortFieldsUsed = array();
-        $this->entitySpecs = $entitySpecs;
-
-        $this->setupGroupVars();
-
-        $this->errorHandler = ErrorHandler::getHandler();
-
-        $this->selectFieldSpecs = $selectFieldSpecs;
-        $this->initializeGroupVars();
-        $this->determineSelectFields();
-        $selectString = $this->buildSelectString();
-        $sortString = $this->buildSortString($sortParam);
-        $from = $this->buildFrom($whereFieldsUsed, $this->selectFieldSpecs, $this->sortFieldsUsed);
-
-        if ($options != null) {
-            if (array_key_exists('page', $options)) {
-                $page = $options['page'];
-            }
-            if (array_key_exists('per_page', $options))
-                if ($options['per_page'] == -1)
-                    $getAll = true;
-                else
-                    $perPage = $options['per_page'];
-        }
-
-        // If getAll, then just get all the data.
-        if ($getAll) {
-            $results = $this->runQuery("distinct $selectString", $from, $whereClause, $sortString);
-            $primaryEntityIds = array();
-            foreach ($results as $row)
-                $primaryEntityIds[$row[$this->groupVars[0]['keyId']]] = 1;
-            $this->total_found = count($primaryEntityIds);
-        }
-        // If get a range, then first get all the IDs, and then get the IDs in that range and use
-        // as the WHERE to get the data rows
-        else {
-            // Get the primary entity IDs
-            $selectPrimaryEntityIdsString = "distinct " . getDBField($this->groupVars[0]['keyId']) . " as " .
-                $this->groupVars[0]['keyId'];
-            $results = $this->runQuery("$selectPrimaryEntityIdsString", $from, $whereClause, $sortString);
-            $this->total_found = count($results);
-
-            // Make sure they asked for a valid range.
-            if (($page-1)*$perPage > count($results))
-                $results = null;
-            else {
-                $primaryEntityIds = array();
-                foreach (array_slice($results, ($page - 1) * $perPage, $perPage) as $row)
-                    $primaryEntityIds[] = $row[$this->groupVars[0]['keyId']];
-
-                $whereClause = getDBField($this->groupVars[0]['keyId']) . ' in ("' . join('","', $primaryEntityIds) . '") ';
-                $selectString = "distinct $selectString";
-                $results = $this->runQuery("$selectString", $from, $whereClause, $sortString);
-            }
-        }
-
-        return $results;
-    }
-*/
 
     private function runQuery($select, $from, $where, $order)
     {
@@ -425,6 +364,20 @@ class DatabaseQuery
                 throw new $e;
             }
         }
+    }
+
+    private function startTransaction()
+    {
+        $this->db->beginTransaction();
+    }
+
+    private function commitTransaction()
+    {
+        $this->db->commit();
+    }
+
+    private function rollbackTransaction() {
+        $this->db->rollback();
     }
 
 }
