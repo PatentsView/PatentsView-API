@@ -34,5 +34,10 @@ final class Config
         return array('host' => $host, 'user' => $user, 'password' => $pass, 'database' => $database, 'supportDatabase' => $supportDatabase);
     }
 
+    public function getMaxPageSize()
+    {
+        return 10000;
+    }
+
 
 }
