@@ -39,5 +39,10 @@ final class Config
         return 10000;
     }
 
+    public function getQueryResultLimit()
+    {
+        return 100000;
+    }
+
 
 }
