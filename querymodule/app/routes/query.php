@@ -152,6 +152,36 @@ $app->post(
     }
 );
 
+
+$app->get(
+    '/locations/query',
+    function () use ($app) {
+        global $LOCATION_ENTITY_SPECS;
+        global $LOCATION_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
+
+        $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results, $LOCATION_ENTITY_SPECS);
+        $app->response->setBody($results);
+    }
+);
+
+
+$app->post(
+    '/locations/query',
+    function () use ($app) {
+        global $LOCATION_ENTITY_SPECS;
+        global $LOCATION_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
+
+        $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results, $LOCATION_ENTITY_SPECS);
+        $app->response->setBody($results);
+    }
+);
+
 $app->get(
   '/',
   function () use ($app) {

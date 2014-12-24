@@ -422,5 +422,49 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('year_num_patents_for_uspc_mainclass', $results['uspc_mainclasses'][0]['years'][0]);
     }
 
+    public function testNormalLocation()
+    {
+        global $LOCATION_ENTITY_SPECS;
+        global $LOCATION_FIELD_SPECS;
+        $queryString = '{"location_id":"39.3762145|-77.154704"}';
+        $fieldList = array("location_id", "location_key_id", "location_city", "uspc_subclass_id", "assignee_last_name", "patent_number", "inventor_last_name");
+        $fieldList = array("location_id", "location_key_id", "location_city", "inventor_last_name", "patent_number", "assignee_organization");
+        $decoded = json_decode($queryString, true);
+        $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertEquals('Mount Airy', $results['locations'][0]['location_city']);
+    }
+
+    public function testAllFieldsLocation()
+    {
+        global $LOCATION_ENTITY_SPECS;
+        global $LOCATION_FIELD_SPECS;
+        $queryString = '{"location_id":"39.3762145|-77.154704"}';
+        $decoded = json_decode($queryString, true);
+        $fieldList = array_keys($LOCATION_FIELD_SPECS);
+        $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertGreaterThanOrEqual(1, $results['total_found']);
+    }
+
+    public function testAllGroupsLocation()
+    {
+        global $LOCATION_ENTITY_SPECS;
+        global $LOCATION_FIELD_SPECS;
+        $queryString = '{"location_id":"39.3762145|-77.154704"}';
+        $fieldList = array("location_id","ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","assignee_organization","cpc_subsection_id");
+        $decoded = json_decode($queryString, true);
+        $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertEquals(1, count($results['locations']));
+        $this->assertArrayHasKey('location_id', $results['locations'][0]);
+        $this->assertArrayHasKey('uspcs', $results['locations'][0]);
+        $this->assertArrayHasKey('uspc_mainclass_id', $results['locations'][0]['uspcs'][0]);
+        $this->assertArrayHasKey('cpcs', $results['locations'][0]);
+        $this->assertArrayHasKey('cpc_subsection_id', $results['locations'][0]['cpcs'][0]);
+        $this->assertArrayHasKey('patents', $results['locations'][0]);
+        $this->assertArrayHasKey('patent_number', $results['locations'][0]['patents'][0]);
+        $this->assertArrayHasKey('inventors', $results['locations'][0]);
+        $this->assertArrayHasKey('inventor_last_name', $results['locations'][0]['inventors'][0]);
+        $this->assertArrayHasKey('IPCs', $results['locations'][0]);
+        $this->assertArrayHasKey('ipc_main_group', $results['locations'][0]['IPCs'][0]);
+    }
 }
 
