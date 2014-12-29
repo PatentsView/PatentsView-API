@@ -42,9 +42,8 @@ $PATENT_ENTITY_SPECS = array(
  *                  attributes of the field/column.
  * key:             the unique internal and external name for the field
  * entity_name:     the name of the parent entity; must match an 'entity_name' in the ENTITY_SPECS
- * table:           the DB table that contains this field. This table must be in the 'join' statement for the entity
- *                  type in the ENTITY_SPECS
- * column_name:     the SQL name of the column in table
+ * column_name:     the SQL field expression to obtain the data; could be a table.column or a more complex expression,
+ *                  as long as it results in a single value.
  * datatype:        One of 'string', 'int', 'float', 'date', 'fulltext'
  * sort:            'y' or 'n' depending on if the primary entity can be sorted on this field. Only set to 'y' when
  *                  the field would be unique for that primary entity. If the field is part of a one-to-many, then

@@ -51,7 +51,7 @@ class DatabaseQuery
             }
             if (array_key_exists('per_page', $options))
                 if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1))
-                    $this->errorHandler->sendError(400, "Per_page must be a positive number not to exceed 10,000.", $options);
+                    $this->errorHandler->sendError(400, "Per_page must be a positive number not to exceed " . $config->getMaxPageSize() . ".", $options);
                 else
                     $perPage = $options['per_page'];
             if (array_key_exists('matched_subentities_only', $options)) {
