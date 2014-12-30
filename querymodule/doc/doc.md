@@ -478,7 +478,7 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_processing_time</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_title</td><td>patents</td><td>full text</td><td>Y</td><td>Y</td><td>Y</td></tr>
-<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_year</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -679,7 +679,7 @@ with the body containing:
 <tr><td>patent_num_claims</td><td>patents</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_title</td><td>patents</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 
 <tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -863,7 +863,7 @@ with the body containing:
 <tr><td>patent_num_claims</td><td>patents</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_title</td><td>patents</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 
 <tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -1054,7 +1054,7 @@ with the body containing:
 <tr><td>patent_num_claims</td><td>patents</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_title</td><td>patents</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_subclass_id*</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -1242,7 +1242,7 @@ with the body containing:
 <tr><td>patent_num_claims</td><td>patents</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_title</td><td>patents</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_id</td><td>uspc_mainclasses</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>uspc_mainclass_title</td><td>uspc_mainclasses</td><td>full text</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>uspc_total_num_assignees</td><td>uspc_mainclasses</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
@@ -1447,7 +1447,7 @@ with the body containing:
 <tr><td>patent_number</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_processing_time</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_title</td><td>patents</td><td>full text</td><td>Y</td><td>Y</td><td>Y</td></tr>
-<tr><td>patent_type</td><td>patents</td><td>string</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_type</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_year</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
