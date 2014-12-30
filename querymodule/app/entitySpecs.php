@@ -643,7 +643,7 @@ $LOCATION_ENTITY_SPECS = array(
     // subentities need to include the joins to get to patent. Including it on the primary join string makes it overall
     // more efficient since we can then only do that series of joins once, although it likely makes queries that only
     // need data from the location table slower.
-    array('entity_name'=>'location', 'group_name'=>'locations', 'keyId'=>'location_key_id', 'join'=>'location left join location_inventor using(location_id) left join patent_inventor using(inventor_id) left join patent using(patent_id)'),
+    array('entity_name'=>'location', 'group_name'=>'locations', 'keyId'=>'location_key_id', 'default_fields'=>array('location_id','location_city','location_state','location_country'), 'join'=>'location left join location_inventor using(location_id) left join patent_inventor using(inventor_id) left join patent using(patent_id)'),
     array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'join'=>'left join inventor using(inventor_id)'),
     array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>'left join location_assignee using(location_id) left join assignee using(assignee_id)'),
     array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'join'=>''),

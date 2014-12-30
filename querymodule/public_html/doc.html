@@ -86,7 +86,7 @@
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter plus the patent number.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to patent_id, patent_number, and patent_title.</td>
 <td>string, optional <br/> example: <code>f=["patent_number", "date"]</code></td>
 </tr>
 
@@ -100,7 +100,7 @@
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
@@ -220,7 +220,7 @@ simple_pair
 <h4><a name="formats"></a> Formats</h4>
 <p>Dates are expected to be in ISO 8601 date format: YYYY-MM-DD.</p>
 <h3><a name="field_list_format"></a> Field List Format</h3>
-<p>The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return the fields used in the query criteria. See &ldquo;<a href="#patent_field_list">Field List</a>&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and dates for patents that meet the query criteria:</p>
+<p>The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return a default set of fields. See &ldquo;<a href="#patent_field_list">Field List</a>&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and dates for patents that meet the query criteria:</p>
 <pre><code>f=["patent_number","inventor_last_name","patent_date"]
 </code></pre>
 <h3><a name="options_parameter"></a> Options Parameter</h3>
@@ -238,10 +238,10 @@ simple_pair
 <li>An example for specifying pagination in the options parameter is: <code>o={"page":2,"per_page":50}</code></li>
 </ul>
 <h4><a name="matched_subentities_only"></a> Matched Subentities Only</h4>
-<p>The <code>matched_subentities_only</code> option is provided to indicate whether only those subentities that match their subentity-specific criteria shoul be included in the results. By default, all subentities will be included for each parent entity that matches the criteria.</p>
+<p>The <code>matched_subentities_only</code> option is provided to indicate whether only those subentities that match their subentity-specific criteria should be included in the results. By default, only those subentities that match their respective query criteria will be included for each parent entity.</p>
 <p>This is easiest to understand with an example, so consider this query:</p>
 <p><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}&amp;f=[%22patent_number%22,%22patent_date%22,%22inventor_last_name%22]"></a></p>
-<p>The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when <code>{"matched_subentities_only":false}</code>, the results will include all data for all inventors for the patents. However if <code>{"matched_subentities_only":true}</code>, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. Note that if the patent has multiple inventors that meet the inventor criteria, then each matching inventor will be included in the results. Also note that if the inventor field in the query is encompassed by an &ldquo;or&rdquo; join operator, then the matched_subentities_only parameter cannot be true.</p>
+<p>The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when <code>{"matched_subentities_only":true}</code>, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. However if <code>{"matched_subentities_only":false}</code>, the results will include all inventors for the patents, even if their last name was not "Whitney".  Note that if the inventor field in the query is encompassed by an &ldquo;or&rdquo; join operator, then the <code>matched_subentities_only</code> parameter must be <code>false</code>.</p>
 <h5><a name="query_string_example"></a> Example</h5>
 <p>Consider this example. Assume the database only has the following content:</p>
 <p>Patents:</p>
@@ -277,11 +277,11 @@ simple_pair
 
 <p>Also assume this query:</p>
 <p><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a></p>
-<p>The results would include the following (keeping in mind that all subentity (i.e. inventor) data is included by default):</p>
-<p><code>{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Hopper"},{"inventor_last_name":"Whitney"},{"inventor_last_name":"Carrier"}]}],"count":1,"total_found":1}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Hopper%22},{%22inventor_last_name%22:%22Whitney%22},{%22inventor_last_name%22:%22Carrier%22}]}],%22count%22:1,%22total_found%22:1}"></a></p>
-<p>However if the query were changed to included only matched subentity data, then the query and results would be as such (including only the inventor with the last name of "Whitney":</p>
-<p><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":true}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a></p>
+<p>The results would be as such (including only the inventor with the last name of "Whitney"):</p>
 <p><code>{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Whitney"}]}],"count":1,"total_found":1}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Whitney%22}]}],%22count%22:1,%22total_found%22:1}"></a></p>
+<p>However, if the setting was change to <code>false</code> like the following, the results would include subentity (i.e. inventor) data:</p>
+<p><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":false}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a></p>
+<p><code>{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Hopper"},{"inventor_last_name":"Whitney"},{"inventor_last_name":"Carrier"}]}],"count":1,"total_found":1}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Hopper%22},{%22inventor_last_name%22:%22Whitney%22},{%22inventor_last_name%22:%22Carrier%22}]}],%22count%22:1,%22total_found%22:1}"></a></p>
 <h3><a name="sort_parameter"></a> Sort Parameter</h3>
 <p>The sort parameter is a JSON formatted array of objects that specifies the sort order for the returned results. If empty or not provided, the default sort order will be ascending by patent number.</p>
 <p>Each object in the array should be a pair, with the pair's key is one of the patent fields, and the value is either &ldquo;asc&rdquo; or &ldquo;desc&rdquo;, to indicate ascending or descending sort, respectively. A couple examples should suffice for understanding:</p>
@@ -487,7 +487,7 @@ key_value_pair
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults inventor_id, inventor_first_name, and inventor_last_name.</td>
 <td>string, optional <br/> example: <code>["patent_number", "date"]</code></td>
 </tr>
 
@@ -501,7 +501,7 @@ key_value_pair
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
@@ -681,7 +681,7 @@ key_value_pair
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to assignee_id, assignee_first_name, assignee_last_name, and assignee_organization.</td>
 <td>string, optional <br/> example: <code>["patent_number", "date"]</code></td>
 </tr>
 
@@ -695,7 +695,7 @@ key_value_pair
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
@@ -859,7 +859,7 @@ key_value_pair
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to cpc_subsection_id and cpc_subsection_title.</td>
 <td>string, optional<br/> example: <code>["cpc_subsection_id", "cpc_subsection_title","cpc_total_num_patents"]</code></td>
 </tr>
 
@@ -873,7 +873,7 @@ key_value_pair
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
@@ -1038,7 +1038,7 @@ key_value_pair
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to uspc_mainclass_id and uspc_mainclass_title.</td>
 <td>string, optional<br/> example: <code>["uspc_mainclass_id", "uspc_mainclass_title","uspc_total_num_patents"]</code></td>
 </tr>
 
@@ -1052,7 +1052,7 @@ key_value_pair
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
@@ -1217,7 +1217,7 @@ key_value_pair
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to location_id, location_city, location_state, and location_country.</td>
 <td>string, optional<br/> example: <code>["location_id", "location_city","location_state"]</code></td>
 </tr>
 
@@ -1231,7 +1231,7 @@ key_value_pair
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>

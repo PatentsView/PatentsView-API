@@ -69,7 +69,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter plus the patent number.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to patent_id, patent_number, and patent_title.</td>
 <td>string, optional <br/> example: <code>f=["patent_number", "date"]</code></td>
 </tr>
 
@@ -217,7 +217,7 @@ Dates are expected to be in ISO 8601 date format: YYYY-MM-DD.
 
 ### <a name="field_list_format"></a> Field List Format
 
-The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return the fields used in the query criteria. See &ldquo;[Field List](#patent_field_list)&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and dates for patents that meet the query criteria:
+The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return a default set of fields. See &ldquo;[Field List](#patent_field_list)&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and dates for patents that meet the query criteria:
 
     f=["patent_number","inventor_last_name","patent_date"]
 
@@ -520,7 +520,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults inventor_id, inventor_first_name, and inventor_last_name.</td>
 <td>string, optional <br/> example: <code>["patent_number", "date"]</code></td>
 </tr>
 
@@ -723,7 +723,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to assignee_id, assignee_first_name, assignee_last_name, and assignee_organization.</td>
 <td>string, optional <br/> example: <code>["patent_number", "date"]</code></td>
 </tr>
 
@@ -910,7 +910,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to cpc_subsection_id and cpc_subsection_title.</td>
 <td>string, optional<br/> example: <code>["cpc_subsection_id", "cpc_subsection_title","cpc_total_num_patents"]</code></td>
 </tr>
 
@@ -1098,7 +1098,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to uspc_mainclass_id and uspc_mainclass_title.</td>
 <td>string, optional<br/> example: <code>["uspc_mainclass_id", "uspc_mainclass_title","uspc_total_num_patents"]</code></td>
 </tr>
 
@@ -1286,7 +1286,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 
 <tr>
 <td><code>f</code></td>
-<td>JSON formatted array of fields to include in the results. If not provided, defaults to the set of fields used in the query parameter.</td>
+<td>JSON formatted array of fields to include in the results. If not provided, defaults to location_id, location_city, location_state, and location_country.</td>
 <td>string, optional<br/> example: <code>["location_id", "location_city","location_state"]</code></td>
 </tr>
 
