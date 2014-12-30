@@ -83,7 +83,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
@@ -239,13 +239,13 @@ By default the API will return the first 25 results. The `page` and `per_page` o
 
 #### <a name="matched_subentities_only"></a> Matched Subentities Only
 
-The `matched_subentities_only` option is provided to indicate whether only those subentities that match their subentity-specific criteria shoul be included in the results. By default, all subentities will be included for each parent entity that matches the criteria.
+The `matched_subentities_only` option is provided to indicate whether only those subentities that match their subentity-specific criteria should be included in the results. By default, only those subentities that match their respective query criteria will be included for each parent entity.
 
 This is easiest to understand with an example, so consider this query:
 
 `q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}&amp;f=[%22patent_number%22,%22patent_date%22,%22inventor_last_name%22]"></a>
 
-The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when `{"matched_subentities_only":false}`, the results will include all data for all inventors for the patents. However if `{"matched_subentities_only":true}`, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. Note that if the patent has multiple inventors that meet the inventor criteria, then each matching inventor will be included in the results. Also note that if the inventor field in the query is encompassed by an &ldquo;or&rdquo; join operator, then the matched_subentities_only parameter cannot be true.
+The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when `{"matched_subentities_only":true}`, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. However if `{"matched_subentities_only":false}`, the results will include all inventors for the patents, even if their last name was not "Whitney".  Note that if the inventor field in the query is encompassed by an &ldquo;or&rdquo; join operator, then the `matched_subentities_only` parameter must be `false`.
 
 ##### <a name="query_string_example"></a> Example
 
@@ -288,15 +288,15 @@ Also assume this query:
 
 `q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a>
 
-The results would include the following (keeping in mind that all subentity (i.e. inventor) data is included by default):
-
-`{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Hopper"},{"inventor_last_name":"Whitney"},{"inventor_last_name":"Carrier"}]}],"count":1,"total_found":1}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Hopper%22},{%22inventor_last_name%22:%22Whitney%22},{%22inventor_last_name%22:%22Carrier%22}]}],%22count%22:1,%22total_found%22:1}"></a>
-
-However if the query were changed to included only matched subentity data, then the query and results would be as such (including only the inventor with the last name of "Whitney":
-
-`q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]&o={"matched_subentities_only":true}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a>
+The results would be as such (including only the inventor with the last name of "Whitney"):
 
 `{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Whitney"}]}],"count":1,"total_found":1}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Whitney%22}]}],%22count%22:1,%22total_found%22:1}"></a>
+
+However, if the setting was change to `false` like the following, the results would include subentity (i.e. inventor) data:
+
+`q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]&o={"matched_subentities_only":false}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a>
+
+`{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Hopper"},{"inventor_last_name":"Whitney"},{"inventor_last_name":"Carrier"}]}],"count":1,"total_found":1}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Hopper%22},{%22inventor_last_name%22:%22Whitney%22},{%22inventor_last_name%22:%22Carrier%22}]}],%22count%22:1,%22total_found%22:1}"></a>
 
 ### <a name="sort_parameter"></a> Sort Parameter
 
@@ -534,7 +534,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
@@ -737,7 +737,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
@@ -924,7 +924,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
@@ -1112,7 +1112,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
@@ -1300,7 +1300,7 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td><code>o</code></td>
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
-<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results.</li>
+<li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>

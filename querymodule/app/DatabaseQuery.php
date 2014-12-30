@@ -19,7 +19,7 @@ class DatabaseQuery
     private $db = null;
     private $errorHandler = null;
 
-    private $matchedSubentitiesOnly = false;
+    private $matchedSubentitiesOnly = true;
 
     private $supportDatabase = "";
 
@@ -57,8 +57,8 @@ class DatabaseQuery
             if (array_key_exists('matched_subentities_only', $options)) {
                 $this->matchedSubentitiesOnly = strtolower($options['matched_subentities_only']) === 'true';
                 # When the matched_subentities_only option is used, we need to check that all the criteria were 'and'ed together
-                if ($this->matchedSubentitiesOnly && !$onlyAndsWereUsed)
-                    $this->errorHandler->sendError(400, "When using the 'matched_subentities_only' option, the query criteria cannot contain any 'or's.", $options);
+//                if ($this->matchedSubentitiesOnly && !$onlyAndsWereUsed)
+//                    $this->errorHandler->sendError(400, "When using the 'matched_subentities_only' option, the query criteria cannot contain any 'or's.", $options);
             }
         }
 
@@ -138,7 +138,7 @@ class DatabaseQuery
                 $whereEntity = "qr.QueryDefId=$queryDefId";
                 if ($perPage < $this->total_found)
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
-                if ($this->matchedSubentitiesOnly && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '')
+                if ($this->matchedSubentitiesOnly && array_key_exists($entitySpec['entity_name'], $this->entitySpecificWhereClauses) && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '')
                     $whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
                 $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, null);
                 $results[$entitySpec['group_name']] = $entityResults;
