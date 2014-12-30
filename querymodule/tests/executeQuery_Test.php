@@ -15,7 +15,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $queryString = '{"_or":[{"patent_number":"8407900"},{"patent_number":"8407901"}]}';
-        $expected = '{"patents":[{"patent_number":"8407900"},{"patent_number":"8407901"}],"count":2,"total_found":2}';
+        $expected = '{"patents":[{"patent_id":"8407900","patent_number":"8407900","patent_title":"Shaving cartridge having mostly elastomeric wings"},{"patent_id":"8407901","patent_number":"8407901","patent_title":"Drive mechanism for a reciprocating tool"}],"count":2,"total_found":2}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -161,7 +161,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $queryString = '{"_begins":{"patent_number":"840790"}}';
-        $expected = '{"patents":[{"patent_number":"8407900"},{"patent_number":"8407901"},{"patent_number":"8407902"},{"patent_number":"8407903"},{"patent_number":"8407904"},{"patent_number":"8407905"},{"patent_number":"8407906"},{"patent_number":"8407907"},{"patent_number":"8407908"},{"patent_number":"8407909"}],"count":10,"total_found":10}';
+        $expected = '{"patents":[{"patent_id":"8407900","patent_number":"8407900","patent_title":"Shaving cartridge having mostly elastomeric wings"},{"patent_id":"8407901","patent_number":"8407901","patent_title":"Drive mechanism for a reciprocating tool"},{"patent_id":"8407902","patent_number":"8407902","patent_title":"Reciprocating power tool having a counterbalance device"},{"patent_id":"8407903","patent_number":"8407903","patent_title":"Rotating construction laser, in particular a self-compensating rotating construction laser, and method for measuring a tilt of an axis of rotation of a construction laser"},{"patent_id":"8407904","patent_number":"8407904","patent_title":"Rotary laser beam emitter"},{"patent_id":"8407905","patent_number":"8407905","patent_title":"Multiple magneto meters using Lorentz force for integrated systems"},{"patent_id":"8407906","patent_number":"8407906","patent_title":"Window frame deflection measurement device and method of use"},{"patent_id":"8407907","patent_number":"8407907","patent_title":"CMM with modular functionality"},{"patent_id":"8407908","patent_number":"8407908","patent_title":"Profile measurement apparatus"},{"patent_id":"8407909","patent_number":"8407909","patent_title":"Tape measure carrier and gauge"}],"count":10,"total_found":10}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);

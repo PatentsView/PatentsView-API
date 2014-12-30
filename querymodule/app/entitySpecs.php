@@ -22,10 +22,12 @@ function getDBField(array $fieldSpecs, $apiFieldName)
  *              primary entity's JOIN statement. Note: these must be able to be used in aggregate with all the
  *              other joins in the ENTITY_SPECS, so any duplicate joins to the same table must use a unique
  *              alias for that table.
+ * default_fields:  Only needed for the primary entity. Lists the fields that will be included in the results
+ *              if API call does not include an explicit list of fields to include.
 */
 
 $PATENT_ENTITY_SPECS = array(
-    array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'join'=>'patent'),
+    array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'default_fields'=>array('patent_id','patent_number','patent_title'), 'join'=>'patent'),
     array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'join'=>'left outer JOIN patent_inventor ON patent.patent_id=patent_inventor.patent_id left outer JOIN inventor ON patent_inventor.inventor_id=inventor.inventor_id left outer join location_inventor ON inventor.inventor_id=location_inventor.inventor_id left outer join location as locationI on location_inventor.location_id=locationI.location_id'),
     array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>'left outer join patent_assignee on patent.patent_id=patent_assignee.patent_id left outer join assignee ON patent_assignee.assignee_id=assignee.assignee_id left outer JOIN location_assignee on assignee.assignee_id=location_assignee.assignee_id left outer join location as locationA on location_assignee.location_id=locationA.location_id'),
     array('entity_name'=>'application', 'group_name'=>'applications', 'keyId'=>'app_id', 'join'=>'left outer join application on patent.patent_id=application.patent_id'),
@@ -170,7 +172,7 @@ $PATENT_FIELD_SPECS = array
 );
 
 $INVENTOR_ENTITY_SPECS = array(
-    array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'join'=>' inventor left outer join patent_inventor on inventor.inventor_id=patent_inventor.inventor_id'),
+    array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'default_fields'=>array('inventor_id','inventor_first_name','inventor_last_name'), 'join'=>' inventor left outer join patent_inventor on inventor.inventor_id=patent_inventor.inventor_id'),
     array('entity_name'=>'location', 'group_name'=>'locations', 'keyId'=>'location_key_id', 'join'=>' left outer JOIN location_inventor on inventor.inventor_id=location_inventor.inventor_id left outer join location as locationI on location_inventor.location_id=locationI.location_id'),
     array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'join'=>'left outer JOIN patent on patent_inventor.patent_id=patent.patent_id'),
     array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>'left outer join patent_assignee on patent_inventor.patent_id=patent_assignee.patent_id left outer join assignee ON patent_assignee.assignee_id=assignee.assignee_id left outer JOIN location_assignee on assignee.assignee_id=location_assignee.assignee_id left outer join location as locationA on location_assignee.location_id=locationA.location_id'),
@@ -304,7 +306,7 @@ $INVENTOR_FIELD_SPECS = array
 
 
 $ASSIGNEE_ENTITY_SPECS = array(
-    array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>' assignee left outer join patent_assignee on assignee.assignee_id=patent_assignee.assignee_id'),
+    array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'default_fields'=>array('assignee_id','assignee_first_name','assignee_last_name','assignee_organization'), 'join'=>' assignee left outer join patent_assignee on assignee.assignee_id=patent_assignee.assignee_id'),
     array('entity_name'=>'location', 'group_name'=>'locations', 'keyId'=>'location_key_id', 'join'=>' left outer JOIN location_assignee on assignee.assignee_id=location_assignee.assignee_id left outer join location as locationA on location_assignee.location_id=locationA.location_id'),
     array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'join'=>'left outer JOIN patent on patent_assignee.patent_id=patent.patent_id'),
     array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'join'=>'left outer join patent_inventor on patent_assignee.patent_id=patent_inventor.patent_id left outer join inventor ON patent_inventor.inventor_id=inventor.inventor_id left outer JOIN location_inventor on inventor.inventor_id=location_inventor.inventor_id left outer join location as locationI on location_inventor.location_id=locationI.location_id'),
@@ -418,7 +420,7 @@ $ASSIGNEE_FIELD_SPECS = array
 
 
 $CPC_ENTITY_SPECS = array(
-    array('entity_name'=>'cpc_subsection', 'group_name'=>'cpc_subsections', 'keyId'=>'cpc_subsection_id', 'join'=>'cpc_current'),
+    array('entity_name'=>'cpc_subsection', 'group_name'=>'cpc_subsections', 'keyId'=>'cpc_subsection_id', 'default_fields'=>array('cpc_subsection_id','cpc_subsection_title'), 'join'=>'cpc_current'),
     array('entity_name'=>'cpc_subgroup', 'group_name'=>'cpc_subgroups', 'keyId'=>'cpc_subgroup_id', 'join'=>''),
     array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>' left outer join patent_assignee on cpc_current.patent_id=patent_assignee.patent_id left outer JOIN assignee on patent_assignee.assignee_id=assignee.assignee_id left outer JOIN location_assignee on assignee.assignee_id=location_assignee.assignee_id left outer join location as locationA on location_assignee.location_id=locationA.location_id'),
     array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'join'=>'left outer JOIN patent on cpc_current.patent_id=patent.patent_id'),
@@ -528,7 +530,7 @@ $CPC_FIELD_SPECS = array
 
 
 $USPC_ENTITY_SPECS = array(
-    array('entity_name'=>'uspc_mainclass', 'group_name'=>'uspc_mainclasses', 'keyId'=>'uspc_mainclass_id', 'join'=>'uspc_current'),
+    array('entity_name'=>'uspc_mainclass', 'group_name'=>'uspc_mainclasses', 'keyId'=>'uspc_mainclass_id', 'default_fields'=>array('uspc_mainclass_id','uspc_mainclass_title'), 'join'=>'uspc_current'),
     array('entity_name'=>'uspc_subclass', 'group_name'=>'uspc_subclasses', 'keyId'=>'uspc_subclass_id', 'join'=>''),
     array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>' left outer join patent_assignee on uspc_current.patent_id=patent_assignee.patent_id left outer JOIN assignee on patent_assignee.assignee_id=assignee.assignee_id left outer JOIN location_assignee on assignee.assignee_id=location_assignee.assignee_id left outer join location as locationA on location_assignee.location_id=locationA.location_id'),
     array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'join'=>'left outer JOIN patent on uspc_current.patent_id=patent.patent_id'),

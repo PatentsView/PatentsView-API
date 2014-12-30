@@ -20,7 +20,10 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam=n
     $whereClause = $qp->parse($fieldSpecs, $queryParam, 'all');
 
     // If the caller did not explicitly list fields to be returned, get them from the other parameters.
-    if (!$fieldsParam) $fieldsParam = $qp->getFieldsUsed();
+    # if (!$fieldsParam) $fieldsParam = $qp->getFieldsUsed();
+    // Changed so that if the caller did not explicitly list fields to be returned, we will use a pre-defined set
+    // for the primary entity.
+    if (!$fieldsParam) $fieldsParam = $entitySpecs[0]['default_fields'];
 
     // Get the FieldSpecs for the list of fields to be returned.
     $selectFieldSpecs = parseFieldList($fieldSpecs, $fieldsParam);
