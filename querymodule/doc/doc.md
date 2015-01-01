@@ -460,6 +460,7 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>ipc_version_indicator</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_years_active</td><td>ipcs</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_abstract</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_average_processing_time</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_date</td><td>patents</td><td>date</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_firstnamed_assignee_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
@@ -686,7 +687,7 @@ with the body containing:
 <tr><td>patent_firstnamed_inventor_latitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_inventor_location_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_inventor_longitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>patent_firstnamed_inventor_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_firstnamed_inventor_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_kind</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_num_cited_by_us_patents</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -879,7 +880,7 @@ with the body containing:
 <tr><td>patent_firstnamed_inventor_latitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_inventor_location_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_inventor_longitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>patent_firstnamed_inventor_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_firstnamed_inventor_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_kind</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_num_cited_by_us_patents</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -1079,7 +1080,7 @@ with the body containing:
 <tr><td>patent_firstnamed_inventor_latitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_inventor_location_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_inventor_longitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>patent_firstnamed_inventor_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_firstnamed_inventor_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_id*</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_kind</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_num_cited_by_us_patents</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -1276,7 +1277,7 @@ with the body containing:
 <tr><td>patent_firstnamed_inventor_latitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_inventor_location_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_inventor_longitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>patent_firstnamed_inventor_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_firstnamed_inventor_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_id*</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_kind</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_num_cited_by_us_patents</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -1474,8 +1475,9 @@ with the body containing:
 <tr><td>location_state</td><td>locations</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 
 <tr><td>patent_abstract</td><td>patents</td><td>full text</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>patent_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
-<tr><td>patent_date</td><td>patents</td><td>date</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_average_processing_time</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>patent_date</td><td>patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_assignee_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_assignee_city</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_assignee_country</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -1489,7 +1491,7 @@ with the body containing:
 <tr><td>patent_firstnamed_inventor_latitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_inventor_location_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_firstnamed_inventor_longitude</td><td>patents</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>patent_firstnamed_inventor_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>patent_firstnamed_inventor_state</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>patent_id</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_kind</td><td>patents</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>patent_num_cited_by_us_patents</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
