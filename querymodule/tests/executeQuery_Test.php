@@ -54,7 +54,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"patent_firstnamed_latitude":"abc"}';
+        $queryString = '{"patent_firstnamed_assignee_latitude":"abc"}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
     }
