@@ -8,6 +8,7 @@ The PatentsView API is currently under development and is not intended for publi
 
 ## Table of Contents
 
+* <a href="#release_notes">Release Notes</a>
 * <a href="#patents_query">Patents Query</a>
 	* <a href="#query_string_format">Query String Format</a> 
 		* <a href="#query_string_syntax">Syntax</a>
@@ -39,6 +40,35 @@ The PatentsView API is currently under development and is not intended for publi
 	* <a href="#uspc_mainclass_field_list">USPC Mainclass Field List</a>
 * <a href="#locations_query">Locations Query</a> 
 	* <a href="#location_field_list">Location Field List</a>
+
+## <a name="release_notes"></a> Release Notes
+### Test Version 3, 20150102
+* Added miscellaneous fields
+	* patents query
+		* `assignee_lastknown_location_id`
+		* `assignee_sequence`
+		* `citedby_patent_id`
+		* `cited_patent_id`
+		* `inventor_lastknown_location_id`
+		* `inventor_sequence`
+	* inventors query
+		* `assignee_lastknown_location_id`
+		* `coinventor_lastknown_location_id`
+		* `inventor_lastknown_location_id`
+	* assignees query
+		* `assignee_lastknown_location_id`
+		* `inventor_lastknown_location_id`
+	* cpc_subsections query
+		* `assignee_lastknown_location_id`
+		* `inventor_lastknown_location_id`
+	* uspc_mainclasses query
+		* `assignee_lastknown_location_id`
+		* `inventor_lastknown_location_id`
+	* locations query
+		* `assignee_lastknown_location_id`
+		* `citedby_patent_id`
+		* `cited_patent_id`
+		* `inventor_lastknown_location_id`
 
 ## <a name="patents_query"></a> Patents Query
 
@@ -395,23 +425,27 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_sequence</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_years_active</td><td>assignee</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_category</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_date</td><td>citedby_patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>citedby_patent_id</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_kind</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_number</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_title</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cited_patent_category</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cited_patent_date</td><td>cited_patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cited_patent_id</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cited_patent_kind</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cited_patent_number</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cited_patent_sequence</td><td>cited_patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -437,11 +471,13 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_sequence</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_years_active</td><td>inventors</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -597,6 +633,7 @@ with the body containing:
 <tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -617,6 +654,7 @@ with the body containing:
 <tr><td>coinventor_lastknown_city</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>coinventor_lastknown_country</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>coinventor_lastknown_latitude</td><td>coinventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>coinventor_lastknown_location_id</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>coinventor_lastknown_longitude</td><td>coinventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>coinventor_lastknown_state</td><td>coinventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>coinventor_latitude</td><td>coinvetnros</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -645,6 +683,7 @@ with the body containing:
 <tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>inventor_lastknown_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
 <tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
@@ -806,6 +845,7 @@ with the body containing:
 <tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
+<tr><td>assignee_lastknown_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>Y</td></tr>
 <tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>Y</td></tr>
@@ -834,6 +874,7 @@ with the body containing:
 <tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -1011,6 +1052,7 @@ with the body containing:
 <tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -1042,6 +1084,7 @@ with the body containing:
 <tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -1208,6 +1251,7 @@ with the body containing:
 <tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -1239,6 +1283,7 @@ with the body containing:
 <tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -1409,6 +1454,7 @@ with the body containing:
 <tr><td>assignee_lastknown_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>assignee_lastknown_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -1418,10 +1464,12 @@ with the body containing:
 <tr><td>citedby_patent_category</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_date</td><td>citedby_patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_kind</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>citedby_patent_id</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_number</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>citedby_patent_title</td><td>citedby_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cited_patent_category</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cited_patent_date</td><td>cited_patents</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cited_patent_id</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cited_patent_kind</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cited_patent_number</td><td>cited_patents</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cited_patent_sequence</td><td>cited_patents</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -1445,6 +1493,7 @@ with the body containing:
 <tr><td>inventor_lastknown_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
+<tr><td>inventor_lastknown_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
