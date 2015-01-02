@@ -32,8 +32,8 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(10, count($results['assignees']));
     }
 
-    #Todo: Way too slow. Need to consider putting a limit 100000 on the total number of entities found. Otherwise the insert into the QueryResults is too slow.
-/*    public function testQueryDatabase_EmptyWhere()
+    // This test is very slow when there is no result count limit. With 100,000 it is 5.5s. With 1,000,000 it was 2 mins.
+    public function testQueryDatabase_EmptyWhere()
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
@@ -51,7 +51,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $options = array('per_page'=>10000);
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldsSpecs, null, $options);
         $this->assertGreaterThan(6000, count($results['patents']));
-    }*/
+    }
 
     public function testQueryDatabaseWithPaging()
     {

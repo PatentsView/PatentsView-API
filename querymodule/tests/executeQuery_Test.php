@@ -170,9 +170,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
 
     public function testLargeReturnSet()
     {
-        #Todo: Slow
-        # First run: 22s on full DB, most of the time spent on inserting into PVSupport.QueryResults
-        # Second run: 1s
+        #Slow when result count limit > 100,000
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $queryString = '{"_gte":{"patent_number":"8000000"}}';
@@ -185,9 +183,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
 
     public function testLargeReturnSetLargePage()
     {
-        #Todo: Slow
-        # First run: 20s on full DB
-        #Second run: 2s
+        #Slow when result count limit > 100,000
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         global $config;
@@ -201,7 +197,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(isset($results['patents'][0]['inventors']));
     }
 
-    #Todo: Out of memory when per_page is 10000. Ok at 2000: PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 64 bytes) in C:\Greg\SourceCode\PatentsView-API\querymodule\app\convertDBResultsToNestedStructure.php on line 77
+    #Out of memory when per_page is 10000. Ok at 2000: PHP Fatal error:  Allowed memory size of 1073741824 bytes exhausted (tried to allocate 64 bytes) in C:\Greg\SourceCode\PatentsView-API\querymodule\app\convertDBResultsToNestedStructure.php on line 77
     #Still takes 45s
     public function testAllFieldsMaxPage()
     {
@@ -271,7 +267,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('year_num_patents_for_inventor', $results['inventors'][0]['years'][0]);
     }
 
-    #Todo: Slow
     public function testNormalAssignee()
     {
         global $ASSIGNEE_ENTITY_SPECS;
@@ -337,8 +332,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
             $this->assertStringStartsWith('G12', $subgroup['cpc_subgroup_id']);
     }
 
-    #Todo: This is slow. When I remove the location data it is much faster. Slowdown primarily due to data volume. 3.4m first time.
-/*    public function testAllFieldsCPCSubsection()
+    #This is slow. When I remove the location data it is much faster. Slowdown primarily due to data volume.
+    public function testAllFieldsCPCSubsection()
     {
         global $CPC_ENTITY_SPECS;
         global $CPC_FIELD_SPECS;
@@ -348,9 +343,9 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $decoded, $fieldList);
         $this->assertGreaterThanOrEqual(1, $results['total_found']);
     }
-*/
 
-    #Todo: Slow 17s
+
+    #Slow 17s
     public function testAllGroupsCPCSubsection()
     {
         global $CPC_ENTITY_SPECS;
@@ -388,17 +383,18 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
             $this->assertStringStartsWith('292', $subclass['uspc_subclass_id']);
     }
 
-    #Todo: This is slow. When I remove the location data it is much faster. Slowdown primarily due to data volume.
-/*    public function testAllFieldsUSPCMainclass()
+    #Todo: This is slow. When I remove the assignee_num_patents_for_uspc_mainclass it is much faster.
+    public function testAllFieldsUSPCMainclass()
     {
         global $USPC_ENTITY_SPECS;
         global $USPC_FIELD_SPECS;
         $queryString = '{"uspc_mainclass_id":"292"}';
         $decoded = json_decode($queryString, true);
         $fieldList = array_keys($USPC_FIELD_SPECS);
+        $fieldList = array_values(array_diff($fieldList, array('assignee_num_patents_for_uspc_mainclass')));
         $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $decoded, $fieldList);
         $this->assertGreaterThanOrEqual(1, $results['total_found']);
-    }*/
+    }
 
     public function testAllGroupsUSPCMainclass()
     {

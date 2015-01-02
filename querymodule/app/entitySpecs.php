@@ -601,7 +601,7 @@ $USPC_FIELD_SPECS = array
     'assignee_latitude' => array('entity_name'=>'assignee', 'column_name' => 'locationA.latitude', 'datatype' => 'float', 'query' => 'n', 'sort' => 'n'),
     'assignee_location_id' => array('entity_name'=>'assignee', 'column_name' => 'locationA.persistent_location_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'assignee_longitude' => array('entity_name'=>'assignee', 'column_name' => 'locationA.longitude', 'datatype' => 'float', 'query' => 'n', 'sort' => 'n'),
-    'assignee_num_patents_for_uspc_mainclass' => array('entity_name'=>'assignee', 'column_name' => '(select count(distinct patent_assigneeX.patent_id) from uspc_current as uspc_currentX left outer join patent_assignee as patent_assigneeX on uspc_currentX.patent_id=patent_assigneeX.patent_id WHERE uspc_currentX.mainclass_id=uspc_current.mainclass_id and patent_assigneeX.assignee_id=patent_assignee.assignee_id group by uspc_currentX.mainclass_id, patent_assigneeX.assignee_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
+    'assignee_num_patents_for_uspc_mainclass' => array('entity_name'=>'assignee', 'column_name' => '(select count(distinct patent_assigneeX.patent_id) from uspc_current_mainclass as uspc_current_mainclassX left outer join patent_assignee as patent_assigneeX on uspc_current_mainclassX.patent_id=patent_assigneeX.patent_id WHERE uspc_current_mainclassX.mainclass_id=uspc_current_mainclass.mainclass_id and patent_assigneeX.assignee_id=patent_assignee.assignee_id group by uspc_current_mainclassX.mainclass_id, patent_assigneeX.assignee_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
     'assignee_organization' => array('entity_name'=>'assignee', 'column_name' => 'assignee.organization', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'assignee_state' => array('entity_name'=>'assignee', 'column_name' => 'locationA.state', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'assignee_total_num_patents' => array('entity_name'=>'assignee', 'column_name' => 'assignee.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
@@ -633,7 +633,7 @@ $USPC_FIELD_SPECS = array
     'inventor_latitude' => array('entity_name'=>'inventor', 'column_name' => 'locationI.latitude', 'datatype' => 'float', 'query' => 'n', 'sort' => 'n'),
     'inventor_location_id' => array('entity_name'=>'inventor', 'column_name' => 'locationI.persistent_location_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'inventor_longitude' => array('entity_name'=>'inventor', 'column_name' => 'locationI.longitude', 'datatype' => 'float', 'query' => 'n', 'sort' => 'n'),
-    'inventor_num_patents_for_uspc_mainclass' => array('entity_name'=>'inventor', 'column_name' => '(select count(distinct patent_inventorX.patent_id) from uspc_current as uspc_currentX left outer join patent_inventor as patent_inventorX on uspc_currentX.patent_id=patent_inventorX.patent_id WHERE uspc_currentX.mainclass_id=uspc_current.mainclass_id and patent_inventorX.inventor_id=patent_inventor.inventor_id group by uspc_currentX.mainclass_id, patent_inventorX.inventor_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
+    'inventor_num_patents_for_uspc_mainclass' => array('entity_name'=>'inventor', 'column_name' => '(select count(distinct patent_inventorX.patent_id) from uspc_current_mainclass as uspc_current_mainclassX left outer join patent_inventor as patent_inventorX on uspc_current_mainclassX.patent_id=patent_inventorX.patent_id WHERE uspc_current_mainclassX.mainclass_id=uspc_current_mainclass.mainclass_id and patent_inventorX.inventor_id=patent_inventor.inventor_id group by uspc_current_mainclassX.mainclass_id, patent_inventorX.inventor_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
     'inventor_state' => array('entity_name'=>'inventor', 'column_name' => 'locationI.state', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'inventor_total_num_patents' => array('entity_name'=>'inventor', 'column_name' => 'inventor.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
     'inventor_years_active' => array('entity_name'=>'inventor', 'column_name' => 'concat(year(inventor.first_seen_date),\'-\',year(inventor.last_seen_date))', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
@@ -688,14 +688,14 @@ $USPC_FIELD_SPECS = array
 
 
 $LOCATION_ENTITY_SPECS = array(
-    // This next line has the joins from location to patent (rather than just the location table) since so many of the
+    // This next line has the joins from location to patent (rather than just the location table) via inventor since so many of the
     // subentities need to include the joins to get to patent. Including it on the primary join string makes it overall
     // more efficient since we can then only do that series of joins once, although it likely makes queries that only
     // need data from the location table slower.
-    array('entity_name'=>'location', 'group_name'=>'locations', 'keyId'=>'location_key_id', 'default_fields'=>array('location_id','location_city','location_state','location_country'), 'join'=>'location left join location_inventor using(location_id) left join patent_inventor using(inventor_id) left join patent using(patent_id)'),
-    array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'join'=>'left join inventor using(inventor_id)'),
-    array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>'left join location_assignee on location.location_id=location_assignee.location_id left join assignee using(assignee_id)'),
+    array('entity_name'=>'location', 'group_name'=>'locations', 'keyId'=>'location_key_id', 'default_fields'=>array('location_id','location_city','location_state','location_country'), 'join'=>'location left join patent_inventor using(location_id) left join patent using(patent_id)'),
     array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'join'=>''),
+    array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'join'=>'left join inventor using(inventor_id)'),
+    array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'join'=>'left join patent_assignee on location.location_id=patent_assignee.location_id left join assignee using(assignee_id)'),
     array('entity_name'=>'application', 'group_name'=>'applications', 'keyId'=>'app_id', 'join'=>'left outer join application using(patent_id)'),
     array('entity_name'=>'ipc', 'group_name'=>'IPCs', 'keyId'=>'', 'join'=>'left outer join ipcr using(patent_id)'),
     array('entity_name'=>'applicationcitation', 'group_name'=>'application_citations', 'keyId'=>'', 'join'=>'left outer join usapplicationcitation on patent.patent_id=usapplicationcitation.citing_patent_id left outer join application appcit_app on usapplicationcitation.cited_application_id=appcit_app.application_id'),
