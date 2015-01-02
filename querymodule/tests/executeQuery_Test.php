@@ -54,7 +54,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $queryString = '{"patent_firstnamed_assignee_latitude":"abc"}';
+        $queryString = '{"inventor_lastknown_latitude":"abc"}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
     }
@@ -451,7 +451,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $LOCATION_ENTITY_SPECS;
         global $LOCATION_FIELD_SPECS;
         $queryString = '{"location_id":"39.3762145|-77.154704"}';
-        $fieldList = array("location_id","ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","assignee_organization","cpc_subsection_id","cpc_group_id");
+        $fieldList = array("location_id","ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","assignee_organization","cpc_subsection_id");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $decoded, $fieldList);
         $this->assertEquals(1, count($results['locations']));

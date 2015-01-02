@@ -361,8 +361,6 @@ key_value_pair
 <tr><td>appcit_kind</td><td>application_citations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>appcit_name</td><td>application_citations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>appcit_sequence</td><td>application_citations</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_first_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_last_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -372,12 +370,8 @@ key_value_pair
 <tr><td>assignee_lastknown_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_sequence</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_years_active</td><td>assignee</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -407,8 +401,6 @@ key_value_pair
 <tr><td>cpc_total_num_inventors</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_total_num_patents</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_years_active</td><td>cpcs</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_first_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_last_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -418,11 +410,7 @@ key_value_pair
 <tr><td>inventor_lastknown_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_sequence</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_years_active</td><td>inventors</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_action_date</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -1471,7 +1459,29 @@ key_value_pair
 <h2><a name="release_notes"></a> Release Notes</h2>
 <h3>Test Version 3, 20150102</h3>
 <ul>
-<li>Locations API</li>
+<li>Locations API<ul>
+<li>As part of implementing the locations API, we removed the following fields:<ul>
+<li>patents query<ul>
+<li><code>assignee_city</code></li>
+<li><code>assignee_country</code></li>
+<li><code>assignee_latitide</code></li>
+<li><code>assignee_location_id</code></li>
+<li><code>assignee_longitude</code></li>
+<li><code>assignee_state</code></li>
+<li><code>inventor_city</code></li>
+<li><code>inventor_country</code></li>
+<li><code>inventor_latitude</code></li>
+<li><code>inventor_location_id</code></li>
+<li><code>inventor_longitude</code></li>
+<li><code>inventor_state</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>In the inventors query, the locations for assignees will only be those locations the assignee used on the inventor's patents, and vice versa assignee-to-inventors.</li>
+<li>In the <code>cpc_subsections</code> and <code>uspc_mainclass</code> queries, the inventor and assignee locations will only be those locations the inventors and and assignees used on that patent.</li>
 <li>Changed which fields are returned by default when not explicitly provided<ul>
 <li>If the <code>f</code> parameter is not specified on the API call, then the fields that will be returned in the results are:<ul>
 <li>patent query<ul>

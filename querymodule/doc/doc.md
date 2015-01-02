@@ -389,8 +389,6 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>appcit_kind</td><td>application_citations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>appcit_name</td><td>application_citations</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>appcit_sequence</td><td>application_citations</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_city</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_country</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_first_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_last_name</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -400,12 +398,8 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>assignee_lastknown_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_lastknown_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_latitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_location_id</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_longitude</td><td>assignees</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_organization</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_sequence</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>assignee_state</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_total_num_patents</td><td>assignees</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_type</td><td>assignees</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>assignee_years_active</td><td>assignee</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -435,8 +429,6 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>cpc_total_num_inventors</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_total_num_patents</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_years_active</td><td>cpcs</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_city</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_country</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_first_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_last_name</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -446,11 +438,7 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>inventor_lastknown_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_lastknown_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_latitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_location_id</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_longitude</td><td>inventors</td><td>float</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_sequence</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>inventor_state</td><td>inventors</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_total_num_patents</td><td>inventors</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>inventor_years_active</td><td>inventors</td><td>string</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>ipc_action_date</td><td>ipcs</td><td>date</td><td>N</td><td>Y</td><td>N</td></tr>
@@ -1545,6 +1533,22 @@ with the body containing:
 ## <a name="release_notes"></a> Release Notes
 ### Test Version 3, 20150102
 * Locations API
+	* As part of implementing the locations API, we removed the following fields:
+		* patents query
+			* `assignee_city`
+			* `assignee_country`
+			* `assignee_latitide`
+			* `assignee_location_id`
+			* `assignee_longitude`
+			* `assignee_state`
+			* `inventor_city`
+			* `inventor_country`
+			* `inventor_latitude`
+			* `inventor_location_id`
+			* `inventor_longitude`
+			* `inventor_state`
+* In the inventors query, the locations for assignees will only be those locations the assignee used on the inventor's patents, and vice versa assignee-to-inventors.
+* In the `cpc_subsections` and `uspc_mainclass` queries, the inventor and assignee locations will only be those locations the inventors and and assignees used on that patent.
 * Changed which fields are returned by default when not explicitly provided
 	* If the `f` parameter is not specified on the API call, then the fields that will be returned in the results are:
 		* patent query
