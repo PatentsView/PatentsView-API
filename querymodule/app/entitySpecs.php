@@ -36,7 +36,7 @@ $PATENT_ENTITY_SPECS = array(
     array('entity_name'=>'cited_patent', 'group_name'=>'cited_patents', 'keyId'=>'', 'join'=>'left outer join uspatentcitation as patentcit_fromciting_tocited on patent.patent_id=patentcit_fromciting_tocited.citing_patent_id left outer join patent as citedpatent on patentcit_fromciting_tocited.cited_patent_id=citedpatent.patent_id'),
     array('entity_name'=>'citedby_patent', 'group_name'=>'citedby_patents', 'keyId'=>'', 'join'=>'left outer join uspatentcitation as patentcit_fromcited_tociting on patent.patent_id=patentcit_fromcited_tociting.cited_patent_id left outer join patent as citingpatent on patentcit_fromcited_tociting.citing_patent_id=citingpatent.patent_id'),
     array('entity_name'=>'uspc', 'group_name'=>'uspcs', 'keyId'=>'', 'join'=>'left outer join uspc_current on patent.patent_id=uspc_current.patent_id'),
-    array('entity_name'=>'cpc', 'group_name'=>'cpcs', 'keyId'=>'', 'join'=>'left outer join cpc_current on patent.patent_id=cpc_current.patent_id')
+    array('entity_name'=>'cpc', 'group_name'=>'cpcs', 'keyId'=>'', 'join'=>'left outer join cpc_current_subsection on patent.patent_id=cpc_current_subsection.patent_id left outer join cpc_current on cpc_current_subsection.patent_id=cpc_current.patent_id and cpc_current_subsection.subsection_id=cpc_current.subsection_id')
 );
 
 /*
@@ -103,15 +103,15 @@ $PATENT_FIELD_SPECS = array
     'cpc_group_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.group_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'cpc_group_title' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.group_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'cpc_sequence' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.sequence', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
-    'cpc_section_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.section_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
+    'cpc_section_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current_subsection.section_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'cpc_subgroup_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.subgroup_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'cpc_subgroup_title' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.subgroup_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
-    'cpc_subsection_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.subsection_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
-    'cpc_subsection_title' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.subsection_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
-    'cpc_total_num_inventors' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
-    'cpc_total_num_patents' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
-    'cpc_total_num_assignees' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
-    'cpc_years_active' => array('entity_name'=>'cpc', 'column_name' => 'concat(year(cpc_current.first_seen_date),\'-\',year(cpc_current.last_seen_date))', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
+    'cpc_subsection_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current_subsection.subsection_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
+    'cpc_subsection_title' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current_subsection.subsection_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
+    'cpc_total_num_inventors' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current_subsection.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
+    'cpc_total_num_patents' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current_subsection.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
+    'cpc_total_num_assignees' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current_subsection.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
+    'cpc_years_active' => array('entity_name'=>'cpc', 'column_name' => 'concat(year(cpc_current_subsection.first_seen_date),\'-\',year(cpc_current_subsection.last_seen_date))', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
     'inventor_city' => array('entity_name'=>'inventor', 'column_name' => 'locationI.city', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'inventor_country' => array('entity_name'=>'inventor', 'column_name' => 'locationI.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'inventor_first_name' => array('entity_name'=>'inventor', 'column_name' => 'inventor.name_first', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
