@@ -1602,3 +1602,4 @@ with the body containing:
 		* `citedby_patent_id`
 		* `cited_patent_id`
 		* `inventor_lastknown_location_id`
+* Improved performance of the cpc_subsections query by restructuring the underlying database
