@@ -1528,7 +1528,6 @@ with the body containing:
 <tr><td>patent_year</td><td>patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td></tr>
 <tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>uspc_sequence</td><td>uspcs</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_subclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_subclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -1602,4 +1601,5 @@ with the body containing:
 		* `citedby_patent_id`
 		* `cited_patent_id`
 		* `inventor_lastknown_location_id`
-* Improved performance of the cpc_subsections query by restructuring the underlying database
+* Improved performance of the cpc_subsections query by restructuring the underlying database and the queries used
+* Improved performance of the uspc_mainclasses query by restructuring the underlying database and the queries used
