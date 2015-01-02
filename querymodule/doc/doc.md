@@ -8,7 +8,6 @@ The PatentsView API is currently under development and is not intended for publi
 
 ## Table of Contents
 
-* <a href="#release_notes">Release Notes</a>
 * <a href="#patents_query">Patents Query</a>
 	* <a href="#query_string_format">Query String Format</a> 
 		* <a href="#query_string_syntax">Syntax</a>
@@ -40,35 +39,8 @@ The PatentsView API is currently under development and is not intended for publi
 	* <a href="#uspc_mainclass_field_list">USPC Mainclass Field List</a>
 * <a href="#locations_query">Locations Query</a> 
 	* <a href="#location_field_list">Location Field List</a>
+* <a href="#release_notes">Release Notes</a>
 
-## <a name="release_notes"></a> Release Notes
-### Test Version 3, 20150102
-* Added miscellaneous fields
-	* patents query
-		* `assignee_lastknown_location_id`
-		* `assignee_sequence`
-		* `citedby_patent_id`
-		* `cited_patent_id`
-		* `inventor_lastknown_location_id`
-		* `inventor_sequence`
-	* inventors query
-		* `assignee_lastknown_location_id`
-		* `coinventor_lastknown_location_id`
-		* `inventor_lastknown_location_id`
-	* assignees query
-		* `assignee_lastknown_location_id`
-		* `inventor_lastknown_location_id`
-	* cpc_subsections query
-		* `assignee_lastknown_location_id`
-		* `inventor_lastknown_location_id`
-	* uspc_mainclasses query
-		* `assignee_lastknown_location_id`
-		* `inventor_lastknown_location_id`
-	* locations query
-		* `assignee_lastknown_location_id`
-		* `citedby_patent_id`
-		* `cited_patent_id`
-		* `inventor_lastknown_location_id`
 
 ## <a name="patents_query"></a> Patents Query
 
@@ -275,7 +247,7 @@ This is easiest to understand with an example, so consider this query:
 
 `q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}&amp;f=[%22patent_number%22,%22patent_date%22,%22inventor_last_name%22]"></a>
 
-The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when `{"matched_subentities_only":true}`, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. However if `{"matched_subentities_only":false}`, the results will include all inventors for the patents, even if their last name was not "Whitney".  Note that if the inventor field in the query is encompassed by an &ldquo;or&rdquo; join operator, then the `matched_subentities_only` parameter must be `false`.
+The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when `{"matched_subentities_only":true}`, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. However if `{"matched_subentities_only":false}`, the results will include all inventors for the patents, even if their last name was not "Whitney".
 
 ##### <a name="query_string_example"></a> Example
 
@@ -1570,3 +1542,63 @@ with the body containing:
 <tr><td>*</td> <td>= unique identifier</td></tr>
 <tr><td>**</td> <td>= not yet implemented</td></tr>
 </table>
+
+## <a name="release_notes"></a> Release Notes
+### Test Version 3, 20150102
+* Locations API
+* Changed which fields are returned by default when not explicitly provided
+	* If the `f` parameter is not specified on the API call, then the fields that will be returned in the results are:
+		* patent query
+			* `patent_id`
+			* `patent_number`
+			* `patent_title`
+		* inventors query
+			* `inventor_id`
+			* `inventor_first_name`
+			* `inventor_last_name`
+		* assignees query
+			* `assignee_id`
+			* `assignee_first_name`
+			* `assignee_last_name`
+			* `assignee_organization`
+		* cpc_subsections query
+			* `cpc_subsection_id`
+			* `cpc_subsection_title`
+		* uspc_mainclasses query
+			* `uspc_mainclass_id`
+			* `uspc_mainclass_title`
+		* locations query
+			* `location_id`
+			* `location_city`
+			* `location_state`
+			* `location_country`
+* Changed `matched_subentities_only` option parameter to default to `true`
+* Allow `patent_type` to be queryable
+* Changed the `patent_firstnamed_*` fields so there are `patent_firstnamed_assignee_*` and `patent_firstnamed_inventor_*` fields 
+* Miscellaneous fields added
+	* patents query
+		* `assignee_lastknown_location_id`
+		* `assignee_sequence`
+		* `citedby_patent_id`
+		* `cited_patent_id`
+		* `inventor_lastknown_location_id`
+		* `inventor_sequence`
+		* `patent_average_processing_time`
+	* inventors query
+		* `assignee_lastknown_location_id`
+		* `coinventor_lastknown_location_id`
+		* `inventor_lastknown_location_id`
+	* assignees query
+		* `assignee_lastknown_location_id`
+		* `inventor_lastknown_location_id`
+	* cpc_subsections query
+		* `assignee_lastknown_location_id`
+		* `inventor_lastknown_location_id`
+	* uspc_mainclasses query
+		* `assignee_lastknown_location_id`
+		* `inventor_lastknown_location_id`
+	* locations query
+		* `assignee_lastknown_location_id`
+		* `citedby_patent_id`
+		* `cited_patent_id`
+		* `inventor_lastknown_location_id`

@@ -14,7 +14,6 @@
 <p>The PatentsView API is currently under development and is not intended for public release.</p>
 <h2>Table of Contents</h2>
 <ul>
-<li><a href="#release_notes">Release Notes</a></li>
 <li><a href="#patents_query">Patents Query</a><ul>
 <li><a href="#query_string_format">Query String Format</a> <ul>
 <li><a href="#query_string_syntax">Syntax</a></li>
@@ -64,50 +63,7 @@
 <li><a href="#location_field_list">Location Field List</a></li>
 </ul>
 </li>
-</ul>
-<h2><a name="release_notes"></a> Release Notes</h2>
-<h3>Test Version 3, 20150102</h3>
-<ul>
-<li>Added miscellaneous fields<ul>
-<li>patents query<ul>
-<li><code>assignee_lastknown_location_id</code></li>
-<li><code>assignee_sequence</code></li>
-<li><code>citedby_patent_id</code></li>
-<li><code>cited_patent_id</code></li>
-<li><code>inventor_lastknown_location_id</code></li>
-<li><code>inventor_sequence</code></li>
-</ul>
-</li>
-<li>inventors query<ul>
-<li><code>assignee_lastknown_location_id</code></li>
-<li><code>coinventor_lastknown_location_id</code></li>
-<li><code>inventor_lastknown_location_id</code></li>
-</ul>
-</li>
-<li>assignees query<ul>
-<li><code>assignee_lastknown_location_id</code></li>
-<li><code>inventor_lastknown_location_id</code></li>
-</ul>
-</li>
-<li>cpc_subsections query<ul>
-<li><code>assignee_lastknown_location_id</code></li>
-<li><code>inventor_lastknown_location_id</code></li>
-</ul>
-</li>
-<li>uspc_mainclasses query<ul>
-<li><code>assignee_lastknown_location_id</code></li>
-<li><code>inventor_lastknown_location_id</code></li>
-</ul>
-</li>
-<li>locations query<ul>
-<li><code>assignee_lastknown_location_id</code></li>
-<li><code>citedby_patent_id</code></li>
-<li><code>cited_patent_id</code></li>
-<li><code>inventor_lastknown_location_id</code></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a href="#release_notes">Release Notes</a></li>
 </ul>
 <h2><a name="patents_query"></a> Patents Query</h2>
 <p><code><strong><em>GET</em></strong> /api/patents/query?q{,f,o,s}</code></p>
@@ -286,7 +242,7 @@ simple_pair
 <p>The <code>matched_subentities_only</code> option is provided to indicate whether only those subentities that match their subentity-specific criteria should be included in the results. By default, only those subentities that match their respective query criteria will be included for each parent entity.</p>
 <p>This is easiest to understand with an example, so consider this query:</p>
 <p><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}&amp;f=[%22patent_number%22,%22patent_date%22,%22inventor_last_name%22]"></a></p>
-<p>The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when <code>{"matched_subentities_only":true}</code>, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. However if <code>{"matched_subentities_only":false}</code>, the results will include all inventors for the patents, even if their last name was not "Whitney".  Note that if the inventor field in the query is encompassed by an &ldquo;or&rdquo; join operator, then the <code>matched_subentities_only</code> parameter must be <code>false</code>.</p>
+<p>The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when <code>{"matched_subentities_only":true}</code>, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. However if <code>{"matched_subentities_only":false}</code>, the results will include all inventors for the patents, even if their last name was not "Whitney".</p>
 <h5><a name="query_string_example"></a> Example</h5>
 <p>Consider this example. Assume the database only has the following content:</p>
 <p>Patents:</p>
@@ -1512,6 +1468,98 @@ key_value_pair
 <tr><td>*</td> <td>= unique identifier</td></tr>
 <tr><td>**</td> <td>= not yet implemented</td></tr>
 </table>
+
+<h2><a name="release_notes"></a> Release Notes</h2>
+<h3>Test Version 3, 20150102</h3>
+<ul>
+<li>Locations API</li>
+<li>Changed which fields are returned by default when not explicitly provided<ul>
+<li>If the <code>f</code> parameter is not specified on the API call, then the fields that will be returned in the results are:<ul>
+<li>patent query<ul>
+<li><code>patent_id</code></li>
+<li><code>patent_number</code></li>
+<li><code>patent_title</code></li>
+</ul>
+</li>
+<li>inventors query<ul>
+<li><code>inventor_id</code></li>
+<li><code>inventor_first_name</code></li>
+<li><code>inventor_last_name</code></li>
+</ul>
+</li>
+<li>assignees query<ul>
+<li><code>assignee_id</code></li>
+<li><code>assignee_first_name</code></li>
+<li><code>assignee_last_name</code></li>
+<li><code>assignee_organization</code></li>
+</ul>
+</li>
+<li>cpc_subsections query<ul>
+<li><code>cpc_subsection_id</code></li>
+<li><code>cpc_subsection_title</code></li>
+</ul>
+</li>
+<li>uspc_mainclasses query<ul>
+<li><code>uspc_mainclass_id</code></li>
+<li><code>uspc_mainclass_title</code></li>
+</ul>
+</li>
+<li>locations query<ul>
+<li><code>location_id</code></li>
+<li><code>location_city</code></li>
+<li><code>location_state</code></li>
+<li><code>location_country</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Changed <code>matched_subentities_only</code> option parameter to default to <code>true</code></li>
+<li>Allow <code>patent_type</code> to be queryable</li>
+<li>Changed the <code>patent_firstnamed_*</code> fields so there are <code>patent_firstnamed_assignee_*</code> and <code>patent_firstnamed_inventor_*</code> fields </li>
+<li>Miscellaneous fields added<ul>
+<li>patents query<ul>
+<li><code>assignee_lastknown_location_id</code></li>
+<li><code>assignee_sequence</code></li>
+<li><code>citedby_patent_id</code></li>
+<li><code>cited_patent_id</code></li>
+<li><code>inventor_lastknown_location_id</code></li>
+<li><code>inventor_sequence</code></li>
+<li><code>patent_average_processing_time</code></li>
+</ul>
+</li>
+<li>inventors query<ul>
+<li><code>assignee_lastknown_location_id</code></li>
+<li><code>coinventor_lastknown_location_id</code></li>
+<li><code>inventor_lastknown_location_id</code></li>
+</ul>
+</li>
+<li>assignees query<ul>
+<li><code>assignee_lastknown_location_id</code></li>
+<li><code>inventor_lastknown_location_id</code></li>
+</ul>
+</li>
+<li>cpc_subsections query<ul>
+<li><code>assignee_lastknown_location_id</code></li>
+<li><code>inventor_lastknown_location_id</code></li>
+</ul>
+</li>
+<li>uspc_mainclasses query<ul>
+<li><code>assignee_lastknown_location_id</code></li>
+<li><code>inventor_lastknown_location_id</code></li>
+</ul>
+</li>
+<li>locations query<ul>
+<li><code>assignee_lastknown_location_id</code></li>
+<li><code>citedby_patent_id</code></li>
+<li><code>cited_patent_id</code></li>
+<li><code>inventor_lastknown_location_id</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
           </body>
           </html>
           
