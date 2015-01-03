@@ -154,6 +154,10 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('uspcs', $results['patents'][0]);
         $this->assertArrayHasKey('uspc_mainclass_id', $results['patents'][0]['uspcs'][0]);
         $this->assertArrayHasKey('uspc_subclass_id', $results['patents'][0]['uspcs'][0]);
+        $this->assertArrayHasKey('cpcs', $results['patents'][0]);
+        $this->assertArrayHasKey('cpc_subsection_id', $results['patents'][0]['cpcs'][0]);
+        $this->assertArrayHasKey('nbers', $results['patents'][0]);
+        $this->assertArrayHasKey('nber_subcategory_id', $results['patents'][0]['nbers'][0]);
     }
 
     public function testStringBegins()
@@ -463,5 +467,53 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('IPCs', $results['locations'][0]);
         $this->assertArrayHasKey('ipc_main_group', $results['locations'][0]['IPCs'][0]);
     }
+
+    public function testNormalNBERSubcategory()
+    {
+        global $NBER_ENTITY_SPECS;
+        global $NBER_FIELD_SPECS;
+        $queryString = '{"nber_subcategory_id":"11"}';
+        $fieldList = array("nber_subcategory_id", "nber_subcategory_title", "nber_category_id", "assignee_organization", "assignee_last_name", "patent_number");
+        $decoded = json_decode($queryString, true);
+        $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertEquals('Agriculture,Food,Textiles', $results['nber_subcategories'][0]['nber_subcategory_title']);
+    }
+
+    #Todo: This is slow. When I remove the assignee_num_patents_for_nber_subcategory it is much faster.
+    public function testAllFieldsNBERSubcategory()
+    {
+        global $NBER_ENTITY_SPECS;
+        global $NBER_FIELD_SPECS;
+        $queryString = '{"_and":[{"nber_subcategory_id":"11"},{"assignee_city":"atlanta"}]}';
+        #$queryString = '{"nber_subcategory_id":"11"}';
+        $decoded = json_decode($queryString, true);
+        $fieldList = array_keys($NBER_FIELD_SPECS);
+        $fieldList = array_values(array_diff($fieldList, array('assignee_num_patents_for_nber_subcategory')));
+        $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertGreaterThanOrEqual(1, $results['total_found']);
+    }
+
+    public function testAllGroupsNBERSubcategory()
+    {
+        global $NBER_ENTITY_SPECS;
+        global $NBER_FIELD_SPECS;
+        $queryString = '{"nber_subcategory_id":"11"}';
+        $fieldList = array("nber_subcategory_id","inventor_last_name","patent_number","uspc_mainclass_id","assignee_organization","cpc_subsection_id","year_num_patents_for_nber_subcategory","ipc_main_group");
+        $decoded = json_decode($queryString, true);
+        $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $decoded, $fieldList);
+        $this->assertEquals(1, count($results['nber_subcategories']));
+        $this->assertArrayHasKey('nber_subcategory_id', $results['nber_subcategories'][0]);
+        $this->assertArrayHasKey('cpcs', $results['nber_subcategories'][0]);
+        $this->assertArrayHasKey('cpc_subsection_id', $results['nber_subcategories'][0]['cpcs'][0]);
+        $this->assertArrayHasKey('patents', $results['nber_subcategories'][0]);
+        $this->assertArrayHasKey('patent_number', $results['nber_subcategories'][0]['patents'][0]);
+        $this->assertArrayHasKey('inventors', $results['nber_subcategories'][0]);
+        $this->assertArrayHasKey('inventor_last_name', $results['nber_subcategories'][0]['inventors'][0]);
+        $this->assertArrayHasKey('IPCs', $results['nber_subcategories'][0]);
+        $this->assertArrayHasKey('ipc_main_group', $results['nber_subcategories'][0]['IPCs'][0]);
+        $this->assertArrayHasKey('years', $results['nber_subcategories'][0]);
+        $this->assertArrayHasKey('year_num_patents_for_nber_subcategory', $results['nber_subcategories'][0]['years'][0]);
+    }
+
 }
 

@@ -154,6 +154,36 @@ $app->post(
 
 
 $app->get(
+    '/nber_subcategories/query',
+    function () use ($app) {
+        global $NBER_ENTITY_SPECS;
+        global $NBER_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
+
+        $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results, $NBER_ENTITY_SPECS);
+        $app->response->setBody($results);
+    }
+);
+
+
+$app->post(
+    '/nber_subcategories/query',
+    function () use ($app) {
+        global $NBER_ENTITY_SPECS;
+        global $NBER_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
+
+        $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results, $NBER_ENTITY_SPECS);
+        $app->response->setBody($results);
+    }
+);
+
+
+$app->get(
     '/locations/query',
     function () use ($app) {
         global $LOCATION_ENTITY_SPECS;
