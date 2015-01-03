@@ -702,7 +702,8 @@ $LOCATION_ENTITY_SPECS = array(
     array('entity_name'=>'cited_patent', 'group_name'=>'cited_patents', 'keyId'=>'', 'join'=>'left outer join uspatentcitation as patentcit_fromciting_tocited on patent.patent_id=patentcit_fromciting_tocited.citing_patent_id left outer join patent as citedpatent on patentcit_fromciting_tocited.cited_patent_id=citedpatent.patent_id'),
     array('entity_name'=>'citedby_patent', 'group_name'=>'citedby_patents', 'keyId'=>'', 'join'=>'left outer join uspatentcitation as patentcit_fromcited_tociting on patent.patent_id=patentcit_fromcited_tociting.cited_patent_id left outer join patent as citingpatent on patentcit_fromcited_tociting.citing_patent_id=citingpatent.patent_id'),
     array('entity_name'=>'uspc', 'group_name'=>'uspcs', 'keyId'=>'', 'join'=>'left outer join uspc_current_mainclass using(patent_id) left outer join uspc_current using (patent_id, mainclass_id)'),
-    array('entity_name'=>'cpc', 'group_name'=>'cpcs', 'keyId'=>'', 'join'=>'left outer join cpc_current_subsection using(patent_id) left outer join cpc_current using (patent_id, subsection_id)')
+    array('entity_name'=>'cpc', 'group_name'=>'cpcs', 'keyId'=>'', 'join'=>'left outer join cpc_current_subsection using(patent_id) left outer join cpc_current using (patent_id, subsection_id)'),
+    array('entity_name'=>'year', 'group_name'=>'years', 'keyId'=>'', 'join'=>'')
 );
 
 $LOCATION_FIELD_SPECS = array
@@ -728,6 +729,7 @@ $LOCATION_FIELD_SPECS = array
     'assignee_lastknown_longitude' => array('entity_name'=>'assignee', 'column_name' => 'assignee.lastknown_longitude', 'datatype' => 'float', 'query' => 'n', 'sort' => 'n'),
     'assignee_lastknown_state' => array('entity_name'=>'assignee', 'column_name' => 'assignee.lastknown_state', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'assignee_last_name' => array('entity_name'=>'assignee', 'column_name' => 'assignee.name_last', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
+    'assignee_num_patents_for_location' => array('entity_name'=>'assignee', 'column_name' => '(select count(distinct patent_assigneeX.patent_id) from patent_assignee as patent_assigneeX WHERE patent_assigneeX.location_id=patent_assignee.location_id and patent_assigneeX.assignee_id=patent_assignee.assignee_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
     'assignee_organization' => array('entity_name'=>'assignee', 'column_name' => 'assignee.organization', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'assignee_total_num_patents' => array('entity_name'=>'assignee', 'column_name' => 'assignee.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
     'assignee_type' => array('entity_name'=>'assignee', 'column_name' => 'assignee.type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
@@ -748,6 +750,7 @@ $LOCATION_FIELD_SPECS = array
     'cpc_category' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.category', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'cpc_group_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.group_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'cpc_group_title' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.group_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
+    'cpc_num_patents_for_location' => array('entity_name'=>'cpc', 'column_name' => '(select count(distinct cpc_current_subsectionX.patent_id) from cpc_current_subsection as cpc_current_subsectionX left outer join patent_inventor as patent_inventorX on cpc_current_subsectionX.patent_id=patent_inventorX.patent_id WHERE patent_inventorX.location_id=patent_inventor.location_id and cpc_current_subsectionX.subsection_id=cpc_current_subsection.subsection_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
     'cpc_sequence' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.sequence', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
     'cpc_section_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current_subsection.section_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'cpc_subgroup_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current.subgroup_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
@@ -768,6 +771,7 @@ $LOCATION_FIELD_SPECS = array
     'inventor_lastknown_location_id' => array('entity_name'=>'inventor', 'column_name' => 'inventor.lastknown_persistent_location_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'inventor_lastknown_longitude' => array('entity_name'=>'inventor', 'column_name' => 'inventor.lastknown_longitude', 'datatype' => 'float', 'query' => 'n', 'sort' => 'n'),
     'inventor_lastknown_state' => array('entity_name'=>'inventor', 'column_name' => 'inventor.lastknown_state', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
+    'inventor_num_patents_for_location' => array('entity_name'=>'inventor', 'column_name' => '(select count(distinct patent_inventorX.patent_id) from patent_inventor as patent_inventorX WHERE patent_inventorX.location_id=patent_inventor.location_id and patent_inventorX.inventor_id=patent_inventor.inventor_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
     'inventor_total_num_patents' => array('entity_name'=>'inventor', 'column_name' => 'inventor.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
     'inventor_years_active' => array('entity_name'=>'inventor', 'column_name' => 'concat(year(inventor.first_seen_date),\'-\',year(inventor.last_seen_date))', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
     'ipc_action_date' => array('entity_name'=>'ipc', 'column_name' => 'ipcr.action_date', 'datatype' => 'date', 'query' => 'n', 'sort' => 'n'),
@@ -813,6 +817,7 @@ $LOCATION_FIELD_SPECS = array
     'patent_id' => array('entity_name'=>'patent', 'column_name' => 'patent.patent_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'y'),
     'patent_kind' => array('entity_name'=>'patent', 'column_name' => 'patent.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'y'),
     'patent_num_cited_by_us_patents' => array('entity_name'=>'patent', 'column_name' => 'patent.num_times_cited_by_us_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'y'),
+    'patent_num_cited_by_us_patents_for_location' => array('entity_name'=>'patent', 'column_name' => '(select count(distinct uspatentcitationX.citing_patent_id) from uspatentcitation as uspatentcitationX left outer join patent_inventor as patent_inventorX on uspatentcitationX.cited_patent_id=patent_inventorX.patent_id left outer join patent_inventor as patent_inventorX2 on uspatentcitationX.citing_patent_id=patent_inventorX2.patent_id WHERE patent_inventorX2.location_id=patent_inventor.location_id and uspatentcitationX.cited_patent_id=patent_inventor.patent_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
     'patent_num_combined_citations' => array('entity_name'=>'patent', 'column_name' => 'patent.num_total_documents_cited', 'datatype' => 'int', 'query' => 'y', 'sort' => 'y'),
     'patent_num_foreign_citations' => array('entity_name'=>'patent', 'column_name' => 'patent.num_foreign_documents_cited', 'datatype' => 'int', 'query' => 'y', 'sort' => 'y'),
     'patent_num_us_application_citations' => array('entity_name'=>'patent', 'column_name' => 'patent.num_us_applications_cited', 'datatype' => 'int', 'query' => 'y', 'sort' => 'y'),
@@ -826,12 +831,15 @@ $LOCATION_FIELD_SPECS = array
     'patent_year' => array('entity_name'=>'patent', 'column_name' => 'patent.year', 'datatype' => 'int', 'query' => 'y', 'sort' => 'y'),
     'uspc_mainclass_id' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.mainclass_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'uspc_mainclass_title' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.mainclass_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
+    'uspc_num_patents_for_location' => array('entity_name'=>'uspc', 'column_name' => '(select count(distinct uspc_current_mainclassX.patent_id) from uspc_current_mainclass as uspc_current_mainclassX left outer join patent_inventor as patent_inventorX on uspc_current_mainclassX.patent_id=patent_inventorX.patent_id WHERE patent_inventorX.location_id=patent_inventor.location_id and uspc_current_mainclassX.mainclass_id=uspc_current_mainclass.mainclass_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
     'uspc_subclass_id' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.subclass_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'uspc_subclass_title' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.subclass_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'uspc_total_num_assignees' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
     'uspc_total_num_inventors' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
     'uspc_total_num_patents' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
-    'uspc_years_active' => array('entity_name'=>'uspc', 'column_name' => 'concat(year(uspc_current_mainclass.first_seen_date),\'-\',year(uspc_current_mainclass.last_seen_date))', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n')
+    'uspc_years_active' => array('entity_name'=>'uspc', 'column_name' => 'concat(year(uspc_current_mainclass.first_seen_date),\'-\',year(uspc_current_mainclass.last_seen_date))', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
+    'year_id' => array('entity_name'=>'year', 'column_name' => 'patent.year', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
+    'year_num_patents_for_location' => array('entity_name'=>'year', 'column_name' => '(select count(distinct patent_year.patent_id) from patent_inventor as patent_inventor_year left outer join patent as patent_year on patent_inventor_year.patent_id=patent_year.patent_id where patent_year.year=patent.year and patent_inventor_year.location_id=patent_inventor.location_id)', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n')
 
 );
 
