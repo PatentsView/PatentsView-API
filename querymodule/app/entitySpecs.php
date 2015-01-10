@@ -181,7 +181,7 @@ $PATENT_FIELD_SPECS = array
     'uspc_last_seen_date' => array('entity_name' => 'uspc', 'column_name' => 'uspc_current_mainclass.last_seen_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'n'),
     'uspc_mainclass_id' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.mainclass_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'uspc_mainclass_title' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.mainclass_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
-    'uspc_sequence' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.sequence', 'datatype' => 'int', 'query' => 'n', 'sort' => 'n'),
+    'uspc_sequence' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.sequence', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
     'uspc_subclass_id' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.subclass_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'uspc_subclass_title' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.subclass_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'n'),
     'uspc_total_num_assignees' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'n'),
