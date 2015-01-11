@@ -6,7 +6,7 @@ require_once dirname(__FILE__) . '/ErrorHandler.php';
 
 class DatabaseQuery
 {
-    private $total_found=0;
+    private $entityTotalCounts = array();
 
     private $entitySpecs = array();
     private $entityGroupVars = array();
@@ -20,12 +20,13 @@ class DatabaseQuery
     private $errorHandler = null;
 
     private $matchedSubentitiesOnly = true;
+    private $include_subentity_total_counts = false;
 
     private $supportDatabase = "";
 
-    public function getTotalFound()
+    public function getTotalCounts()
     {
-        return $this->total_found;
+        return $this->entityTotalCounts;
     }
 
     public function queryDatabase(array $entitySpecs, array $fieldSpecs, $whereClause, array $whereFieldsUsed, array $entitySpecificWhereClauses, $onlyAndsWereUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
@@ -59,6 +60,9 @@ class DatabaseQuery
                 # When the matched_subentities_only option is used, we need to check that all the criteria were 'and'ed together
 //                if ($this->matchedSubentitiesOnly && !$onlyAndsWereUsed)
 //                    $this->errorHandler->sendError(400, "When using the 'matched_subentities_only' option, the query criteria cannot contain any 'or's.", $options);
+            }
+            if (array_key_exists('include_subentity_total_counts', $options)) {
+                $this->include_subentity_total_counts = strtolower($options['include_subentity_total_counts']) === 'true';
             }
         }
 
@@ -111,7 +115,8 @@ class DatabaseQuery
         $fromEntity = $this->supportDatabase . '.QueryResults qr';
         $whereEntity = "qr.QueryDefId=$queryDefId";
         $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
-        $this->total_found = intval($countResults[0]['total_found']);
+        $this->entityTotalCounts[$entitySpecs[0]['entity_name']] = intval($countResults[0]['total_found']);
+
 
         // Get the primary entities
         $results = array();
@@ -119,7 +124,7 @@ class DatabaseQuery
         $fromEntity = $this->entitySpecs[0]['join'] .
             ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
         $whereEntity = "qr.QueryDefId=$queryDefId";
-        if ($perPage < $this->total_found)
+        if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
             $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
         $sortEntity = 'qr.sequence';
         $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortEntity);
@@ -136,13 +141,24 @@ class DatabaseQuery
                     ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
                 $fromEntity .= ' ' . $entitySpec['join'];
                 $whereEntity = "qr.QueryDefId=$queryDefId";
-                if ($perPage < $this->total_found)
+                if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
                 if ($this->matchedSubentitiesOnly && array_key_exists($entitySpec['entity_name'], $this->entitySpecificWhereClauses) && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '')
                     $whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
                 $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, null);
                 $results[$entitySpec['group_name']] = $entityResults;
                 unset($entityResults);
+
+                if ($this->include_subentity_total_counts) {
+                    // Count of all subentities for all primary entities.
+                    $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
+                    $fromEntity = $this->entitySpecs[0]['join'] .
+                        ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
+                    $fromEntity .= ' ' . $entitySpec['join'];
+                    $whereEntity = "qr.QueryDefId=$queryDefId";
+                    $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
+                    $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
+                }
             }
         }
 

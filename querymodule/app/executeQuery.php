@@ -37,6 +37,7 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam=n
     // Convert the DB result structures to PHO structures. The DB results will be in multiple tables, and the
     // PHP structures will be nested (only one-level) PHP arrays.
     $results = convertDBResultsToNestedStructure($entitySpecs, $dbResults, $selectFieldSpecs);
-    $results['total_found'] = $dbQuery->getTotalFound();
+    foreach ($dbQuery->getTotalCounts() as $entityName=>$count)
+        $results['total_' . $entityName . '_count'] = $count;
     return $results;
 }

@@ -30,7 +30,7 @@
 <li><a href="#options_parameter">Options Parameter</a> <ul>
 <li><a href="#pagination">Pagination</a></li>
 <li><a href="#matched_subentities_only">Matched Subentities Only</a></li>
-<li><a href="#query_string_example">Example</a></li>
+<li><a href="#include_subentity_total_counts">Include Subentity Total Counts</a></li>
 </ul>
 </li>
 <li><a href="#sort_parameter">Sort Parameter</a> </li>
@@ -106,11 +106,12 @@
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 <tr>
@@ -247,7 +248,7 @@ simple_pair
 <p>This is easiest to understand with an example, so consider this query:</p>
 <p><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}&amp;f=[%22patent_number%22,%22patent_date%22,%22inventor_last_name%22]"></a></p>
 <p>The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when <code>{"matched_subentities_only":true}</code>, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. However if <code>{"matched_subentities_only":false}</code>, the results will include all inventors for the patents, even if their last name was not "Whitney".</p>
-<h5><a name="query_string_example"></a> Example</h5>
+<p><strong>Example</strong></p>
 <p>Consider this example. Assume the database only has the following content:</p>
 <p>Patents:</p>
 <table>
@@ -287,6 +288,8 @@ simple_pair
 <p>However, if the setting was change to <code>false</code> like the following, the results would include subentity (i.e. inventor) data:</p>
 <p><code>q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":false}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a></p>
 <p><code>{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Hopper"},{"inventor_last_name":"Whitney"},{"inventor_last_name":"Carrier"}]}],"count":1,"total_found":1}</code> <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Hopper%22},{%22inventor_last_name%22:%22Whitney%22},{%22inventor_last_name%22:%22Carrier%22}]}],%22count%22:1,%22total_found%22:1}"></a></p>
+<h4><a name="include_subentity_total_counts"></a> Include Subentity Total Counts</h4>
+<p>The <code>include_subentity_total_counts</code> option is provided to indicate whether the query results should include the total counts of unique subentities. By default, these counts are not returned. If <code>true</code>, then there will be a count of unique subentities for those subentities that have at least one field included in the result fields. These will be named, e.g., <code>total_inventor_count</code>, <code>total_assignee_count</code>, etc. </p>
 <h3><a name="sort_parameter"></a> Sort Parameter</h3>
 <p>The sort parameter is a JSON formatted array of objects that specifies the sort order for the returned results. If empty or not provided, the default sort order will be ascending by patent number.</p>
 <p>Each object in the array should be a pair, with the pair's key is one of the patent fields, and the value is either &ldquo;asc&rdquo; or &ldquo;desc&rdquo;, to indicate ascending or descending sort, respectively. A couple examples should suffice for understanding:</p>
@@ -537,11 +540,12 @@ key_value_pair
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 <tr>
@@ -759,11 +763,12 @@ key_value_pair
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 <tr>
@@ -963,11 +968,12 @@ key_value_pair
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 <tr>
@@ -1167,11 +1173,12 @@ key_value_pair
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 
@@ -1372,11 +1379,12 @@ key_value_pair
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 <tr>
@@ -1576,11 +1584,12 @@ key_value_pair
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 
@@ -1771,6 +1780,29 @@ key_value_pair
 </table>
 
 <h2><a name="release_notes"></a> Release Notes</h2>
+<h3>Test Version 4, 20150110</h3>
+<ul>
+<li>Added at-issue location for inventors and assignees in the patent query<ul>
+<li>assignee_city</li>
+<li>assignee_country</li>
+<li>assignee_latitude</li>
+<li>assignee_location_id</li>
+<li>assignee_longitude</li>
+<li>assignee_state</li>
+<li>inventor_city</li>
+<li>inventor_country</li>
+<li>inventor_latitude</li>
+<li>inventor_location_id</li>
+<li>inventor_longitude</li>
+<li>inventor_state</li>
+</ul>
+</li>
+<li>Added the <code>include_subentity_total_counts</code> option<ul>
+<li><strong>Note</strong>: this could be a breaking change since the old <code>total_found</code> field is no longer returned, it will be called, e.g., <code>total_patent_count</code>.</li>
+</ul>
+</li>
+<li>Allow uspc_sequence in the patents query to be used as query criteria</li>
+</ul>
 <h3>Test Version 3, 20150102</h3>
 <ul>
 <li>Added Locations API<ul>

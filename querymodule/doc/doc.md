@@ -22,7 +22,7 @@ The PatentsView API is currently under development and is not intended for publi
 	* <a href="#options_parameter">Options Parameter</a> 
 		* <a href="#pagination">Pagination</a>
 		* <a href="#matched_subentities_only">Matched Subentities Only</a>
-		* <a href="#query_string_example">Example</a>
+		* <a href="#include_subentity_total_counts">Include Subentity Total Counts</a>
 	* <a href="#sort_parameter">Sort Parameter</a> 
 	* <a href="#results_format">Results Format</a> 
 		* <a href="#results_format_json">JSON</a>
@@ -88,11 +88,12 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 <tr>
@@ -251,7 +252,7 @@ This is easiest to understand with an example, so consider this query:
 
 The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when `{"matched_subentities_only":true}`, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. However if `{"matched_subentities_only":false}`, the results will include all inventors for the patents, even if their last name was not "Whitney".
 
-##### <a name="query_string_example"></a> Example
+__Example__
 
 Consider this example. Assume the database only has the following content:
 
@@ -301,6 +302,10 @@ However, if the setting was change to `false` like the following, the results wo
 `q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name"]&o={"matched_subentities_only":false}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22_and%22:[{%22_gte%22:{%22patent_date%22:%222007-01-04%22}},{%22inventor_last_name%22:%22Whitney%22}]}"></a>
 
 `{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Hopper"},{"inventor_last_name":"Whitney"},{"inventor_last_name":"Carrier"}]}],"count":1,"total_found":1}` <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={%22patents%22:[{%22patent_number%22:%22pat1%22,%22patent_date%22:%222007-01-27%22,%22inventors%22:[{%22inventor_last_name%22:%22Hopper%22},{%22inventor_last_name%22:%22Whitney%22},{%22inventor_last_name%22:%22Carrier%22}]}],%22count%22:1,%22total_found%22:1}"></a>
+
+#### <a name="include_subentity_total_counts"></a> Include Subentity Total Counts
+
+The `include_subentity_total_counts` option is provided to indicate whether the query results should include the total counts of unique subentities. By default, these counts are not returned. If `true`, then there will be a count of unique subentities for those subentities that have at least one field included in the result fields. These will be named, e.g., `total_inventor_count`, `total_assignee_count`, etc. 
 
 ### <a name="sort_parameter"></a> Sort Parameter
 
@@ -569,11 +574,12 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 <tr>
@@ -800,11 +806,12 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 <tr>
@@ -1013,11 +1020,12 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 <tr>
@@ -1226,11 +1234,12 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 
@@ -1440,11 +1449,12 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 <tr>
@@ -1653,11 +1663,12 @@ The HTTP GET request method is the preferred access mechanism; however when the 
 <td>JSON formatted object of options to modify the query or results.  Available options are:
 <ul>
 <li>matched_subentities_only &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</li>
+<li>include_subentity_total_counts &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</li>
 <li>page &mdash; return only the Nth page of results. Defaults to 1.</li>
 <li>per_page &mdash; the size of each page to return. Defaults to 25.</li>
 </ul>
 </td>
-<td>string, optional <br/> example: <code>o={"matched_subentities_only": true, "page": 2, "per_page": 50}</code> </td>
+<td>string, optional <br/> example: <code>o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</code> </td>
 </tr>
 
 
@@ -1852,6 +1863,24 @@ with the body containing:
 </table>
 
 ## <a name="release_notes"></a> Release Notes
+### Test Version 4, 20150110
+* Added at-issue location for inventors and assignees in the patent query
+    * assignee_city
+    * assignee_country
+    * assignee_latitude
+    * assignee_location_id
+    * assignee_longitude
+    * assignee_state
+    * inventor_city
+    * inventor_country
+    * inventor_latitude
+    * inventor_location_id
+    * inventor_longitude
+    * inventor_state
+* Added the `include_subentity_total_counts` option
+    * __Note__: this could be a breaking change since the old `total_found` field is no longer returned, it will be called, e.g., `total_patent_count`.
+* Allow uspc_sequence in the patents query to be used as query criteria
+
 ### Test Version 3, 20150102
 * Added Locations API
 	* As part of implementing the locations API, we removed the following fields:
