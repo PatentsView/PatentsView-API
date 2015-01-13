@@ -144,12 +144,14 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldSpecs, null);
         $memUsed = memory_get_usage();
         $this->assertGreaterThanOrEqual(1, count($results['patents']));
+        $total_patent_count = $dbQuery->getTotalCounts();
+        $total_patent_count = $total_patent_count['patent'];
         if (count($results['patents']) < 25) {
-            $this->assertEquals($dbQuery->getTotalFound(), count($results['patents']));
+            $this->assertEquals($total_patent_count, count($results['patents']));
         }
         else {
             $this->assertEquals(25, count($results['patents']));
-            $this->assertGreaterThanOrEqual(25, $dbQuery->getTotalFound());
+            $this->assertGreaterThanOrEqual(25, $total_patent_count);
         }
     }
 
@@ -166,12 +168,14 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $whereFieldsUsed = array('patent_number');
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldSpecs, null, $options);
         $memUsed = memory_get_usage();
+        $total_patent_count = $dbQuery->getTotalCounts();
+        $total_patent_count = $total_patent_count['patent'];
         if (count($results['patents']) < $config->getMaxPageSize()) {
-            $this->assertEquals($dbQuery->getTotalFound(), count($results['patents']));
+            $this->assertEquals($total_patent_count, count($results['patents']));
         }
         else {
             $this->assertEquals($config->getMaxPageSize(), count($results['patents']));
-            $this->assertGreaterThanOrEqual($config->getMaxPageSize(), $dbQuery->getTotalFound());
+            $this->assertGreaterThanOrEqual($config->getMaxPageSize(), $total_patent_count);
         }
     }
 

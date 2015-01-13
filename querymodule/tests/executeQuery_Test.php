@@ -15,7 +15,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $queryString = '{"_or":[{"patent_number":"8407900"},{"patent_number":"8407901"}]}';
-        $expected = '{"patents":[{"patent_id":"8407900","patent_number":"8407900","patent_title":"Shaving cartridge having mostly elastomeric wings"},{"patent_id":"8407901","patent_number":"8407901","patent_title":"Drive mechanism for a reciprocating tool"}],"count":2,"total_found":2}';
+        $expected = '{"patents":[{"patent_id":"8407900","patent_number":"8407900","patent_title":"Shaving cartridge having mostly elastomeric wings"},{"patent_id":"8407901","patent_number":"8407901","patent_title":"Drive mechanism for a reciprocating tool"}],"count":2,"total_patent_count":2}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -28,7 +28,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_FIELD_SPECS;
         $queryString = '{"_or":[{"patent_number":"8407900"},{"patent_number":"8407901"}]}';
         $fieldList = array("patent_id", "patent_type", "patent_number", "patent_title", "inventor_last_name", "assignee_last_name");
-        $expected = '{"patents":[{"patent_id":"8407900","patent_type":"utility","patent_number":"8407900","patent_title":"Shaving cartridge having mostly elastomeric wings","inventors":[{"inventor_last_name":"Johnson"}],"assignees":[{"assignee_last_name":null}]},{"patent_id":"8407901","patent_type":"utility","patent_number":"8407901","patent_title":"Drive mechanism for a reciprocating tool","inventors":[{"inventor_last_name":"Oberheim"}],"assignees":[{"assignee_last_name":null}]}],"count":2,"total_found":2}';
+        $expected = '{"patents":[{"patent_id":"8407900","patent_type":"utility","patent_number":"8407900","patent_title":"Shaving cartridge having mostly elastomeric wings","inventors":[{"inventor_last_name":"Johnson"}],"assignees":[{"assignee_last_name":null}]},{"patent_id":"8407901","patent_type":"utility","patent_number":"8407901","patent_title":"Drive mechanism for a reciprocating tool","inventors":[{"inventor_last_name":"Oberheim"}],"assignees":[{"assignee_last_name":null}]}],"count":2,"total_patent_count":2}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, $fieldList);
         $encoded = json_encode($results);
@@ -40,7 +40,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $queryString = '{"patent_number":"DoesNotExist"}';
-        $expected = '{"patents":null,"count":0,"total_found":0}';
+        $expected = '{"patents":null,"count":0,"total_patent_count":0}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -66,8 +66,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $queryString = '{"_text_phrase":{"patent_title":"lead wire"}}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
-        $this->assertGreaterThanOrEqual(180, $results['total_found']);
-        $this->assertLessThanOrEqual(400, $results['total_found']);
+        $this->assertGreaterThanOrEqual(180, $results['total_patent_count']);
+        $this->assertLessThanOrEqual(400, $results['total_patent_count']);
         foreach ($results['patents'] as $patent)
             $this->assertFalse(stristr($patent['patent_title'], 'lead wire') === false);
     }
@@ -79,8 +79,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $queryString = '{"_text_any":{"patent_title":"lead wire"}}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
-        $this->assertGreaterThanOrEqual(24000, $results['total_found']);
-        $this->assertLessThanOrEqual(30000, $results['total_found']);
+        $this->assertGreaterThanOrEqual(24000, $results['total_patent_count']);
+        $this->assertLessThanOrEqual(30000, $results['total_patent_count']);
         foreach ($results['patents'] as $patent) {
             $this->assertFalse((stristr($patent['patent_title'], 'lead') === false) and (stristr($patent['patent_title'], 'wire') === false));
         }
@@ -91,11 +91,11 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $queryString = '{"_text_all":{"patent_title":"lead wire"}}';
-        $expected = '{"patents":[{"patent_title":"Wire lead straightening device"},{"patent_title":"Small magnet wire to lead wire termination"},{"patent_title":"Lead wire forming apparatus for incandescent filaments"},{"patent_title":"Ceramic envelope plug and lead wire and seal"},{"patent_title":"Heart pacer lead wire with break-away needle"},{"patent_title":"Wire lead bonding tool"},{"patent_title":"Motor lead guide and lead wire attaching means"},{"patent_title":"Hermetic lead wire"},{"patent_title":"Anode and cathode lead wire assembly for solid electrolytic capacitors"},{"patent_title":"Stator coil winding and lead wire connection"},{"patent_title":"Crimping and wire lead insertion machine"},{"patent_title":"Forced air furnace motor lead wire protection"},{"patent_title":"Wire lead and solder removal tool"},{"patent_title":"Crimping and wire lead insertion machine having improved insertion means"},{"patent_title":"Wire straightening mechanism for wire lead production apparatus"},{"patent_title":"Wire gathering mechanism for wire lead production apparatus"},{"patent_title":"Lead wire cutter"},{"patent_title":"Wire lead clamping mechanism for wire lead production apparatus"},{"patent_title":"Anode and cathode lead wire assembly for solid electrolytic capacitors"},{"patent_title":"Lamp lead to wire attachment for integral string sets"},{"patent_title":"Tungsten halogen lamp having lead-in wire comprising tantalum alloy"},{"patent_title":"Component lead wire cutting equipment"},{"patent_title":"Horn loudspeaker with particular suspension and lead wire passage"},{"patent_title":"Lead wire forming apparatus for electric parts"},{"patent_title":"Wire lead forming machine"}],"count":25,"total_found":280}';
+        $expected = '{"patents":[{"patent_title":"Wire lead straightening device"},{"patent_title":"Small magnet wire to lead wire termination"},{"patent_title":"Lead wire forming apparatus for incandescent filaments"},{"patent_title":"Ceramic envelope plug and lead wire and seal"},{"patent_title":"Heart pacer lead wire with break-away needle"},{"patent_title":"Wire lead bonding tool"},{"patent_title":"Motor lead guide and lead wire attaching means"},{"patent_title":"Hermetic lead wire"},{"patent_title":"Anode and cathode lead wire assembly for solid electrolytic capacitors"},{"patent_title":"Stator coil winding and lead wire connection"},{"patent_title":"Crimping and wire lead insertion machine"},{"patent_title":"Forced air furnace motor lead wire protection"},{"patent_title":"Wire lead and solder removal tool"},{"patent_title":"Crimping and wire lead insertion machine having improved insertion means"},{"patent_title":"Wire straightening mechanism for wire lead production apparatus"},{"patent_title":"Wire gathering mechanism for wire lead production apparatus"},{"patent_title":"Lead wire cutter"},{"patent_title":"Wire lead clamping mechanism for wire lead production apparatus"},{"patent_title":"Anode and cathode lead wire assembly for solid electrolytic capacitors"},{"patent_title":"Lamp lead to wire attachment for integral string sets"},{"patent_title":"Tungsten halogen lamp having lead-in wire comprising tantalum alloy"},{"patent_title":"Component lead wire cutting equipment"},{"patent_title":"Horn loudspeaker with particular suspension and lead wire passage"},{"patent_title":"Lead wire forming apparatus for electric parts"},{"patent_title":"Wire lead forming machine"}],"count":25,"total_patent_count":280}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
-        $this->assertGreaterThanOrEqual(200, $results['total_found']);
-        $this->assertLessThanOrEqual(500, $results['total_found']);
+        $this->assertGreaterThanOrEqual(200, $results['total_patent_count']);
+        $this->assertLessThanOrEqual(500, $results['total_patent_count']);
         foreach ($results['patents'] as $patent) {
             $this->assertFalse(stristr($patent['patent_title'], 'lead') === false);
             $this->assertFalse(stristr($patent['patent_title'], 'wire') === false);
@@ -165,7 +165,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $queryString = '{"_begins":{"patent_number":"840790"}}';
-        $expected = '{"patents":[{"patent_id":"8407900","patent_number":"8407900","patent_title":"Shaving cartridge having mostly elastomeric wings"},{"patent_id":"8407901","patent_number":"8407901","patent_title":"Drive mechanism for a reciprocating tool"},{"patent_id":"8407902","patent_number":"8407902","patent_title":"Reciprocating power tool having a counterbalance device"},{"patent_id":"8407903","patent_number":"8407903","patent_title":"Rotating construction laser, in particular a self-compensating rotating construction laser, and method for measuring a tilt of an axis of rotation of a construction laser"},{"patent_id":"8407904","patent_number":"8407904","patent_title":"Rotary laser beam emitter"},{"patent_id":"8407905","patent_number":"8407905","patent_title":"Multiple magneto meters using Lorentz force for integrated systems"},{"patent_id":"8407906","patent_number":"8407906","patent_title":"Window frame deflection measurement device and method of use"},{"patent_id":"8407907","patent_number":"8407907","patent_title":"CMM with modular functionality"},{"patent_id":"8407908","patent_number":"8407908","patent_title":"Profile measurement apparatus"},{"patent_id":"8407909","patent_number":"8407909","patent_title":"Tape measure carrier and gauge"}],"count":10,"total_found":10}';
+        $expected = '{"patents":[{"patent_id":"8407900","patent_number":"8407900","patent_title":"Shaving cartridge having mostly elastomeric wings"},{"patent_id":"8407901","patent_number":"8407901","patent_title":"Drive mechanism for a reciprocating tool"},{"patent_id":"8407902","patent_number":"8407902","patent_title":"Reciprocating power tool having a counterbalance device"},{"patent_id":"8407903","patent_number":"8407903","patent_title":"Rotating construction laser, in particular a self-compensating rotating construction laser, and method for measuring a tilt of an axis of rotation of a construction laser"},{"patent_id":"8407904","patent_number":"8407904","patent_title":"Rotary laser beam emitter"},{"patent_id":"8407905","patent_number":"8407905","patent_title":"Multiple magneto meters using Lorentz force for integrated systems"},{"patent_id":"8407906","patent_number":"8407906","patent_title":"Window frame deflection measurement device and method of use"},{"patent_id":"8407907","patent_number":"8407907","patent_title":"CMM with modular functionality"},{"patent_id":"8407908","patent_number":"8407908","patent_title":"Profile measurement apparatus"},{"patent_id":"8407909","patent_number":"8407909","patent_title":"Tape measure carrier and gauge"}],"count":10,"total_patent_count":10}';
         $decoded = json_decode($queryString, true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decoded, null);
         $encoded = json_encode($results);
@@ -182,7 +182,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $decodedFieldString = json_decode('["patent_number","inventor_last_name]"', true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decodedQueryString, $decodedFieldString);
         $this->assertEquals(25, $results['count']);
-        $this->assertGreaterThan(5000, $results['total_found']);
+        $this->assertGreaterThan(5000, $results['total_patent_count']);
     }
 
     public function testLargeReturnSetLargePage()
@@ -197,7 +197,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $decodedOptionString = json_decode('{"per_page":'.$config->getMaxPageSize().'}', true);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $decodedQueryString, $decodedFieldString, null, $decodedOptionString);
         $this->assertGreaterThan(5000, $results['count']);
-        $this->assertGreaterThanOrEqual($results['count'], $results['total_found']);
+        $this->assertGreaterThanOrEqual($results['count'], $results['total_patent_count']);
         $this->assertTrue(isset($results['patents'][0]['inventors']));
     }
 
@@ -242,7 +242,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $decoded = json_decode($queryString, true);
         $fieldList = array_keys($INVENTOR_FIELD_SPECS);
         $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $decoded, $fieldList);
-        $this->assertGreaterThan(1, $results['total_found']);
+        $this->assertGreaterThan(1, $results['total_inventor_count']);
     }
 
     public function testAllGroupsInventor()
@@ -296,7 +296,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $decoded = json_decode($queryString, true);
         $fieldList = array_keys($ASSIGNEE_FIELD_SPECS);
         $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $decoded, $fieldList);
-        $this->assertGreaterThanOrEqual(1, $results['total_found']);
+        $this->assertGreaterThanOrEqual(1, $results['total_assignee_count']);
     }
 
     public function testAllGroupsAssignee()
@@ -345,7 +345,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $decoded = json_decode($queryString, true);
         $fieldList = array_keys($CPC_FIELD_SPECS);
         $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $decoded, $fieldList);
-        $this->assertGreaterThanOrEqual(1, $results['total_found']);
+        $this->assertGreaterThanOrEqual(1, $results['total_cpc_subsection_count']);
     }
 
 
@@ -397,7 +397,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $fieldList = array_keys($USPC_FIELD_SPECS);
         $fieldList = array_values(array_diff($fieldList, array('assignee_num_patents_for_uspc_mainclass')));
         $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $decoded, $fieldList);
-        $this->assertGreaterThanOrEqual(1, $results['total_found']);
+        $this->assertGreaterThanOrEqual(1, $results['total_uspc_mainclass_count']);
     }
 
     public function testAllGroupsUSPCMainclass()
@@ -443,7 +443,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $decoded = json_decode($queryString, true);
         $fieldList = array_keys($LOCATION_FIELD_SPECS);
         $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $decoded, $fieldList);
-        $this->assertGreaterThanOrEqual(1, $results['total_found']);
+        $this->assertGreaterThanOrEqual(1, $results['total_location_count']);
     }
 
     public function testAllGroupsLocation()
@@ -490,7 +490,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $fieldList = array_keys($NBER_FIELD_SPECS);
         $fieldList = array_values(array_diff($fieldList, array('assignee_num_patents_for_nber_subcategory')));
         $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $decoded, $fieldList);
-        $this->assertGreaterThanOrEqual(1, $results['total_found']);
+        $this->assertGreaterThanOrEqual(1, $results['total_nber_subcategory_count']);
     }
 
     public function testAllGroupsNBERSubcategory()
