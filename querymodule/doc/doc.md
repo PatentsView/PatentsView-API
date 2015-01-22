@@ -521,10 +521,10 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <tr><td>uspc_first_seen_date</td><td>uspcs</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_last_seen_date</td><td>uspcs</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_mainclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>uspc_mainclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_mainclass_title</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_sequence</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_subclass_id</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>uspc_subclass_title</td><td>uspcs</td><td>full text</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>uspc_subclass_title</td><td>uspcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_inventors</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_patents</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
