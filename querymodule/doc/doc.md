@@ -665,6 +665,7 @@ with the body containing:
 <tr><td>cpc_group_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_group_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_last_seen_date</td><td>cpcs</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_num_patents_for_inventor</td><td>cpcs</td><td>int</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_section_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_subgroup_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_subgroup_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -870,6 +871,7 @@ with the body containing:
 <tr><td>cpc_group_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_group_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_last_seen_date</td><td>cpcs</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>cpc_num_patents_for_assignee</td><td>cpcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_section_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_subgroup_id</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>cpc_subgroup_title</td><td>cpcs</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
@@ -924,6 +926,7 @@ with the body containing:
 <tr><td>nber_category_title</td><td>nbers</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>nber_first_seen_date</td><td>nbers</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>nber_last_seen_date</td><td>nbers</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>nber_num_patents_for_assignee</td><td>nbers</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>nber_subcategory_id</td><td>nbers</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>nber_subcategory_title</td><td>nbers</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>nber_total_num_assignees</td><td>nbers</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>

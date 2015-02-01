@@ -336,7 +336,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
             $this->assertStringStartsWith('G12', $subgroup['cpc_subgroup_id']);
     }
 
-    #This is slow. When I remove the location data it is much faster. Slowdown primarily due to data volume.
     public function testAllFieldsCPCSubsection()
     {
         global $CPC_ENTITY_SPECS;
@@ -349,12 +348,12 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     }
 
 
-    #Slow 17s
+    #ToDo: Super slow when using B41 rather than G12. Probably due to sheer size of records involved.
     public function testAllGroupsCPCSubsection()
     {
         global $CPC_ENTITY_SPECS;
         global $CPC_FIELD_SPECS;
-        $queryString = '{"cpc_subsection_id":"B41"}';
+        $queryString = '{"cpc_subsection_id":"G12"}';
         $fieldList = array("ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","uspc_subclass_id","assignee_organization","cpc_subsection_id","cpc_subgroup_id","year_id","year_num_patents_for_cpc_subsection");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $decoded, $fieldList);
@@ -387,7 +386,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
             $this->assertStringStartsWith('292', $subclass['uspc_subclass_id']);
     }
 
-    #Todo: This is slow. When I remove the assignee_num_patents_for_uspc_mainclass it is much faster.
     public function testAllFieldsUSPCMainclass()
     {
         global $USPC_ENTITY_SPECS;
@@ -395,7 +393,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $queryString = '{"uspc_mainclass_id":"292"}';
         $decoded = json_decode($queryString, true);
         $fieldList = array_keys($USPC_FIELD_SPECS);
-        $fieldList = array_values(array_diff($fieldList, array('assignee_num_patents_for_uspc_mainclass')));
         $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $decoded, $fieldList);
         $this->assertGreaterThanOrEqual(1, $results['total_uspc_mainclass_count']);
     }
@@ -479,7 +476,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals('Agriculture,Food,Textiles', $results['nber_subcategories'][0]['nber_subcategory_title']);
     }
 
-    #Todo: This is slow. When I remove the assignee_num_patents_for_nber_subcategory it is much faster.
     public function testAllFieldsNBERSubcategory()
     {
         global $NBER_ENTITY_SPECS;
@@ -488,7 +484,6 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         #$queryString = '{"nber_subcategory_id":"11"}';
         $decoded = json_decode($queryString, true);
         $fieldList = array_keys($NBER_FIELD_SPECS);
-        $fieldList = array_values(array_diff($fieldList, array('assignee_num_patents_for_nber_subcategory')));
         $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $decoded, $fieldList);
         $this->assertGreaterThanOrEqual(1, $results['total_nber_subcategory_count']);
     }
