@@ -4,7 +4,6 @@ PatentsView is a data visualization and analysis initiative intended to increase
 
 The PatentsView API is developed with support of the USPTO and is open to the public.  The API is intended to enable researchers and developers to examine the dynamics of inventor patenting activity over time and space, study regional trends in innovative activity, and track patterns of patent citations.
 
-The PatentsView API is currently under development and is not intended for public release.
 
 ## Table of Contents
 
@@ -1872,6 +1871,8 @@ with the body containing:
 <tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_inventors</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>uspc_total_num_patents</td><td>uspcs</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
+
+<tr><td>year_id</td><td>years</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>year_num_patents_for_location</td><td>years</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 
 </table>
