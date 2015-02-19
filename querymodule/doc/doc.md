@@ -1823,6 +1823,7 @@ with the body containing:
 <tr><td>nber_category_title</td><td>nbers</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>nber_first_seen_date</td><td>nbers</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>nber_last_seen_date</td><td>nbers</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><td>nber_num_patents_for_location</td><td>nbers</td><td>integer</td><td>N</td><td>Y</td><td>N</td></tr>
 <tr><td>nber_subcategory_id</td><td>nbers</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>nber_subcategory_title</td><td>nbers</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
 <tr><td>nber_total_num_assignees</td><td>nbers</td><td>integer</td><td>Y</td><td>Y</td><td>N</td></tr>
