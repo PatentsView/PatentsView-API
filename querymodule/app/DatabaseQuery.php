@@ -15,7 +15,7 @@ class DatabaseQuery
 
     private $selectFieldSpecs;
     private $sortFieldsUsed;
-
+    
     private $db = null;
     private $errorHandler = null;
 
@@ -77,38 +77,51 @@ class DatabaseQuery
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%u', $whereHash);
 
-        // If the query results for this where clause don't already exist, then we need to run the
-        // query and cache the primary entity IDs.
-        $results = $this->runQuery('QueryDefID, QueryString', $this->supportDatabase . '.QueryDef', "QueryDefID=$queryDefId", null);
-        //TODO Need to handle a hash collision
-        if (count($results) == 0) {
-            // Add an entry for the query
-            try {
-                $this->startTransaction();
-                $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
-                $this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
+        $county = 0;
+		$maxTries = 3;
+		do {
+			try {
+			// If the query results for this where clause don't already exist, then we need to run the
+        		// query and cache the primary entity IDs.
+        		$results = $this->runQuery('QueryDefID, QueryString', $this->supportDatabase . '.QueryDef', "QueryDefID=$queryDefId", null);
+        		//TODO Need to handle a hash collision
+        		if (count($results) == 0) {
+            		// Add an entry for the query
+            		
+                		$this->startTransaction();
+                		$insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
+                		$this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
 
-                // Get all the primary entity IDs and insert into the cached results table
-                #Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
-                $insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
-                $selectPrimaryEntityIdsString =
-                    "$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
-                if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = "";
-                if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
-                $fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
-                $this->runInsertSelect($insertStatement,
-                    $selectPrimaryEntityIdsString,
-                    '(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
-                    $fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
-                    null,
-                    null);
-                $this->commitTransaction();
-            }
-            catch (Exception $e) {
-                $this->rollbackTransaction();
-                throw new $e;
-            }
-        }
+                		// Get all the primary entity IDs and insert into the cached results table
+                		#Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
+                		$insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
+                		$selectPrimaryEntityIdsString =
+                    		"$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
+                		if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = "";
+                		if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
+                		$fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
+                		$this->runInsertSelect($insertStatement,
+                    		$selectPrimaryEntityIdsString,
+                    		'(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
+                    		$fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
+                    		null,
+                    		null);
+                		$this->commitTransaction();
+                		break;
+            		}
+			}
+			catch (Exception $e) {
+				$this->rollbackTransaction();
+				$county++;
+				usleep(500000);
+				if ($county==$maxTries) {
+					throw new $e;
+					break; }
+				continue;	
+			}
+		break;
+		
+	} while($county < $maxTries);
 
         // First find out how many there are in the complete set.
         $selectStringForEntity = 'count(QueryDefId) as total_found';
