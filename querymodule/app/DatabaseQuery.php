@@ -113,10 +113,10 @@ class DatabaseQuery
 			catch (Exception $e) {
 				$this->rollbackTransaction();
 				$county++;
-				usleep(500000);
 				if ($county==$maxTries) {
 					throw new $e;
 					break; }
+				usleep(1000000);
 				continue;	
 			}
 		break;
