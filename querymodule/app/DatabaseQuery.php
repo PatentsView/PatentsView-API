@@ -227,7 +227,7 @@ class DatabaseQuery
         $this->connectToDB();
 
         
-$sqlStatement = "INSERT INTO $insert";
+	$sqlStatement = "INSERT INTO $insert";
         $this->errorHandler->getLogger()->debug($sqlStatement);
         $this->errorHandler->getLogger()->debug($params);
 
