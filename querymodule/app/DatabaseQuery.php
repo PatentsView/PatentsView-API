@@ -116,7 +116,7 @@ class DatabaseQuery
 				if ($county==$maxTries) {
 					throw new $e;
 					break; }
-				usleep(1000000);
+				usleep(500000);
 				continue;	
 			}
 		break;
@@ -226,19 +226,30 @@ class DatabaseQuery
     {
         $this->connectToDB();
 
-        $sqlStatement = "INSERT INTO $insert";
+        
+$sqlStatement = "INSERT INTO $insert";
         $this->errorHandler->getLogger()->debug($sqlStatement);
         $this->errorHandler->getLogger()->debug($params);
 
-        try {
-            $st = $this->db->prepare($sqlStatement);
-            $results = $st->execute($params);
-            $st->closeCursor();
-        }
-        catch (Exception $e) {
-            $this->errorHandler->sendError(500, "Insert execution failed.", $e);
-            throw new $e;
-        }
+	$counto = 0;
+	$maxTriesy = 3;
+	do {
+    	    try {        
+    		$st = $this->db->prepare($sqlStatement);
+            	$results = $st->execute($params);
+            	$st->closeCursor();
+		break;
+        	}
+            catch (Exception $e) {
+            	if ($counto==$maxTriesy) {
+			$this->errorHandler->sendError(500, "Insert execution failed.", $e);		
+			throw new $e;
+			break;}
+	    	usleep(1000000);
+	    	continue;
+        	}
+	break;
+	     } while(counto<maxTriesy);
 
         return $results;
     }
