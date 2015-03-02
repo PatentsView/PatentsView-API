@@ -9,8 +9,14 @@ def sheet_data(ws):
     ary = []
     header = None
 
+    def encode(s):
+        if s:
+            return s.encode("iso-8859-1", "xmlcharrefreplace").decode("utf-8")
+        else:
+            return None
+
     for row in ws.iter_rows():
-        values = [cell.value for cell in row]
+        values = [encode(cell.value) for cell in row]
 
         if not header:
             header = values
