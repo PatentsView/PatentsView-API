@@ -375,18 +375,8 @@ An HTTP status code of 500 will be returned when there is an internal error with
 ### <a name="patent_field_list"></a> Patent Field List
 
 <table>
-<tr>
-<th>API Field Name</th>
-<th>Group</th>
-<th>Type</th>
-<th>Query</th>
-<th>Return</th>
-<th>Sort</th>
-<th>Description</th>
-</tr>
-
+$field_list_header
 $patent_field_list
-
 </table>
 
 <table>
@@ -468,11 +458,8 @@ with the body containing:
 ### <a name="inventor_field_list"></a> Inventor Field List
 
 <table>
-
-<tr><th>API Field Name</th><th>Group</th><th>Type</th><th>Query</th><th>Return</th><th>Sort</th><th>Description</th></tr>
-
+$field_list_header
 $inventor_field_list
-
 </table>
 
 <table>
@@ -553,11 +540,8 @@ with the body containing:
 ### <a name="assignee_field_list"></a> Assignee Field List
 
 <table>
-
-<tr><th>API Field Name</th><th>Group</th><th>Type</th><th>Query</th><th>Return</th><th>Sort</th><th>Description</th></tr>
-
+$field_list_header
 $assignee_field_list
-
 </table>
 
 <table>
@@ -642,24 +626,13 @@ with the body containing:
 ### <a name="cpc_subsection_field_list"></a> CPC Subsection Field List
 
 <table>
-
-<tr>
-<th>API Field Name</th>
-<th>Group</th>
-<th>Type</th>
-<th>Query</th>
-<th>Return</th>
-<th>Sort</th>
-<th>Description</th>
-</tr>
-
+$field_list_header
 $cpc_subsection_field_list
+</table>
 
 <table>
 <tr><td>*</td> <td>= unique identifier</td></tr>
 <tr><td>**</td> <td>= not yet implemented</td></tr>
-</table>
-
 </table>
 
 ## <a name="uspc_mainclasses_query"></a> USPC Mainclasses Query
@@ -739,18 +712,8 @@ with the body containing:
 ### <a name="uspc_mainclass_field_list"></a> USPC Mainclass Field List
 
 <table>
-<tr>
-<th>API Field Name</th>
-<th>Group</th>
-<th>Type</th>
-<th>Query</th>
-<th>Return</th>
-<th>Sort</th>
-<th>Description</th>
-</tr>
-
+$field_list_header
 $uspc_field_list
-
 </table>
 
 <table>
@@ -837,17 +800,8 @@ with the body containing:
 <table>
 
 <tr>
-<th>API Field Name</th>
-<th>Group</th>
-<th>Type</th>
-<th>Query</th>
-<th>Return</th>
-<th>Sort</th>
-<th>Description</th>
-</tr>
-
+$field_list_header
 $nber_subcat_field_list
-
 </table>
 
 <table>
@@ -932,18 +886,8 @@ with the body containing:
 ### <a name="location_field_list"></a> Location Field List
 
 <table>
-<tr>
-<th>API Field Name</th>
-<th>Group</th>
-<th>Type</th>
-<th>Query</th>
-<th>Return</th>
-<th>Sort</th>
-<th>Description</th>
-</tr>
-
+$field_list_header
 $location_field_list
-
 </table>
 
 <table>

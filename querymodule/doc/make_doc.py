@@ -30,15 +30,19 @@ def sheet_data(ws):
     return ary
 
 
-def make_field_list_html(field_list):
+def make_field_list_header(field_list_column_names):
+    cells = ["<th>{}</th>".format(s) for s in field_list_column_names]
+    return "<tr>" + "".join(cells) + "</tr>"
+
+
+def make_field_list_html(column_names, field_list):
 
     def field_list_columns(row):
-        column_names = ["API Field Name", "Group", "Type", "Query", "Return", "Sort", "Description"]
         cols = [(re.sub(" ", "_", s.lower()), s) for s in column_names]
 
         return dict((k, row[v]) for k, v in cols)
 
-    s = "<tr><td>{api_field_name}</td><td>{group}</td><td>{type}</td><td>{query}</td><td>{return}</td><td>{sort}</td><td>{description}</td></tr>"
+    s = "<tr><td>{api_field_name}</td><td>{group}</td><td>{common_name}</td><td>{type}</td><td>{query}</td><td>{return}</td><td>{sort}</td><td>{description}</td></tr>"
     return "\n".join(s.format(**field_list_columns(row)) for row in field_list)
 
 
@@ -65,19 +69,21 @@ def make_documentation_html(outdir):
         os.makedirs(os.path.join(outdir, "field_lists"))
 
     keep_sections = ["patent", "inventor", "assignee", "cpc subsection", "uspc", "nber subcat", "location"]
+    field_list_column_names = ["API Field Name", "Group", "Common Name", "Type", "Query", "Return", "Sort", "Description"]
 
     for ws in wb.worksheets:
         if ws.title not in keep_sections:
             continue
 
         result = sheet_data(ws)
-        field_lists[ws.title] = make_field_list_html(result)
+        field_lists[ws.title] = make_field_list_html(field_list_column_names, result)
 
         with open(os.path.join(outdir, "field_lists", "{}.json".format(ws.title)), "w") as f:
             print(json.dumps(result), file=f)
 
     md = string.Template(open("doc.md").read())
-    md2 = md.substitute(patent_field_list=field_lists["patent"],
+    md2 = md.substitute(field_list_header=make_field_list_header(field_list_column_names),
+                        patent_field_list=field_lists["patent"],
                         inventor_field_list=field_lists["inventor"],
                         assignee_field_list=field_lists["assignee"],
                         cpc_subsection_field_list=field_lists["cpc subsection"],
