@@ -27,12 +27,12 @@ def sheet_data(ws):
 def make_field_list_html(field_list):
 
     def field_list_columns(row):
-        column_names = ["API Field Name", "Group", "Type", "Query", "Return", "Sort"]
+        column_names = ["API Field Name", "Group", "Type", "Query", "Return", "Sort", "Description"]
         cols = [(re.sub(" ", "_", s.lower()), s) for s in column_names]
 
         return dict((k, row[v]) for k, v in cols)
 
-    s = "<tr><td>{api_field_name}</td><td>{group}</td><td>{type}</td><td>{query}</td><td>{return}</td><td>{sort}</td></tr>"
+    s = "<tr><td>{api_field_name}</td><td>{group}</td><td>{type}</td><td>{query}</td><td>{return}</td><td>{sort}</td><td>{description}</td></tr>"
     return "\n".join(s.format(**field_list_columns(row)) for row in field_list)
 
 

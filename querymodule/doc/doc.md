@@ -382,6 +382,7 @@ An HTTP status code of 500 will be returned when there is an internal error with
 <th>Query</th>
 <th>Return</th>
 <th>Sort</th>
+<th>Description</th>
 </tr>
 
 $patent_field_list
@@ -468,7 +469,7 @@ with the body containing:
 
 <table>
 
-<tr><th>API Field Name</th><th>Group</th><th>Type</th><th>Query</th><th>Return</th><th>Sort</th></tr>
+<tr><th>API Field Name</th><th>Group</th><th>Type</th><th>Query</th><th>Return</th><th>Sort</th><th>Description</th></tr>
 
 $inventor_field_list
 
@@ -553,12 +554,7 @@ with the body containing:
 
 <table>
 
-<tr><th>API Field Name</th><th>Group</th><th>Type</th><th>Query</th><th>Return</th><th>Sort</th></tr>
-<tr><td>app_country</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>app_date</td><td>applications</td><td>date</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>app_id</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>app_number</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
-<tr><td>app_type</td><td>applications</td><td>string</td><td>Y</td><td>Y</td><td>N</td></tr>
+<tr><th>API Field Name</th><th>Group</th><th>Type</th><th>Query</th><th>Return</th><th>Sort</th><th>Description</th></tr>
 
 $assignee_field_list
 
@@ -654,6 +650,7 @@ with the body containing:
 <th>Query</th>
 <th>Return</th>
 <th>Sort</th>
+<th>Description</th>
 </tr>
 
 $cpc_subsection_field_list
@@ -749,6 +746,7 @@ with the body containing:
 <th>Query</th>
 <th>Return</th>
 <th>Sort</th>
+<th>Description</th>
 </tr>
 
 $uspc_field_list
@@ -845,6 +843,7 @@ with the body containing:
 <th>Query</th>
 <th>Return</th>
 <th>Sort</th>
+<th>Description</th>
 </tr>
 
 $nber_subcat_field_list
@@ -940,6 +939,7 @@ with the body containing:
 <th>Query</th>
 <th>Return</th>
 <th>Sort</th>
+<th>Description</th>
 </tr>
 
 $location_field_list
