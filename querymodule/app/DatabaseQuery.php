@@ -160,14 +160,13 @@ class DatabaseQuery
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
                 if ($this->matchedSubentitiesOnly && array_key_exists($entitySpec['entity_name'], $this->entitySpecificWhereClauses) && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '')
                     $whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
-
-		if (isset($entitySpec['group_name'],$this->sortFieldsUsedSec)) {
+		
+		if (array_key_exists($entitySpec['group_name'],$this->sortFieldsUsedSec)) {
 			$sortStringSec = $this->sortFieldsUsedSec[$entitySpec['group_name']];
 			$entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortStringSec);
 		} else {
 			$entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, null);
-		};
-
+		}
 		$results[$entitySpec['group_name']] = $entityResults;
                 unset($entityResults);
 
