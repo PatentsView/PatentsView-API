@@ -15,7 +15,8 @@ class DatabaseQuery
 
     private $selectFieldSpecs;
     private $sortFieldsUsed;
-    
+	private $sortFieldsUsedSec;
+	    
     private $db = null;
     private $errorHandler = null;
 
@@ -40,6 +41,7 @@ class DatabaseQuery
         $page = 1;
         $perPage = 25;
         $this->sortFieldsUsed = array();
+        $this->sortFieldsUsedSec = array();
         $this->entitySpecificWhereClauses = $entitySpecificWhereClauses;
 
         $this->entitySpecs = $entitySpecs;
@@ -71,8 +73,8 @@ class DatabaseQuery
         $this->determineSelectFields();
         $from = $this->buildFrom($whereFieldsUsed, $this->selectFieldSpecs, $this->sortFieldsUsed);
         $sortString = $this->buildSortString($sortParam);
-
-        // Get the QueryDefId for this where clause
+        
+	// Get the QueryDefId for this where clause
         $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause::sort->$sortString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%u', $whereHash);
@@ -113,10 +115,10 @@ class DatabaseQuery
 			catch (Exception $e) {
 				$this->rollbackTransaction();
 				$county++;
+				usleep(500000);
 				if ($county==$maxTries) {
 					throw new $e;
 					break; }
-				usleep(500000);
 				continue;	
 			}
 		break;
@@ -143,7 +145,7 @@ class DatabaseQuery
         $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortEntity);
         $results[$this->entitySpecs[0]['group_name']] = $entityResults;
         unset($entityResults);
-
+	
         // Loop through the subentities and get them.
         foreach (array_slice($this->entitySpecs,1) as $entitySpec) {
             $tempSelect = $this->buildSelectStringForEntity($entitySpec);
@@ -158,8 +160,15 @@ class DatabaseQuery
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
                 if ($this->matchedSubentitiesOnly && array_key_exists($entitySpec['entity_name'], $this->entitySpecificWhereClauses) && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '')
                     $whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
-                $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, null);
-                $results[$entitySpec['group_name']] = $entityResults;
+
+		if (isset($entitySpec['group_name'],$this->sortFieldsUsedSec)) {
+			$sortStringSec = $this->sortFieldsUsedSec[$entitySpec['group_name']];
+			$entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortStringSec);
+		} else {
+			$entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, null);
+		};
+
+		$results[$entitySpec['group_name']] = $entityResults;
                 unset($entityResults);
 
                 if ($this->include_subentity_total_counts) {
@@ -226,30 +235,19 @@ class DatabaseQuery
     {
         $this->connectToDB();
 
-        
-	$sqlStatement = "INSERT INTO $insert";
+        $sqlStatement = "INSERT INTO $insert";
         $this->errorHandler->getLogger()->debug($sqlStatement);
         $this->errorHandler->getLogger()->debug($params);
 
-	$counto = 0;
-	$maxTriesy = 3;
-	do {
-    	    try {        
-    		$st = $this->db->prepare($sqlStatement);
-            	$results = $st->execute($params);
-            	$st->closeCursor();
-		break;
-        	}
-            catch (Exception $e) {
-            	if ($counto==$maxTriesy) {
-			$this->errorHandler->sendError(500, "Insert execution failed.", $e);		
-			throw new $e;
-			break;}
-	    	usleep(1000000);
-	    	continue;
-        	}
-	break;
-	     } while(counto<maxTriesy);
+        try {
+            $st = $this->db->prepare($sqlStatement);
+            $results = $st->execute($params);
+            $st->closeCursor();
+        }
+        catch (Exception $e) {
+            $this->errorHandler->sendError(500, "Insert execution failed.", $e);
+            throw new $e;
+        }
 
         return $results;
     }
@@ -319,9 +317,8 @@ class DatabaseQuery
     {
         $orderString = '';
         if ($sortParam != null) {
-            foreach ($sortParam as $sortField) {
-                $apiField = key($sortField);
-                $direction = current($sortField);
+	    foreach ($sortParam as $sortField) {
+		foreach($sortField as $apiField=>$direction) {
                 try {
                     $fieldSpec = $this->fieldSpecs[$apiField];
                 }
@@ -340,18 +337,32 @@ class DatabaseQuery
                         $orderString .= getDBField($this->fieldSpecs, $apiField) . ' ' . $direction;
                         $this->sortFieldsUsed[] = $apiField;
                     }
+                } elseif (strtolower($fieldSpec['sort']) == 'suppl') {
+		    if (($direction != 'asc') and ($direction != 'desc')) {
+                        ErrorHandler::getHandler()->sendError(400, "Not a valid direction for sorting: $direction");
+                        throw new ErrorException("Not a valid direction for sorting: $direction");
+                    }
+                    else {
+                        if ($orderString != '')
+                            $orderString .= ', ';
+                        $orderString .= getDBField($this->fieldSpecs, $apiField) . ' ' . $direction;
+			$this->sortFieldsUsed[] = $apiField;
+			$secEntityField = $fieldSpec['entity_name'];
+			$secEntityField .= "s";
+                        $this->sortFieldsUsedSec[$secEntityField] = $apiField . ' ' . $direction;
+                    } 
                 } else {
                     $msg = "Not a valid field for sorting: $apiField";
                     ErrorHandler::getHandler()->sendError(400, $msg);
                     throw new ErrorException($msg);
-                }
+                }}
             }
         }
 
         if ($orderString != '')
             $orderString .= ', ';
         $orderString .= getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']);
-        return $orderString;
+	return $orderString;
     }
 
     private function buildFrom(array $whereFieldsUsed, array $selectFieldSpecs, array $sortFields)
@@ -419,4 +430,5 @@ class DatabaseQuery
         $this->db->rollback();
     }
 
+    
 }
