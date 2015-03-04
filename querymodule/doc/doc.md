@@ -312,7 +312,7 @@ The sort parameter is a JSON formatted array of objects that specifies the sort 
 
 Each object in the array should be a pair, with the pair's key is one of the patent fields, and the value is either &ldquo;asc&rdquo; or &ldquo;desc&rdquo;, to indicate ascending or descending sort, respectively. 
 
-All sort fields should be also necessarily included into the field list parameter ("f"). For example, if a user wants to sort all assignee organization by their associated inventors last names, they should make sure that "inventor_last_name" is present in both the field list ("f") and the sort parameter ("s").
+All sort fields should be also necessarily included into the field list parameter ("f"). For example, if a user wants to sort all assignee organizations from assignee entity by their associated inventors' last names from inventor subentity, they should make sure that "inventor_last_name" is present in both the field list ("f") and the sort parameter ("s").
 
 A couple examples should suffice for understanding:
 
