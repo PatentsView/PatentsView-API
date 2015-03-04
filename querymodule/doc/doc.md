@@ -310,7 +310,11 @@ The `include_subentity_total_counts` option is provided to indicate whether the 
 
 The sort parameter is a JSON formatted array of objects that specifies the sort order for the returned results. If empty or not provided, the default sort order will be ascending by patent number.
 
-Each object in the array should be a pair, with the pair's key is one of the patent fields, and the value is either &ldquo;asc&rdquo; or &ldquo;desc&rdquo;, to indicate ascending or descending sort, respectively. A couple examples should suffice for understanding:
+Each object in the array should be a pair, with the pair's key is one of the patent fields, and the value is either &ldquo;asc&rdquo; or &ldquo;desc&rdquo;, to indicate ascending or descending sort, respectively. 
+
+All sort fields should be also necessarily included into the field list parameter ("f"). For example, if a user wants to sort all assignee organization by their associated inventors last names, they should make sure that "inventor_last_name" is present in both the field list ("f") and the sort parameter ("s").
+
+A couple examples should suffice for understanding:
 
 * `s=[{"patent_num_claims":"desc"}`
     * Primary sort is by `patent_num_claims` in ascending order, so that patents with the most claims will be first, and those with least claims will be last.
