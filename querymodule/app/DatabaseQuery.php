@@ -144,7 +144,7 @@ class DatabaseQuery
         $sortEntity = 'qr.sequence';
         $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortEntity);
         $results[$this->entitySpecs[0]['group_name']] = $entityResults;
-        unset($entityResults);
+	unset($entityResults);
 	
         // Loop through the subentities and get them.
         foreach (array_slice($this->entitySpecs,1) as $entitySpec) {
@@ -162,13 +162,13 @@ class DatabaseQuery
                     $whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
 		
 		if (array_key_exists($entitySpec['group_name'],$this->sortFieldsUsedSec)) {
-			$sortStringSec = $this->sortFieldsUsedSec[$entitySpec['group_name']];
+			$sortStringSec = implode(',',$this->sortFieldsUsedSec[$entitySpec['group_name']]);
 			$entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortStringSec);
 		} else {
 			$entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, null);
 		}
 		$results[$entitySpec['group_name']] = $entityResults;
-                unset($entityResults);
+		unset($entityResults);
 
                 if ($this->include_subentity_total_counts) {
                     // Count of all subentities for all primary entities.
@@ -182,8 +182,7 @@ class DatabaseQuery
                 }
             }
         }
-
-        return $results;
+	return $results;
     }
 
     private function runQuery($select, $from, $where, $order)
@@ -194,7 +193,7 @@ class DatabaseQuery
         if (strlen($order) > 0) $order = "ORDER BY $order";
         $sqlQuery = "SELECT $select FROM $from $where $order";
         $this->errorHandler->getLogger()->debug($sqlQuery);
-
+	
         try {
             $st = $this->db->query("$sqlQuery", PDO::FETCH_ASSOC);
             $results = $st->fetchAll();
@@ -358,7 +357,11 @@ class DatabaseQuery
 			$this->sortFieldsUsed[] = $apiField;
 			$secEntityField = $fieldSpec['entity_name'];
 			$secEntityField .= "s";
-                        $this->sortFieldsUsedSec[$secEntityField] = $apiField . ' ' . $direction;
+                        if (array_key_exists($secEntityField,$this->sortFieldsUsedSec)) {
+				array_push($this->sortFieldsUsedSec[$secEntityField],$apiField . ' ' . $direction);
+			} else {
+				$this->sortFieldsUsedSec[$secEntityField] = array($apiField . ' ' . $direction);
+			}
                     } 
                 } else {
                     $msg = "Not a valid field for sorting: $apiField";
