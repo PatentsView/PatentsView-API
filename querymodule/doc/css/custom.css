@@ -1,0 +1,59 @@
+body {
+    padding-top: 80px;
+}
+
+a.anchor {
+    display: block;
+    position: relative;
+    top: -75px;
+    visibility: hidden;
+}
+
+.navbar {
+    background-image: linear-gradient(#54677B, #48596A);
+}
+
+.navbar-inverse .navbar-nav > .active > a {
+    background-image: none;
+    background-color: transparent;
+}
+
+#contents {
+    position: fixed;
+}
+
+#contents .section-list {
+    display: none;
+}
+
+#contents li.section-selected {
+    background-color: #EEEEEE;
+}
+
+#contents li.section-selected .section-list {
+    display: inherit;
+}
+
+#contents p.section-name {
+    font-weight: bold;
+}
+
+#contents ul.section-list {
+    list-style-type: none;
+    padding: 0 10px;
+    margin: 0;
+}
+
+#documentation .code {
+    font-family: monospace;
+}
+
+#documentation .documentation-parameters {
+    font-size: 12px;
+}
+
+#documentation .documentation-fieldlist {
+    font-size: 12px;
+}
+
+

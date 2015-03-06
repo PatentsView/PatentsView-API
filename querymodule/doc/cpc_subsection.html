@@ -1,16 +1,16 @@
 {% extends "page.html" %}
 
-{% block inventor_section_class %}section-selected{% endblock %}
+{% block cpc_subsection_section_class %}section-selected{% endblock %}
 
 {% block body %}
 
-<h1>Inventors Query</h1>
+<h1>CPC Subsections Query</h1>
 <p class="code">
-    <strong>GET</strong> /api/inventors/query?q{,f,o,s}<br/>
-    <strong>POST</strong> /api/inventors/query
+    <strong>GET</strong> /api/cpc_subsections/query?q{,f,o,s}<br/>
+    <strong>POST</strong> /api/cpc_subsections/query
 </p>
 
-<p>This will search for inventors matching the query string (q) and returning the data fields listed in the field string (f) sorted by the fields in the sort string (s) using options provided in the option string (o).</p>
+<p>This will search for CPC (Cooperative Patent Classification) subsections matching the query string (<span class="code">q</span>) and returning the data fields listed in the field string (<span class="code">f</span>) sorted by the fields in the sort string (<span class="code">s</span>) using options provided in the option string (<span class="code">o</span>).</p>
 
 <p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
 
@@ -26,29 +26,33 @@
         <tr>
             <td class="code">q</td>
             <td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
-            <td>string, required <br/> <strong>example:</strong> <span class="code">{"inventor_last_name":"Whitney"}</span></td>
+            <td>string, required<br/> <strong>example:</strong> <span class="code">{"cpc_subsection_id":"G12"}</span></td>
         </tr>
+
         <tr>
             <td class="code">f</td>
-            <td>JSON formatted array of fields to include in the results. If not provided, defaults inventor_id, inventor_first_name, and inventor_last_name.</td>
-            <td>string, optional <br/> <strong>example:</strong> <span class="code">["patent_number", "date"]</span></td>
+            <td>JSON formatted array of fields to include in the results. If not provided, defaults to cpc_subsection_id and cpc_subsection_title.</td>
+            <td>string, optional<br/> <strong>example:</strong> <span class="code">["cpc_subsection_id", "cpc_subsection_title","cpc_total_num_patents"]</span></td>
         </tr>
+
         <tr>
             <td class="code">s</td>
-            <td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal inventor identifier.</td>
-            <td>string, optional <br/> <strong>example:</strong> <span class="code">[{"inventor_last_name":"desc"}]</span></td>
+            <td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal CPC subsection identifier.</td>
+            <td>string, optional<br/> <strong>example:</strong> <span class="code">[{"cpc_total_num_patents":"desc"}]</span></td>
         </tr>
+
         <tr>
             <td class="code">o</td>
             <td>
-                <p>JSON formatted object of options to modify the query or results. Available options are:</p>
+                <p>JSON formatted object of options to modify the query or results.  Available options are:</p>
                 <p><span class="code">matched_subentities_only</span> &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</p>
                 <p><span class="code">include_subentity_total_counts</span> &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</p>
-                <p><span class="code">page</span> &mdash; return on the Nth page of results. Defaults to 1.</p>
+                <p><span class="code">page</span> &mdash; return only the Nth page of results. Defaults to 1.</p>
                 <p><span class="code">per_page</span> &mdash; the size of each page to return. Defaults to 25.</p>
             </td>
-            <td>string, optional <br/> <strong>example:</strong> <span class="code">o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</span></td>
+            <td>string, optional <br/> <strong>example:</strong> <span class="code">o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</span> </td>
         </tr>
+
         <tr>
             <td class="code">format</td>
             <td>
@@ -56,24 +60,25 @@
                 <p><span class="code">json</span></p>
                 <p><span class="code">xml</span></p>
             </td>
-            <td>string, optional <br/> <strong>example:</strong> <span class="code">format=xml</span></td>
+            <td>string, optional<br/> <strong>example:</strong> <span class="code">format=xml</span></td>
         </tr>
+
     </tbody>
 </table>
 
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code">https://api.patentsview.org/api/inventors/query?q={"inventor_last_name":"Young"}&f=["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]</p>
+<p class="well code">https://api.patentsview.org/api/cpc_subsections/query?q={"cpc_subsection_id":"G12"}&amp;f=["cpc_subsection_id","cpc_subsection_title","cpc_total_num_patents"]</p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
 
-<p class="well code">https://api.patentsview.org/api/inventors/query</p>
+<p class="well code">https://api.patentsview.org/api/cpc_subsections/query</p>
 
 <p>with the body containing:</p>
 
-<p class="well code">{"q":{"inventor_last_name":"Young"},"f":["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]}</p>
+<p class="well code">{"q":{"cpc_subsection_id":"G12"},"f":["cpc_subsection_id", "cpc_subsection_title","cpc_total_num_patents"]}</p>
 
-<h2><a class="anchor" name="field_list"></a>Inventor Field List</h2>
+<h2><a class="anchor" name="field_list"></a>CPC Subsection Field List</h2>
 
 <table class="table table-striped documentation-fieldlist">
     <tr>

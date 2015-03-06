@@ -26,59 +26,59 @@
     <div class="container" role="main">
         <div class="col-md-3">
             <ul class="list-group" id="contents">
-                <li class="list-group-item">
-                    <p class="section-name"><a href="#">Patents Query</a></p>
-                    <ul class="section-list collapse">
-                        <li><a href="#">Query String Format</a></li>
-                        <li><a href="#">Field List Format</a></li>
-                        <li><a href="#">Options Parameter</a></li>
-                        <li><a href="#">Sort Parameter</a></li>
-                        <li><a href="#">Results Format</a></li>
-                        <li><a href="#">Response Status Codes</a></li>
-                        <li><a href="#">Patent Field List</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item section-selected">
-                    <p class="section-name"><a href="#">Inventors Query</a></p>
+                <li class="list-group-item {% block patent_section_class %}{% endblock %}">
+                    <p class="section-name"><a href="patent.html">Patents Query</a></p>
                     <ul class="section-list">
-                        <li><a href="#">Inventor Field List</a></li>
+                        <li><a href="patent.html#query_string_format">Query String Format</a></li>
+                        <li><a href="patent.html#field_list_format">Field List Format</a></li>
+                        <li><a href="patent.html#options_parameter">Options Parameter</a></li>
+                        <li><a href="patent.html#sort_parameter">Sort Parameter</a></li>
+                        <li><a href="patent.html#results_format">Results Format</a></li>
+                        <li><a href="patent.html#response_status_codes">Response Status Codes</a></li>
+                        <li><a href="patent.html#field_list">Patent Field List</a></li>
                     </ul>
                 </li>
-                <li class="list-group-item">
-                    <p class="section-name"><a href="#">Assignees Query</a></p>
-                    <ul class="section-list collapse">
-                        <li><a href="#">Assignees Field List</a></li>
+                <li class="list-group-item {% block inventor_section_class %}{% endblock %}">
+                    <p class="section-name"><a href="inventor.html">Inventors Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="inventor.html#field_list">Inventor Field List</a></li>
                     </ul>
                 </li>
-                <li class="list-group-item">
-                    <p class="section-name"><a href="#">CPC Subsections Query</a></p>
-                    <ul class="section-list collapse">
-                        <li><a href="#">CPC Subsections Field List</a></li>
+                <li class="list-group-item {% block assignee_section_class %}{% endblock %}">
+                    <p class="section-name"><a href="assignee.html">Assignees Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="assignee.html#field_list">Assignee Field List</a></li>
                     </ul>
                 </li>
-                <li class="list-group-item">
-                    <p class="section-name"><a href="#">USPC Mainclasses Query</a></p>
-                    <ul class="section-list collapse">
-                        <li><a href="#">USPC Mainclasses Field List</a></li>
+                <li class="list-group-item {% block cpc_subsection_section_class %}{% endblock %}">
+                    <p class="section-name"><a href="cpc_subsection.html">CPC Subsections Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="cpc_subsection.html#field_list">CPC Subsection Field List</a></li>
                     </ul>
                 </li>
-                <li class="list-group-item">
-                    <p class="section-name"><a href="#">NBER Subcategories Query</a></p>
-                    <ul class="section-list collapse">
-                        <li><a href="#">NBER Subcategories Field List</a></li>
+                <li class="list-group-item {% block uspc_section_class %}{% endblock %}">
+                    <p class="section-name"><a href="uspc.html">USPC Mainclasses Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="uspc.html#field_list">USPC Mainclasse Field List</a></li>
                     </ul>
                 </li>
-                <li class="list-group-item">
-                    <p class="section-name"><a href="#">Locations Query</a></p>
-                    <ul class="section-list collapse">
-                        <li><a href="#">Locations Field List</a></li>
+                <li class="list-group-item {% block nber_subcat_section_class %}{% endblock %}">
+                    <p class="section-name"><a href="nber_subcat.html">NBER Subcategories Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="nber_subcat.html#field_list">NBER Subcategorie Field List</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item {% block location_section_class %}{% endblock %}">
+                    <p class="section-name"><a href="location.html">Locations Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="location.html#field_list">Location Field List</a></li>
                     </ul>
                 </li>
             </ul>
         </div>
         <div class="col-md-9">
             <div id="documentation">
-                {{ body }}
+                {% block body %}{% endblock %}
             </div>
         </div>
     </div>

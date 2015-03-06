@@ -1,4 +1,4 @@
-import jinja2, json, markdown, openpyxl, os, re, sys
+import jinja2, json, openpyxl, os, shutil
 
 import xml.etree.ElementTree as ET
 
@@ -37,7 +37,13 @@ def snake_case(s):
 
 def make_documentation_html(outdir):
     env = jinja2.Environment(loader=jinja2.FileSystemLoader("."), trim_blocks=True, lstrip_blocks=True)
-    page_tpl = env.get_template("page.html")
+
+    # copy css
+
+    if not os.path.exists(os.path.join(outdir, "css")):
+        os.makedirs(os.path.join(outdir, "css"))
+
+    shutil.copyfile("css/custom.css", os.path.join(outdir, "css", "custom.css"))
     
     field_lists = {}
     wb = openpyxl.load_workbook("API field lists.xlsx", data_only=True, use_iterators=True)
@@ -46,7 +52,7 @@ def make_documentation_html(outdir):
         os.makedirs(os.path.join(outdir, "field_lists"))
 
     # keep_sections = ["patent", "inventor", "assignee", "cpc subsection", "uspc", "nber subcat", "location"]
-    keep_sections = ["inventor"]
+    keep_sections = ["patent", "inventor", "assignee", "cpc subsection"]
     field_list_column_names = ["API Field Name", "Group", "Common Name", "Type", "Sort", "Description"]
 
     for ws in wb.worksheets:
@@ -66,13 +72,12 @@ def make_documentation_html(outdir):
         # build the documentation page for this section
 
         fname = os.path.join("{}.html".format(title))
-        body_tpl = env.get_template(fname)
+        page_tpl = env.get_template(fname)
 
         fname = os.path.join(outdir, "{}.html".format(title))
 
         with open(fname, "w") as f:
-            body = body_tpl.render(field_list_column_names=field_list_column_names, field_list=field_list)
-            page = page_tpl.render(body=body)
+            page = page_tpl.render(field_list_column_names=field_list_column_names, field_list=field_list)
             print(page, file=f)
 
 
