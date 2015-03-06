@@ -49,13 +49,18 @@
 
 <h2>Inventor Field List</h2>
 
-$field_list
-
-<!--
 <table class="table table-striped documentation-fieldlist">
-<tr><th>API Field Name</th><th>Group</th><th>Common Name</th><th>Type</th><th>Query</th><th>Description</th></tr>
-<tr><td>app_country</td><td>applications</td><td>Country</td><td>string</td><td>Y</td><td>Country in which patent application was filed, always U.S.</td></tr>
-<tr><td>app_date</td><td>applications</td><td>Date</td><td>date</td><td>Y</td><td>Date a patent application was filed (filing date)</td></tr>
-<tr><td>app_id</td><td>applications</td><td>ID</td><td>string</td><td>Y</td><td>Application ID assigned by USPTO</td></tr>
+    <tr>
+        {% for name in field_list_column_names %}
+        <th>{{name}}</th>
+        {% endfor %}
+    </tr>
+
+    {% for field in field_list %}
+    <tr>
+        {% for name in field_list_column_names %}
+        <td>{{ field[name] }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
 </table>
--->
