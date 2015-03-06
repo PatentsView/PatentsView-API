@@ -2,7 +2,8 @@ import json, markdown, openpyxl, os, re, string, sys
 
 import xml.etree.ElementTree as ET
 
-OUTPUT_DIRECTORY = "../public_html"
+# OUTPUT_DIRECTORY = "../public_html"
+OUTPUT_DIRECTORY = "test"
 
 
 def sheet_data(ws):
@@ -29,38 +30,40 @@ def sheet_data(ws):
 
     return ary
 
+def snake_case(s):
+    return "_".join(w.lower() for w in s.split())
+
 
 def make_field_list_header(field_list_column_names):
     cells = ["<th>{}</th>".format(s) for s in field_list_column_names]
     return "<tr>" + "".join(cells) + "</tr>"
 
+def make_row_template(column_names):
+    cells = ["<td>{{{}}}</td>".format(snake_case(s)) for s in column_names]
+    return "<tr>" + "".join(cells) + "</tr>"
+
 
 def make_field_list_html(column_names, field_list):
+    lines = ['<table class="table table-striped documentation-fieldlist">']
+    lines.append(make_field_list_header(column_names))
 
     def field_list_columns(row):
-        cols = [(re.sub(" ", "_", s.lower()), s) for s in column_names]
-
+        cols = [(snake_case(s), s) for s in column_names]
         return dict((k, row[v]) for k, v in cols)
 
-    s = "<tr><td>{api_field_name}</td><td>{group}</td><td>{common_name}</td><td>{type}</td><td>{query}</td><td>{return}</td><td>{sort}</td><td>{description}</td></tr>"
-    return "\n".join(s.format(**field_list_columns(row)) for row in field_list)
+    # s = "<tr><td>{api_field_name}</td><td>{group}</td><td>{common_name}</td><td>{type}</td><td>{query}</td><td>{return}</td><td>{sort}</td><td>{description}</td></tr>"
+    s = make_row_template(column_names)
+
+    for row in field_list:
+        lines.append(s.format(**field_list_columns(row)))
+
+    lines.append("</table>")
+    return "\n".join(lines)
 
 
 def make_documentation_html(outdir):
-    tpl = string.Template("""
-          <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-              "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-          <html xmlns="http://www.w3.org/1999/xhtml">
-          <head>
-          <title>PatentsView Query Module API</title>
-          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-          <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
-          </head>
-          <body>
-          $content
-          </body>
-          </html>
-          """)
+    with open("page.html") as f:
+        page_tpl = string.Template(f.read())
 
     field_lists = {}
     wb = openpyxl.load_workbook("API field lists.xlsx", data_only=True, use_iterators=True)
@@ -68,33 +71,37 @@ def make_documentation_html(outdir):
     if not os.path.exists(os.path.join(outdir, "field_lists")):
         os.makedirs(os.path.join(outdir, "field_lists"))
 
-    keep_sections = ["patent", "inventor", "assignee", "cpc subsection", "uspc", "nber subcat", "location"]
-    field_list_column_names = ["API Field Name", "Group", "Common Name", "Type", "Query", "Return", "Sort", "Description"]
+    # keep_sections = ["patent", "inventor", "assignee", "cpc subsection", "uspc", "nber subcat", "location"]
+    keep_sections = ["inventor"]
+    field_list_column_names = ["API Field Name", "Group", "Common Name", "Type", "Sort", "Description"]
 
     for ws in wb.worksheets:
         if ws.title not in keep_sections:
             continue
 
+        title = snake_case(ws.title)
         result = sheet_data(ws)
-        field_lists[ws.title] = make_field_list_html(field_list_column_names, result)
 
-        with open(os.path.join(outdir, "field_lists", "{}.json".format(ws.title)), "w") as f:
+        # create the JSON file
+
+        fname = os.path.join(outdir, "field_lists", "{}.json".format(title))
+
+        with open(fname, "w") as f:
             print(json.dumps(result), file=f)
 
-    md = string.Template(open("doc.md").read())
-    md2 = md.substitute(field_list_header=make_field_list_header(field_list_column_names),
-                        patent_field_list=field_lists["patent"],
-                        inventor_field_list=field_lists["inventor"],
-                        assignee_field_list=field_lists["assignee"],
-                        cpc_subsection_field_list=field_lists["cpc subsection"],
-                        uspc_field_list=field_lists["uspc"],
-                        nber_subcat_field_list=field_lists["nber subcat"],
-                        location_field_list=field_lists["location"])
-    html = markdown.markdown(md2)
+        # build the documentation page for this section
 
-    with open(os.path.join(outdir, "doc.html"), "w") as f:
-        s = tpl.substitute(content=html)
-        print(s, file=f)
+        fname = os.path.join("{}.html".format(title))
+        with open(fname) as f:
+            body_tpl = string.Template(f.read())
+
+        field_list = make_field_list_html(field_list_column_names, result)
+        fname = os.path.join(outdir, "{}.html".format(title))
+
+        with open(fname, "w") as f:
+            body = body_tpl.substitute(field_list=field_list)
+            page = page_tpl.substitute(body=body)
+            print(page, file=f)
 
 
 def main(outdir):

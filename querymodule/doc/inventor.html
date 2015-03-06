@@ -1,0 +1,61 @@
+<h1>Inventors Query</h1>
+<p class="code">
+    <strong>GET</strong> /api/inventors/query?q{,f,o,s}<br/>
+    <strong>POST</strong> /api/inventors/query
+</p>
+
+<p>This will search for inventors matching the query string (q) and returning the data fields listed in the field string (f) sorted by the fields in the sort string (s) using options provided in the option string (o).</p>
+
+<p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
+
+<table class="table table-striped documentation-parameters">
+    <thead>
+        <tr>
+            <th class="col-md-1">Name</th>
+            <th class="col-md-6">Description</th>
+            <th class="col-md-5">Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="code">q</td>
+            <td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
+            <td>string, required <br/> <strong>example:</strong> <span class="code">{"inventor_last_name":"Whitney"}</span></td>
+        </tr>
+        <tr>
+            <td class="code">f</td>
+            <td>JSON formatted array of fields to include in the results. If not provided, defaults inventor_id, inventor_first_name, and inventor_last_name.</td>
+            <td>string, optional <br/> <strong>example:</strong> <span class="code">["patent_number", "date"]</span></td>
+        </tr>
+        <tr>
+            <td class="code">s</td>
+            <td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal inventor identifier.</td>
+            <td>string, optional <br/> <strong>example:</strong> <span class="code">[{"inventor_last_name":"desc"}]</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<p>An example of a complete API call using the GET verb is:</p>
+
+<p class="well code">https://api.patentsview.org/api/inventors/query?q={"inventor_last_name":"Young"}&f=["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]</p>
+
+<p>An example of the equivalent API call using the POST verb is:</p>
+
+<p class="well code">https://api.patentsview.org/api/inventors/query</p>
+
+<p>with the body containing:</p>
+
+<p class="well code">{"q":{"inventor_last_name":"Young"},"f":["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]}</p>
+
+<h2>Inventor Field List</h2>
+
+$field_list
+
+<!--
+<table class="table table-striped documentation-fieldlist">
+<tr><th>API Field Name</th><th>Group</th><th>Common Name</th><th>Type</th><th>Query</th><th>Description</th></tr>
+<tr><td>app_country</td><td>applications</td><td>Country</td><td>string</td><td>Y</td><td>Country in which patent application was filed, always U.S.</td></tr>
+<tr><td>app_date</td><td>applications</td><td>Date</td><td>date</td><td>Y</td><td>Date a patent application was filed (filing date)</td></tr>
+<tr><td>app_id</td><td>applications</td><td>ID</td><td>string</td><td>Y</td><td>Application ID assigned by USPTO</td></tr>
+</table>
+-->
