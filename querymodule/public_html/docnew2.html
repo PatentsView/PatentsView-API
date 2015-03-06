@@ -27,7 +27,8 @@
         <div class="col-md-3">
             <ul class="list-group" id="contents">
                 <li class="list-group-item">
-                    <p class="section">Patents Query</p>
+                    <p class="section-name"><a href="#">Patents Query</a></p>
+                    <!--
                     <ul class="section-list">
                         <li>Query String Format</li>
                         <li>Field List Format</li>
@@ -37,42 +38,53 @@
                         <li>Response Status Codes</li>
                         <li>Patent Field List</li>
                     </ul>
+                    -->
                 </li>
-                <li class="list-group-item">
-                    <p class="section">Inventors Query</p>
+                <li class="list-group-item section-selected">
+                    <p class="section-name"><a href="#">Inventors Query</a></p>
                     <ul class="section-list">
-                        <li>Inventor Field List</li>
+                        <li><a href="#">Inventor Field List</a></li>
                     </ul>
                 </li>
                 <li class="list-group-item">
-                    <p class="section">Assignees Query</p>
+                    <p class="section-name"><a href="#">Assignees Query</a></p>
+                    <!--
                     <ul class="section-list">
                         <li>Assignees Field List</li>
                     </ul>
+                    -->
                 </li>
                 <li class="list-group-item">
-                    <p class="section">CPC Subsections Query</p>
+                    <p class="section-name"><a href="#">CPC Subsections Query</a></p>
+                    <!--
                     <ul class="section-list">
                         <li>CPC Subsections Field List</li>
                     </ul>
+                    -->
                 </li>
                 <li class="list-group-item">
-                    <p class="section">USPC Mainclasses Query</p>
+                    <p class="section-name"><a href="#">USPC Mainclasses Query</a></p>
+                    <!--
                     <ul class="section-list">
                         <li>USPC Mainclasses Field List</li>
                     </ul>
+                    -->
                 </li>
                 <li class="list-group-item">
-                    <p class="section">NBER Subcategories Query</p>
+                    <p class="section-name"><a href="#">NBER Subcategories Query</a></p>
+                    <!--
                     <ul class="section-list">
                         <li>NBER Subcategories Field List</li>
                     </ul>
+                    -->
                 </li>
                 <li class="list-group-item">
-                    <p class="section">Locations Query</p>
+                    <p class="section-name"><a href="#">Locations Query</a></p>
+                    <!--
                     <ul class="section-list">
                         <li>Locations Field List</li>
                     </ul>
+                    -->
                 </li>
             </ul>
         </div>
@@ -128,6 +140,13 @@
                 <p class="well code">{"q":{"inventor_last_name":"Young"},"f":["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]}</p>
 
                 <h2>Inventor Field List</h2>
+
+                <table class="table table-striped documentation-fieldlist">
+                <tr><th>API Field Name</th><th>Group</th><th>Common Name</th><th>Type</th><th>Query</th><th>Description</th></tr>
+                <tr><td>app_country</td><td>applications</td><td>Country</td><td>string</td><td>Y</td><td>Country in which patent application was filed, always U.S.</td></tr>
+                <tr><td>app_date</td><td>applications</td><td>Date</td><td>date</td><td>Y</td><td>Date a patent application was filed (filing date)</td></tr>
+                <tr><td>app_id</td><td>applications</td><td>ID</td><td>string</td><td>Y</td><td>Application ID assigned by USPTO</td></tr>
+                </table>
 
                 <table class="table table-striped documentation-fieldlist">
                 <tr><th>API Field Name</th><th>Group</th><th>Common Name</th><th>Type</th><th>Query</th><th>Return</th><th>Sort</th><th>Description</th></tr>

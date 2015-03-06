@@ -15,7 +15,11 @@ body {
     position: fixed;
 }
 
-#contents p.section {
+#contents li.section-selected {
+    background-color: #EEEEEE;
+}
+
+#contents p.section-name {
     font-weight: bold;
 }
 
