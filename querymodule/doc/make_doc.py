@@ -1,10 +1,6 @@
-import jinja2, json, openpyxl, os, shutil
+import jinja2, json, openpyxl, os, shutil, sys
 
 import xml.etree.ElementTree as ET
-
-# OUTPUT_DIRECTORY = "../public_html"
-OUTPUT_DIRECTORY = "test"
-
 
 def extract_field_list(ws):
     ary = []
@@ -85,4 +81,8 @@ def main(outdir):
 
 
 if __name__ == "__main__":
-    main(OUTPUT_DIRECTORY)
+    if len(sys.argv) < 2:
+        print("USAGE: python make_doc.py DIRECTORY")
+        sys.exit(1)
+
+    main(sys.argv[1])

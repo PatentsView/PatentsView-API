@@ -1,0 +1,100 @@
+{% extends "page.html" %}
+
+{% block uspc_section_class %}section-selected{% endblock %}
+
+{% block body %}
+
+<h1>USPC Mainclasses Query</h1>
+
+<p class="code">
+    <strong>GET</strong> /api/uspc_mainclasses/query?q{,f,o,s}<br/>
+    <strong>POST</strong> /api/uspc_mainclasses/query
+</p>
+
+<p>This will search for USPC (United States Patent Classification) mainclasses matching the query string (<span class="code">q</span>) and returning the data fields listed in the field string (<span class="code">f</span>) sorted by the fields in the sort string (<span class="code">s</span>) using options provided in the option string (<span class="code">o</span>).</p>
+
+<p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
+
+<table class="table table-striped documentation-parameters">
+    <thead>
+        <tr>
+            <th class="col-md-1">Name</th>
+            <th class="col-md-6">Description</th>
+            <th class="col-md-5">Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="code">q</td>
+            <td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
+            <td>string, required<br/> <strong>example:</strong> <span class="code">{"uspc_mainclass_id":"292"}</span></td>
+        </tr>
+
+        <tr>
+            <td class="code">f</td>
+            <td>JSON formatted array of fields to include in the results. If not provided, defaults to uspc_mainclass_id and uspc_mainclass_title.</td>
+            <td>string, optional<br/> <strong>example:</strong> <span class="code">["uspc_mainclass_id", "uspc_mainclass_title","uspc_total_num_patents"]</span></td>
+        </tr>
+
+        <tr>
+            <td class="code">s</td>
+            <td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal USPC mainclass identifier.</td>
+            <td>string, optional<br/> <strong>example:</strong> <span class="code">[{"uspc_total_num_patents":"desc"}]</span></td>
+        </tr>
+
+        <tr>
+            <td class="code">o</td>
+            <td>
+                <p>JSON formatted object of options to modify the query or results.  Available options are:</p>
+                <p><span class="code">matched_subentities_only</span> &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</p>
+                <p><span class="code">include_subentity_total_counts</span> &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</p>
+                <p><span class="code">page</span> &mdash; return only the Nth page of results. Defaults to 1.</p>
+                <p><span class="code">per_page</span> &mdash; the size of each page to return. Defaults to 25.</p>
+            </td>
+            <td>string, optional <br/> <strong>example:</strong> <span class="code">o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</span> </td>
+        </tr>
+
+
+        <tr>
+            <td class="code">format</td>
+            <td>
+                <p>Specifies the response data format. If not provided, defaults to JSON. Available options are:</p>
+                <p class="code">json</p>
+                <p class="code">xml</p>
+            </td>
+            <td>string, optional<br/> <strong>example:</strong> <span class="code">format=xml</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<p>An example of a complete API call using the GET verb is:</p>
+
+<p class="well code">https://api.patentsview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]</p>
+
+<p>An example of the equivalent API call using the POST verb is:</p>
+
+<p class="well code">https://api.patentsview.org/api/uspc_mainclasses/query</p>
+
+<p>with the body containing:</p>
+
+<p class="well code">{"q":{"uspc_mainclass_id":"292"},"f":["uspc_mainclass_id", "uspc_mainclass_title","uspc_total_num_patents"]}</p>
+
+<h2><a class="anchor" name="field_list"></a>USPC Mainclass Field List</h2>
+
+<table class="table table-striped documentation-fieldlist">
+    <tr>
+        {% for name in field_list_column_names %}
+        <th>{{name}}</th>
+        {% endfor %}
+    </tr>
+
+    {% for field in field_list %}
+    <tr>
+        {% for name in field_list_column_names %}
+        <td>{{ field[name] }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

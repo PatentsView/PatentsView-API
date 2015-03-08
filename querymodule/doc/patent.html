@@ -10,11 +10,11 @@
     <strong>POST</strong> /api/patents/query
 </p>
 
-<p>To access prior or specific versions of the api, insert <code>/vN</code> after <code>api</code> in the URL. For example, </p>
+<p>To access prior or specific versions of the api, insert <span class="code">/vN</span> after <span class="code">api</span> in the URL. For example, </p>
 
-<p class="code"><strong><em>GET</em></strong> /api/v1/patents/query?q{,f,o,s}</p>
+<p class="code"><strong>GET</strong> /api/v1/patents/query?q{,f,o,s}</p>
 
-<p>This will search for patents matching the query string (<code>q</code>) and returning the data fields listed in the field string (<code>f</code>) sorted by the fields in the sort string (<code>s</code>) using options provided in the option string (<code>o</code>).</p>
+<p>This will search for patents matching the query string (<span class="span">q</span>) and returning the data fields listed in the field string (<span class="code">f</span>) sorted by the fields in the sort string (<span class="code">s</span>) using options provided in the option string (<span class="code">o</span>).</p>
 
 <p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
 
@@ -163,7 +163,7 @@ simple_pair
 
 <h3><a class="anchor" name="negation"></a>Negation</h3>
 
-<p>Negation does the opposite of the specified comparison. To specify the negation operator for a criterion, nest the element containing the criterion inside an element that uses the negation operator: <code>_not</code>. For example, this query string will return all patents that are not design patents: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_not":{"patent_type":"design"}}'></a></p>
+<p>Negation does the opposite of the specified comparison. To specify the negation operator for a criterion, nest the element containing the criterion inside an element that uses the negation operator: <span class="code">_not</span>. For example, this query string will return all patents that are not design patents: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_not":{"patent_type":"design"}}'></a></p>
 
 <p class="well code">q={"_not":{"patent_type":"design"}}</p>
 
@@ -211,7 +211,7 @@ simple_pair
 
 <ul>
     <li><span class="code">page</span> and <span class="code">per_page</span> &mdash; customize how may patents to return per page and which page.</li>
-    <li><span class="code">coinventors</span> - whether coinventor data should be shown when using inventor fields in the query. Defaults to <code>true</code> if not provided.</li>
+    <li><span class="code">coinventors</span> - whether coinventor data should be shown when using inventor fields in the query. Defaults to <span class="code">true</span> if not provided.</li>
     <li>TBD &mdash; other options, for example other one-to-many relationships like classes, etc.</li>
 </ul>
 
@@ -279,7 +279,7 @@ simple_pair
 
 <p class="well code">{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Whitney"}]}],"count":1,"total_patent_count":1}</p>
 
-<p>However, if the setting was change to <code>false</code> like the following, the results would include subentity (i.e. inventor) data: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}'></a></p>
+<p>However, if the setting was change to <span class="code">false</span> like the following, the results would include subentity (i.e. inventor) data: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}'></a></p>
 
 <p class="well code">q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":false}</p>
 
@@ -289,7 +289,7 @@ simple_pair
 
 <h3><a class="anchor" name="include_subentity_total_counts"></a>Include Subentity Total Counts</h3>
 
-<p>The <span class="code">include_subentity_total_counts</span> option is provided to indicate whether the query results should include the total counts of unique subentities. By default, these counts are not returned. If <code>true</code>, then there will be a count of unique subentities for those subentities that have at least one field included in the result fields. These will be named, e.g., <span class="code">total_inventor_count</span>, <span class="code">total_assignee_count</span>, etc. </p>
+<p>The <span class="code">include_subentity_total_counts</span> option is provided to indicate whether the query results should include the total counts of unique subentities. By default, these counts are not returned. If <span class="code">true</span>, then there will be a count of unique subentities for those subentities that have at least one field included in the result fields. These will be named, e.g., <span class="code">total_inventor_count</span>, <span class="code">total_assignee_count</span>, etc. </p>
 
 <h2><a class="anchor" name="sort_parameter"></a>Sort Parameter</h2>
 
