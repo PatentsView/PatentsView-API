@@ -214,7 +214,7 @@ $INVENTOR_ENTITY_SPECS = array(
     array('entity_name'=>'ipc', 'group_name'=>'IPCs', 'keyId'=>'', 'distinctCountId'=>'ipc_class','join'=>'left outer join ipcr on patent_inventor.patent_id=ipcr.patent_id'),
     array('entity_name'=>'uspc', 'group_name'=>'uspcs', 'keyId'=>'', 'distinctCountId'=>'uspc_mainclass_id','join'=>'left outer join uspc_current_mainclass on patent_inventor.patent_id=uspc_current_mainclass.patent_id left outer join uspc_current on uspc_current_mainclass.patent_id=uspc_current.patent_id and uspc_current_mainclass.mainclass_id=uspc_current.mainclass_id left outer join inventor_uspc_mainclass on inventor.inventor_id=inventor_uspc_mainclass.inventor_id and uspc_current_mainclass.mainclass_id=inventor_uspc_mainclass.mainclass_id'),
     array('entity_name'=>'cpc', 'group_name'=>'cpcs', 'keyId'=>'', 'distinctCountId'=>'cpc_subsection_id','join'=>'left outer join cpc_current_subsection on patent_inventor.patent_id=cpc_current_subsection.patent_id left outer join cpc_current on cpc_current_subsection.patent_id=cpc_current.patent_id and cpc_current_subsection.subsection_id=cpc_current.subsection_id left outer join inventor_cpc_subsection on inventor.inventor_id=inventor_cpc_subsection.inventor_id and cpc_current_subsection.subsection_id=inventor_cpc_subsection.subsection_id'),
-    array('entity_name'=>'nber', 'group_name'=>'nbers', 'keyId'=>'', 'distinctCountId'=>'nber_subcategory_id','join'=>'left outer join nber on patent_inventor.patent_id=nber.patent_id'),
+    array('entity_name'=>'nber', 'group_name'=>'nbers', 'keyId'=>'', 'distinctCountId'=>'nber_subcategory_id','join'=>'left outer join nber on patent_inventor.patent_id=nber.patent_id left outer join inventor_nber_subcategory on inventor.inventor_id=inventor_nber_subcategory.inventor_id and nber.subcategory_id=inventor_nber_subcategory.subcategory_id'),
     array('entity_name'=>'year', 'group_name'=>'years', 'keyId'=>'', 'distinctCountId'=>'year_id','join'=>'left outer JOIN patent as patent_year on patent_inventor.patent_id=patent_year.patent_id left outer join inventor_year on inventor.inventor_id=inventor_year.inventor_id and patent_year.year=inventor_year.patent_year'),
 );
 
@@ -322,6 +322,7 @@ $INVENTOR_FIELD_SPECS = array
     'nber_category_title' => array('entity_name'=>'nber', 'column_name' => 'nber.category_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'y'),
     'nber_first_seen_date' => array('entity_name' => 'nber', 'column_name' => 'nber.first_seen_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'y'),
     'nber_last_seen_date' => array('entity_name' => 'nber', 'column_name' => 'nber.last_seen_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'y'),
+    'nber_num_patents_for_inventor' => array('entity_name'=>'nber', 'column_name' => 'inventor_nber_subcategory.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),    
     'nber_subcategory_id' => array('entity_name'=>'nber', 'column_name' => 'nber.subcategory_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'y'),
     'nber_subcategory_title' => array('entity_name'=>'nber', 'column_name' => 'nber.subcategory_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'y'),
     'nber_total_num_assignees' => array('entity_name'=>'nber', 'column_name' => 'nber.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'y'),
