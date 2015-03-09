@@ -1,6 +1,18 @@
-{% extends "page.html" %}
+{% extends "_section.html" %}
 
 {% block assignee_section_class %}section-selected{% endblock %}
+
+{% block section_title %}Inventor{% endblock %}
+{% block section_title_plural %}Inventors{% endblock %}
+
+{% block section_get_url %}/api/inventors/query?q{,f,o,s}{% endblock %}
+{% block section_post_url %}/api/inventors/query{% endblock %}
+
+{% block section_introduction %}
+<p>This will search for inventors matching the query string (q) and returning the data fields listed in the field string (f) sorted by the fields in the sort string (s) using options provided in the option string (o).</p>
+{% endblock %}
+
+{% block section_field_defaults %}assignee_id, assignee_first_name, assignee_last_name, and assignee_organization{% endblock %}
 
 {% block body %}
 
@@ -28,7 +40,6 @@
             <td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
             <td>string, required <br/> <strong>example:</strong> <span class="code">{"inventor_last_name":"Whitney"}</span></td>
         </tr>
-
         <tr>
             <td class="code">f</td>
             <td>JSON formatted array of fields to include in the results. If not provided, defaults to assignee_id, assignee_first_name, assignee_last_name, and assignee_organization.</td>
@@ -37,7 +48,7 @@
 
         <tr>
             <td class="code">s</td>
-            <td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal assignee identifier. string, optional</td>
+            <td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal assignee identifier.</td>
             <td>string, optional <br/> <strong>example:</strong> <span class="code">[{"assignee_organization":"desc"}]</span></td>
         </tr>
 

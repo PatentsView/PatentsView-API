@@ -2,13 +2,14 @@
 
 {% block body %}
 
-<h1>Inventors Query</h1>
+<h1>{% block section_title_plural %}{% endblock %} Query</h1>
 <p class="code">
-    <strong>GET</strong> /api/inventors/query?q{,f,o,s}<br/>
-    <strong>POST</strong> /api/inventors/query
+    <strong>GET</strong> {% block section_get_url %}{% endblock %}<br/>
+    <strong>POST</strong> {% block section_post_url %}{% endblock %}
 </p>
 
-<p>This will search for inventors matching the query string (q) and returning the data fields listed in the field string (f) sorted by the fields in the sort string (s) using options provided in the option string (o).</p>
+{% block section_introduction %}
+
 
 <p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
 
@@ -28,7 +29,7 @@
         </tr>
         <tr>
             <td class="code">f</td>
-            <td>JSON formatted array of fields to include in the results. If not provided, defaults inventor_id, inventor_first_name, and inventor_last_name.</td>
+            <td>JSON formatted array of fields to include in the results. If not provided, defaults to {% block section_field_defaults %}{% endblock %}.</td>
             <td>string, optional <br/> <strong>example:</strong> <span class="code">["patent_number", "date"]</span></td>
         </tr>
         <tr>
