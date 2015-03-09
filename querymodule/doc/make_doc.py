@@ -1,4 +1,4 @@
-import jinja2, json, openpyxl, os, shutil, sys
+import glob, jinja2, json, openpyxl, os, shutil, sys
 
 import xml.etree.ElementTree as ET
 
@@ -39,7 +39,15 @@ def make_documentation_html(outdir):
     if not os.path.exists(os.path.join(outdir, "css")):
         os.makedirs(os.path.join(outdir, "css"))
 
-    shutil.copyfile("css/custom.css", os.path.join(outdir, "css", "custom.css"))
+    shutil.copy("css/custom.css", os.path.join(outdir, "css"))
+
+    # copy images
+
+    if not os.path.exists(os.path.join(outdir, "img")):
+        os.makedirs(os.path.join(outdir, "img"))
+
+    for filename in glob.glob("img/*.png"):
+        shutil.copy(filename, os.path.join(outdir, "img"))
     
     field_lists = {}
     wb = openpyxl.load_workbook("API field lists.xlsx", data_only=True, use_iterators=True)
