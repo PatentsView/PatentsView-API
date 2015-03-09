@@ -618,6 +618,7 @@ key_value_pair
 <tr><td>cpc_subgroup_title</td><td>cpcs</td><td>Subgroup Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of CPC Subgroup</td></tr>
 <tr><td>cpc_subsection_id</td><td>cpcs</td><td>Subsection ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>CPC subsection ID</td></tr>
 <tr><td>cpc_subsection_title</td><td>cpcs</td><td>Subsection Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of CPC subsection</td></tr>
+<tr><td>cpc_num_patents_for_inventor</td><td>cpcs</td><td>Number of Patents for CPC Subsection</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>The number of patents within a CPC subsection for a given inventor</td></tr>
 <tr><td>cpc_total_num_assignees</td><td>cpcs</td><td>Total Number of Assignees</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>Total number of assignees on patents within a CPC subsection</td></tr>
 <tr><td>cpc_total_num_inventors</td><td>cpcs</td><td>Total Number of Inventors</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>Total number of inventors on patents within a CPC subsection</td></tr>
 <tr><td>cpc_total_num_patents</td><td>cpcs</td><td>Total Number of Patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>Total number of patents within a CPC subsection</td></tr>
@@ -657,6 +658,7 @@ key_value_pair
 <tr><td>nber_category_title</td><td>nbers</td><td>Category Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of NBER category</td></tr>
 <tr><td>nber_first_seen_date</td><td>nbers</td><td>First Seen Date</td><td>date</td><td>Y</td><td>Y</td><td>Y</td><td>The date of the earliest patent within a NBER subcategory</td></tr>
 <tr><td>nber_last_seen_date</td><td>nbers</td><td>Last Seen Date</td><td>date</td><td>Y</td><td>Y</td><td>Y</td><td>The date of the most recent patent within a NBER subcategory</td></tr>
+<tr><td>nber_num_patents_for_inventor</td><td>nbers</td><td>Number of Patents for NBER Subcategory</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>The number of patents within a NBER subcategory for a given inventor</td></tr>
 <tr><td>nber_subcategory_id</td><td>nbers</td><td>Subcategory ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>NBER subcategory ID (See nber_subcategory_title for details)</td></tr>
 <tr><td>nber_subcategory_title</td><td>nbers</td><td>Subcategory Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of NBER subcategory</td></tr>
 <tr><td>nber_total_num_assignees</td><td>nbers</td><td>Total Number of Assignees</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>The total number of unique assignees on patents within a NBER subcategory</td></tr>
@@ -798,6 +800,7 @@ key_value_pair
 <tr><td>cpc_group_id</td><td>cpcs</td><td>Group ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>CPC Group ID</td></tr>
 <tr><td>cpc_group_title</td><td>cpcs</td><td>Group Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of CPC group</td></tr>
 <tr><td>cpc_last_seen_date</td><td>cpcs</td><td>Last Seen Date</td><td>date</td><td>Y</td><td>Y</td><td>Y</td><td>The date of the most recent patent within a CPC subsection</td></tr>
+<tr><td>cpc_num_patents_for_assignee</td><td>cpcs</td><td>Number of Patents for CPC Subsection</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>The number of patents within a CPC subsection for a given assignee</td></tr>
 <tr><td>cpc_section_id</td><td>cpcs</td><td>Section ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>CPC Section ID (A = Human Necessitites, B = Performing Operations; Transporint, C = Chemistry; Metallurgy, D = Textiles; paper, E = Fixed Constructing, F = Mechanical Engineering; Lighting; Heating; Weapons; Blasting Engines; Pumps, G = Physics, H = Electricity, Y = General Tagging of new technological developments)</td></tr>
 <tr><td>cpc_subgroup_id</td><td>cpcs</td><td>Subgroup ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>CPC Subgroup ID</td></tr>
 <tr><td>cpc_subgroup_title</td><td>cpcs</td><td>Subgroup Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of CPC Subgroup</td></tr>
@@ -848,6 +851,7 @@ key_value_pair
 <tr><td>nber_category_title</td><td>nbers</td><td>Category Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of NBER category</td></tr>
 <tr><td>nber_first_seen_date</td><td>nbers</td><td>First Seen Date</td><td>date</td><td>Y</td><td>Y</td><td>Y</td><td>The date of the earliest patent within a NBER subcategory</td></tr>
 <tr><td>nber_last_seen_date</td><td>nbers</td><td>Last Seen Date</td><td>date</td><td>Y</td><td>Y</td><td>Y</td><td>The date of the most recent patent within a NBER subcategory</td></tr>
+<tr><td>nber_num_patents_for_assignee</td><td>nbers</td><td>Number of Patents for NBER Subcategory</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>The number of patents within a NBER subcategory for a given assignee</td></tr>
 <tr><td>nber_subcategory_id</td><td>nbers</td><td>Subcategory ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>NBER subcategory ID (See nber_subcategory_title for details)</td></tr>
 <tr><td>nber_subcategory_title</td><td>nbers</td><td>Subcategory Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of NBER subcategory</td></tr>
 <tr><td>nber_total_num_assignees</td><td>nbers</td><td>Total Number of Assignees</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>The total number of unique assignees on patents within a NBER subcategory</td></tr>
@@ -1087,7 +1091,7 @@ key_value_pair
 <tr><td>uspc_total_num_inventors</td><td>uspcs</td><td>Total Number of Inventors</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>The total number of unique inventors on patents  within a USPC mainclass</td></tr>
 <tr><td>uspc_total_num_patents</td><td>uspcs</td><td>Total Number of Patents</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>The total number of patents within a USPC mainclass</td></tr>
 <tr><td>year_id</td><td>years</td><td>ID</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>Year </td></tr>
-<tr><td>year_num_patents_for_cpc_subsection</td><td>years</td><td>Number of Patents for CPCSubsection</td><td>integer</td><td>N</td><td>Y</td><td>Y</td><td>The number of patents within a CPC subsection for a given year</td></tr>
+<tr><td>year_num_patents_for_cpc_subsection</td><td>years</td><td>Number of Patents for CPC Subsection</td><td>integer</td><td>N</td><td>Y</td><td>Y</td><td>The number of patents within a CPC subsection for a given year</td></tr>
 </table>
 
 <table>
