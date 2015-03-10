@@ -400,7 +400,6 @@ key_value_pair
 <tr><td>cpc_group_title</td><td>cpcs</td><td>Group Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of CPC group</td></tr>
 <tr><td>cpc_last_seen_date</td><td>cpcs</td><td>Last Seen Date</td><td>date</td><td>Y</td><td>Y</td><td>Y</td><td>The date of the most recent patent within a CPC subsection</td></tr>
 <tr><td>cpc_section_id</td><td>cpcs</td><td>Section ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>CPC Section ID (A = Human Necessitites, B = Performing Operations; Transporint, C = Chemistry; Metallurgy, D = Textiles; paper, E = Fixed Constructing, F = Mechanical Engineering; Lighting; Heating; Weapons; Blasting Engines; Pumps, G = Physics, H = Electricity, Y = General Tagging of new technological developments)</td></tr>
-<tr><td>cpc_sequence</td><td>cpcs</td><td>Sequence</td><td>integer</td><td>N</td><td>Y</td><td>Y</td><td>The order of the CPC classification in the list of classifications for the selected patent</td></tr>
 <tr><td>cpc_subgroup_id</td><td>cpcs</td><td>Subgroup ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>CPC Subgroup ID</td></tr>
 <tr><td>cpc_subgroup_title</td><td>cpcs</td><td>Subgroup Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of CPC Subgroup</td></tr>
 <tr><td>cpc_subsection_id</td><td>cpcs</td><td>Subsection ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>CPC subsection ID</td></tr>
@@ -435,7 +434,6 @@ key_value_pair
 <tr><td>ipc_last_seen_date</td><td>ipcs</td><td>Last Seen Date</td><td>date</td><td>Y</td><td>Y</td><td>Y</td><td>The date of the most recent patent within a IPC group</td></tr>
 <tr><td>ipc_main_group</td><td>ipcs</td><td>Main Group</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Subdivisions of the subclass within the IPC system</td></tr>
 <tr><td>ipc_section</td><td>ipcs</td><td>Section</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>One of the eight highest hierarchical levels of the IPC corresponding to very broad technical fields ( A = Human Necessitites, B = Performing Operations; Transporint, C = Chemistry; Metallurgy, D = Textiles; paper, E = Fixed Constructing, F = Mechanical Engineering; Lighting; Heating; Weapons; Blasting Engines; Pumps, G = Physics, H = Electricity)</td></tr>
-<tr><td>ipc_sequence</td><td>ipcs</td><td>Sequence</td><td>integer</td><td>N</td><td>Y</td><td>Y</td><td>The order of the IPC classification in the list of classifications for the selected patent</td></tr>
 <tr><td>ipc_subclass</td><td>ipcs</td><td>Subclass</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Subdivisions of the class within IPC system</td></tr>
 <tr><td>ipc_subgroup</td><td>ipcs</td><td>Subgroup</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Subdivisions of the main group within the IPC system</td></tr>
 <tr><td>ipc_symbol_position</td><td>ipcs</td><td>Symbol Position</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>&#8220;F&#8221; defining &#8220;first&#8221; for the sole or first &#8220;invention information&#8221; IPC, or &#8220;L&#8221; defining &#8220;later&#8221; for any second and succeeding &#8220;invention information&#8221; IPC and for any &#8220;non - invention informati on&#8221; IPC</td></tr>
@@ -486,7 +484,6 @@ key_value_pair
 <tr><td>uspc_last_seen_date</td><td>uspcs</td><td>Last Seen Date</td><td>date</td><td>Y</td><td>Y</td><td>Y</td><td>The date of the most recent patent within a USPC mainclass</td></tr>
 <tr><td>uspc_mainclass_id</td><td>uspcs</td><td>Mainclass ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>ID of the USPC mainclass</td></tr>
 <tr><td>uspc_mainclass_title</td><td>uspcs</td><td>Mainclass Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Text describing USPC mainclass</td></tr>
-<tr><td>uspc_sequence</td><td>uspcs</td><td>Sequence</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>The order of the USPC classification in the list of classifications for the selected patent</td></tr>
 <tr><td>uspc_subclass_id</td><td>uspcs</td><td>Subclass ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>ID of USPC subclass</td></tr>
 <tr><td>uspc_subclass_title</td><td>uspcs</td><td>Subclass Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Text describing USPC subclass</td></tr>
 <tr><td>uspc_total_num_assignees</td><td>uspcs</td><td>Total Number of Assignees</td><td>integer</td><td>Y</td><td>Y</td><td>Y</td><td>The total number of unique assignees on patents within a USPC mainclass</td></tr>
@@ -1607,7 +1604,6 @@ key_value_pair
 <tr><td>cpc_last_seen_date</td><td>cpcs</td><td>Last Seen Date</td><td>date</td><td>Y</td><td>Y</td><td>Y</td><td>The date of the most recent patent within a CPC subsection</td></tr>
 <tr><td>cpc_num_patents_for_location</td><td>cpcs</td><td>Number of Patents for Location</td><td>integer</td><td>N</td><td>Y</td><td>Y</td><td>Number of patents for a location within a CPC subsection</td></tr>
 <tr><td>cpc_section_id</td><td>cpcs</td><td>Section ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>CPC Section ID (A = Human Necessitites, B = Performing Operations; Transporint, C = Chemistry; Metallurgy, D = Textiles; paper, E = Fixed Constructing, F = Mechanical Engineering; Lighting; Heating; Weapons; Blasting Engines; Pumps, G = Physics, H = Electricity, Y = General Tagging of new technological developments)</td></tr>
-<tr><td>cpc_sequence</td><td>cpcs</td><td>Sequence</td><td>integer</td><td>N</td><td>Y</td><td>Y</td><td>The order of the CPC classification in the list of classifications for the selected patent</td></tr>
 <tr><td>cpc_subgroup_id</td><td>cpcs</td><td>Subgroup ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>CPC Subgroup ID</td></tr>
 <tr><td>cpc_subgroup_title</td><td>cpcs</td><td>Subgroup Title</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Description of CPC Subgroup</td></tr>
 <tr><td>cpc_subsection_id</td><td>cpcs</td><td>Subsection ID</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>CPC subsection ID</td></tr>
@@ -1636,7 +1632,6 @@ key_value_pair
 <tr><td>ipc_last_seen_date</td><td>ipcs</td><td>Last Seen Date</td><td>date</td><td>Y</td><td>Y</td><td>Y</td><td>The date of the most recent patent within a IPC group</td></tr>
 <tr><td>ipc_main_group</td><td>ipcs</td><td>Main Group</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Subdivisions of the subclass within the IPC system</td></tr>
 <tr><td>ipc_section</td><td>ipcs</td><td>Section</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>One of the eight highest hierarchical levels of the IPC corresponding to very broad technical fields ( A = Human Necessitites, B = Performing Operations; Transporint, C = Chemistry; Metallurgy, D = Textiles; paper, E = Fixed Constructing, F = Mechanical Engineering; Lighting; Heating; Weapons; Blasting Engines; Pumps, G = Physics, H = Electricity)</td></tr>
-<tr><td>ipc_sequence</td><td>ipcs</td><td>Sequence</td><td>integer</td><td>N</td><td>Y</td><td>Y</td><td>The order of the IPC classification in the list of classifications for the selected patent</td></tr>
 <tr><td>ipc_subclass</td><td>ipcs</td><td>Subclass</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Subdivisions of the class within IPC system</td></tr>
 <tr><td>ipc_subgroup</td><td>ipcs</td><td>Subgroup</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>Subdivisions of the main group within the IPC system</td></tr>
 <tr><td>ipc_symbol_position</td><td>ipcs</td><td>Symbol Position</td><td>string</td><td>Y</td><td>Y</td><td>Y</td><td>&#8220;F&#8221; defining &#8220;first&#8221; for the sole or first &#8220;invention information&#8221; IPC, or &#8220;L&#8221; defining &#8220;later&#8221; for any second and succeeding &#8220;invention information&#8221; IPC and for any &#8220;non - invention informati on&#8221; IPC</td></tr>
