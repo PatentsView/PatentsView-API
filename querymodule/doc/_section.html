@@ -3,13 +3,13 @@
 {% block body %}
 
 <h1>{% block section_title_plural %}{% endblock %} Query</h1>
+
 <p class="code">
     <strong>GET</strong> {% block section_get_url %}{% endblock %}<br/>
     <strong>POST</strong> {% block section_post_url %}{% endblock %}
 </p>
 
-{% block section_introduction %}
-
+{% block section_introduction %}{% endblock %}
 
 <p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
 
@@ -34,8 +34,8 @@
         </tr>
         <tr>
             <td class="code">s</td>
-            <td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal inventor identifier.</td>
-            <td>string, optional <br/> <strong>example:</strong> <span class="code">[{"inventor_last_name":"desc"}]</span></td>
+            <td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal {% block section_title_lcase %}{% endblock %} identifier.</td>
+            <td>string, optional <br/> <strong>example:</strong> <span class="code">{% block section_sort_example %}{% endblock %}</span></td>
         </tr>
         <tr>
             <td class="code">o</td>
@@ -62,17 +62,17 @@
 
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code">https://api.patentsview.org/api/inventors/query?q={"inventor_last_name":"Young"}&f=["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]</p>
+<p class="well code">{% block section_get_url_example %}{% endblock %}</p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
 
-<p class="well code">https://api.patentsview.org/api/inventors/query</p>
+<p class="well code">{% block section_post_url_example %}{% endblock %}</p>
 
 <p>with the body containing:</p>
 
-<p class="well code">{"q":{"inventor_last_name":"Young"},"f":["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]}</p>
+<p class="well code">{% block section_post_body_example %}{% endblock %}</p>
 
-<h2><a class="anchor" name="field_list"></a>Inventor Field List</h2>
+<h2><a class="anchor" name="field_list"></a>{{ self.section_title() }} Field List</h2>
 
 <table class="table table-striped documentation-fieldlist">
     <tr>
