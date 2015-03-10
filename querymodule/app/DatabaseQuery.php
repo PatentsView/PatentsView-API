@@ -149,7 +149,7 @@ class DatabaseQuery
         // Loop through the subentities and get them.
         foreach (array_slice($this->entitySpecs,1) as $entitySpec) {
             $tempSelect = $this->buildSelectStringForEntity($entitySpec);
-            if ($tempSelect != '') { // If there aren't any fields to get back, then skip the group.
+	    if ($tempSelect != '') { // If there aren't any fields to get back, then skip the group.
                 $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . ' as ' . $this->entitySpecs[0]['keyId'];
                 $selectStringForEntity .= ", $tempSelect";
                 $fromEntity = $this->entitySpecs[0]['join'] .
@@ -194,7 +194,7 @@ class DatabaseQuery
         $sqlQuery = "SELECT $select FROM $from $where $order";
         $this->errorHandler->getLogger()->debug($sqlQuery);
 	
-        try {
+	try {
             $st = $this->db->query("$sqlQuery", PDO::FETCH_ASSOC);
             $results = $st->fetchAll();
             $st->closeCursor();
@@ -324,7 +324,7 @@ class DatabaseQuery
     private function buildSortString($sortParam)
     {
         $orderString = '';
-        if ($sortParam != null) {
+	if ($sortParam != null) {
 	    foreach ($sortParam as $sortField) {
 		foreach($sortField as $apiField=>$direction) {
                 try {
@@ -357,10 +357,10 @@ class DatabaseQuery
 			$this->sortFieldsUsed[] = $apiField;
 			$secEntityField = $fieldSpec['entity_name'];
 			$secEntityField .= "s";
-                        if (array_key_exists($secEntityField,$this->sortFieldsUsedSec)) {
-				array_push($this->sortFieldsUsedSec[$secEntityField],$apiField . ' ' . $direction);
+			if (array_key_exists($secEntityField,$this->sortFieldsUsedSec)) {
+				array_push($this->sortFieldsUsedSec[$secEntityField],getDBField($this->fieldSpecs, $apiField) . ' ' . $direction);
 			} else {
-				$this->sortFieldsUsedSec[$secEntityField] = array($apiField . ' ' . $direction);
+				$this->sortFieldsUsedSec[$secEntityField] = array(getDBField($this->fieldSpecs, $apiField) . ' ' . $direction);
 			}
                     } 
                 } else {
@@ -382,7 +382,6 @@ class DatabaseQuery
         // Smerge all the fields into one array
         $allFieldsUsed = array_merge($whereFieldsUsed, array_keys($selectFieldSpecs), $sortFields);
         $allFieldsUsed = array_unique($allFieldsUsed);
-
         $fromString = '';
         $joins = array();
 
