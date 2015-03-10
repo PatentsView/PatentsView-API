@@ -25,12 +25,12 @@
         <tr>
             <td class="code">q</td>
             <td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
-            <td>string, required <br/> <strong>example:</strong> <span class="code">{"inventor_last_name":"Whitney"}</span></td>
+            <td>string, required <br/> <strong>example:</strong> <span class="code">{% block section_query_example %}{% endblock %}</span></td>
         </tr>
         <tr>
             <td class="code">f</td>
             <td>JSON formatted array of fields to include in the results. If not provided, defaults to {% block section_field_defaults %}{% endblock %}.</td>
-            <td>string, optional <br/> <strong>example:</strong> <span class="code">["patent_number", "date"]</span></td>
+            <td>string, optional <br/> <strong>example:</strong> <span class="code">{% block section_field_example %}{% endblock %}</span></td>
         </tr>
         <tr>
             <td class="code">s</td>

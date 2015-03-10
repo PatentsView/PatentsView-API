@@ -1,99 +1,43 @@
-{% extends "page.html" %}
+{% extends "_section.html" %}
 
 {% block nber_subcat_section_class %}section-selected{% endblock %}
 
-{% block body %}
+{% block section_title %}NBER Subcategory{% endblock %}
+{% block section_title_plural %}NBER Subcategories{% endblock %}
+{% block section_title_lcase %}NBER subcategory{% endblock %}
 
-<h1>NBER Subcategories Query</h1>
+{% block section_get_url %}/api/nber_subcategories/query?q{,f,o,s}{% endblock %}
+{% block section_post_url %}/api/nber_subcategories/query{% endblock %}
 
-<p class="code">
-<strong>GET</strong> /api/nber_subcategories/query?q{,f,o,s}<br/>
-<strong>POST</strong> /api/nber_subcategories/query
-</p>
-
+{% block section_introduction %}
 <p>This will search for NBER (National Bureau of Economic Research) subcategories matching the query string (<span class="code">q</span>) and returning the data fields listed in the field string (<span class="code">f</span>) sorted by the fields in the sort string (<span class="code">s</span>) using options provided in the option string (<span class="code">o</span>).</p>
-
-<p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
-
-<table class="table table-striped documentation-parameters">
-    <thead>
-        <tr>
-            <th class="col-md-1">Name</th>
-            <th class="col-md-6">Description</th>
-            <th class="col-md-5">Details</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td class="code">q</td>
-            <td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
-            <td>string, required <br/> <strong>example:</strong> <span class="code">{"nber_subcategory_id":"62"}</span></td>
-        </tr>
-
-        <tr>
-            <td class="code">f</td>
-            <td>JSON formatted array of fields to include in the results. If not provided, defaults to nber_subcategory_id and nber_subcategory_title.</td>
-            <td>string, optional <br/> <strong>example:</strong> <span class="code">["nber_subcategory_id", "nber_subcategory_title","nber_total_num_patents"]</span></td>
-        </tr>
-
-        <tr>
-            <td class="code">s</td>
-            <td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal NBER subcategory identifier.</td>
-            <td>string, optional <br/> <strong>example:</strong> <span class="code">[{"nber_total_num_patents":"desc"}]</span></td>
-        </tr>
-
-        <tr>
-            <td class="code">o</td>
-            <td>
-                <p>JSON formatted object of options to modify the query or results. Available options are:</p>
-                <p><span class="code">matched_subentities_only</span> &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</p>
-                <p><span class="code">include_subentity_total_counts</span> &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</p>
-                <p><span class="code">page</span> &mdash; return only the Nth page of results. Defaults to 1.</p>
-                <p><span class="code">per_page</span> &mdash; the size of each page to return. Defaults to 25.</p>
-            </td>
-            <td>string, optional <br/> <strong>example:</strong> <span class="code">o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</span></td>
-        </tr>
-
-        <tr>
-            <td class="code">format</td>
-            <td>
-                <p>Specifies the response data format. If not provided, defaults to JSON. Available options are:</p>
-                <p><span class="code">json</span></p>
-                <p><span class="code">xml</span></p>
-            </td>
-            <td>string, optional <br/> <strong>example:</strong> <span class="code">format=xml</span></td>
-        </tr>
-    </tbody>
-</table>
-
-<p>An example of a complete API call using the GET verb is:</p>
-
-<p class="well code">https://api.patentsview.org/api/nber_subcategories/query?q={"nber_subcategory_id":"62"}&amp;f=["nber_subcategory_id","nber_subcategory_title","nber_total_num_patents"]</p>
-
-<p>An example of the equivalent API call using the POST verb is:</p>
-
-<p class="well code">https://api.patentsview.org/api/nber_subcategories/query</p>
-
-<p>with the body containing:</p>
-
-<p class="well code">{"q":{"nber_subcategory_id":"62"},"f":["nber_subcategory_id", "nber_subcategory_title","nber_total_num_patents"]}</p>
-
-<h2><a class="anchor" name="field_list"></a>NBER Subcategory Field List</h2>
-
-<table class="table table-striped documentation-fieldlist">
-    <tr>
-        {% for name in field_list_column_names %}
-        <th>{{name}}</th>
-        {% endfor %}
-    </tr>
-
-    {% for field in field_list %}
-    <tr>
-        {% for name in field_list_column_names %}
-        <td>{{ field[name] }}</td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-</table>
-
 {% endblock %}
+
+{% block section_query_example %}
+{"nber_subcategory_id":"62"}
+{% endblock %}
+
+{% block section_field_defaults %}
+<span class="code">nber_subcategory_id</span> and <span class="code">nber_subcategory_title</span>
+{% endblock %}
+
+{% block section_field_example %}
+["nber_subcategory_id", "nber_subcategory_title","nber_total_num_patents"]
+{% endblock %}
+
+{% block section_sort_example %}
+[{"nber_total_num_patents":"desc"}]
+{% endblock %}
+
+{% block section_get_url_example %}
+https://api.patentsview.org/api/nber_subcategories/query?q={"nber_subcategory_id":"62"}&amp;f=["nber_subcategory_id","nber_subcategory_title","nber_total_num_patents"]
+{% endblock %}
+
+{% block section_post_url_example %}
+https://api.patentsview.org/api/nber_subcategories/query
+{% endblock %}
+
+{% block section_post_body_example %}
+{"q":{"nber_subcategory_id":"62"},"f":["nber_subcategory_id", "nber_subcategory_title","nber_total_num_patents"]}
+{% endblock %}
+

@@ -13,12 +13,32 @@
 <p>This will search for assignees matching the query string (<span class="code">q</span>) and returning the data fields listed in the field string (<span class="code">f</span>) sorted by the fields in the sort string (<span class="code">s</span>) using options provided in the option string (<span class="code">o</span>).</p>
 {% endblock %}
 
-{% block section_field_defaults %}assignee_id, assignee_first_name, assignee_last_name, and assignee_organization{% endblock %}
+{% block section_query_example %}
+{"inventor_last_name": "Whitney"}
+{% endblock %}
 
-{% block section_sort_example %}[{"assignee_organization":"desc"}]{% endblock %}
+{% block section_field_defaults %}
+<span class="code">assignee_id</span>, <span class="code">assignee_first_name</span>, <span class="code">assignee_last_name</span>, and <span class="code">assignee_organization</span>
+{% endblock %}
 
-{% block section_get_url_example %}https://api.patentsview.org/api/assignees/query?q={"_begins":{"assignee_organization":"Race"}}&amp;f=["patent_number","patent_date","assignee_organization","assignee_id"]{% endblock %}
-{% block section_post_url_example %}https://api.patentsview.org/api/assignees/query{% endblock %}
-{% block section_post_body_example %}{"q":{"_begins":{"assignee_organization":"Race"}},"f":["patent_number","patent_date","assignee_organization","assignee_id"]}{% endblock %}
+{% block section_field_example %}
+["patent_number", "date"]
+{% endblock %}
+
+{% block section_sort_example %}
+[{"assignee_organization":"desc"}]
+{% endblock %}
+
+{% block section_get_url_example %}
+https://api.patentsview.org/api/assignees/query?q={"_begins":{"assignee_organization":"Race"}}&amp;f=["patent_number","patent_date","assignee_organization","assignee_id"]
+{% endblock %}
+
+{% block section_post_url_example %}
+https://api.patentsview.org/api/assignees/query
+{% endblock %}
+
+{% block section_post_body_example %}
+{"q":{"_begins":{"assignee_organization":"Race"}},"f":["patent_number","patent_date","assignee_organization","assignee_id"]}
+{% endblock %}
 
 
