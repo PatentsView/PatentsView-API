@@ -39,7 +39,7 @@
         </tr>
         <tr>
             <td class="code">s</td>
-            <td>JSON formatted array of objects to sort the results. if not provided, defaults to the unique, internal patent identifier.</td>
+            <td>JSON formatted array of objects to sort the results. If not provided, defaults to the unique, internal patent identifier.</td>
             <td>string, optional <br/> <strong>example:</strong> <span class="code">s=[{"patent_number":"desc"}]</span></td>
         </tr>
 
@@ -47,10 +47,10 @@
             <td><span class="code">o</span></td>
             <td>
                 <p>JSON formatted object of options to modify the query or results.  Available options are:</p>
-                <p><span class="code">matched_subentities_only</span> &mdash; Whether only subentity data that matches the subentity-specific criteria should be included in the results. Defaults to true.</p>
-                <p><span class="code">include_subentity_total_counts</code> &mdash; Whether the total counts of unique subentities should be included in the results. Defaults to false.</p>
-                <p><span class="code">page</span> &mdash; return only the Nth page of results. Defaults to 1.</p>
-                <p><span class="code">per_page</span> &mdash; the size of each page to return. Defaults to 25.</p>
+                <p><span class="code">matched_subentities_only</span> &mdash; Only subentity data that matches the subentity specific criteria is included in results. Defaults to true.</p>
+                <p><span class="code">include_subentity_total_counts</code> &mdash; Total counts of unique subentities included in results. Defaults to false.</p>
+                <p><span class="code">page</span> &mdash; Return only the Nth page of results. Defaults to 1.</p>
+                <p><span class="code">per_page</span> &mdash; Size of each page to return. Defaults to 25.</p>
             </td>
             <td>string, optional <br/> <strong>example:</strong> <span class="code">o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</span> 
             </td>
@@ -85,7 +85,7 @@
 
 <p>The query string is always a single JSON object: <span class="code">{}</span>, with properties and contained objects that determine the criteria for the query.</p>
 
-<p>Note: To aid in understanding the structure of the queries below and while creating your own, it is helpful to use JSON validators and visual parsers, like <a href="http://www.jsoneditoronline.org/">http://www.jsoneditoronline.org/</a> and <a href="http://jsonlint.com/">http://jsonlint.com/</a>. Clicking on the <span class="fa fa-external-link"></span> icons below display the JSON in JSON Editor Online.</p>
+<p>Note: To aid in understanding the structure of the queries below and while creating your own, it is helpful to use JSON validators and visual parsers, like <a href="http://www.jsoneditoronline.org/">http://www.jsoneditoronline.org/</a> and <a href="http://jsonlint.com/">http://jsonlint.com/</a>. Clicking on the<span class="fa fa-external-link"></span>icons below display the JSON in JSON Editor Online.</p>
 
 <h3><a class="anchor" name="query_string_syntax"></a>Syntax</h3>
 
@@ -121,13 +121,13 @@ simple_pair
 
 <h3><a class="anchor" name="joining_criteria"></a>Joining Criteria</h3>
 
-<p>There can be multiple criteria within a query by using a join operator (<span class="code">_and</span>, <span class="code">_or</span>) and putting the criteria in an array using square brackets (&ldquo;<span class="code">[</span>&rdquo; and &ldquo;<span class="code">]</span>&rdquo;). The following has multiple criteria, and will return patents that have &ldquo;Whitney&rdquo; as an inventor and a grant date of January 4, 2007: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json=={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}'></a></p>
+<p>Multiple criteria can be added to a query using a join operator (<span class="code">_and</span>, <span class="code">_or</span>) and putting the criteria in an array using square brackets (&ldquo;<span class="code">[</span>&rdquo; and &ldquo;<span class="code">]</span>&rdquo;). The following has multiple criteria, and will return patents that have &ldquo;Whitney&rdquo; as an inventor and a grant date of January 4, 2007: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json=={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}'></a></p>
 
 <p class="well code">q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}</p>
 
 <h3><a class="anchor" name="comparison_operators"></a> Comparison Operators</h3>
 
-<p>Comparison operators can be used to compare a field to a value using comparators besides just equality. The available comparison operators are:</p>
+<p>Comparison operators can be used to compare a field to a value using comparators other than equality. The available comparison operators are:</p>
 
 <ul>
     <li>Integer, float, date, and string
@@ -201,7 +201,7 @@ simple_pair
 
 <h2><a class="anchor" name="field_list_format"></a>Field List Format</h2>
 
-<p>The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return a default set of fields. See &ldquo;<a href="#patent_field_list">Field List</a>&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and dates for patents that meet the query criteria:</p>
+<p>The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return a default set of fields. See &ldquo;<a href="#patent_field_list">Field List</a>&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and date patent was granted that meet the query criteria:</p>
 
 <p class="well code">f=["patent_number","inventor_last_name","patent_date"]</p>
 
@@ -228,14 +228,6 @@ simple_pair
 <h3><a class="anchor" name="matched_subentities_only"></a>Matched Subentities Only</h3>
 
 <p>The <span class="code">matched_subentities_only</span> option is provided to indicate whether only those subentities that match their subentity-specific criteria should be included in the results. By default, only those subentities that match their respective query criteria will be included for each parent entity.</p>
-
-<p>This is easiest to understand with an example, so consider this query: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]'></a></p>
-
-<p class="well code">q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</p>
-
-<p>The results will include all the patents that have a grant date on or after January 4, 2007 and with an inventor with the last name &ldquo;Whitney&rdquo;. By default or when <span class="code">{"matched_subentities_only":true}</span>, the results will only include the inventor data for the inventor &ldquo;Whitney&rdquo;. However if <span class="code">{"matched_subentities_only":false}</span>, the results will include all inventors for the patents, even if their last name was not "Whitney".</p>
-
-<p><strong>Example</strong></p>
 
 <p>Consider this example. Assume the database only has the following content:</p>
 
@@ -271,15 +263,15 @@ simple_pair
 </tr>
 </table>
 
-<p>Also assume this query: <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}"></a></p>
+<p>This query: <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}"></a></p>
 
 <p class="well code">q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</p>
 
-<p>The results would be as such (including only the inventor with the last name of "Whitney"): <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Whitney"}]}],"count":1,"total_patent_count":1}'></a></p>
+<p>Produces results that include only patents that have a grant date on or after January 4, 2007 and an inventor with the last name "Whitney": <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Whitney"}]}],"count":1,"total_patent_count":1}'></a></p>
 
 <p class="well code">{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Whitney"}]}],"count":1,"total_patent_count":1}</p>
 
-<p>However, if the setting was change to <span class="code">false</span> like the following, the results would include subentity (i.e. inventor) data: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}'></a></p>
+<p>However, if the query includes {"matched_subentities_only": false}, the results will include all patents granted on or after January 4, 2007 whether the inventor's last name is "Whitney" or not: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}'></a></p>
 
 <p class="well code">q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":false}</p>
 
@@ -295,11 +287,11 @@ simple_pair
 
 <p>The sort parameter is a JSON formatted array of objects that specifies the sort order for the returned results. If empty or not provided, the default sort order will be ascending by patent number.</p>
 
-<p>Each object in the array should be a pair, with the pair's key is one of the patent fields, and the value is either &ldquo;asc&rdquo; or &ldquo;desc&rdquo;, to indicate ascending or descending sort, respectively. </p>
+<p>Each object in the array should be a pair, with the pair's key being one of the patent fields, and the value is either &ldquo;asc&rdquo; or &ldquo;desc&rdquo;, to indicate ascending or descending sort, respectively.</p>
 
 <p>All sort fields should be also necessarily included into the field list parameter ("f"). For example, if a user wants to sort all assignee organizations from assignee entity by their associated inventors' last names from inventor subentity, they should make sure that "inventor_last_name" is present in both the field list ("f") and the sort parameter ("s").</p>
 
-<p>A couple examples should suffice for understanding:</p>
+<p>For example:</p>
 
 <ul>
     <li><span class="code">s=[{"patent_num_claims":"desc"}</span><br/> Primary sort is by <span class="code">patent_num_claims</span> in ascending order, so that patents with the most claims will be first, and those with least claims will be last.</li>
