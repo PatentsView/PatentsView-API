@@ -56,7 +56,7 @@ def make_documentation_html(outdir):
         os.makedirs(os.path.join(outdir, "field_lists"))
 
     keep_sections = ["patent", "inventor", "assignee", "cpc subsection", "uspc", "nber subcat", "location"]
-    field_list_column_names = ["API Field Name", "Group", "Common Name", "Type", "Sort", "Description"]
+    field_list_column_names = ["API Field Name", "Group", "Common Name", "Type", "Query", "Description"]
 
     for ws in wb.worksheets:
         if ws.title not in keep_sections:
