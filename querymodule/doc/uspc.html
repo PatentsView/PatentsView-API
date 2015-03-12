@@ -4,7 +4,6 @@
 
 {% block section_title %}USPC Mainclass{% endblock %}
 {% block section_title_plural %}USPC Mainclasses{% endblock %}
-{% block section_title_lcase %}USPC mainclass{% endblock %}
 
 {% block section_get_url %}/api/uspc_mainclasses/query?q{,f,o,s}{% endblock %}
 {% block section_post_url %}/api/uspc_mainclasses/query{% endblock %}
@@ -23,6 +22,10 @@
 
 {% block section_field_example %}
 ["uspc_mainclass_id", "uspc_mainclass_title","uspc_total_num_patents"]
+{% endblock %}
+
+{% block section_sort_default %}
+uspc_mainclass_id
 {% endblock %}
 
 {% block section_sort_example %}

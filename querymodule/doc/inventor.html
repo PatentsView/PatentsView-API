@@ -4,7 +4,6 @@
 
 {% block section_title %}Inventor{% endblock %}
 {% block section_title_plural %}Inventors{% endblock %}
-{% block section_title_lcase %}inventor{% endblock %}
 
 {% block section_get_url %}/api/inventors/query?q{,f,o,s}{% endblock %}
 {% block section_post_url %}/api/inventors/query{% endblock %}
@@ -23,6 +22,10 @@
 
 {% block section_field_example %}
 ["patent_number", "date"]
+{% endblock %}
+
+{% block section_sort_default %}
+inventor_key_id
 {% endblock %}
 
 {% block section_sort_example %}

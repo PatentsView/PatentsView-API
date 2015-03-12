@@ -4,7 +4,6 @@
 
 {% block section_title %}Location{% endblock %}
 {% block section_title_plural %}Locations{% endblock %}
-{% block section_title_lcase %}location{% endblock %}
 
 {% block section_get_url %}/api/locations/query?q{,f,o,s}{% endblock %}
 {% block section_post_url %}/api/locations/query{% endblock %}
@@ -23,6 +22,10 @@
 
 {% block section_field_example %}
 ["location_id", "location_city","location_state"]
+{% endblock %}
+
+{% block section_sort_default %}
+location_key_id
 {% endblock %}
 
 {% block section_sort_example %}

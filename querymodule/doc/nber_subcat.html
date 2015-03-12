@@ -4,7 +4,6 @@
 
 {% block section_title %}NBER Subcategory{% endblock %}
 {% block section_title_plural %}NBER Subcategories{% endblock %}
-{% block section_title_lcase %}NBER subcategory{% endblock %}
 
 {% block section_get_url %}/api/nber_subcategories/query?q{,f,o,s}{% endblock %}
 {% block section_post_url %}/api/nber_subcategories/query{% endblock %}
@@ -23,6 +22,10 @@
 
 {% block section_field_example %}
 ["nber_subcategory_id", "nber_subcategory_title","nber_total_num_patents"]
+{% endblock %}
+
+{% block section_sort_default %}
+nber_subcategory_id
 {% endblock %}
 
 {% block section_sort_example %}

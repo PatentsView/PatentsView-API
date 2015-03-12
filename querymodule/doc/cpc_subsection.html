@@ -4,7 +4,6 @@
 
 {% block section_title %}CPC Subsection{% endblock %}
 {% block section_title_plural %}CPC Subsections{% endblock %}
-{% block section_title_lcase %}CPC subsection{% endblock %}
 
 {% block section_get_url %}/api/cpc_subsections/query?q{,f,o,s}{% endblock %}
 {% block section_post_url %}/api/cpc_subsections/query{% endblock %}
@@ -23,6 +22,10 @@
 
 {% block section_field_example %}
 ["cpc_subsection_id", "cpc_subsection_title","cpc_total_num_patents"]
+{% endblock %}
+
+{% block section_sort_default %}
+cpc_subsection_id
 {% endblock %}
 
 {% block section_sort_example %}
