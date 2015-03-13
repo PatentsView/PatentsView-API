@@ -271,7 +271,7 @@ simple_pair
 
 <p class="well code">{"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Whitney"}]}],"count":1,"total_patent_count":1}</p>
 
-<p>However, if the query includes {"matched_subentities_only": false}, the results will include all patents granted on or after January 4, 2007 whether the inventor's last name is "Whitney" or not: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}'></a></p>
+<p>However, if the query includes <span class="code">{"matched_subentities_only": false}</code>, the results will include all patents granted on or after January 4, 2007 whether the inventor's last name is "Whitney" or not: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}'></a></p>
 
 <p class="well code">q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":false}</p>
 
