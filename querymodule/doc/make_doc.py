@@ -1,4 +1,4 @@
-BASE_URL = "http://www.dev.patentsview.org/api/v5/"
+BASE_URL = "http://www.dev.patentsview.org/api/"
 
 import glob, jinja2, json, openpyxl, os, shutil, sys
 

@@ -44,3 +44,15 @@ cpc_subsections/query
 {"q":{"cpc_subsection_id":"G12"},"f":["cpc_subsection_id", "cpc_subsection_title","cpc_total_num_patents"]}
 {% endblock %}
 
+{% block section_examples %}
+<ul>
+    <li>
+    <p>Return the total number of inventors within CPC subsection F41 "Weapons".</p>
+    <p class="well code"><a href='{{ base_url }}cpc_subsections/query?q={"cpc_subsection_id":"F41"}&f=["cpc_total_num_inventors"]'>cpc_subsections/query?q={"cpc_subsection_id":"F41"}&f=["cpc_total_num_inventors"]</a></p>
+    </li>
+    <li>
+    <p>Return the last known location for assignees with patents in CPC subsection H02 "Generation; Conversion or Distribution of Electric Power".</p>
+    <p class="well code"><a href='{{ base_url }}cpc_subsections/query?q={"cpc_subsection_id":"H02"}&f=["assignee_lastknown_city","assignee_lastknown_state","assignee_lastknown_country"]'>q={"cpc_subsection_id":"H02"}&f=["assignee_lastknown_city","assignee_lastknown_state","assignee_lastknown_country"]</a></p>
+    </li>
+</ul>
+{% endblock %}

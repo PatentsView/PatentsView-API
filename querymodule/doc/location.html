@@ -44,3 +44,11 @@ locations/query
 {"q":{"location_city":"Mount Airy"},"f":["location_id", "location_state","location_total_num_patents"]}
 {% endblock %}
 
+{% block section_examples %}
+<ul>
+    <li>
+    <p>Return the last known location of any assigness with patents which have at least one inventor with last name "Yamazaki", "Weder", or "Edison".</p>
+    <p class="well code"><a href='{{ base_url }}locations/query?q={"inventor_last_name":["Yamazaki","Weder","Edison"]}&f=["assignee_lastknown_city","assignee_lastknown_state","assignee_lastknown_country"]'>locations/query?q={"inventor_last_name":["Yamazaki","Weder","Edison"]}&f=["assignee_lastknown_city","assignee_lastknown_state","assignee_lastknown_country"]</a></p>
+    </li>
+</ul>
+{% endblock %}

@@ -48,7 +48,15 @@ inventors/query
 <ul>
     <li>
         <p>Return the first name, last name, and associated patent title of all inventors who had patents granted between 2000 and 2006 where the patent title contains the word "bicycle".</p>
-        <p class="well code"><a href='{{ base_url}}'></a></p>
+        <p class="well code"><a href='{{ base_url}}inventors/query?q={"_and":[{"_gte":{"patent_date":"2000-01-01"}},{"_lt":{"patent_date":"2007-01-01"}},{"_text_any":{"patent_title":"bicycle"}}]}&f=["inventor_first_name","inventor_last_name"]'>q={"_and":[{"_gte":{"patent_date":"2000-01-01"}},{"_lt":{"patent_date":"2007-01-01"}},{"_text_any":{"patent_title":"bicycle"}}]}&f=["inventor_first_name","inventor_last_name"]</a></p>
+    </li>
+    <li>
+        <p>Return the last known location of inventors with patents in NBER subcategory 25.</p>
+        <p class="well code"><a href='{{ base_url }}inventors/query?q={"nber_subcategory_id":25}&f=["inventor_lastknown_city","inventor_lastknown_state"]'>q={"nber_subcategory_id":25}&f=["inventor_lastknown_city","inventor_lastknown_state"]</a></p>
+    </li>
+    <li>
+    <p>Return the organization names of assigness linked to inventors whose last known location was the city of Washington, D.C.</p>
+    <p class="well code"><a href='{{ base_url }}inventors/query?q={"_and":[{"inventor_lastknown_city":"Washington"},{"inventor_lastknown_state":"D.C."}]}&f=["assignee_organization"]'>q={"_and":[{"inventor_lastknown_city":"Washington"},{"inventor_lastknown_state":"D.C."}]}&f=["assignee_organization"]</a></p>
     </li>
 </ul>
 {% endblock %}
