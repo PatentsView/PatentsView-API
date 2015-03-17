@@ -70,7 +70,7 @@
 
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code">https://api.patentsview.org/api/patents/query?q={"_gte":{"patent_date":"2007-01-04"}}&amp;amp;f=["patent_number","patent_date"]
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_gte":{"patent_date":"2007-01-04"}}&f=["patent_number","patent_date"]'>{{ base_url }}patents/query?q={"_gte":{"patent_date":"2007-01-04"}}&f=["patent_number","patent_date"]</a>
 </p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
@@ -201,7 +201,7 @@ simple_pair
 
 <h2><a class="anchor" name="field_list_format"></a>Field List Format</h2>
 
-<p>The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return a default set of fields. See &ldquo;<a href="#patent_field_list">Field List</a>&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and date patent was granted that meet the query criteria:</p>
+<p>The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return a default set of fields. See &ldquo;<a href="#field_list">Field List</a>&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and date patent was granted that meet the query criteria:</p>
 
 <p class="well code">f=["patent_number","inventor_last_name","patent_date"]</p>
 
@@ -362,11 +362,11 @@ The following are examples of the kinds of queries that can be performed:
 <ul>
     <li>
         <p>Return all patent numbers and titles after 2006 where the inventor's last name was "Jobs" and the assignee was based in the US.</p>
-        <p><a href='http://www.dev.patentsview.org/api/v5/patents/query?q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]'>q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]</a></p>
+        <p class="well code"><a href='http://www.dev.patentsview.org/api/v5/patents/query?q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]'>q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]</a></p>
     </li>
     <li>
         <p>Return the patent number, processing time, and patent kind for patents granted after 2001 that have the word "international" in the abstract and have a foreign company or corporation assignee.</p>
-        <p><a href='http://www.dev.patentsview.org/api/v5/patents/query?q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]'>q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]</a></p>
+        <p class="well code"><a href='http://www.dev.patentsview.org/api/v5/patents/query?q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]'>q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]</a></p>
     </li>
 </ul>
 

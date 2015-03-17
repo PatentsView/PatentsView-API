@@ -1,3 +1,5 @@
+BASE_URL = "http://www.dev.patentsview.org/api/v5/"
+
 import glob, jinja2, json, openpyxl, os, shutil, sys
 
 import xml.etree.ElementTree as ET
@@ -80,7 +82,8 @@ def make_documentation_html(outdir):
         fname = os.path.join(outdir, "{}.html".format(title))
 
         with open(fname, "w") as f:
-            page = page_tpl.render(field_list_column_names=field_list_column_names, field_list=field_list)
+            page = page_tpl.render(field_list_column_names=field_list_column_names, field_list=field_list,
+                                   base_url=BASE_URL)
             print(page, file=f)
 
 
