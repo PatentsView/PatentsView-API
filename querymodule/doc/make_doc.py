@@ -26,7 +26,7 @@ def extract_field_list(ws):
 
         ary.append(dict(zip(header, values)))
 
-    return ary
+    return sorted(ary, key=lambda x: (x[ "Group"], x["API Field Name"]))
 
 
 def snake_case(s):
