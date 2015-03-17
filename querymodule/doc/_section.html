@@ -62,11 +62,11 @@
 
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code">{% block section_get_url_example %}{% endblock %}</p>
+<p class="well code"><a href='{{ base_url }}{{ self.section_get_url_example() }}'>{{ base_url }}{% block section_get_url_example %}{% endblock %}</a></p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
 
-<p class="well code">{% block section_post_url_example %}{% endblock %}</p>
+<p class="well code">{{ base_url }}{% block section_post_url_example %}{% endblock %}</p>
 
 <p>with the body containing:</p>
 
