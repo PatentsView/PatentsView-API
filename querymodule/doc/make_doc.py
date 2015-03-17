@@ -86,6 +86,18 @@ def make_documentation_html(outdir):
                                    base_url=BASE_URL)
             print(page, file=f)
 
+    # other pages
+    for title in ["query_language"]:
+        fname = os.path.join("{}.html".format(title))
+        page_tpl = env.get_template(fname)
+
+        fname = os.path.join(outdir, "{}.html".format(title))
+
+        with open(fname, "w") as f:
+            page = page_tpl.render()
+            print(page, file=f)
+
+
 
 def main(outdir):
     make_documentation_html(outdir)

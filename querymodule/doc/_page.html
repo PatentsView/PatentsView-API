@@ -26,15 +26,20 @@
     <div class="container" role="main">
         <div class="col-md-3">
             <ul class="list-group" id="contents">
+                <li class="list-group-item {% block query_language_section_class %}{% endblock %}">
+                    <p class="section-name"><a href="query_language.html">Query Language</a></p>
+                    <ul class="section-list">
+                        <li><a href="query_language.html#query_string_format">Query String Format</a></li>
+                        <li><a href="query_language.html#field_list_format">Field List Format</a></li>
+                        <li><a href="query_language.html#options_parameter">Options Parameter</a></li>
+                        <li><a href="query_language.html#sort_parameter">Sort Parameter</a></li>
+                        <li><a href="query_language.html#results_format">Results Format</a></li>
+                        <li><a href="query_language.html#response_status_codes">Response Status Codes</a></li>
+                    </ul>
+                </li>
                 <li class="list-group-item {% block patent_section_class %}{% endblock %}">
                     <p class="section-name"><a href="patent.html">Patents Query</a></p>
                     <ul class="section-list">
-                        <li><a href="patent.html#query_string_format">Query String Format</a></li>
-                        <li><a href="patent.html#field_list_format">Field List Format</a></li>
-                        <li><a href="patent.html#options_parameter">Options Parameter</a></li>
-                        <li><a href="patent.html#sort_parameter">Sort Parameter</a></li>
-                        <li><a href="patent.html#results_format">Results Format</a></li>
-                        <li><a href="patent.html#response_status_codes">Response Status Codes</a></li>
                         <li><a href="patent.html#field_list">Patent Field List</a></li>
                     </ul>
                 </li>
