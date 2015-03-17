@@ -44,3 +44,11 @@ inventors/query
 {"q":{"inventor_last_name":"Young"},"f":["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]}
 {% endblock %}
 
+{% block section_examples %}
+<ul>
+    <li>
+        <p>Return the first name, last name, and associated patent title of all inventors who had patents granted between 2000 and 2006 where the patent title contains the word "bicycle".</p>
+        <p class="well code"><a href='{{ base_url}}'></a></p>
+    </li>
+</ul>
+{% endblock %}

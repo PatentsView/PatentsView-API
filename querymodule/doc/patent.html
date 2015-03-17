@@ -362,11 +362,11 @@ The following are examples of the kinds of queries that can be performed:
 <ul>
     <li>
         <p>Return all patent numbers and titles after 2006 where the inventor's last name was "Jobs" and the assignee was based in the US.</p>
-        <p class="well code"><a href='http://www.dev.patentsview.org/api/v5/patents/query?q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]'>q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]</a></p>
+        <p class="well code"><a href='{{ base_url }}patents/query?q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]'>q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]</a></p>
     </li>
     <li>
         <p>Return the patent number, processing time, and patent kind for patents granted after 2001 that have the word "international" in the abstract and have a foreign company or corporation assignee.</p>
-        <p class="well code"><a href='http://www.dev.patentsview.org/api/v5/patents/query?q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]'>q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]</a></p>
+        <p class="well code"><a href='{{ base_url }}patents/query?q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]'>q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]</a></p>
     </li>
 </ul>
 
