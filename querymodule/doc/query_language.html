@@ -140,8 +140,8 @@ simple_pair
 
 <ul>
     <li><span class="code">page</span> and <span class="code">per_page</span> &mdash; customize how may patents to return per page and which page.</li>
-    <li><span class="code">coinventors</span> - whether coinventor data should be shown when using inventor fields in the query. Defaults to <span class="code">true</span> if not provided.</li>
-    <li>TBD &mdash; other options, for example other one-to-many relationships like classes, etc.</li>
+    <li><span class="code">matched_subentities_only</span> &mdash; whether a query should return all related subentities or just those that match query criteria. Defaults to <span class="code">"false</span>.</li>
+    <li><span class="code">include_subentity_total_counts</span> &mdash; whether the query results should include the total counts of unique subentities. Defaults to <span class="code">"false"</span>.</li>
 </ul>
 
 <h3><a class="anchor" name="pagination"></a> Pagination</h3>
@@ -211,6 +211,30 @@ simple_pair
 <h3><a class="anchor" name="include_subentity_total_counts"></a>Include Subentity Total Counts</h3>
 
 <p>The <span class="code">include_subentity_total_counts</span> option is provided to indicate whether the query results should include the total counts of unique subentities. By default, these counts are not returned. If <span class="code">true</span>, then there will be a count of unique subentities for those subentities that have at least one field included in the result fields. These will be named, e.g., <span class="code">total_inventor_count</span>, <span class="code">total_assignee_count</span>, etc. </p>
+
+<p>For example, suppose the following patent query is submitted:</p>
+
+<p class="well code">
+q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_last_name"]
+</p>
+
+<p>In addition to the matching patents, he result will include the total number of patents matching the query.</p>
+
+<p class="well code">
+{"patents":[{"patent_number":"pat1","patent_date":"2007-02-20","inventors":[{"inventor_last_name":"Whitney"}],"assignees":[{"assignee_last_name":null}]},...], "count":25,"total_patent_count":314}
+</p>
+
+<p>If we set the <span class="code">include_subentity_total_counts</span> to <span class="code">"true"</span>:
+
+<p class="well code">
+q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_last_name"]&o={"include_subentity_total_counts":"true"}
+</p>
+
+<p>then the output will also include the total numbers of inventors and assignees associated to matching patents.</p>
+
+<p class="well code">
+{"patents":[{"patent_number":"pat1","patent_date":"2007-02-20","inventors":[{"inventor_last_name":"Whitney"}],"assignees":[{"assignee_last_name":null}]},...], "count":25,"total_patent_count":314,"total_inventor_count":696,"total_assignee_count":102}
+</p>
 
 <h2><a class="anchor" name="sort_parameter"></a>Sort Parameter</h2>
 
