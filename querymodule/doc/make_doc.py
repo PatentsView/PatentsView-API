@@ -43,6 +43,14 @@ def make_documentation_html(outdir):
 
     shutil.copy("css/custom.css", os.path.join(outdir, "css"))
 
+    # copy js
+
+    if not os.path.exists(os.path.join(outdir, "js")):
+        os.makedirs(os.path.join(outdir, "js"))
+
+    for filename in glob.glob("js/*.js"):
+        shutil.copy(filename, os.path.join(outdir, "js"))
+
     # copy images
 
     if not os.path.exists(os.path.join(outdir, "img")):
@@ -87,14 +95,17 @@ def make_documentation_html(outdir):
             print(page, file=f)
 
     # other pages
-    for title in ["query_language"]:
+
+    with open("schema/schema.svg") as f:
+        schema_svg = f.read() 
+    for title in ["query_language", "schema"]:
         fname = os.path.join("{}.html".format(title))
         page_tpl = env.get_template(fname)
 
         fname = os.path.join(outdir, "{}.html".format(title))
 
         with open(fname, "w") as f:
-            page = page_tpl.render()
+            page = page_tpl.render(schema_svg=schema_svg)
             print(page, file=f)
 
 
