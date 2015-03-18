@@ -1,0 +1,117 @@
+{% extends "_page.html" %}
+
+{% block introduction_section_class %}section-selected{% endblock %}
+
+{% block body %}
+
+<h1>Introduction</h1>
+
+<h2><a class="anchor" name="overview"></a>PatentsView Overview</h2>
+
+<p>The PatentsView application programming interface (API) provides web developers and researchers programmatic access to longitudinal data and metadata on patents, inventors, companies, and geographic locations. </p>
+
+<p>PatentsView is a prototype patent data visualization and analysis platform intended to increase the value, utility, and transparency of US patent data.  The initiative is supported by the <a href="http://www.uspto.gov/about-us/organizational-offices/office-policy-and-international-affairs/office-chief-economist-6">Office of Chief Economist</a> at the US Patent &amp; Trademark Office (USPTO).</p>
+
+<p>The PatentsView platform is built on a <a href="http://www.sciencedirect.com/science/article/pii/S0048733314000225">newly developed database</a> that longitudinally links inventors, organizations, locations, and patenting activity since 1976. The data visualization tool, query tool, and flexible API enable a broad spectrum of users to examine the dynamics of inventor patenting activity over time and location. They also permit users to explore technology categories, assignees, citation patterns, and co-inventor networks. </p>
+
+<p>PatentsView is intended to encourage the study and enhanced understanding of the intellectual property (IP) and innovation systems; to serve as a fundamental function of the government in creating "public good" platforms in these data; and to eliminate wasteful and redundant cleaning, converting, and matching efforts necessary for individual researchers to use these data, thus freeing up researchers to do what they do best-study IP, innovation, and technological change.</p>
+
+<p>The current PatentsView API is a prototype and the team welcomes <a href="mailto:cssip@air.org">feedback</a> on data discrepancies.	</p>
+
+<h2><a class="anchor" name="database_schema"></a>Database Schema</h2>
+
+<div id="diagram">
+    {{ schema_svg }}
+</div>
+
+<h2><a class="anchor" name="inventor_disambiguation"></a>Inventor Disambiguation</h2>
+
+<p>When an inventor applies for a patent, the USPTO does not require that he or she record a unique identifier.  As a result, searching for all the patents associated with a specific inventor can be difficult. This is particularly true if the inventor's name is common or has multiple forms. The PatentsView tool relies on a <a href="http://cssip.org/docs/publications/inventor_disambiguator_v1.2.pdf">large scale-clustering algorithm</a> (adaptive K-means) to automatically associate patents with the same inventor, a technique known as disambiguation. The algorithm considers statistical correlations on patent attributes (published name, patent technology class, city, his/her co-inventor names, and assignee) to determine whether or not the inventor names belong to the same individual.  Data are fed into the inventor disambiguation algorithm and clusters of inventor names that are determined to be the same individual are assigned a unique ID that is a combination of their first patent number and their inventor sequence in that patent.</p>
+
+<p>Because the disambiguation of inventor identities is an ongoing effort, there are likely to be errors observable in the PatentsView query results. The team welcomes feedback as we continue to improve our disambiguation methodology.</p>
+
+<h2><a class="anchor" name="patent_classes_and_technologies"></a>Patent Classes and Technologies</h2>
+
+<p>Patents are classified by four distinct schemes in the PatentsView database: 1) US patent classification (USPC), 2) cooperative patent classification (CPC), 3) the <a href="http://www.nber.org/papers/w8498.pdf">National Bureau of Economic Research (NBER) technology categories</a>, and 4) International patent classification (IPC).  All USPC, CPC, and NBER patent classes appearing in the API results represent the current patent class, unless otherwise noted.  All IPC patent classes in the Patents View database represent the at-issue patent class.</p>
+
+<h2><a class="anchor" name="glossary"></a>Glossary of Key Terms</h2>
+
+<em>This glossary is provided for the purpose of navigating the PatentsView platform tools and data.  These are not official USPTO definitions of terms.</em>
+
+<p><strong>Application</strong> - An application for a US patent. PatentsView includes all types of US patent applications expect provisional applications.  </p>
+
+<p><strong>Application number</strong> - An application number is the unique number assigned to a patent application by the USPTO when it is filed and includes a two digit series code and a six digit serial number</p>
+
+<p><strong>Assignee</strong> - The name of the entity - company, foundation, partnership, holding company, or individual- that owns the patent or to which the patent rights are assigned.</p>
+
+<p><strong>Cited patent</strong> - A patent that is cited as a reference in another patent application.  The cited patent number will show in the "references cited" section of the patent application.</p>
+
+<p><strong>Citing patent</strong> - A patent that cites a given granted patent or patent application.</p>
+
+<p><strong>Claim</strong> - A description of the invention as defined in the specification of a patent application. A claim defines the invention and the aspects of it that are legally enforceable. </p>
+
+<p><strong>Co-inventor</strong> - For a given inventor, any other inventor listed on the same patent application or granted patent.</p>
+
+<p><strong>Cooperative Patent Classification</strong> - A hierarchical patent classification scheme that is the result of a joint partnership between the USPTO and the European Patent Office (EPO) to harmonize their existing classification systems (ECLA and USPC, respectively) and migrate towards a common classification scheme. </p>
+
+<p><strong>Current Classification</strong> - The most recent USPC classification for a given patent, which is used to determine the most recent NBER category and CPC class.</p>
+
+<p><strong>Design Patent</strong> - Design patents cover a new, original, and ornamental design for an article of manufacture.</p>
+
+<p><strong>Disambiguation</strong> - The process of identifying the same entity (person, organization, etc.) across and between datasets, when there is no common system of entity identifiers.  </p>
+
+<p><strong>Filing Date</strong> - The date a patent application was filed with the USPTO. </p>
+
+<p><strong>First-Named Inventor</strong> - The first inventor listed on a patent application. The first-named inventor is also the assignee (owner) if no assignee is identified on the patent application or granted patent. </p>
+
+<p><strong>Grant Date</strong> - The date a patent was granted or issued by the USPTO. Grant dates are always on Tuesday.</p>
+
+<p><strong>Individual Inventors</strong> - Inventors who "own" their own patents. The first-named inventor is also the assignee if no assignee is identified on the patent application or granted patent.</p>
+
+<p><strong>Inventor</strong> - The creator of the invention for which patent protection is sought.</p>
+
+<p><strong>International Patent Classification (IPC)</strong> - A hierarchical patent classification system published by the World Intellectual Property Organization (WIPO).</p>
+
+<p><strong>Kind</strong> - A code assigned by the USPTO to all patents. The code includes a letter, and in many cases a number, that distinguishes the kind of patent document (e.g., patent application publication, patent, plant patent application publication, plant patent, or design patent) and the level of publication (e.g., first publication, second publication, or corrected publication). (http://www.uspto.gov/learning-and-resources/support-centers/electronic-business-center/kind-codes-included-uspto-patent) </p>
+
+<p><strong>Location, at-issue</strong> - The location for an inventor or assignee as recorded on a patent grant or published application.</p>
+
+<p><strong>Location, most recent</strong> - The location for an inventor or assignees as recorded on the most recent patent associated with that entity in the PatentsView database.  This date is determined by the results of inventor and assignee disambiguation and is the default location setting for both inventors and assignees in the data visualization tool.</p>
+
+<p><strong>NBER Category</strong> - The system of patent technological categories/subcategories classification designed by the National Bureau of Economic Research (NBER) as part of the patent database project (Hall, Jaffe, and Trajtenberg 2002).   USPTO has generated an algorithm to assign current NBER subcategories to all US patents and published applications based on a USPC crosswalk generated by the NBER team in 2006 (Marco et. al. 2015 forthcoming).</p>
+
+<p><strong>At</strong> -Issue or Original Classification - The primary classification assigned to a patent at the time it is granted. This classification is also called the original classification. It appears in bold on the face of a patent.</p>
+
+<p><strong>Patent</strong> - A property right granted by the Government of the United States of America to an inventor "to exclude others from making, using, offering for sale, or selling the invention throughout the United States or importing the invention into the United States" for a limited time in exchange for public disclosure of the invention when the patent is granted.</p>
+
+<p><strong>Patent Processing Time</strong> - The duration between application filing date and patent grant date for an individual patent.</p>
+
+<p><strong>Plant Patent</strong> - Patents granted to an inventor who has invented or discovered and asexually reproduced a distinct and new variety of plant.</p>
+
+<p><strong>Title</strong> - The title of a patent.</p>
+
+<p><strong>Type</strong> - USPTO issues different types of patent documents offering different kinds of protection and covering distinct subject matter.  These are: utility, design, plant, reissue, defensive, and statutory invention registration.</p>
+
+<p><strong>United States Patent Classification System (USPC)</strong> - The patent classification system used by the USPTO to classify and organize applications filed and patents granted in the United States. Every class has a unique alphanumeric identifier. A class/subclass pair uniquely identifies a subclass within a class.</p>
+
+<p><strong>Utility Patent</strong> - Utility patents are issued for the invention of a new, useful, and non-obvious process, machine, manufacture, or composition of matter, or a new, useful, and non-obvious improvement upon an existing process, machine, manufacture, or composition of matter. </p>
+
+<p><strong>USPTO</strong> - The United States Patent and Trademark Office - An Agency in the US Department of Commerce responsible for granting U.S patents and registering trademarks.</p>
+
+<h2><a class="anchor" name="copyright_notice"></a>Copyright Notice</h2>
+
+<p>This work was created through a government contract which assigned copyright to the US Patent and Trademark Office (USPTO). USPTO waives copyright and related rights in the work worldwide through the CC0 1.0 Universal Public Domain Dedication (which can be found at https://creativecommons.org/publicdomain/zero/1.0/).</p>
+{% endblock %}
+
+{% block page_script %}
+<script src="js/svg-pan-zoom.min.js"></script>
+<script>
+$(function() {
+        var dg = svgPanZoom('#diagram svg', {
+            viewportSelector: '#diagram',
+            fit: true,
+            controlIconsEnabled: true
+        });
+});
+</script>
+{% endblock %}

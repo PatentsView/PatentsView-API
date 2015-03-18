@@ -98,7 +98,7 @@ def make_documentation_html(outdir):
 
     with open("schema/schema.svg") as f:
         schema_svg = f.read() 
-    for title in ["query_language", "schema"]:
+    for title in ["doc", "query_language"]:
         fname = os.path.join("{}.html".format(title))
         page_tpl = env.get_template(fname)
 
