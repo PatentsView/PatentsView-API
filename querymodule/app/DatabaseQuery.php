@@ -15,8 +15,8 @@ class DatabaseQuery
 
     private $selectFieldSpecs;
     private $sortFieldsUsed;
-	private $sortFieldsUsedSec;
-	    
+    private $sortFieldsUsedSec;
+
     private $db = null;
     private $errorHandler = null;
 
@@ -42,7 +42,7 @@ class DatabaseQuery
         $perPage = 25;
         $this->sortFieldsUsed = array();
         $this->sortFieldsUsedSec = array();
-        $this->entitySpecificWhereClauses = $entitySpecificWhereClauses;
+	$this->entitySpecificWhereClauses = $entitySpecificWhereClauses;
 
         $this->entitySpecs = $entitySpecs;
         $this->fieldSpecs = $fieldSpecs;
@@ -102,7 +102,7 @@ class DatabaseQuery
                 		if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = "";
                 		if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
                 		$fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
-                		$this->runInsertSelect($insertStatement,
+				$this->runInsertSelect($insertStatement,
                     		$selectPrimaryEntityIdsString,
                     		'(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
                     		$fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
@@ -130,6 +130,30 @@ class DatabaseQuery
         $fromEntity = $this->supportDatabase . '.QueryResults qr';
         $whereEntity = "qr.QueryDefId=$queryDefId";
         $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
+	
+	if (intval($countResults[0]['total_found']) == 100000) {
+			if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = "";
+                	if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';	
+			$fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs			[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);	
+		
+			$countResQuery = 'SELECT count(distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . 					') as total_found FROM ' . $fromInsert . ' ' . $whereInsert . $sortInsert . ' limit 10000000 ';
+		
+                		
+			$this->connectToDB();
+
+		        $this->errorHandler->getLogger()->debug($countResQuery);
+	
+			try {
+		            $st = $this->db->query("$countResQuery", PDO::FETCH_ASSOC);
+		            $countResults = $st->fetchAll();
+		            $st->closeCursor();
+		        }
+		        catch (Exception $e) {
+		            $this->errorHandler->sendError(500, "Query execution failed.", $e);
+		            throw new $e;
+		        }
+
+	}
         $this->entityTotalCounts[$entitySpecs[0]['entity_name']] = intval($countResults[0]['total_found']);
 
 
@@ -236,7 +260,7 @@ class DatabaseQuery
         $sqlStatement = "INSERT INTO $insert";
         $this->errorHandler->getLogger()->debug($sqlStatement);
         $this->errorHandler->getLogger()->debug($params);
-	
+
 	$counto = 0;
 	$maxTriesy = 3;
 	do {
