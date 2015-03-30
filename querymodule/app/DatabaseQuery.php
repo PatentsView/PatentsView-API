@@ -20,7 +20,7 @@ class DatabaseQuery
     private $db = null;
     private $errorHandler = null;
 
-    private $matchedSubentitiesOnly = true;
+    private $matchedSubentitiesOnly = false;
     private $include_subentity_total_counts = false;
 
     private $supportDatabase = "";
@@ -32,7 +32,7 @@ class DatabaseQuery
 
     public function queryDatabase(array $entitySpecs, array $fieldSpecs, $whereClause, array $whereFieldsUsed, array $entitySpecificWhereClauses, $onlyAndsWereUsed, array $selectFieldSpecs, array $sortParam=null, array $options=null)
     {
-        global $config;
+	global $config;
         $dbSettings = $config->getDbSettings();
         $this->supportDatabase = $dbSettings['supportDatabase'];
 
@@ -43,11 +43,12 @@ class DatabaseQuery
         $this->sortFieldsUsed = array();
         $this->sortFieldsUsedSec = array();
 	$this->entitySpecificWhereClauses = $entitySpecificWhereClauses;
-
+	
         $this->entitySpecs = $entitySpecs;
         $this->fieldSpecs = $fieldSpecs;
         $this->setupGroupVars();
-
+	$this->whereFieldsUsed = $whereFieldsUsed;
+	
         if ($options != null) {
             if (array_key_exists('page', $options)) {
                 $page = $options['page'];
@@ -58,13 +59,13 @@ class DatabaseQuery
                 else
                     $perPage = $options['per_page'];
             if (array_key_exists('matched_subentities_only', $options)) {
-                $this->matchedSubentitiesOnly = strtolower($options['matched_subentities_only']) === 'true';
+                $this->matchedSubentitiesOnly = strtolower($options['matched_subentities_only']);
                 # When the matched_subentities_only option is used, we need to check that all the criteria were 'and'ed together
 //                if ($this->matchedSubentitiesOnly && !$onlyAndsWereUsed)
 //                    $this->errorHandler->sendError(400, "When using the 'matched_subentities_only' option, the query criteria cannot contain any 'or's.", $options);
             }
             if (array_key_exists('include_subentity_total_counts', $options)) {
-                $this->include_subentity_total_counts = strtolower($options['include_subentity_total_counts']) === 'true';
+                $this->include_subentity_total_counts = strtolower($options['include_subentity_total_counts']);
             }
         }
 
@@ -102,6 +103,7 @@ class DatabaseQuery
                 		if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = "";
                 		if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
                 		$fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
+				$this->fromSubEntity = $fromInsert;
 				$this->runInsertSelect($insertStatement,
                     		$selectPrimaryEntityIdsString,
                     		'(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
@@ -169,8 +171,10 @@ class DatabaseQuery
         $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortEntity);
         $results[$this->entitySpecs[0]['group_name']] = $entityResults;
 	unset($entityResults);
-	
-        // Loop through the subentities and get them.
+
+	$fromSubEntity = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
+
+	// Loop through the subentities and get them.
         foreach (array_slice($this->entitySpecs,1) as $entitySpec) {
             $tempSelect = $this->buildSelectStringForEntity($entitySpec);
 	    if ($tempSelect != '') { // If there aren't any fields to get back, then skip the group.
@@ -182,9 +186,12 @@ class DatabaseQuery
                 $whereEntity = "qr.QueryDefId=$queryDefId";
                 if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
-                if ($this->matchedSubentitiesOnly && array_key_exists($entitySpec['entity_name'], $this->entitySpecificWhereClauses) && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '')
-                    $whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
-		
+                if ($this->matchedSubentitiesOnly && array_key_exists($entitySpec['entity_name'], $this->entitySpecificWhereClauses) && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '') {
+                        //$whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
+			$whereEntity .= ' and ' .$whereClause;
+			$fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
+			$fromEntity = $fromSubEntity;
+		}
 		if (array_key_exists($entitySpec['group_name'],$this->sortFieldsUsedSec)) {
 			$sortStringSec = implode(',',$this->sortFieldsUsedSec[$entitySpec['group_name']]);
 			$entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortStringSec);
@@ -217,7 +224,7 @@ class DatabaseQuery
         if (strlen($order) > 0) $order = "ORDER BY $order";
         $sqlQuery = "SELECT $select FROM $from $where $order";
         $this->errorHandler->getLogger()->debug($sqlQuery);
-	
+
 	try {
             $st = $this->db->query("$sqlQuery", PDO::FETCH_ASSOC);
             $results = $st->fetchAll();
@@ -239,8 +246,8 @@ class DatabaseQuery
         if (strlen($order) > 0) $order = "ORDER BY $order";
         $sqlQuery = "INSERT INTO $insert SELECT $select FROM $from $where $order";
         $this->errorHandler->getLogger()->debug($sqlQuery);
-
-        try {
+	
+	try {
             $st = $this->db->prepare($sqlQuery);
             $results = $st->execute();
             $st->closeCursor();
@@ -331,16 +338,14 @@ class DatabaseQuery
 
     private function buildSelectStringForEntity($entitySpec)
     {
-        $selectString = '';
-
-        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
-            if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
-                if ($selectString != '')
+	$selectString = '';
+	foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
+	    if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
+		if ($selectString != '')
                     $selectString .= ', ';
                 $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
             }
         }
-
         return $selectString;
     }
 
