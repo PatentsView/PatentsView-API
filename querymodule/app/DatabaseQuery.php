@@ -58,13 +58,13 @@ class DatabaseQuery
                     $this->errorHandler->sendError(400, "Per_page must be a positive number not to exceed " . $config->getMaxPageSize() . ".", $options);
                 else
                     $perPage = $options['per_page'];
-            if (array_key_exists('matched_subentities_only', $options)) {
-                $this->matchedSubentitiesOnly = strtolower($options['matched_subentities_only']);
+            if (array_key_exists('matched_subentities_only', $options) && strtolower($options['matched_subentities_only']) != "false") {
+        	$this->matchedSubentitiesOnly = strtolower($options['matched_subentities_only']);
                 # When the matched_subentities_only option is used, we need to check that all the criteria were 'and'ed together
 //                if ($this->matchedSubentitiesOnly && !$onlyAndsWereUsed)
 //                    $this->errorHandler->sendError(400, "When using the 'matched_subentities_only' option, the query criteria cannot contain any 'or's.", $options);
             }
-            if (array_key_exists('include_subentity_total_counts', $options)) {
+            if (array_key_exists('include_subentity_total_counts', $options) && strtolower($options['include_subentity_total_counts']) != "false") {
                 $this->include_subentity_total_counts = strtolower($options['include_subentity_total_counts']);
             }
         }
