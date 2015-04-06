@@ -173,6 +173,7 @@ class DatabaseQuery
 	unset($entityResults);
 
 	$fromSubEntity = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
+	$fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
 
 	// Loop through the subentities and get them.
         foreach (array_slice($this->entitySpecs,1) as $entitySpec) {
@@ -189,7 +190,6 @@ class DatabaseQuery
                 if ($this->matchedSubentitiesOnly && array_key_exists($entitySpec['entity_name'], $this->entitySpecificWhereClauses) && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '') {
                         //$whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
 			$whereEntity .= ' and ' .$whereClause;
-			$fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
 			$fromEntity = $fromSubEntity;
 		}
 		if (array_key_exists($entitySpec['group_name'],$this->sortFieldsUsedSec)) {
@@ -224,7 +224,7 @@ class DatabaseQuery
         if (strlen($order) > 0) $order = "ORDER BY $order";
         $sqlQuery = "SELECT $select FROM $from $where $order";
         $this->errorHandler->getLogger()->debug($sqlQuery);
-
+	
 	try {
             $st = $this->db->query("$sqlQuery", PDO::FETCH_ASSOC);
             $results = $st->fetchAll();
@@ -246,7 +246,7 @@ class DatabaseQuery
         if (strlen($order) > 0) $order = "ORDER BY $order";
         $sqlQuery = "INSERT INTO $insert SELECT $select FROM $from $where $order";
         $this->errorHandler->getLogger()->debug($sqlQuery);
-	
+
 	try {
             $st = $this->db->prepare($sqlQuery);
             $results = $st->execute();
