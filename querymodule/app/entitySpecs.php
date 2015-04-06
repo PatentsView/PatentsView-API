@@ -1115,6 +1115,7 @@ $LOCATION_FIELD_SPECS = array
     'uspc_mainclass_id' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.mainclass_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'uspc_mainclass_title' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.mainclass_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'uspc_num_patents_for_location' => array('entity_name'=>'uspc', 'column_name' => 'location_uspc_mainclass.num_patents', 'datatype' => 'int', 'query' => 'n', 'sort' => 'suppl'),
+	'uspc_sequence' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.sequence', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'uspc_subclass_id' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.subclass_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'uspc_subclass_title' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current.subclass_title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'uspc_total_num_assignees' => array('entity_name'=>'uspc', 'column_name' => 'uspc_current_mainclass.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
