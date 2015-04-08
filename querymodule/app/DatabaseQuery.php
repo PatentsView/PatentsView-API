@@ -189,7 +189,7 @@ class DatabaseQuery
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
                 if ($this->matchedSubentitiesOnly && array_key_exists($entitySpec['entity_name'], $this->entitySpecificWhereClauses) && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '') {
                         //$whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
-			$whereEntity .= ' and ' .$whereClause;
+			$whereEntity .= ' and ' . $whereClause;
 			$fromEntity = $fromSubEntity;
 		}
 		if (array_key_exists($entitySpec['group_name'],$this->sortFieldsUsedSec)) {
@@ -204,10 +204,12 @@ class DatabaseQuery
                 if ($this->include_subentity_total_counts) {
                     // Count of all subentities for all primary entities.
                     $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
-		    $fromEntity = $fromSubEntity;
-                    $whereEntity = "qr.QueryDefId=$queryDefId";
-		$whereEntity .= ' and ' . $whereClause;
-                    $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
+		$fromEntity = $this->entitySpecs[0]['join'] .
+                        ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
+                    $fromEntity .= ' ' . $entitySpec['join'];
+                   $whereEntity = "qr.QueryDefId=$queryDefId";
+		    $whereEntity .= ' and ' . $whereClause;
+		    $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
                     $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
                 }
             }
@@ -230,7 +232,7 @@ class DatabaseQuery
             $st->closeCursor();
         }
         catch (Exception $e) {
-            $this->errorHandler->sendError(500, "Query execution failed.", $e);
+            $this->errorHandler->sendError(500, "Query execution failed.", $sqlQuery);
             throw new $e;
         }
 
