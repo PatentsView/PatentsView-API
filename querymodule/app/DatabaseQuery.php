@@ -204,10 +204,9 @@ class DatabaseQuery
                 if ($this->include_subentity_total_counts) {
                     // Count of all subentities for all primary entities.
                     $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
-                    $fromEntity = $this->entitySpecs[0]['join'] .
-                        ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
-                    $fromEntity .= ' ' . $entitySpec['join'];
+		    $fromEntity = $fromSubEntity;
                     $whereEntity = "qr.QueryDefId=$queryDefId";
+		$whereEntity .= ' and ' . $whereClause;
                     $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
                     $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
                 }
