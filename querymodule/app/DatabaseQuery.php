@@ -174,6 +174,14 @@ class DatabaseQuery
 
 	$fromSubEntity = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
 	$fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
+	
+	$allFieldsUsed = array_merge($whereFieldsUsed, array_keys(array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']])), $this->sortFieldsUsed);
+        $allFieldsUsed = array_unique($allFieldsUsed);
+	$groupsCheckTotalCount = array();
+	foreach ($allFieldsUsed as $fieldUsed) {
+		$groupsCheckTotalCount[] = $this->fieldSpecs[$fieldUsed]['entity_name'];
+	}
+	$groupsCheckTotalCount = array_unique($groupsCheckTotalCount);
 
 	// Loop through the subentities and get them.
         foreach (array_slice($this->entitySpecs,1) as $entitySpec) {
@@ -204,10 +212,14 @@ class DatabaseQuery
                 if ($this->include_subentity_total_counts) {
                     // Count of all subentities for all primary entities.
                     $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
-		$fromEntity = $this->entitySpecs[0]['join'] .
+		
+//		$fromEntity = $this->entitySpecs[0]['join'] .
                         ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
-                    $fromEntity .= ' ' . $entitySpec['join'];
-                   $whereEntity = "qr.QueryDefId=$queryDefId";
+                    $fromEntity = $fromSubEntity;
+		if (!in_array($entitySpec['entity_name'],$groupsCheckTotalCount)) {					
+			$fromEntity .= ' ' . $entitySpec['join'];
+			}
+		   $whereEntity = "qr.QueryDefId=$queryDefId";
 		    $whereEntity .= ' and ' . $whereClause;
 		    $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
                     $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
@@ -232,7 +244,7 @@ class DatabaseQuery
             $st->closeCursor();
         }
         catch (Exception $e) {
-            $this->errorHandler->sendError(500, "Query execution failed.", $sqlQuery);
+            $this->errorHandler->sendError(500, "Query execution failed.", $e);
             throw new $e;
         }
 
