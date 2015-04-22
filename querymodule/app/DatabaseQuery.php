@@ -135,11 +135,10 @@ class DatabaseQuery
 	
 	if (intval($countResults[0]['total_found']) == 100000) {
 			if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = "";
-                	if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';	
+                	//if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';	
 			$fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs			[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);	
 		
-			$countResQuery = 'SELECT count(distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . 					') as total_found FROM ' . $fromInsert . ' ' . $whereInsert . $sortInsert . ' limit 10000000 ';
-		
+			$countResQuery = 'SELECT count(distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . 					') as total_found FROM ' . $fromInsert . ' ' . $whereInsert . ' ';
                 		
 			$this->connectToDB();
 
