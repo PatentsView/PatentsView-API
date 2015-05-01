@@ -49,11 +49,11 @@ assignees/query
 <ul>
     <li>
         <p>Return the default fields for assignees on patents with a patent type of "utility", granted between 1999 and 2001, and whose title contains the word "Software".</p>
-        <p class="well code"><a href='{{ base_url }}assignees/query?q={"_and":[{"patent_type":"utility"},{"_text_any":{"patent_title":"Software"}}, {"_gte":{"patent_date":"1999-01-01"}},{"_lte":{"patent_date":"2001-12-31"}}]}'>q={"_and":[{"patent_type":"utility"},{"_text_any":{"patent_title":"Software"}}, {"_gte":{"patent_date":"1999-01-01"}},{"_lte":{"patent_date":"2001-12-31"}}]}</a></p> 
+        <p class="well code"><a href='{{ base_url }}assignees/query?q={"_and":[{"patent_type":"utility"},{"_text_any":{"patent_title":"Software"}}, {"_gte":{"patent_date":"1999-01-01"}},{"_lte":{"patent_date":"2001-12-31"}}]}'>{{ base_url }}assignees/query?q={"_and":[{"patent_type":"utility"},{"_text_any":{"patent_title":"Software"}}, {"_gte":{"patent_date":"1999-01-01"}},{"_lte":{"patent_date":"2001-12-31"}}]}</a></p> 
     </li>
     <li>
         <p>Return the assignee types of all patents in NBER subcategory 22.</p>
-        <p class="well code"><a href='{{ base_url }}assignees/query?q={"_eq":{"nber_subcategory_id":"22"}}&f=["assignee_type"]'>q={"nber_subcategory_id":"22"}&f=["assignee_type"]</a></p>
+        <p class="well code"><a href='{{ base_url }}assignees/query?q={"_eq":{"nber_subcategory_id":"22"}}&f=["assignee_type"]'>{{ base_url }}assignees/query?q={"nber_subcategory_id":"22"}&f=["assignee_type"]</a></p>
     </li>
 </ul>
 {% endblock %}

@@ -48,7 +48,7 @@ uspc_mainclasses/query
 <ul>
     <li>
     <p>Return inventor names for patents whose assignee organization contains the word "Census", whose grant date is between 2000 and 2010, and whose USPC mainclass title contains the word "Electricity".</p>
-    <p class="well code"><a href='{{ base_url }}uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]'>q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]</a></p>
+    <p class="well code"><a href='{{ base_url }}uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]'>{{ base_url }}uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]</a></p>
     </li>
 </ul>
 {% endblock %}

@@ -105,7 +105,7 @@ def make_documentation_html(outdir):
         fname = os.path.join(outdir, "{}.html".format(title))
 
         with open(fname, "w") as f:
-            page = page_tpl.render(schema_svg=schema_svg)
+            page = page_tpl.render(schema_svg=schema_svg, base_url=BASE_URL)
             print(page, file=f)
 
 

@@ -46,13 +46,13 @@ simple_pair
 
 <p>The basic criterion, which checks for equality, has the format: <span class="code">{&lt;field&gt;:&lt;value&gt;}</span>, where <span class="code">&lt;field&gt;</span> is the name of a database field and <span class="code">&lt;value&gt;</span> is the value the field will be compared to for equality (see &ldquo;<a href="">Field List</a>&rdquo; for a list of fields and their value data types). For example, this query string will return the patent with the patent number of 7861317: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"patent_number":7861317}'></a></p>
 
-<p class="well code">q={"patent_number":"7861317"}</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"patent_number":"7861317"}'>{{ base_url }}patents/query?q={"patent_number":"7861317"}</a></p>
 
 <h3><a class="anchor" name="joining_criteria"></a>Joining Criteria</h3>
 
 <p>Multiple criteria can be added to a query using a join operator (<span class="code">_and</span>, <span class="code">_or</span>) and putting the criteria in an array using square brackets (&ldquo;<span class="code">[</span>&rdquo; and &ldquo;<span class="code">]</span>&rdquo;). The following has multiple criteria, and will return patents that have &ldquo;Whitney&rdquo; as an inventor and a grant date of January 4, 2007: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json=={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}'></a></p>
 
-<p class="well code">q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}'>{{ base_url }}patents/query?q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}</a></p>
 
 <h3><a class="anchor" name="comparison_operators"></a> Comparison Operators</h3>
 
@@ -86,7 +86,7 @@ simple_pair
 
 <p>To specify a comparison operator for a criterion, nest the element containing the criterion inside an element that uses the comparison operator. For example, this query string will return all patents that have a grant date on or after January 4, 2007: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_gte":{"patent_date":"2007-01-04"}}'></a></p>
 
-<p class="well code">q={"_gte":{"patent_date":"2007-01-04"}}</code></p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_gte":{"patent_date":"2007-01-04"}}'>{{ base_url }}patents/query?q={"_gte":{"patent_date":"2007-01-04"}}</a></p>
 
 <p>Note that <span class="code">q={"_eq":{"patent_date":"2007-01-04"}}</span> <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_eq":{"patent_date":"2007-01-04"}}'></a> is functionally equivalent to <span class="code">q={"patent_date":"2007-01-04"}</span> <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"patent_date":"2007-01-04"}'></a>.</p>
 
@@ -94,13 +94,13 @@ simple_pair
 
 <p>Negation does the opposite of the specified comparison. To specify the negation operator for a criterion, nest the element containing the criterion inside an element that uses the negation operator: <span class="code">_not</span>. For example, this query string will return all patents that are not design patents: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_not":{"patent_type":"design"}}'></a></p>
 
-<p class="well code">q={"_not":{"patent_type":"design"}}</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_not":{"patent_type":"design"}}'>{{ base_url }}patents/query?q={"_not":{"patent_type":"design"}}</a></p>
 
 <h3><a class="anchor" name="value_arrays"></a> Value Arrays</h3>
 
 <p>If the value of a criterion is an array, then the query will accept a match of any one of the array values. For example, this query will return all patents that have &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; as an inventor: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"inventor_last_name":["Whitney","Hopper"]}'></a></p>
 
-<p class="well code">q={"inventor_last_name":["Whitney","Hopper"]}</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"inventor_last_name":["Whitney","Hopper"]}'>{{ base_url }}patents/query?q={"inventor_last_name":["Whitney","Hopper"]}</a></p>
 
 <p>Note that this is functionally equivalent to: <span class="code">q={"_or":[{"inventor_last_name":"Whitney"},{"inventor_last_name":"Hopper"}]}</span> <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_or":[{"inventor_last_name":"Whitney"},{"inventor_last_name":"Hopper"}]}'></a></p>
 
@@ -110,19 +110,19 @@ simple_pair
 
 <p>Patents with a grant date in 2007: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}'></a></p>
 
-<p class="well code">q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}'>{{ base_url }}patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}</a></p>
 
 <p>Patents with an inventor with the last name of &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; and not a design patent and with a grant date in 2007: <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}"></a></p>
 
-<p class="well code">q={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}'>{{ base_url }}patents/query?q={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}</a></p>
 
 <p>Patents with an inventor with the last name of &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; or with a title that contains &ldquo;cotton&rdquo; or &ldquo;gin&rdquo; or &ldquo;COBOL&rdquo;: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_or":[{"name_last":["Whitney","Hopper"]},{"_contains":{"title":"cotton%20gin"}},{"_contains":{"title":"COBOL"}}]}'></a><p>
 
-<p class="well code">q={"_or":[{"inventor_last_name":["Whitney","Hopper"]},{"_text_any":{"patent_title":"COBOL cotton gin"}}]}</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_or":[{"inventor_last_name":["Whitney","Hopper"]},{"_text_any":{"patent_title":"COBOL cotton gin"}}]}'>{{ base_url }}patents/query?q={"_or":[{"inventor_last_name":["Whitney","Hopper"]},{"_text_any":{"patent_title":"COBOL cotton gin"}}]}</a></p>
 
 <p>Patents with an inventor with the last name of &ldquo;Whitney&rdquo; and with &ldquo;cotton gin&rdquo; in the title, or with an inventor with the last name of &ldquo;Hopper&rdquo; and with &ldquo;COBOL&rdquo; in the title: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json=={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton%20gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}'></a></p>
 
-<p class="well code">q={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}'>{{ base_url }}patents/query?q={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}</a></p>
 
 <h3><a class="anchor" name="formats"></a>Formats</h3>
 
@@ -156,7 +156,7 @@ simple_pair
 
 <h3><a class="anchor" name="matched_subentities_only"></a>Matched Subentities Only</h3>
 
-<p>The <span class="code">matched_subentities_only</span> option is provided to indicate whether only those subentities that match their subentity-specific criteria should be included in the results. By default, only those subentities that match their respective query criteria will be included for each parent entity.</p>
+<p>The <span class="code">matched_subentities_only</span> option is provided to indicate whether only those subentities that match all query criteria should be included in the results. By default, this option is set to false and any query returns all subentity data associated with the primary entity for this query regardless of the query parameters.</p>
 
 <p>Consider this example. Assume the database only has the following content:</p>
 
@@ -194,7 +194,7 @@ simple_pair
 
 <p>This query: <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}"></a></p>
 
-<p class="well code">q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]'>{{ base_url }}patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</a></p>
 
 <p>Produces results that include only patents that have a grant date on or after January 4, 2007 and an inventor with the last name "Whitney": <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Whitney"}]}],"count":1,"total_patent_count":1}'></a></p>
 
@@ -202,7 +202,7 @@ simple_pair
 
 <p>However, if the query includes <span class="code">{"matched_subentities_only": false}</code>, the results will include all patents granted on or after January 4, 2007 whether the inventor's last name is "Whitney" or not: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}'></a></p>
 
-<p class="well code">q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":false}</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":false}'>{{ base_url }}patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":false}</a></p>
 
 <p>the results would include subentity (i.e. inventor) data: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"patents":[{"patent_number":"pat1","patent_date":"2007-01-27","inventors":[{"inventor_last_name":"Hopper"},{"inventor_last_name":"Whitney"},{"inventor_last_name":"Carrier"}]}],"count":1,"total_patent_count":1}'></a></p>
 
@@ -214,11 +214,9 @@ simple_pair
 
 <p>For example, suppose the following patent query is submitted:</p>
 
-<p class="well code">
-q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_last_name"]
-</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_last_name"]'>{{base_url }}patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_last_name"]</a></p>
 
-<p>In addition to the matching patents, he result will include the total number of patents matching the query.</p>
+<p>In addition to the matching patents, the result will include the total number of patents matching the query.</p>
 
 <p class="well code">
 {"patents":[{"patent_number":"pat1","patent_date":"2007-02-20","inventors":[{"inventor_last_name":"Whitney"}],"assignees":[{"assignee_last_name":null}]},...], "count":25,"total_patent_count":314}
@@ -226,9 +224,7 @@ q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"
 
 <p>If we set the <span class="code">include_subentity_total_counts</span> to <span class="code">"true"</span>:
 
-<p class="well code">
-q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_last_name"]&o={"include_subentity_total_counts":"true"}
-</p>
+<p class="well code"><a href='{{ base_url }}patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_last_name"]&o={"include_subentity_total_counts":"true"}'>{{ base_url }}patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_last_name"]&o={"include_subentity_total_counts":"true"}</a></p>
 
 <p>then the output will also include the total numbers of inventors and assignees associated to matching patents.</p>
 
