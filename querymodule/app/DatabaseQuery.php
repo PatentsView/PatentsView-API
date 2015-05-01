@@ -133,29 +133,7 @@ class DatabaseQuery
         $whereEntity = "qr.QueryDefId=$queryDefId";
         $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
 	
-	if (intval($countResults[0]['total_found']) == 100000) {
-			if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = "";
-                	//if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';	
-			$fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs			[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);	
-		
-			$countResQuery = 'SELECT count(distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . 					') as total_found FROM ' . $fromInsert . ' ' . $whereInsert . ' ';
-                		
-			$this->connectToDB();
-
-		        $this->errorHandler->getLogger()->debug($countResQuery);
-	
-			try {
-		            $st = $this->db->query("$countResQuery", PDO::FETCH_ASSOC);
-		            $countResults = $st->fetchAll();
-		            $st->closeCursor();
-		        }
-		        catch (Exception $e) {
-		            $this->errorHandler->sendError(500, "Query execution failed.", $e);
-		            throw new $e;
-		        }
-
-	}
-        $this->entityTotalCounts[$entitySpecs[0]['entity_name']] = intval($countResults[0]['total_found']);
+	$this->entityTotalCounts[$entitySpecs[0]['entity_name']] = intval($countResults[0]['total_found']);
 
 
         // Get the primary entities
@@ -211,9 +189,6 @@ class DatabaseQuery
                 if ($this->include_subentity_total_counts) {
                     // Count of all subentities for all primary entities.
                     $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
-		
-//		$fromEntity = $this->entitySpecs[0]['join'] .
-                        ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
                     $fromEntity = $fromSubEntity;
 		if (!in_array($entitySpec['entity_name'],$groupsCheckTotalCount)) {					
 			$fromEntity .= ' ' . $entitySpec['join'];
