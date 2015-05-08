@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PatentsView Query Modle API</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body role="document">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="logo"><a href="doc.html" title="PatentsView - USPTO"><img alt="PatentsView Logo" src="img/logo.png" /></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" role="main">
+        <div class="col-md-3">
+            <ul class="list-group" id="contents">
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="doc.html">Introduction</a></p>
+                    <ul class="section-list">
+                        <li><a href="doc.html#overview">PatentsView Overview</a></li>
+                        <li><a href="doc.html#database_schema">Database Schema</a></li>
+                        <li><a href="doc.html#inventor_disambiguation">Inventor Disambiguation</a></li>
+                        <li><a href="doc.html#patent_classes_and_technologies">Patent Classes and Technologies</a></li>
+                        <li><a href="doc.html#glossary">Glossary of Key Terms</a></li>
+                        <li><a href="doc.html#copyright_notice">Copyright Notice</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="query_language.html">Query Language</a></p>
+                    <ul class="section-list">
+                        <li><a href="query_language.html#query_string_format">Query String Format</a></li>
+                        <li><a href="query_language.html#field_list_format">Field List Format</a></li>
+                        <li><a href="query_language.html#options_parameter">Options Parameter</a></li>
+                        <li><a href="query_language.html#sort_parameter">Sort Parameter</a></li>
+                        <li><a href="query_language.html#results_format">Results Format</a></li>
+                        <li><a href="query_language.html#response_status_codes">Response Status Codes</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="patent.html">Patents Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="patent.html#field_list">Patent Field List</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item section-selected">
+                    <p class="section-name"><a href="inventor.html">Inventors Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="inventor.html#field_list">Inventor Field List</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="assignee.html">Assignees Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="assignee.html#field_list">Assignee Field List</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="location.html">Locations Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="location.html#field_list">Location Field List</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="cpc_subsection.html">CPC Subsections Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="cpc_subsection.html#field_list">CPC Subsection Field List</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="uspc.html">USPC Mainclasses Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="uspc.html#field_list">USPC Mainclass Field List</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="nber_subcat.html">NBER Subcategories Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="nber_subcat.html#field_list">NBER Subcategory Field List</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div id="documentation">
+
+<h1>Inventors Query</h1>
+
+<p class="code">
+    <strong>GET</strong> /api/inventors/query?q{,f,o,s}<br/>
+    <strong>POST</strong> /api/inventors/query</p>
+
+<p>This will search for inventors matching the query string (<span class="code">q</span>) and returning the data fields listed in the field string (<span class="code">f</span>) sorted by the fields in the sort string (<span class="code">s</span>) using options provided in the option string (<span class="code">o</span>).</p>
+
+<p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
+
+<table class="table table-striped documentation-parameters">
+    <thead>
+        <tr>
+            <th class="col-md-1">Name</th>
+            <th class="col-md-6">Description</th>
+            <th class="col-md-5">Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="code">q</td>
+            <td>JSON formatted object containing the query parameters. See below for details on formatting this object.</td>
+            <td>string, required <br/> <strong>example:</strong> <span class="code">{"inventor_last_name": "Whitney"}
+</span></td>
+        </tr>
+        <tr>
+            <td class="code">f</td>
+            <td>JSON formatted array of fields to include in the results. If not provided, defaults to <span class="code">inventor_id</span>, <span class="code">inventor_first_name</span>, and <span class="code">inventor_last_name</span>
+.</td>
+            <td>string, optional <br/> <strong>example:</strong> <span class="code">["patent_number", "date"]
+</span></td>
+        </tr>
+        <tr>
+            <td class="code">s</td>
+            <td>JSON formatted array of objects to sort the results. If not provided, defaults to <span class="code">inventor_key_id
+</span>.</td>
+            <td>string, optional <br/> <strong>example:</strong> <span class="code">[{"inventor_last_name":"desc"}]
+</span></td>
+        </tr>
+        <tr>
+            <td class="code">o</td>
+            <td>
+                <p>JSON formatted object of options to modify the query or results. Available options are:</p>
+                <p><span class="code">matched_subentities_only</span> &mdash; Only subentity data that matches the subentity specific criteria is included in results. Defaults to true.</p>
+                <p><span class="code">include_subentity_total_counts</span> &mdash; Total counts of unique subentities included in results. Defaults to false.</p>
+                <p><span class="code">page</span> &mdash; return only the Nth page of results. Defaults to 1.</p>
+                <p><span class="code">per_page</span> &mdash; Size of each page of results. Defaults to 25.</p>
+            </td>
+            <td>string, optional <br/> <strong>example:</strong> <span class="code">o={"matched_subentities_only": "true", "page": 2, "per_page": 50, "include_subentity_total_counts": "false"}</span></td>
+        </tr>
+        <tr>
+            <td class="code">format</td>
+            <td>
+                <p>Specifies the response data format. If not provided, defaults to JSON. Available options are:</p>
+                <p><span class="code">json</span></p>
+                <p><span class="code">xml</span></p>
+            </td>
+            <td>string, optional <br/> <strong>example:</strong> <span class="code">format=xml</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<p>An example of a complete API call using the GET verb is:</p>
+
+<p class="well code"><a href='http://www.dev.patentsview.org/api/inventors/query?q={"inventor_last_name":"Young"}&f=["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]
+'>http://www.dev.patentsview.org/api/inventors/query?q={"inventor_last_name":"Young"}&f=["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]
+</a></p>
+
+<p>An example of the equivalent API call using the POST verb is:</p>
+
+<p class="well code">http://www.dev.patentsview.org/api/inventors/query
+</p>
+
+<p>with the body containing:</p>
+
+<p class="well code">{"q":{"inventor_last_name":"Young"},"f":["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]}
+</p>
+
+<h2><a class="anchor"></a>Examples</h2>
+
+<ul>
+    <li>
+        <p>Return the first name, last name, and associated patent title of all inventors who had patents granted between 2000 and 2006 where the patent title contains the word "bicycle".</p>
+        <p class="well code"><a href='http://www.dev.patentsview.org/api/inventors/query?q={"_and":[{"_gte":{"patent_date":"2000-01-01"}},{"_lt":{"patent_date":"2007-01-01"}},{"_text_any":{"patent_title":"bicycle"}}]}&f=["inventor_first_name","inventor_last_name"]'>q={"_and":[{"_gte":{"patent_date":"2000-01-01"}},{"_lt":{"patent_date":"2007-01-01"}},{"_text_any":{"patent_title":"bicycle"}}]}&f=["inventor_first_name","inventor_last_name"]</a></p>
+    </li>
+    <li>
+        <p>Return the last known location of inventors with patents in NBER subcategory 25.</p>
+        <p class="well code"><a href='http://www.dev.patentsview.org/api/inventors/query?q={"nber_subcategory_id":25}&f=["inventor_lastknown_city","inventor_lastknown_state"]'>q={"nber_subcategory_id":25}&f=["inventor_lastknown_city","inventor_lastknown_state"]</a></p>
+    </li>
+    <li>
+    <p>Return the organization names of assigness linked to inventors whose last known location was the city of Washington, D.C.</p>
+    <p class="well code"><a href='http://www.dev.patentsview.org/api/inventors/query?q={"_and":[{"inventor_lastknown_city":"Washington"},{"inventor_lastknown_state":"D.C."}]}&f=["assignee_organization"]'>q={"_and":[{"inventor_lastknown_city":"Washington"},{"inventor_lastknown_state":"D.C."}]}&f=["assignee_organization"]</a></p>
+    </li>
+</ul>
+
+<h2><a class="anchor" name="field_list"></a>Inventor Field List</h2>
+
+<table class="table table-striped documentation-fieldlist">
+    <tr>
+        <th>API Field Name</th>
+        <th>Group</th>
+        <th>Common Name</th>
+        <th>Type</th>
+        <th>Query</th>
+        <th>Description</th>
+    </tr>
+
+    <tr>
+        <td>app_country</td>
+        <td>applications</td>
+        <td>Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Country in which patent application was filed, always U.S.</td>
+    </tr>
+    <tr>
+        <td>app_date</td>
+        <td>applications</td>
+        <td>Filing Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Date the patent application was filed (filing date)</td>
+    </tr>
+    <tr>
+        <td>app_number</td>
+        <td>applications</td>
+        <td>Number</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Application ID assigned by USPTO</td>
+    </tr>
+    <tr>
+        <td>app_type</td>
+        <td>applications</td>
+        <td>Type</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Patent Application Type (From XML data dictionary). 02 through 28 = Utility application; 29, D = Design application; 60 = Provisional application; 90 = Reexamination request</td>
+    </tr>
+    <tr>
+        <td>assignee_city</td>
+        <td>assignees</td>
+        <td>City</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Assignee's city as listed on the patent</td>
+    </tr>
+    <tr>
+        <td>assignee_country</td>
+        <td>assignees</td>
+        <td>Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Assignee's country as listed on the patent</td>
+    </tr>
+    <tr>
+        <td>assignee_first_name</td>
+        <td>assignees</td>
+        <td>First Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>First name, if assignee is individual</td>
+    </tr>
+    <tr>
+        <td>assignee_first_seen_date</td>
+        <td>assignees</td>
+        <td>First Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Earliest patent grant date for all of an asisgnee's patents in the database</td>
+    </tr>
+    <tr>
+        <td>assignee_id</td>
+        <td>assignees</td>
+        <td>ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database assignee ID assigned by disambiguation algorithm</td>
+    </tr>
+    <tr>
+        <td>assignee_last_name</td>
+        <td>assignees</td>
+        <td>Last Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Last name, if assignee is individual</td>
+    </tr>
+    <tr>
+        <td>assignee_last_seen_date</td>
+        <td>assignees</td>
+        <td>Last Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Most recent patent grant date for all of the asisgnee's patents in the database</td>
+    </tr>
+    <tr>
+        <td>assignee_lastknown_city</td>
+        <td>assignees</td>
+        <td>Last Known City</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Assignee's country as of their most recent patent grant date (equivalently, as of assignee_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>assignee_lastknown_country</td>
+        <td>assignees</td>
+        <td>Last Known Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Assignee's city as of their most recent patent grant date (equivalently, as of assignee_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>assignee_lastknown_latitude</td>
+        <td>assignees</td>
+        <td>Last Known Latitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Latitude for assignee's location as of their most recent patent grant date (equivalently, as of assignee_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>assignee_lastknown_location_id</td>
+        <td>assignees</td>
+        <td>Last Known Location ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database ID for the assignee's location on their most recent patent grant date (equivalently, as of assignee_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>assignee_lastknown_longitude</td>
+        <td>assignees</td>
+        <td>Last Known Longitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Longitude for assignee's location as of their most recent patent grant date (equivalently, as of assignee_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>assignee_lastknown_state</td>
+        <td>assignees</td>
+        <td>Last Known State</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Assignee's state as of their most recent patent grant date (equivalently, as of assignee_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>assignee_latitude</td>
+        <td>assignees</td>
+        <td>Latitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Latitude for assignee's location as listed on the patent</td>
+    </tr>
+    <tr>
+        <td>assignee_location_id</td>
+        <td>assignees</td>
+        <td>Location ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database ID for the assignee's location as listed on the patent</td>
+    </tr>
+    <tr>
+        <td>assignee_longitude</td>
+        <td>assignees</td>
+        <td>Longitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Longitude for assignee's location a listed on the patent</td>
+    </tr>
+    <tr>
+        <td>assignee_num_patents_for_inventor</td>
+        <td>assignees</td>
+        <td>Number of patents for Inventor</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Number of patents in the database for a given assignee and the selected inventor (as indicated by unique assignee_id and unique inventor_id, respectively)</td>
+    </tr>
+    <tr>
+        <td>assignee_organization</td>
+        <td>assignees</td>
+        <td>Organization</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Organization name, if assignee is organization</td>
+    </tr>
+    <tr>
+        <td>assignee_state</td>
+        <td>assignees</td>
+        <td>State</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Assignee's state as listed on the patent</td>
+    </tr>
+    <tr>
+        <td>assignee_total_num_patents</td>
+        <td>assignees</td>
+        <td>Total Number of Patents</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of patents in database for a given assignee (as indicated by unique assignee_id)</td>
+    </tr>
+    <tr>
+        <td>assignee_type</td>
+        <td>assignees</td>
+        <td>Type</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Classification of assignee. 2 - US Company or Corporation, 3 - Foreign Company or Corporation, 4 - US Individual, 5 - Foreign Individual, 6 - US Government, 7 - Foreign Government, 8 - Country Government, 9 - State Government (US). Note: A "1" appearing before any of these codes signifies part interest</td>
+    </tr>
+    <tr>
+        <td>coinventor_city</td>
+        <td>coinventors</td>
+        <td>City</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Coinventor's city as listed on the patent</td>
+    </tr>
+    <tr>
+        <td>coinventor_country</td>
+        <td>coinventors</td>
+        <td>Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Coinventor's country as listed on the patent</td>
+    </tr>
+    <tr>
+        <td>coinventor_first_name</td>
+        <td>coinventors</td>
+        <td>First Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>First name of the coinventor</td>
+    </tr>
+    <tr>
+        <td>coinventor_first_seen_date</td>
+        <td>coinventors</td>
+        <td>First Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Grant date of coinventor's earliest patent</td>
+    </tr>
+    <tr>
+        <td>coinventor_id*</td>
+        <td>coinventors</td>
+        <td>ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique ID for a coinventor assigned by disambiguation algorithm</td>
+    </tr>
+    <tr>
+        <td>coinventor_last_name</td>
+        <td>coinventors</td>
+        <td>Last Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Last name of the coinventor</td>
+    </tr>
+    <tr>
+        <td>coinventor_last_seen_date</td>
+        <td>coinventors</td>
+        <td>Last Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Grant date of coinventor's most recent patent in the database</td>
+    </tr>
+    <tr>
+        <td>coinventor_lastknown_city</td>
+        <td>coinventors</td>
+        <td>Last Known City</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Coinventor's city as of their most recent patent grant date (equivalently, as of coinventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>coinventor_lastknown_country</td>
+        <td>coinventors</td>
+        <td>Last Known Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Coinventor's country as of their most recent patent grant date (equivalently, as of coinventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>coinventor_lastknown_latitude</td>
+        <td>coinventors</td>
+        <td>Last Known Latitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Latitude of coinventor's city as of their most recent patent grant date (equivalently, as of coinventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>coinventor_lastknown_location_id</td>
+        <td>coinventors</td>
+        <td>Last Known Location ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database ID for the coinventor's city as of their most recent patent grant date (equivalently, as of coinventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>coinventor_lastknown_longitude</td>
+        <td>coinventors</td>
+        <td>Last Known Longitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Longitude of coinventor's city as of their most recent patent grant date (equivalently, as of coinventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>coinventor_lastknown_state</td>
+        <td>coinventors</td>
+        <td>Last Known State</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Coinventor's state as of their most recent patent grant date (equivalently, as of coinventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>coinventor_num_patents_for_inventor</td>
+        <td>coinventors</td>
+        <td>Number of patents for Inventor</td>
+        <td>integer</td>
+        <td>N</td>
+        <td>Total number of patents in the database for a given coinventor with the selected inventor (as indicated by unique coinventor_id and unique inventor_id, respectively)</td>
+    </tr>
+    <tr>
+        <td>coinventor_total_num_patents</td>
+        <td>coinventors</td>
+        <td>Total Number of Patents</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of patents in the database for a given coinventor (as indicated by unique coinventor_id)</td>
+    </tr>
+    <tr>
+        <td>coinventor_latitude</td>
+        <td>coinvetnros</td>
+        <td>Latitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Latitude of coinventor's city as listed on the selected patent</td>
+    </tr>
+    <tr>
+        <td>coinventor_location_id</td>
+        <td>coinvetnros</td>
+        <td>Location ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database ID for the coinventor's city as listed on the selected patent</td>
+    </tr>
+    <tr>
+        <td>coinventor_longitude</td>
+        <td>coinvetnros</td>
+        <td>Longitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Longitude of coinventor's city as lited on the selected patent</td>
+    </tr>
+    <tr>
+        <td>cpc_category</td>
+        <td>cpcs</td>
+        <td>Category</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Top Level Cooperative Patent Classification (CPC) category (http://www.cooperativepatentclassification.org/index.html)</td>
+    </tr>
+    <tr>
+        <td>cpc_first_seen_date</td>
+        <td>cpcs</td>
+        <td>First Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Grant date of the earliest patent in the database within a CPC subsection.</td>
+    </tr>
+    <tr>
+        <td>cpc_group_id</td>
+        <td>cpcs</td>
+        <td>Group ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>CPC group ID</td>
+    </tr>
+    <tr>
+        <td>cpc_group_title</td>
+        <td>cpcs</td>
+        <td>Group Title</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Description of CPC group</td>
+    </tr>
+    <tr>
+        <td>cpc_last_seen_date</td>
+        <td>cpcs</td>
+        <td>Last Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Grant date of the most recent patent in the database within a CPC subsection</td>
+    </tr>
+    <tr>
+        <td>cpc_num_patents_for_inventor</td>
+        <td>cpcs</td>
+        <td>Number of Patents for CPC Subsection</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Number of patents within a CPC subsection for a given inventor</td>
+    </tr>
+    <tr>
+        <td>cpc_section_id</td>
+        <td>cpcs</td>
+        <td>Section ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>CPC section ID (A = Human Necessitites, B = Performing Operations; Transporint, C = Chemistry; Metallurgy, D = Textiles; paper, E = Fixed Constructing, F = Mechanical Engineering; Lighting; Heating; Weapons; Blasting Engines; Pumps, G = Physics, H = Electricity, Y = General Tagging of new technological developments)</td>
+    </tr>
+    <tr>
+        <td>cpc_subgroup_id</td>
+        <td>cpcs</td>
+        <td>Subgroup ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>CPC subgroup ID</td>
+    </tr>
+    <tr>
+        <td>cpc_subgroup_title</td>
+        <td>cpcs</td>
+        <td>Subgroup Title</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Description of CPC subgroup</td>
+    </tr>
+    <tr>
+        <td>cpc_subsection_id</td>
+        <td>cpcs</td>
+        <td>Subsection ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>CPC subsection ID</td>
+    </tr>
+    <tr>
+        <td>cpc_subsection_title</td>
+        <td>cpcs</td>
+        <td>Subsection Title</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Description of CPC subsection</td>
+    </tr>
+    <tr>
+        <td>cpc_total_num_assignees</td>
+        <td>cpcs</td>
+        <td>Total Number of Assignees</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique assignees on patents within a CPC subsection</td>
+    </tr>
+    <tr>
+        <td>cpc_total_num_inventors</td>
+        <td>cpcs</td>
+        <td>Total Number of Inventors</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique inventors on patents within a CPC subsection</td>
+    </tr>
+    <tr>
+        <td>cpc_total_num_patents</td>
+        <td>cpcs</td>
+        <td>Total Number of Patents</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of patents within a CPC subsection</td>
+    </tr>
+    <tr>
+        <td>inventor_first_name</td>
+        <td>inventors</td>
+        <td>First Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>First name of inventor</td>
+    </tr>
+    <tr>
+        <td>inventor_first_seen_date</td>
+        <td>inventors</td>
+        <td>First Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Earliest patent grant date for all the inventor's patents in the database</td>
+    </tr>
+    <tr>
+        <td>inventor_id</td>
+        <td>inventors</td>
+        <td>ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database inventor ID  by disambiguation algorithm</td>
+    </tr>
+    <tr>
+        <td>inventor_key_id</td>
+        <td>inventors</td>
+        <td>Inventor key id</td>
+        <td>string</td>
+        <td>N</td>
+        <td>Special identifier used as the default sort field for the inventor query. This field may be deprecated in a future version.</td>
+    </tr>
+    <tr>
+        <td>inventor_last_name</td>
+        <td>inventors</td>
+        <td>Last Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Last name of inventor</td>
+    </tr>
+    <tr>
+        <td>inventor_last_seen_date</td>
+        <td>inventors</td>
+        <td>Last Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Most recent patent grant date for all the inventor's patents in the database</td>
+    </tr>
+    <tr>
+        <td>inventor_lastknown_city</td>
+        <td>inventors</td>
+        <td>Last Known City</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Inventor's city as of their most recent patent grant date (equivalently, as of inventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>inventor_lastknown_country</td>
+        <td>inventors</td>
+        <td>Last Known Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Inventor's country as of their most recent patent grant date (equivalently, as of inventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>inventor_lastknown_latitude</td>
+        <td>inventors</td>
+        <td>Last Known Latitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Latitude of inventor's city as of  their most recent patent grant date (equivalently, as of inventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>inventor_lastknown_location_id</td>
+        <td>inventors</td>
+        <td>Last Known Location ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database ID for the inventor's location as of their most recent patent grant date (equivalently, as of inventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>inventor_lastknown_longitude</td>
+        <td>inventors</td>
+        <td>Last Known Longitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Longitude of inventor's city as of  their most recent patent grant date (equivalently, as of inventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>inventor_lastknown_state</td>
+        <td>inventors</td>
+        <td>Last Known State</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Inventor's state as of their most recent patent grant date (equivalently, as of inventor_last_seen_date)</td>
+    </tr>
+    <tr>
+        <td>inventor_total_num_patents</td>
+        <td>inventors</td>
+        <td>Total Number of Patents</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of patents in the database for a given inventor (as indicated by unique inventor_id)</td>
+    </tr>
+    <tr>
+        <td>ipc_action_date</td>
+        <td>ipcs</td>
+        <td>Action Date</td>
+        <td>date</td>
+        <td>N</td>
+        <td>Date an International Patent Classification (IPC) is issued for the patent</td>
+    </tr>
+    <tr>
+        <td>ipc_class</td>
+        <td>ipcs</td>
+        <td>Class</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Second hierarchial level of the IPC system, sections are subdivided into classes</td>
+    </tr>
+    <tr>
+        <td>ipc_classification_data_source</td>
+        <td>ipcs</td>
+        <td>Classification Data Source</td>
+        <td>string</td>
+        <td>N</td>
+        <td> &#8220;H&#8221; defining &#8220;Human - Generated&#8221;, &#8220;M&#8221; defining &#8220;Machine - Generated&#8221; and &#8220;G&#8221; defining &#8220;G enerated via Software&#8221;</td>
+    </tr>
+    <tr>
+        <td>ipc_classification_value</td>
+        <td>ipcs</td>
+        <td>Classification Value</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>&#8220; I &#8221; defining &#8220;invention information&#8221; or &#8220;N&#8221; defining &#8220;non - invention information&#8221;</td>
+    </tr>
+    <tr>
+        <td>ipc_first_seen_date</td>
+        <td>ipcs</td>
+        <td>First Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Grant date of the earliest patent in the database within a IPC group</td>
+    </tr>
+    <tr>
+        <td>ipc_last_seen_date</td>
+        <td>ipcs</td>
+        <td>Last Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Grant date of the most recent patent in the database within a IPC group</td>
+    </tr>
+    <tr>
+        <td>ipc_main_group</td>
+        <td>ipcs</td>
+        <td>Main Group</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Subdivisions of the IPC subclass</td>
+    </tr>
+    <tr>
+        <td>ipc_section</td>
+        <td>ipcs</td>
+        <td>Section</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Highest hierarchical levels of the IPC corresponding to broad technical fields ( A = Human Necessitites, B = Performing Operations; Transporint, C = Chemistry; Metallurgy, D = Textiles; paper, E = Fixed Constructing, F = Mechanical Engineering; Lighting; Heating; Weapons; Blasting Engines; Pumps, G = Physics, H = Electricity)</td>
+    </tr>
+    <tr>
+        <td>ipc_subclass</td>
+        <td>ipcs</td>
+        <td>Subclass</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Subdivisions IPC class</td>
+    </tr>
+    <tr>
+        <td>ipc_subgroup</td>
+        <td>ipcs</td>
+        <td>Subgroup</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Subdivisions of IPC main group</td>
+    </tr>
+    <tr>
+        <td>ipc_symbol_position</td>
+        <td>ipcs</td>
+        <td>Position</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>First or later position of symbols. The position of the first invention information classification can be recognized by this field. The letters "F" and "L" are used for the first and later position, respectively.</td>
+    </tr>
+    <tr>
+        <td>ipc_total_num_assignees</td>
+        <td>ipcs</td>
+        <td>Total Number of Assignees</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique assignees on patents within an IPC class</td>
+    </tr>
+    <tr>
+        <td>ipc_total_num_inventors</td>
+        <td>ipcs</td>
+        <td>Total Number of Inventors</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique inventors on patents within an IPC class</td>
+    </tr>
+    <tr>
+        <td>ipc_version_indicator</td>
+        <td>ipcs</td>
+        <td>Version Indicator</td>
+        <td>date</td>
+        <td>N</td>
+        <td>The version of the IPC classification system</td>
+    </tr>
+    <tr>
+        <td>location_city</td>
+        <td>locations</td>
+        <td>City</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>City associated with a location_id</td>
+    </tr>
+    <tr>
+        <td>location_country</td>
+        <td>locations</td>
+        <td>Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Country associated with a location_id</td>
+    </tr>
+    <tr>
+        <td>location_latitude</td>
+        <td>locations</td>
+        <td>Latitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Latitude associated with a location_id</td>
+    </tr>
+    <tr>
+        <td>location_location_id</td>
+        <td>locations</td>
+        <td>Location ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique location ID generated by the disambiguation algorithm</td>
+    </tr>
+    <tr>
+        <td>location_longitude</td>
+        <td>locations</td>
+        <td>Longitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Longitude associated with a location_id</td>
+    </tr>
+    <tr>
+        <td>location_state</td>
+        <td>locations</td>
+        <td>State</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>State assocaited with a location_id</td>
+    </tr>
+    <tr>
+        <td>nber_category_id</td>
+        <td>nbers</td>
+        <td>Category ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>National Bureau of Economic Research (NBER) technology category ID (see nber_category_title for details)</td>
+    </tr>
+    <tr>
+        <td>nber_category_title</td>
+        <td>nbers</td>
+        <td>Category Title</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Description of NBER category</td>
+    </tr>
+    <tr>
+        <td>nber_first_seen_date</td>
+        <td>nbers</td>
+        <td>First Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Grant date of the earliest patent in the database within a NBER subcategory</td>
+    </tr>
+    <tr>
+        <td>nber_last_seen_date</td>
+        <td>nbers</td>
+        <td>Last Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Grant date of the most recent patent in the database within a NBER subcategory</td>
+    </tr>
+    <tr>
+        <td>nber_num_patents_for_inventor</td>
+        <td>nbers</td>
+        <td>Number of Patents for NBER Subcategory</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Number of patents within a NBER subcategory for a given inventor</td>
+    </tr>
+    <tr>
+        <td>nber_subcategory_id</td>
+        <td>nbers</td>
+        <td>Subcategory ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>NBER subcategory ID (see nber_subcategory_title for details)</td>
+    </tr>
+    <tr>
+        <td>nber_subcategory_title</td>
+        <td>nbers</td>
+        <td>Subcategory Title</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Description of NBER subcategory</td>
+    </tr>
+    <tr>
+        <td>nber_total_num_assignees</td>
+        <td>nbers</td>
+        <td>Total Number of Assignees</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique assignees on patents within a NBER subcategory</td>
+    </tr>
+    <tr>
+        <td>nber_total_num_inventors</td>
+        <td>nbers</td>
+        <td>Total Number of Inventors</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique inventors on patents within a NBER subcategory</td>
+    </tr>
+    <tr>
+        <td>nber_total_num_patents</td>
+        <td>nbers</td>
+        <td>Total Number of Patents</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of patents within a NBER subcategory</td>
+    </tr>
+    <tr>
+        <td>patent_abstract</td>
+        <td>patents</td>
+        <td>Abstract</td>
+        <td>full text</td>
+        <td>N</td>
+        <td>Abstract of the patent</td>
+    </tr>
+    <tr>
+        <td>patent_country</td>
+        <td>patents</td>
+        <td>Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Country in which the patent was granted, always U.S.</td>
+    </tr>
+    <tr>
+        <td>patent_date</td>
+        <td>patents</td>
+        <td>Grant Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Date patent was granted</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_assignee_city</td>
+        <td>patents</td>
+        <td>First Named Assignee City</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>City of the location of the first-named (i.e. first in the list) assignee on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_assignee_country</td>
+        <td>patents</td>
+        <td>First Named Assignee Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Country of the location of the first-named (i.e. first in the list) assignee on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_assignee_id</td>
+        <td>patents</td>
+        <td>First Named Assignee ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Assignee ID (assignee_id) for the first-named (i.e. first in the list) assignee on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_assignee_latitude</td>
+        <td>patents</td>
+        <td>First Named Assignee Latitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Latitude of the location of the first-named (i.e. first in the list) assignee on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_assignee_location_id</td>
+        <td>patents</td>
+        <td>First Named Assignee Location ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database ID for the location of the first-named (i.e. first in the list) assignee on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_assignee_longitude</td>
+        <td>patents</td>
+        <td>First Named Assignee Longitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Longitude of the location of the first-named (i.e. first in the list) assignee on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_assignee_state</td>
+        <td>patents</td>
+        <td>First Named Assignee State</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>State of the location of the the first-named (i.e. first in the list) assignee on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_inventor_city</td>
+        <td>patents</td>
+        <td>First Named Inventor City</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>City of the location of the the first-named (i.e. first in the list) inventor on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_inventor_country</td>
+        <td>patents</td>
+        <td>First Named Inventor Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Country of the location of the first-named (i.e. first in the list) inventor on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_inventor_id</td>
+        <td>patents</td>
+        <td>First Named Inventor ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Inventor ID (inventor_id) for the first-named (i.e. first in the list) inventor on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_inventor_latitude</td>
+        <td>patents</td>
+        <td>First Named Inventor Latitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Latitude of the location of the first-named (i.e. first in the list) inventor on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_inventor_location_id</td>
+        <td>patents</td>
+        <td>First Named Inventor Location ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database ID for the location of the first-named (i.e. first in the list) inventor on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_inventor_longitude</td>
+        <td>patents</td>
+        <td>First Named Inventor Longitude</td>
+        <td>float</td>
+        <td>N</td>
+        <td>Longitude of the location of the first-named (i.e. first in the list) inventor on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_firstnamed_inventor_state</td>
+        <td>patents</td>
+        <td>First Named Inventor State</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>State of the location of the first-named (i.e. first in the list) inventor on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_kind</td>
+        <td>patents</td>
+        <td>Kind</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>World Intellectual Property Organization (WIPO) Standard ST.16 Patent Code (http://www.uspto.gov/learning-and-resources/support-centers/electronic-business-center/kind-codes-included-uspto-patent)</td>
+    </tr>
+    <tr>
+        <td>patent_num_cited_by_us_patents</td>
+        <td>patents</td>
+        <td>Number Cited by US Patents</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Number of times the patent was cited by other US patents</td>
+    </tr>
+    <tr>
+        <td>patent_num_claims</td>
+        <td>patents</td>
+        <td>Number of Claims</td>
+        <td>integer</td>
+        <td>N</td>
+        <td>Number of claim statements on the patent</td>
+    </tr>
+    <tr>
+        <td>patent_num_combined_citations</td>
+        <td>patents</td>
+        <td>Number of Combined Citations</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Number of patents and applications cited by the selected patent. This is the sum of citations of US patents, foreign patents, and US applications</td>
+    </tr>
+    <tr>
+        <td>patent_num_foreign_citations</td>
+        <td>patents</td>
+        <td>Number of Foreign Citations</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Number of foreign patents cited by the selected patent</td>
+    </tr>
+    <tr>
+        <td>patent_num_us_application_citations</td>
+        <td>patents</td>
+        <td>Number of US Application Citations</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Number of US applications cited by the selected patent</td>
+    </tr>
+    <tr>
+        <td>patent_num_us_patent_citations</td>
+        <td>patents</td>
+        <td>Number of US Patent Citations</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Number of US patents cited by the selected patent</td>
+    </tr>
+    <tr>
+        <td>patent_number</td>
+        <td>patents</td>
+        <td>Number</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>US Patent number, as assigned by USPTO</td>
+    </tr>
+    <tr>
+        <td>patent_title</td>
+        <td>patents</td>
+        <td>Title</td>
+        <td>full text</td>
+        <td>Y</td>
+        <td>Title of the  patent</td>
+    </tr>
+    <tr>
+        <td>patent_type</td>
+        <td>patents</td>
+        <td>Type</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Category of patent. There are 6 possible type: "Defensive Publication" - 509, "Design" - 474736, "Plant" - 21052, "Reissue" - 16416, "Statutory Invention Registration" - 2254, "Utility" - 4910906.</td>
+    </tr>
+    <tr>
+        <td>uspc_first_seen_date</td>
+        <td>uspcs</td>
+        <td>First Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Grant date of the earliest patent in the database within a USPC mainclass</td>
+    </tr>
+    <tr>
+        <td>uspc_last_seen_date</td>
+        <td>uspcs</td>
+        <td>Last Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Grant date of the most recent patent in the database within a USPC mainclass</td>
+    </tr>
+    <tr>
+        <td>uspc_mainclass_id</td>
+        <td>uspcs</td>
+        <td>Mainclass ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>ID of the USPC mainclass</td>
+    </tr>
+    <tr>
+        <td>uspc_mainclass_title</td>
+        <td>uspcs</td>
+        <td>Mainclass Title</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Description of USPC mainclass</td>
+    </tr>
+    <tr>
+        <td>uspc_num_patents_for_inventor</td>
+        <td>uspcs</td>
+        <td>Number of Patents for Inventor</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique patents within a USPC mainclass with a given inventor</td>
+    </tr>
+    <tr>
+        <td>uspc_subclass_id</td>
+        <td>uspcs</td>
+        <td>Subclass ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>ID of USPC subclass</td>
+    </tr>
+    <tr>
+        <td>uspc_subclass_title</td>
+        <td>uspcs</td>
+        <td>Subclass Title</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Description of USPC subclass</td>
+    </tr>
+    <tr>
+        <td>uspc_total_num_assignees</td>
+        <td>uspcs</td>
+        <td>Total Number of Assignees</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique assignees on patents within a USPC mainclass</td>
+    </tr>
+    <tr>
+        <td>uspc_total_num_inventors</td>
+        <td>uspcs</td>
+        <td>Total Number of Inventors</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique inventors on patents  within a USPC mainclass</td>
+    </tr>
+    <tr>
+        <td>uspc_total_num_patents</td>
+        <td>uspcs</td>
+        <td>Total Number of Patents</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of patents within a USPC mainclass</td>
+    </tr>
+    <tr>
+        <td>year_id</td>
+        <td>years</td>
+        <td>ID</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Year </td>
+    </tr>
+    <tr>
+        <td>year_num_patents_for_inventor</td>
+        <td>years</td>
+        <td>Number of Patents for Inventor</td>
+        <td>integer</td>
+        <td>N</td>
+        <td>Number of patents for an inventor for a given year</td>
+    </tr>
+</table>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
