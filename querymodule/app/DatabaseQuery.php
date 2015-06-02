@@ -109,16 +109,18 @@ class DatabaseQuery
                     		'(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
                     		$fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
                     		null,
-                    		null);
+                    		null,$dbSettings);
                 		$this->commitTransaction();
                 		break;
             		}
 			}
 			catch (Exception $e) {
 				$this->rollbackTransaction();
+				//echo $e;
 				$county++;
 				if ($county==$maxTries) {
-					throw new $e;
+					$this->errorHandler->sendError(500, "Insert select execution failed.", $e);
+            				throw new $e;
 					break; }
 				usleep(500000);
 				continue;	
@@ -218,26 +220,46 @@ class DatabaseQuery
             $st->closeCursor();
         }
         catch (Exception $e) {
-            $this->errorHandler->sendError(500, "Query execution failed.", $e);
+            $this->errorHandler->sendError(500, "Query execution failed.", $sqlQuery);
             throw new $e;
         }
 
         return $results;
     }
 
-    private function runInsertSelect($insert, $select, $from, $where, $order)
+    private function runInsertSelect($insert, $select, $from, $where, $order,$dbSettings)
     {
         $this->connectToDB();
 
         if (strlen($where) > 0) $where = "WHERE $where ";
         if (strlen($order) > 0) $order = "ORDER BY $order";
-        $sqlQuery = "INSERT INTO $insert SELECT $select FROM $from $where $order";
-        $this->errorHandler->getLogger()->debug($sqlQuery);
-
+        $insertHash = substr(md5(uniqid(mt_rand(), true)), 0, 10);
+	$selectSt = "SELECT $select FROM $from $where $order";
+	$selectSt = preg_replace('/"/','\"',$selectSt);
+	$cmd = 'mysql -B -h'.escapeshellarg($dbSettings['host']).' -u'.escapeshellarg($dbSettings['user']).' -p'.escapeshellarg($dbSettings['password']).' ' . escapeshellarg($dbSettings['database']) . ' -e "'.$selectSt. '" > '.escapeshellarg('c:/tmp/' . $insertHash . '.txt');
+	shell_exec( $cmd );
+	$cmd2 = 'mysql -h'.escapeshellarg($dbSettings['host']).' -u'.escapeshellarg($dbSettings['user']).' -p'.escapeshellarg($dbSettings['password']) . ' '.escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'c:/tmp/" . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
+	$sqlQuery = "INSERT INTO $insert SELECT $select FROM $from $where $order";
+	$this->errorHandler->getLogger()->debug($sqlQuery);
+	
 	try {
-            $st = $this->db->prepare($sqlQuery);
-            $results = $st->execute();
-            $st->closeCursor();
+	    	if (filesize("c:/tmp/" . $insertHash . ".txt") !== 0) {
+	    		$outfile = fopen("c:/tmp/" . $insertHash . ".txt",'r');
+	    		$outstr = fread($outfile,filesize("c:/tmp/" . $insertHash . ".txt"));
+	    		$outstr = preg_replace('/\s+\n/',"\n",$outstr);
+	    		$outstr = preg_replace('/\n$/','',$outstr);
+	    		
+			fclose($outfile);
+    	    		unlink('c:/tmp/' . $insertHash . '.txt');
+	    		$outfile = fopen("c:/tmp/" . $insertHash . ".txt",'w');
+	    		fwrite($outfile,$outstr);
+	    		fclose($outfile);
+			}
+	    	$results = shell_exec($cmd2);
+		unlink('c:/tmp/' . $insertHash . '.txt');
+	    	//$st = $this->db->prepare($sqlQuery);
+            	//$results = $st->execute();
+            	//$st->closeCursor();
         }
         catch (Exception $e) {
             $this->errorHandler->sendError(500, "Insert select execution failed.", $e);
