@@ -70,8 +70,8 @@ class DatabaseQuery
 //                    $this->errorHandler->sendError(400, "When using the 'matched_subentities_only' option, the query criteria cannot contain any 'or's.", $options);
             }
 
-            if (array_key_exists('include_subentity_total_count', $options) && strtolower($options['include_subentity_total_count']) != "false") 	    {
-                $this->include_subentity_total_counts = strtolower($options['include_subentity_total_count']);
+            if (array_key_exists('include_subentity_total_counts', $options) && strtolower($options['include_subentity_total_counts']) != "false") 	    {
+                $this->include_subentity_total_counts = strtolower($options['include_subentity_total_counts']);
             }
 
 	    if (array_key_exists('sort_by_subentity_counts', $options) && array_key_exists($options['sort_by_subentity_counts'],$selectFieldSpecs)) {                	
