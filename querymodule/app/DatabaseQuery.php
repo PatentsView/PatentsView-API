@@ -241,7 +241,7 @@ class DatabaseQuery
         if (strlen($order) > 0) $order = "ORDER BY $order";
         $sqlQuery = "SELECT $select FROM $from $where $order";
 	$this->errorHandler->getLogger()->debug($sqlQuery);
-
+	
 	try {
             $st = $this->db->query("$sqlQuery", PDO::FETCH_ASSOC);
             $results = $st->fetchAll();
@@ -265,7 +265,6 @@ class DatabaseQuery
         $insertHash = substr(md5(uniqid(mt_rand(), true)), 0, 10);
 	$selectSt = "SELECT $select FROM $from $where $order";
 	$selectSt = preg_replace('/"/','\"',$selectSt);
-	
 	$cmd = 'mysql -B -h'.escapeshellarg($dbSettings['host']).' -u'.escapeshellarg($dbSettings['user']).' -p'.escapeshellarg($dbSettings['password']).' ' . escapeshellarg($dbSettings['database']) . ' -e "'.$selectSt. '" > '.escapeshellarg('c:/tmp/' . $insertHash . '.txt');
 	shell_exec( $cmd );
 	$cmd2 = 'mysql -h'.escapeshellarg($dbSettings['host']).' -u'.escapeshellarg($dbSettings['user']).' -p'.escapeshellarg($dbSettings['password']) . ' '.escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'c:/tmp/" . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
@@ -304,7 +303,7 @@ class DatabaseQuery
         $sqlStatement = "INSERT INTO $insert";
         $this->errorHandler->getLogger()->debug($sqlStatement);
         $this->errorHandler->getLogger()->debug($params);
-
+	
 	$counto = 0;
 	$maxTriesy = 3;
 	do {
@@ -421,9 +420,11 @@ class DatabaseQuery
                             $orderString .= ', ';
                         $orderString .= getDBField($this->fieldSpecs, $apiField) . ' ' . $direction;
 			$this->sortFieldsUsed[] = $apiField;
-			if ($this->sort_by_subentity_counts && getDBField($this->fieldSpecs, $apiField) !== getDBField($this->fieldSpecs, $this->sort_by_subentity_counts)) {
+			if (!$this->sort_by_subentity_counts || ($this->sort_by_subentity_counts && getDBField($this->fieldSpecs, $apiField) !== getDBField($this->fieldSpecs, $this->sort_by_subentity_counts))) {
+
 				$secEntityField = $fieldSpec['entity_name'];
 				$secEntityField .= "s";
+
 				if (array_key_exists($secEntityField,$this->sortFieldsUsedSec)) {
 					array_push($this->sortFieldsUsedSec[$secEntityField],getDBField($this->fieldSpecs, $apiField) . ' ' . $direction);
 				} else {
