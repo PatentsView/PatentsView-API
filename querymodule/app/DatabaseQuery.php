@@ -22,7 +22,8 @@ class DatabaseQuery
 
     private $matchedSubentitiesOnly = false;
     private $include_subentity_total_counts = false;
-
+    private $sort_by_subentity_counts = false;
+    
     private $supportDatabase = "";
 
     public function getTotalCounts()
@@ -34,7 +35,7 @@ class DatabaseQuery
     {
 	global $config;
         $dbSettings = $config->getDbSettings();
-        $this->supportDatabase = $dbSettings['supportDatabase'];
+        $this->supportDatabase = $dbSettings['supportDatabase'];	
 
         $memUsed = memory_get_usage();
         $this->errorHandler = ErrorHandler::getHandler();
@@ -50,33 +51,61 @@ class DatabaseQuery
 	$this->whereFieldsUsed = $whereFieldsUsed;
 	
         if ($options != null) {
-            if (array_key_exists('page', $options)) {
+
+	    if (array_key_exists('page', $options)) {
                 $page = $options['page'];
             }
+
             if (array_key_exists('per_page', $options))
                 if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1))
                     $this->errorHandler->sendError(400, "Per_page must be a positive number not to exceed " . $config->getMaxPageSize() . ".", $options);
                 else
                     $perPage = $options['per_page'];
+
             if (array_key_exists('matched_subentities_only', $options) && strtolower($options['matched_subentities_only']) != "false") {
         	$this->matchedSubentitiesOnly = strtolower($options['matched_subentities_only']);
-                # When the matched_subentities_only option is used, we need to check that all the criteria were 'and'ed together
+	
+	# When the matched_subentities_only option is used, we need to check that all the criteria were 'and'ed together
 //                if ($this->matchedSubentitiesOnly && !$onlyAndsWereUsed)
 //                    $this->errorHandler->sendError(400, "When using the 'matched_subentities_only' option, the query criteria cannot contain any 'or's.", $options);
             }
-            if (array_key_exists('include_subentity_total_counts', $options) && strtolower($options['include_subentity_total_counts']) != "false") {
-                $this->include_subentity_total_counts = strtolower($options['include_subentity_total_counts']);
-            }
-        }
 
-        $this->selectFieldSpecs = $selectFieldSpecs;
+            if (array_key_exists('include_subentity_total_count', $options) && strtolower($options['include_subentity_total_count']) != "false") 	    {
+                $this->include_subentity_total_counts = strtolower($options['include_subentity_total_count']);
+            }
+
+	    if (array_key_exists('sort_by_subentity_counts', $options) && array_key_exists($options['sort_by_subentity_counts'],$selectFieldSpecs)) {                	
+			$this->sort_by_subentity_counts = strtolower($options['sort_by_subentity_counts']);
+            } elseif (array_key_exists('sort_by_subentity_counts', $options) && !array_key_exists($options['sort_by_subentity_counts'],$selectFieldSpecs)) {
+			$this->errorHandler->sendError(500, "Sorting field is not in the output field list.", "Sorting field " . $options['sort_by_subentity_counts'] . " is not in the output field list.");
+        	    	throw new $e;
+		} else {}
+	    }	
+	
+	$this->selectFieldSpecs = $selectFieldSpecs;
         $this->initializeGroupVars();
         $this->determineSelectFields();
         $from = $this->buildFrom($whereFieldsUsed, $this->selectFieldSpecs, $this->sortFieldsUsed);
         $sortString = $this->buildSortString($sortParam);
+	$countInsertSelect = "";
+	$whereGroup = "";
+	$secSortFields = explode(', ',$sortString);
+	if ($this->sort_by_subentity_counts) {
+		foreach($secSortFields as $secSortField) {
+			preg_match('/'.getDBField($this->fieldSpecs, $this->sort_by_subentity_counts).'/',$secSortField,$matches);
+			if ($matches) {
+				$secSortArray = explode(' ',$secSortField);
+				$sortString = preg_replace('/'.$secSortArray[0].'/','count('.$secSortArray[0].')',$sortString);
+				$whereGroup =' GROUP BY '.getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']).' ';
+				$countInsertSelect = 'count('.$secSortArray[0].')';
+			}
+		}
+	}
+	
+	
         
 	// Get the QueryDefId for this where clause
-        $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause::sort->$sortString";
+        $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%u', $whereHash);
 
@@ -93,14 +122,14 @@ class DatabaseQuery
             		
                 		$this->startTransaction();
                 		$insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
-                		$this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
-
+				$this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
+				
                 		// Get all the primary entity IDs and insert into the cached results table
                 		#Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
                 		$insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
                 		$selectPrimaryEntityIdsString =
                     		"$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
-                		if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause "; else $whereInsert = "";
+                		if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause $whereGroup "; else $whereInsert = "";
                 		if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
                 		$fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
 				$this->fromSubEntity = $fromInsert;
@@ -116,7 +145,6 @@ class DatabaseQuery
 			}
 			catch (Exception $e) {
 				$this->rollbackTransaction();
-				//echo $e;
 				$county++;
 				if ($county==$maxTries) {
 					$this->errorHandler->sendError(500, "Insert select execution failed.", $e);
@@ -167,7 +195,7 @@ class DatabaseQuery
             $tempSelect = $this->buildSelectStringForEntity($entitySpec);
 	    if ($tempSelect != '') { // If there aren't any fields to get back, then skip the group.
                 $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . ' as ' . $this->entitySpecs[0]['keyId'];
-                $selectStringForEntity .= ", $tempSelect";
+		$selectStringForEntity .= ", $tempSelect";
                 $fromEntity = $this->entitySpecs[0]['join'] .
                     ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
                 $fromEntity .= ' ' . $entitySpec['join'];
@@ -212,15 +240,15 @@ class DatabaseQuery
         if (strlen($where) > 0) $where = "WHERE $where ";
         if (strlen($order) > 0) $order = "ORDER BY $order";
         $sqlQuery = "SELECT $select FROM $from $where $order";
-        $this->errorHandler->getLogger()->debug($sqlQuery);
-	
+	$this->errorHandler->getLogger()->debug($sqlQuery);
+
 	try {
             $st = $this->db->query("$sqlQuery", PDO::FETCH_ASSOC);
             $results = $st->fetchAll();
             $st->closeCursor();
         }
         catch (Exception $e) {
-            $this->errorHandler->sendError(500, "Query execution failed.", $sqlQuery);
+            $this->errorHandler->sendError(500, "Query execution failed.", $e);
             throw new $e;
         }
 
@@ -233,14 +261,14 @@ class DatabaseQuery
 
         if (strlen($where) > 0) $where = "WHERE $where ";
         if (strlen($order) > 0) $order = "ORDER BY $order";
+
         $insertHash = substr(md5(uniqid(mt_rand(), true)), 0, 10);
 	$selectSt = "SELECT $select FROM $from $where $order";
 	$selectSt = preg_replace('/"/','\"',$selectSt);
+	
 	$cmd = 'mysql -B -h'.escapeshellarg($dbSettings['host']).' -u'.escapeshellarg($dbSettings['user']).' -p'.escapeshellarg($dbSettings['password']).' ' . escapeshellarg($dbSettings['database']) . ' -e "'.$selectSt. '" > '.escapeshellarg('c:/tmp/' . $insertHash . '.txt');
 	shell_exec( $cmd );
 	$cmd2 = 'mysql -h'.escapeshellarg($dbSettings['host']).' -u'.escapeshellarg($dbSettings['user']).' -p'.escapeshellarg($dbSettings['password']) . ' '.escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'c:/tmp/" . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
-	$sqlQuery = "INSERT INTO $insert SELECT $select FROM $from $where $order";
-	$this->errorHandler->getLogger()->debug($sqlQuery);
 	
 	try {
 	    	if (filesize("c:/tmp/" . $insertHash . ".txt") !== 0) {
@@ -393,12 +421,14 @@ class DatabaseQuery
                             $orderString .= ', ';
                         $orderString .= getDBField($this->fieldSpecs, $apiField) . ' ' . $direction;
 			$this->sortFieldsUsed[] = $apiField;
-			$secEntityField = $fieldSpec['entity_name'];
-			$secEntityField .= "s";
-			if (array_key_exists($secEntityField,$this->sortFieldsUsedSec)) {
-				array_push($this->sortFieldsUsedSec[$secEntityField],getDBField($this->fieldSpecs, $apiField) . ' ' . $direction);
-			} else {
-				$this->sortFieldsUsedSec[$secEntityField] = array(getDBField($this->fieldSpecs, $apiField) . ' ' . $direction);
+			if ($this->sort_by_subentity_counts && getDBField($this->fieldSpecs, $apiField) !== getDBField($this->fieldSpecs, $this->sort_by_subentity_counts)) {
+				$secEntityField = $fieldSpec['entity_name'];
+				$secEntityField .= "s";
+				if (array_key_exists($secEntityField,$this->sortFieldsUsedSec)) {
+					array_push($this->sortFieldsUsedSec[$secEntityField],getDBField($this->fieldSpecs, $apiField) . ' ' . $direction);
+				} else {
+					$this->sortFieldsUsedSec[$secEntityField] = array(getDBField($this->fieldSpecs, $apiField) . ' ' . $direction);
+				}
 			}
                     } 
                 } else {
