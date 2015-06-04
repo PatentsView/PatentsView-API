@@ -50,6 +50,7 @@ class DatabaseQuery
         $this->setupGroupVars();
 	$this->whereFieldsUsed = $whereFieldsUsed;
 	
+	
         if ($options != null) {
 
 	    if (array_key_exists('page', $options)) {
@@ -95,9 +96,9 @@ class DatabaseQuery
 			preg_match('/'.getDBField($this->fieldSpecs, $this->sort_by_subentity_counts).'/',$secSortField,$matches);
 			if ($matches) {
 				$secSortArray = explode(' ',$secSortField);
-				$sortString = preg_replace('/'.$secSortArray[0].'/','count('.$secSortArray[0].')',$sortString);
+				$sortString = preg_replace('/'.$secSortArray[0].'/','count(distinct '.$secSortArray[0].')',$sortString);
 				$whereGroup =' GROUP BY '.getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']).' ';
-				$countInsertSelect = 'count('.$secSortArray[0].')';
+				$countInsertSelect = 'count(distinct '.$secSortArray[0].')';
 			}
 		}
 	}
@@ -108,7 +109,9 @@ class DatabaseQuery
         $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%u', $whereHash);
-
+	
+	
+	
         $county = 0;
 		$maxTries = 3;
 		do {
@@ -266,6 +269,7 @@ class DatabaseQuery
 	$selectSt = "SELECT $select FROM $from $where $order";
 	$selectSt = preg_replace('/"/','\"',$selectSt);
 	$cmd = 'mysql -B -h'.escapeshellarg($dbSettings['host']).' -u'.escapeshellarg($dbSettings['user']).' -p'.escapeshellarg($dbSettings['password']).' ' . escapeshellarg($dbSettings['database']) . ' -e "'.$selectSt. '" > '.escapeshellarg('c:/tmp/' . $insertHash . '.txt');
+	
 	shell_exec( $cmd );
 	$cmd2 = 'mysql -h'.escapeshellarg($dbSettings['host']).' -u'.escapeshellarg($dbSettings['user']).' -p'.escapeshellarg($dbSettings['password']) . ' '.escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'c:/tmp/" . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
 	
@@ -282,7 +286,7 @@ class DatabaseQuery
 	    		fwrite($outfile,$outstr);
 	    		fclose($outfile);
 			}
-	    	$results = shell_exec($cmd2);
+		$results = shell_exec($cmd2);
 		unlink('c:/tmp/' . $insertHash . '.txt');
 	    	//$st = $this->db->prepare($sqlQuery);
             	//$results = $st->execute();
