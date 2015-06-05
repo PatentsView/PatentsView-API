@@ -181,16 +181,21 @@ class DatabaseQuery
         $results[$this->entitySpecs[0]['group_name']] = $entityResults;
 	unset($entityResults);
 
-	$fromSubEntity = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
-	$fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
-	
 	$allFieldsUsed = array_merge($whereFieldsUsed, array_keys(array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']])), $this->sortFieldsUsed);
+        foreach (array_slice($this->entitySpecs,1) as $entitySpec) {
+            $tempSelect = $this->buildSelectStringForEntityReturnApiField($entitySpec);
+	    $allFieldsUsed = array_merge($allFieldsUsed,$tempSelect);
+	}
         $allFieldsUsed = array_unique($allFieldsUsed);
 	$groupsCheckTotalCount = array();
 	foreach ($allFieldsUsed as $fieldUsed) {
 		$groupsCheckTotalCount[] = $this->fieldSpecs[$fieldUsed]['entity_name'];
 	}
 	$groupsCheckTotalCount = array_unique($groupsCheckTotalCount);
+
+	$fromSubEntity = $this->buildFrom($allFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
+	$fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
+	
 
 	// Loop through the subentities and get them.
         foreach (array_slice($this->entitySpecs,1) as $entitySpec) {
@@ -204,6 +209,7 @@ class DatabaseQuery
                 $whereEntity = "qr.QueryDefId=$queryDefId";
                 if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
+		
 		if ($this->matchedSubentitiesOnly) {
 			$whereEntity .= ' and ' . $whereClause;
 			$fromEntity = $fromSubEntity;
@@ -381,6 +387,17 @@ class DatabaseQuery
 		if ($selectString != '')
                     $selectString .= ', ';
                 $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
+            }
+        }
+        return $selectString;
+    }
+
+    private function buildSelectStringForEntityReturnApiField($entitySpec)
+    {
+	$selectString = Array();
+	foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
+	    if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
+		$selectString[] = $apiField;
             }
         }
         return $selectString;
