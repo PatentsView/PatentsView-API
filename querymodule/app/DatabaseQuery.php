@@ -44,7 +44,7 @@ class DatabaseQuery
         $this->sortFieldsUsed = array();
         $this->sortFieldsUsedSec = array();
 	$this->entitySpecificWhereClauses = $entitySpecificWhereClauses;
-	
+
         $this->entitySpecs = $entitySpecs;
         $this->fieldSpecs = $fieldSpecs;
         $this->setupGroupVars();
@@ -82,7 +82,6 @@ class DatabaseQuery
         	    	throw new $e;
 		} else {}
 	    }	
-	
 	$this->selectFieldSpecs = $selectFieldSpecs;
         $this->initializeGroupVars();
         $this->determineSelectFields();
@@ -205,8 +204,7 @@ class DatabaseQuery
                 $whereEntity = "qr.QueryDefId=$queryDefId";
                 if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1)*$perPage)+1) . ') and (qr.Sequence<=' . $page*$perPage . '))';
-                if ($this->matchedSubentitiesOnly && array_key_exists($entitySpec['entity_name'], $this->entitySpecificWhereClauses) && $this->entitySpecificWhereClauses[$entitySpec['entity_name']] != '') {
-                        //$whereEntity .= ' and ' . $this->entitySpecificWhereClauses[$entitySpec['entity_name']];
+		if ($this->matchedSubentitiesOnly) {
 			$whereEntity .= ' and ' . $whereClause;
 			$fromEntity = $fromSubEntity;
 		}
@@ -269,7 +267,6 @@ class DatabaseQuery
 	$selectSt = "SELECT $select FROM $from $where $order";
 	$selectSt = preg_replace('/"/','\"',$selectSt);
 	$cmd = 'mysql -B -h'.escapeshellarg($dbSettings['host']).' -u'.escapeshellarg($dbSettings['user']).' -p'.escapeshellarg($dbSettings['password']).' ' . escapeshellarg($dbSettings['database']) . ' -e "'.$selectSt. '" > '.escapeshellarg('c:/tmp/' . $insertHash . '.txt');
-	
 	shell_exec( $cmd );
 	$cmd2 = 'mysql -h'.escapeshellarg($dbSettings['host']).' -u'.escapeshellarg($dbSettings['user']).' -p'.escapeshellarg($dbSettings['password']) . ' '.escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'c:/tmp/" . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
 	
