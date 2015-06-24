@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,103 +8,110 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/sass/font-awesome/font-awesome.min.css" />
+    <link rel="stylesheet" href="../assets/sass/query.css" />
     <link rel="stylesheet" href="css/custom.css" />
+    <link rel="stylesheet" href="css/headfoot.css" />
 </head>
 <body role="document">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="logo"><a href="doc.html" title="PatentsView - USPTO"><img alt="PatentsView Logo" src="img/logo.png" /></a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-    <div class="container" role="main">
+    <header class="med-header">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid container">
+          <div class="navbar-header centered-header">
+            <a href="/" class="navbar-brand logo" title="PatentsView - USPTO" alt="PatentsView Logo"></a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            
+          </div>
+
+          <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+            
+            <ul class="nav navbar-nav navbar-right">
+              <li class="api active"><a href="#">API</a><div class="nav-tooltip">provides developers and researchers programmatic access to the underlying data</div></li>
+                <li class="data-query"><a href="#">Data Query</a><div class="nav-tooltip">provides a graphical interface for researchers to query the entire underlying database</div></li>
+                <li class="data-download"><a href="#">Data Download</a><div class="nav-tooltip">provides downloadable tables as csv files covering the underlying database</div></li>
+            </ul>
+
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+</header>
+
+<!-- 
+
+    <header class="med-header">
+            <div class="centered-header">
+                <a href="/" class="logo" title="PatentsView - USPTO" alt="PatentsView Logo"></a>
+                <nav>
+                    <ul>
+                        <li class="api active"><a href="#">API</a><div class="nav-tooltip">provides developers and researchers programmatic access to the underlying data</div></li>
+                        <li class="data-query"><a href="#">Data Query</a><div class="nav-tooltip">provides a graphical interface for researchers to query the entire underlying database</div></li>
+                        <li class="data-download"><a href="#">Data Download</a><div class="nav-tooltip">provides downloadable tables as csv files covering the underlying database</div></li>
+                    </ul>
+                </nav>
+            </div>
+
+        </header> -->
+
+    <div class="sub-nav">
+        <div class="container">
+            <ul class="right-header">
+                <li><a href="doc.html">Why Explore Patent Data?</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+                <li><a href="glossary.html">Glossary</a></li>
+                <li><a href="query-language.html">API Query Language</a></li>
+                <li class="api-endpoints-li active">7 API Endpoints
+                    <ul class="dropdown-nav">
+                        <li><a href="patent.html">Patents Endpoint</a></li>
+                        <li><a href="inventor.html">Inventors Endpoint</a></li>
+                        <li><a href="assignee.html">Assignees Endpoint</a></li>
+                        <li><a href="location.html">Locations Endpoint</a></li>
+                        <li><a href="cpc_subsection.html">CPC Endpoint</a></li>
+                        <li><a href="uspc.html">USPC Endpoint</a></li>
+                        <li><a href="nber_subcat.html">NBER Endpoint</a></li>
+                    </ul>
+                </li>
+            </ul>  
+        </div>  
+    </div>
+
+
+<div class="container" role="main">
         <div class="col-md-3">
             <ul class="list-group" id="contents">
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="doc.html">Introduction</a></p>
-                    <ul class="section-list">
-                        <li><a href="doc.html#overview">PatentsView Overview</a></li>
-                        <li><a href="doc.html#database_schema">Database Schema</a></li>
-                        <li><a href="doc.html#inventor_disambiguation">Inventor Disambiguation</a></li>
-                        <li><a href="doc.html#patent_classes_and_technologies">Patent Classes and Technologies</a></li>
-                        <li><a href="doc.html#glossary">Glossary of Key Terms</a></li>
-                        <li><a href="doc.html#copyright_notice">Copyright Notice</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="query_language.html">Query Language</a></p>
-                    <ul class="section-list">
-                        <li><a href="query_language.html#query_string_format">Query String Format</a></li>
-                        <li><a href="query_language.html#field_list_format">Field List Format</a></li>
-                        <li><a href="query_language.html#options_parameter">Options Parameter</a></li>
-                        <li><a href="query_language.html#sort_parameter">Sort Parameter</a></li>
-                        <li><a href="query_language.html#results_format">Results Format</a></li>
-                        <li><a href="query_language.html#response_status_codes">Response Status Codes</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="patent.html">Patents Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="patent.html#field_list">Patent Field List</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="inventor.html">Inventors Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="inventor.html#field_list">Inventor Field List</a></li>
-                    </ul>
-                </li>
                 <li class="list-group-item section-selected">
-                    <p class="section-name"><a href="assignee.html">Assignees Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="assignee.html#field_list">Assignee Field List</a></li>
-                    </ul>
+                    <p class="section-name"><a href="assignee.html">Assignees Endpoint</a></p>
                 </li>
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="location.html">Locations Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="location.html#field_list">Location Field List</a></li>
-                    </ul>
+                
+                <li class="list-group-item">
+                    <p class="section-name"><a href="assignee.html#field_list">Assignee Field List</a></p>
+                    
                 </li>
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="cpc_subsection.html">CPC Subsections Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="cpc_subsection.html#field_list">CPC Subsection Field List</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="uspc.html">USPC Mainclasses Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="uspc.html#field_list">USPC Mainclass Field List</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="nber_subcat.html">NBER Subcategories Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="nber_subcat.html#field_list">NBER Subcategory Field List</a></li>
-                    </ul>
-                </li>
+                
             </ul>
         </div>
+
+    
         <div class="col-md-9">
             <div id="documentation">
 
-<h1>Assignees Query</h1>
+<h1>Assignees Endpoint</h1>
 
-<p class="code">
+<p class="code top-code">
     <strong>GET</strong> /api/assignees/query?q{,f,o,s}<br/>
     <strong>POST</strong> /api/assignees/query</p>
 
 <p>This will search for assignees matching the query string (<span class="code">q</span>) and returning the data fields listed in the field string (<span class="code">f</span>) sorted by the fields in the sort string (<span class="code">s</span>) using options provided in the option string (<span class="code">o</span>).</p>
 
 <p>The HTTP GET request method is the preferred access mechanism; however when the query parameters exceed a reasonable size (around 2,000 characters), then the POST method can be used. When using the POST method, the query parameters should be embedded within a JSON string within the request body.</p>
-
+<div class="table-responsive">
 <table class="table table-striped documentation-parameters">
     <thead>
         <tr>
@@ -156,6 +163,7 @@
         </tr>
     </tbody>
 </table>
+</div>
 
 <p>An example of a complete API call using the GET verb is:</p>
 
@@ -174,7 +182,7 @@
 
 <h2><a class="anchor"></a>Examples</h2>
 
-<ul>
+<ul class="example-ul">
     <li>
         <p>Return the default fields for assignees on patents with a patent type of "utility", granted between 1999 and 2001, and whose title contains the word "Software".</p>
         <p class="well code"><a href='http://www.dev.patentsview.org/api/assignees/query?q={"_and":[{"patent_type":"utility"},{"_text_any":{"patent_title":"Software"}}, {"_gte":{"patent_date":"1999-01-01"}},{"_lte":{"patent_date":"2001-12-31"}}]}'>http://www.dev.patentsview.org/api/assignees/query?q={"_and":[{"patent_type":"utility"},{"_text_any":{"patent_title":"Software"}}, {"_gte":{"patent_date":"1999-01-01"}},{"_lte":{"patent_date":"2001-12-31"}}]}</a></p> 
@@ -187,6 +195,7 @@
 
 <h2><a class="anchor" name="field_list"></a>Assignee Field List</h2>
 
+<div class="table-responsive">
 <table class="table table-striped documentation-fieldlist">
     <tr>
         <th>API Field Name</th>
@@ -1158,10 +1167,24 @@
         <td>Number of patents for an assignee for a given year</td>
     </tr>
 </table>
-
+</div>
             </div>
         </div>
     </div>
+
+    <footer class="thin-footer">
+                <div>
+                    <p>© 2014</p>
+                    <nav>
+                        <ul>
+                            <li class="about"><a href="#" title="About">About</a></li>
+                            <li class="methods"><a href="#" title="Methods and Sources">Methods and Sources</a></li>
+                            <li class="feedback"><a href="#" title="Send Feedback">Send Feedback</a></li>
+                            <li class="glossary"><a href="#" title="Glossary">Glossary</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </footer>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
