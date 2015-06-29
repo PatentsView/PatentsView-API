@@ -1224,7 +1224,96 @@
         <td>Y</td>
         <td>Category of patent. There are 6 possible type: "Defensive Publication" - 509, "Design" - 474736, "Plant" - 21052, "Reissue" - 16416, "Statutory Invention Registration" - 2254, "Utility" - 4910906.</td>
     </tr>
-    <tr>
+   
+<tr>
+        <td>usda_grant_id</td>
+        <td>usda_grants</td>
+        <td>USDA Award Number</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>USDA award numbers associated with an inventor/researcher (if any)</td>
+    </tr>
+<tr>
+        <td>usda_grant_start_date</td>
+        <td>usda_grants</td>
+        <td>Start date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>USDA award start date</td>
+    </tr>
+<tr>
+        <td>usda_grant_start_year</td>
+        <td>usda_grants</td>
+        <td>Start year</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>USDA award start year</td>
+    </tr>
+<tr>
+        <td>usda_grant_end_date</td>
+        <td>usda_grants</td>
+        <td>End date</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>USDA award end date</td>
+    </tr>
+<tr>
+        <td>usda_grant_end_year</td>
+        <td>usda_grants</td>
+        <td>End year</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>USDA award end year</td>
+    </tr>
+<tr>
+        <td>usda_grant_topic_id</td>
+        <td>usda_grants</td>
+        <td>Topic ID</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Topic number associated with the USDA award and generated using Latent Dirichlet Allocation</td>
+    </tr>
+<tr>
+        <td>usda_grant_topic</td>
+        <td>usda_grants</td>
+        <td>Full topic</td>
+        <td>full text</td>
+        <td>Y</td>
+        <td>Full text of the topic associated with the USDA award and generated using Latent Dirichlet Allocation</td>
+    </tr>
+<tr>
+        <td>usda_grant_topic_sequence</td>
+        <td>usda_grants</td>
+        <td>Topic sequence</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Sequence number of the topic associated with the USDA award as ranked by the probability score</td>
+    </tr>
+<tr>
+        <td>usda_grant_topic_probability</td>
+        <td>usda_grants</td>
+        <td>Topic probability score</td>
+        <td>float</td>
+        <td>Y</td>
+        <td>Probability score of the topic associated with the USDA award as produced by the Latent Dirichlet Allocation output</td>
+    </tr>
+<tr>
+        <td>usda_grant_topic_model</td>
+        <td>usda_grants</td>
+        <td>Topic model name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>The name of the corpus from which the topics were originally generated using Latent Dirichlet Allocation (e.g. the National Science Foundation awards 2000-2013)</td>
+    </tr>
+<tr>
+        <td>usda_researcher_id</td>
+        <td>usda_grants</td>
+        <td>Research ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>ID of a researcher having USDA awards and associated patents as an inventor in granted patents database</td>
+    </tr>
+ <tr>
         <td>uspc_first_seen_date</td>
         <td>uspcs</td>
         <td>First Seen Date</td>
