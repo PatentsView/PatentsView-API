@@ -164,8 +164,8 @@ header.med-header .logo {
   text-align: left;
   text-transform: capitalize;
   /*background-position: 0 -73px;*/
-  height: 32px;
-  width: 210px;
+  height: 45px;
+  width: 216px;
   background-image: url('../img/logo.png');
   background-repeat: no-repeat; }
 
@@ -299,10 +299,11 @@ footer.thin-footer {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  color: white;
+  color: #ffffff;
   bottom: 0;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 400;
+  letter-spacing: 0.03em;
   position: fixed;
   width: 100%; }
   footer.thin-footer > div {
@@ -315,13 +316,21 @@ footer.thin-footer {
       width: 758px; } }
   footer.thin-footer a,
   footer.thin-footer a:visited {
-    color: white; }
+    color: #ffffff;
+    font-size: 11px;
+     }
+  footer.thin-footer a {
+    margin-top: 1px; }
   footer.thin-footer div {
     height: 25px;
     position: relative; }
   footer.thin-footer p {
-    padding-top: 5px;
-    text-align: center; }
+    padding-top: 6px;
+    text-align: center; 
+    color:#ffffff;
+    font-size: 11px;
+    line-height: inherit;
+  }
   footer.thin-footer nav {
     left: 0;
     position: absolute;
@@ -463,6 +472,13 @@ footer.thin-footer {
           border-bottom-color: #e17954; }
       .overlay .pane .paneNav li + li {
         margin-left: 20px; }
+    .overlay .pane .col2 {
+      -moz-column-count: 2;
+      -webkit-column-count: 2;
+      column-count: 2;
+      -moz-column-gap: 40px;
+      -webkit-column-gap: 40px;
+      column-gap: 40px; }
     .overlay .pane .paneCopy {
       -moz-border-radius-bottomleft: 3px;
       -webkit-border-bottom-left-radius: 3px;
@@ -470,32 +486,19 @@ footer.thin-footer {
       -moz-border-radius-bottomright: 3px;
       -webkit-border-bottom-right-radius: 3px;
       border-bottom-right-radius: 3px;
-      -moz-column-count: 2;
-      -webkit-column-count: 2;
-      column-count: 2;
-      -moz-column-gap: 40px;
-      -webkit-column-gap: 40px;
-      column-gap: 40px;
       padding: 25px;
       background: #e5ebf0;
       color: #3e4b5a; }
+      .overlay .pane .paneCopy.patent-class-type .scroll {
+        max-height: 450px; }
       .overlay .pane .paneCopy .scroll {
-        -moz-column-span: all;
-        -webkit-column-span: all;
-        column-span: all;
         max-height: 500px;
-        overflow-y: scroll;
-        -moz-column-count: 2;
-        -webkit-column-count: 2;
-        column-count: 2;
-        -moz-column-gap: 40px;
-        -webkit-column-gap: 40px;
-        column-gap: 40px;
-        padding-bottom: 15px; }
+        overflow-y: scroll; }
+        .overlay .pane .paneCopy .scroll:after {
+          display: block;
+          content: '';
+          height: 15px; }
       .overlay .pane .paneCopy h3 {
-        -moz-column-span: all;
-        -webkit-column-span: all;
-        column-span: all;
         font-size: 16px;
         color: #a75a3e;
         margin-bottom: 13px; }
@@ -508,7 +511,7 @@ footer.thin-footer {
         .overlay .pane .paneCopy h4:not(:first-child) {
           margin-top: 24px; }
       .overlay .pane .paneCopy h4 {
-        break-after: avoid;
+        -moz-page-break-after: avoid;
         -webkit-column-break-after: avoid;
         break-after: avoid; }
       .overlay .pane .paneCopy em {
@@ -564,9 +567,6 @@ footer.thin-footer {
         border-bottom: 1px dashed #919A9D;
         cursor: pointer; }
     .overlay .pane .paneCopy.filter-opts ul {
-      -moz-column-span: all;
-      -webkit-column-span: all;
-      column-span: all;
       list-style-type: none;
       margin: 0;
       padding: 0; }
@@ -602,7 +602,7 @@ footer.thin-footer {
           margin: 0;
           padding: 0;
           list-style-type: none;
-          break-inside: avoid;
+          -moz-page-break-inside: avoid;
           -webkit-column-break-inside: avoid;
           break-inside: avoid; }
           .overlay .pane .paneCopy.patent-class-type ul li .label {
@@ -620,21 +620,22 @@ footer.thin-footer {
             display: block;
             clear: both; }
     .overlay .pane .paneCopy.patent-class-overview h3 {
-      -moz-column-span: 1;
-      -webkit-column-span: 1;
-      column-span: 1;
-      break-before: always;
+      -moz-page-break-before: always;
       -webkit-column-break-before: always;
       break-before: always; }
     .overlay .pane .paneCopy.glossary {
       padding-bottom: 0; }
       .overlay .pane .paneCopy.glossary p {
-        break-inside: avoid;
+        -moz-page-break-inside: avoid;
         -webkit-column-break-inside: avoid;
         break-inside: avoid; }
       .overlay .pane .paneCopy.glossary .entryTitle {
         font-size: 13px;
         color: #a75a3e; }
+        .overlay .pane .paneCopy.glossary .entryTitle:after {
+          content: ':'; }
+
+/*# sourceMappingURL=headfoot.css.map */
 
 
 

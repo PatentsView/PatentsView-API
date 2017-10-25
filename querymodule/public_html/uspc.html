@@ -4,16 +4,25 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PatentsView Query Modle API</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <title>PatentsView Query Module API</title>
+ <link rel="icon" href="//patentsview.org/webtool/favicon.ico" type="image/x-icon" />  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="../assets/sass/font-awesome/font-awesome.min.css" />
-    <link rel="stylesheet" href="../assets/sass/query.css" />
+    <link rel="stylesheet" href="sass/font-awesome/font-awesome.min.css" />
+    <link rel="stylesheet" href="sass/query.css" />
     <link rel="stylesheet" href="css/custom.css" />
     <link rel="stylesheet" href="css/headfoot.css" />
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-107120029-1', 'auto');
+    ga('send', 'pageview', {/*sequence*/ metric1: 0});
+    </script>
 </head>
 <body role="document">
 
@@ -34,9 +43,9 @@
           <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
             
             <ul class="nav navbar-nav navbar-right">
-              <li class="api active"><a href="#">API</a><div class="nav-tooltip">provides developers and researchers programmatic access to the underlying data</div></li>
-                <li class="data-query"><a href="#">Data Query</a><div class="nav-tooltip">provides a graphical interface for researchers to query the entire underlying database</div></li>
-                <li class="data-download"><a href="#">Data Download</a><div class="nav-tooltip">provides downloadable tables as csv files covering the underlying database</div></li>
+              <li class="api active"><a href="//patentsview.org/api/">API</a><div class="nav-tooltip">provides developers and researchers programmatic access to the underlying data</div></li>
+                <li class="data-query"><a href="//patentsview.org/query/">Data Query</a><div class="nav-tooltip">provides a graphical interface for researchers to query the entire underlying database</div></li>
+                <li class="data-download"><a href="//patentsview.org/download/">Data Download</a><div class="nav-tooltip">provides downloadable tables as csv files covering the underlying database</div></li>
             </ul>
 
           </div><!--/.nav-collapse -->
@@ -166,12 +175,12 @@
 </div>
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code"><a href='http://www.dev.patentsview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]'>http://www.dev.patentsview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]
+<p class="well code"><a href='http://www.patentsview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]'>http://www.patentsview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]
 </a></p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
 
-<p class="well code">http://www.dev.patentsview.org/api/uspc_mainclasses/query
+<p class="well code">http://www.patentsview.org/api/uspc_mainclasses/query
 </p>
 
 <p>with the body containing:</p>
@@ -184,7 +193,7 @@
 <ul class="example-ul">
     <li>
     <p>Return inventor names for patents whose assignee organization contains the word "Census", whose grant date is between 2000 and 2010, and whose USPC mainclass title contains the word "Electricity".</p>
-    <p class="well code"><a href='http://www.dev.patentsview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]'>http://www.dev.patentsview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]</a></p>
+    <p class="well code"><a href='http://www.patentsview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]'>http://www.patentsview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]</a></p>
     </li>
 </ul>
 
@@ -248,6 +257,22 @@
         <td>string</td>
         <td>Y</td>
         <td>Assignee's country as listed on the patent</td>
+    </tr>
+    <tr>
+        <td>assignee_county</td>
+        <td>assignees</td>
+        <td>County</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Assignee's county associated with their location_id on a given patent (only US)</td>
+    </tr>
+    <tr>
+        <td>assignee_county_fips</td>
+        <td>assignees</td>
+        <td>County FIPS code</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>FIPS code of the assignee's county associated with their location_id on a given patent (only US)</td>
     </tr>
     <tr>
         <td>assignee_first_name</td>
@@ -386,6 +411,22 @@
         <td>Assignee's state as listed on the patent</td>
     </tr>
     <tr>
+        <td>assignee_state_fips</td>
+        <td>assignees</td>
+        <td>State FIPS code</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>FIPS code of the assignee's state associated with their location_id on a given patent (only US)</td>
+    </tr>
+    <tr>
+        <td>assignee_total_num_inventors</td>
+        <td>assignees</td>
+        <td>Total Number of Inventors</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of inventors in database for a given assignee (as indicated by unique assignee_id)</td>
+    </tr>
+    <tr>
         <td>assignee_total_num_patents</td>
         <td>assignees</td>
         <td>Total Number of Patents</td>
@@ -506,6 +547,151 @@
         <td>Total number of patents within a CPC subsection</td>
     </tr>
     <tr>
+        <td>detail_desc_length</td>
+        <td>patents</td>
+        <td>Length of the detailed description text</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>The character count (length) of the detailed description text on a given patent</td>
+    </tr>
+    <tr>
+        <td>examiner_first_name</td>
+        <td>examiners</td>
+        <td>First name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>First name of examiner</td>
+    </tr>
+    <tr>
+        <td>examiner_id</td>
+        <td>examiners</td>
+        <td>ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database examiner ID (not currently disambiguated)</td>
+    </tr>
+    <tr>
+        <td>examiner_last_name</td>
+        <td>examiners</td>
+        <td>Last name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Last name of examiner</td>
+    </tr>
+    <tr>
+        <td>examiner_role</td>
+        <td>examiners</td>
+        <td>Role</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Specifies the role of the examiner on the patent (either primary or assistant examiner)</td>
+    </tr>
+    <tr>
+        <td>examiner_group</td>
+        <td>examiners</td>
+        <td>Group</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Art unit, tech center, industry sector, or other grouping of the USPTO examiners</td>
+    </tr>
+
+   <tr>
+        <td>forprior_country</td>
+        <td>foreign_priority</td>
+        <td>Country</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Country in which patent was originally filed</td>
+    </tr>
+    <tr>
+        <td>forprior_date</td>
+        <td>foreign_priority</td>
+        <td>Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Date at which patent was originally filed</td>
+    </tr>
+    <tr>
+        <td>forprior_docnumber</td>
+        <td>foreign_priority</td>
+        <td>Document number</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Foreign patent application number</td>
+    </tr>
+    <tr>
+        <td>forprior_kind</td>
+        <td>foreign_priority</td>
+        <td>Kind</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Kind of foreign priority document (international, national, regional)</td>
+    </tr>
+    <tr>
+        <td>forprior_sequence</td>
+        <td>foreign_priority</td>
+        <td>Sequence</td>
+        <td>int</td>
+        <td>Y</td>
+        <td>Order in which foreign priority documents appear in patent file</td>
+    </tr>
+<tr>
+        <td>govint_contract_award_number</td>
+        <td>gov_interests</td>
+        <td>Contract/Award Number</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Contract or award number as reported in the government interest statement on patents (if available)</td>
+    </tr>
+    <tr>
+        <td>govint_org_id</td>
+        <td>gov_interests</td>
+        <td>Organization ID</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Organization ID of the U.S. government agency reported in the government interest statement on patents (if available)</td>
+    </tr>
+    <tr>
+        <td>govint_org_level_one</td>
+        <td>gov_interests</td>
+        <td>Top Level Government Organization</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>The top-level U.S. government organization name related to the organization reported in the government interest statement on patents (if available). For example, the National Institutes of Health report to the U.S. Department of Health and Human Services.</td>
+    </tr>
+    <tr>
+        <td>govint_org_level_two</td>
+        <td>gov_interests</td>
+        <td>Second Level Government Organization</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>The second-level U.S. government organization name related to the organization reported in the government interest statement on patents (if available). For example, the National Institutes of Health is second-level in relation to the National Heart, Lung, and Blood Institute.</td>
+    </tr>
+    <tr>
+        <td>govint_org_level_three</td>
+        <td>gov_interests</td>
+        <td>Third Level Government Organization</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>The third-level U.S. government organization name related to the organization reported in the government interest statement on patents (if available). For example, the National Institute for Occupational Safety and Health is third-level in relation to the Centers for Disease Control and Prevention that report to the U.S. Department of Health and Human Services.</td>
+    </tr>
+    <tr>
+        <td>govint_org_name</td>
+        <td>gov_interests</td>
+        <td>Organization Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Name of the U.S. government organization reported in the government interest statement on patents (if available).</td>
+    </tr>
+    <tr>
+        <td>govint_raw_statement</td>
+        <td>gov_interests</td>
+        <td>Government Interest Statement</td>
+        <td>full text</td>
+        <td>Y</td>
+        <td>The full government interest statement as reported on a given patent (if available).</td>
+    </tr>
+    <tr>
         <td>inventor_city</td>
         <td>inventors</td>
         <td>City</td>
@@ -521,7 +707,23 @@
         <td>Y</td>
         <td>Inventor's country as listed on the selected patent</td>
     </tr>
+        <tr>
+        <td>inventor_county</td>
+        <td>inventors</td>
+        <td>County</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Inventor's county associated with their location_id on a given patent (only US)</td>
+    </tr>
     <tr>
+        <td>inventor_county_fips</td>
+        <td>inventors</td>
+        <td>County FIPS code</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>FIPS code of the inventor's county associated with their location_id on a given patent (only US)</td>
+    </tr>
+<tr>
         <td>inventor_first_name</td>
         <td>inventors</td>
         <td>First Name</td>
@@ -650,6 +852,14 @@
         <td>Inventor's state as listed on the selected patent</td>
     </tr>
     <tr>
+        <td>inventor_state_fips</td>
+        <td>inventors</td>
+        <td>State FIPS code</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>FIPS code of the inventor's state associated with their location_id on a given patent (only US)</td>
+    </tr>
+    <tr>
         <td>inventor_total_num_patents</td>
         <td>inventors</td>
         <td>Total Number of Patents</td>
@@ -770,6 +980,86 @@
         <td>The version of the IPC classification system</td>
     </tr>
     <tr>
+        <td>lawyer_first_name</td>
+        <td>lawyers</td>
+        <td>First Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>First name of lawyer</td>
+    </tr>
+    <tr>
+        <td>lawyer_first_seen_date</td>
+        <td>lawyers</td>
+        <td>First Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Earliest patent grant date for all the lawyer's patents in the database</td>
+    </tr>
+    <tr>
+        <td>lawyer_id</td>
+        <td>lawyers</td>
+        <td>ID</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Unique database lawyer ID  by disambiguation algorithm</td>
+    </tr>
+    <tr>
+        <td>lawyer_last_name</td>
+        <td>lawyers</td>
+        <td>Last Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Last name of lawyer</td>
+    </tr>
+    <tr>
+        <td>lawyer_last_seen_date</td>
+        <td>lawyers</td>
+        <td>Last Seen Date</td>
+        <td>date</td>
+        <td>Y</td>
+        <td>Most recent patent grant date for all the lawyer's patents in the database</td>
+    </tr>
+    <tr>
+        <td>lawyer_organization</td>
+        <td>lawyers</td>
+        <td>Organization</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Organization name, if lawyer is organization</td>
+    </tr>
+    <tr>
+        <td>lawyer_sequence</td>
+        <td>lawyers</td>
+        <td>Sequence</td>
+        <td>int</td>
+        <td>Y</td>
+        <td>Order in which lawyer appears in patent file</td>
+    </tr>
+    <tr>
+        <td>lawyer_total_num_assignees</td>
+        <td>lawyers</td>
+        <td>Total Number of Assignees</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique assignees on patents within a given lawyer (as indicated by unique lawyer_id)</td>
+    </tr>
+    <tr>
+        <td>lawyer_total_num_inventors</td>
+        <td>lawyers</td>
+        <td>Total Number of Inventors</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of unique inventors on patents within a given lawyer (as indicated by unique lawyer_id)</td>
+    </tr>
+    <tr>
+        <td>lawyer_total_num_patents</td>
+        <td>lawyers</td>
+        <td>Total Number of Patents</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Total number of patents in the database for a given lawyer (as indicated by unique lawyer_id)</td>
+    </tr>
+    <tr>
         <td>nber_category_id</td>
         <td>nbers</td>
         <td>Category ID</td>
@@ -849,14 +1139,7 @@
         <td>N</td>
         <td>Abstract of the patent</td>
     </tr>
-    <tr>
-        <td>patent_country</td>
-        <td>patents</td>
-        <td>Country</td>
-        <td>string</td>
-        <td>Y</td>
-        <td>Country in which the patent was granted, always U.S.</td>
-    </tr>
+
     <tr>
         <td>patent_date</td>
         <td>patents</td>
@@ -1057,62 +1340,69 @@
         <td>Y</td>
         <td>Category of patent. There are 6 possible type: "Defensive Publication" - 509, "Design" - 474736, "Plant" - 21052, "Reissue" - 16416, "Statutory Invention Registration" - 2254, "Utility" - 4910906.</td>
     </tr>
-   
-<tr>
-        <td>usda_grant_id</td>
-        <td>usda_grants</td>
-        <td>USDA Award Number</td>
-        <td>string</td>
-        <td>Y</td>
-        <td>USDA award numbers associated with an inventor/researcher (if any)</td>
-    </tr>
-<tr>
-        <td>usda_grant_start_date</td>
-        <td>usda_grants</td>
-        <td>Start date</td>
+   <tr>
+        <td>pct_102_date</td>
+        <td>pct_data</td>
+        <td>Date</td>
         <td>date</td>
         <td>Y</td>
-        <td>USDA award start date</td>
+        <td>35 U.S.C. § 102(e) date for PCT applications</td>
     </tr>
-<tr>
-        <td>usda_grant_start_year</td>
-        <td>usda_grants</td>
-        <td>Start year</td>
-        <td>integer</td>
-        <td>Y</td>
-        <td>USDA award start year</td>
-    </tr>
-<tr>
-        <td>usda_grant_end_date</td>
-        <td>usda_grants</td>
-        <td>End date</td>
+    <tr>
+        <td>pct_371_date</td>
+        <td>pct_data</td>
+        <td>Date</td>
         <td>date</td>
         <td>Y</td>
-        <td>USDA award end date</td>
+        <td>PCT Section 371(c)(1)(2)(4)date, date when PCT application was filed</td>
     </tr>
-<tr>
-        <td>usda_grant_end_year</td>
-        <td>usda_grants</td>
-        <td>End year</td>
-        <td>integer</td>
+    <tr>
+        <td>pct_date</td>
+        <td>pct_data</td>
+        <td>Date</td>
+        <td>date</td>
         <td>Y</td>
-        <td>USDA award end year</td>
+        <td>Date when PCT document was filed or published</td>
     </tr>
-<tr>
-        <td>usda_grant_nalt_topic</td>
-        <td>usda_grants</td>
-        <td>NAL Thesaurus subject category</td>
-        <td>full text</td>
-        <td>Y</td>
-        <td>Full text of the NAL Thesaurus subject category associated with the USDA award and generated using the Temis tool at the USDA National Agricultural Library</td>
-    </tr>
-<tr>
-        <td>usda_researcher_id</td>
-        <td>usda_grants</td>
-        <td>Research ID</td>
+    <tr>
+        <td>pct_docnumber</td>
+        <td>pct_data</td>
+        <td>Number</td>
         <td>string</td>
         <td>Y</td>
-        <td>ID of a researcher having USDA awards and associated patents as an inventor in granted patents database</td>
+        <td>ID of the PCT document</td>
+    </tr>
+    <tr>
+        <td>pct_doctype</td>
+        <td>pct_data</td>
+        <td>Type</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Type of the PCT document (wo_grant, pct_application)</td>
+    </tr>
+    <tr>
+        <td>pct_kind</td>
+        <td>pct_data</td>
+        <td>Kind</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Kind of PCT application (numerical for filed, alphabetical for published)</td>
+    </tr>
+    <tr>
+        <td>rawinventor_first_name</td>
+        <td>rawinventors</td>
+        <td>First Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Inventor first name before disambiguation as listed on the selected patent</td>
+    </tr>
+    <tr>
+        <td>rawinventor_last_name</td>
+        <td>rawinventors</td>
+        <td>Last Name</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Inventor last name before disambiguation as listed on the selected patent</td>
     </tr>
  <tr>
         <td>uspc_first_seen_date</td>
@@ -1186,6 +1476,39 @@
         <td>Y</td>
         <td>Description of USPC subclass</td>
     </tr>
+<tr>
+        <td>wipo_field_id</td>
+        <td>wipos</td>
+        <td>WIPO Technology Field ID</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>ID of WIPO technology field</td>
+    </tr>
+    <tr>
+        <td>wipo_field_title</td>
+        <td>wipos</td>
+        <td>Technology Field Title</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Description of WIPO technology field</td>
+    </tr>
+    <tr>
+        <td>wipo_sector_title</td>
+        <td>wipos</td>
+        <td>Technology Sector Title</td>
+        <td>string</td>
+        <td>Y</td>
+        <td>Description of WIPO technology sector</td>
+    </tr>
+    <tr>
+        <td>wipo_sequence</td>
+        <td>wipos</td>
+        <td>Sequence</td>
+        <td>integer</td>
+        <td>Y</td>
+        <td>Order of the WIPO technology field in the list of technology fields for the selected patent</td>
+    </tr>
+    
     <tr>
         <td>year_id</td>
         <td>years</td>
@@ -1197,7 +1520,7 @@
     <tr>
         <td>year_num_patents_for_uspc_mainclass</td>
         <td>years</td>
-        <td>#N/A</td>
+        <td>Number of Patents for USPC Mainclass</td>
         <td>integer</td>
         <td>N</td>
         <td>#N/A</td>
@@ -1210,22 +1533,9 @@
     </div>
 
 
-    <footer class="thin-footer">
-                <div>
-                    <p>© 2014</p>
-                    <nav>
-                        <ul>
-                            <li class="about"><a href="#" title="About">About</a></li>
-                            <li class="methods"><a href="#" title="Methods and Sources">Methods and Sources</a></li>
-                            <li class="feedback"><a href="#" title="Send Feedback">Send Feedback</a></li>
-                            <li class="glossary"><a href="#" title="Glossary">Glossary</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </footer>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+ 
 
 </body>
 </html>

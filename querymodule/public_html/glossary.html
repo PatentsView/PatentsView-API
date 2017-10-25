@@ -4,16 +4,25 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PatentsView Query Modle API</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <title>PatentsView Query Module API</title>
+  <link rel="icon" href="//patentsview.org/webtool/favicon.ico" type="image/x-icon" />  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="../assets/sass/font-awesome/font-awesome.min.css" />
-    <link rel="stylesheet" href="../assets/sass/query.css" />
+    <link rel="stylesheet" href="sass/font-awesome/font-awesome.min.css" />
+    <link rel="stylesheet" href="sass/query.css" />
     <link rel="stylesheet" href="css/custom.css" />
     <link rel="stylesheet" href="css/headfoot.css" />
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-90540397-1', 'auto');
+    ga('send', 'pageview', {/*sequence*/ metric1: 0});
+    </script>
 </head>
 <body role="document">
 
@@ -34,9 +43,9 @@
           <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
             
             <ul class="nav navbar-nav navbar-right">
-              <li class="api active"><a href="#">API</a><div class="nav-tooltip">provides developers and researchers programmatic access to the underlying data</div></li>
-                <li class="data-query"><a href="#">Data Query</a><div class="nav-tooltip">provides a graphical interface for researchers to query the entire underlying database</div></li>
-                <li class="data-download"><a href="#">Data Download</a><div class="nav-tooltip">provides downloadable tables as csv files covering the underlying database</div></li>
+              <li class="api active"><a href="//www.patentsview.org/api/">API</a><div class="nav-tooltip">provides developers and researchers programmatic access to the underlying data</div></li>
+                <li class="data-query"><a href="//www.patentsview.org/query/">Data Query</a><div class="nav-tooltip">provides a graphical interface for researchers to query the entire underlying database</div></li>
+                <li class="data-download"><a href="//www.patentsview.org/download/">Data Download</a><div class="nav-tooltip">provides downloadable tables as csv files covering the underlying database</div></li>
             </ul>
 
           </div><!--/.nav-collapse -->
@@ -90,87 +99,71 @@
 
 <p><em class="light-gray">This glossary is provided for the purpose of navigating the PatentsView platform tools and data.  These are not official USPTO definitions of terms.</em></p>
 
-<p><strong>Application</strong> - An application for a US patent. PatentsView includes all types of US patent applications except provisional applications.  </p>
+<p><strong>Application</strong> - An application filed with the USPTO to patent an invention.  PatentsView includes all types of published patent applications except provisional applications. An application number is a unique number assigned to the patent application when it is filed and includes a two digit series code and a six digit serial number.  </p>
 
-<p><strong>Application number</strong> - An application number is the unique number assigned to a patent application by the USPTO when it is filed and includes a two digit series code and a six digit serial number</p>
+<p><strong>Assignee</strong> - The name of the entity—company, foundation, partnership, holding company or individual—that owns the patent.</p>
 
-<p><strong>Assignee</strong> - The name of the entity - company, foundation, partnership, holding company, or individual- that owns the patent or to which the patent rights are assigned.</p>
+<p><strong>At-Issue or Original Classification</strong> - The classification assigned to a patent at the time it is granted. This classification is also called the OR classification. It appears in bold on the face of a published patent at grant.</p>
 
-<p><strong>Cited patent</strong> - A patent that is cited as a reference in another patent application.  The cited patent number will show in the "references cited" section of the patent application.</p>
+<p><strong>Cited patent</strong> - A patent is cited when it appears as a reference in another patent or patent application. The cited patent number is contained in the ‘references cited’ section of the document.</p>
 
-<p><strong>Citing patent</strong> - A patent that cites a given granted patent or patent application.</p>
+<p><strong>Citing patent</strong> - A patent that cites a patent or patent application as a reference in its 'references cited' section.</p>
 
-<p><strong>Claim</strong> - A description of the invention as defined in the specification of a patent application. A claim defines the invention and the aspects of it that are legally enforceable. </p>
+<p><strong>Claim</strong> - A patent claim states the subject-matter protected by the patent in technical language. The set of claims in a patent define the scope of its legal protection.</p>
 
-<p><strong>Co-inventor</strong> - For a given inventor, any other inventor listed on the same patent application or granted patent.</p>
+<p><strong>Co-inventor</strong> - A person who appears on the same patent or patent application as another inventor.</p>
 
-<p><strong>Cooperative Patent Classification</strong> - A hierarchical patent classification scheme that is the result of a joint partnership between the USPTO and the European Patent Office (EPO) to harmonize their existing classification systems (ECLA and USPC, respectively) and migrate towards a common classification scheme. </p>
+<p><strong>Cooperative Patent Classification (CPC)</strong> - A hierarchical patent classification scheme developed through a joint partnership between the USPTO and the European Patent Office (EPO) to harmonize and replace each office’s individual classification system, the US Patent Classification (USPC) and the European Classification (ECLA). The USPTO formally launched the CPC system in January 2013.  </p>
 
-<p><strong>Current Classification</strong> - The most recent USPC classification for a given patent, which is used to determine the most recent NBER category and CPC class.</p>
+<p><strong>Current Classification</strong> - The most recent CPC classification for a given patent, which is used to determine the most recent National Bureau of Economic Research (NBER) category.</p>
 
 <p><strong>Design Patent</strong> - Design patents cover a new, original, and ornamental design for an article of manufacture.</p>
 
 <p><strong>Disambiguation</strong> - The process of identifying the same entity (person, organization, etc.) across and between datasets, when there is no common system of entity identifiers.  </p>
 
-<p><strong>Filing Date</strong> - The date a patent application was filed with the USPTO. </p>
+<p><strong>Filing Date</strong> - The date a patent application was filed with the USPTO.</p>
 
-<p><strong>First-Named Inventor</strong> - The first inventor listed on a patent application. The first-named inventor is also the assignee (owner) if no assignee is identified on the patent application or granted patent. </p>
+<p><strong>First Named Inventor</strong> - The first inventor listed on a patent application. </p>
 
-<p><strong>Grant Date</strong> - The date a patent was granted or issued by the USPTO. Grant dates are always on Tuesday.</p>
+<p><strong>Grant Date</strong> - The date a patent was issued by the USPTO.</p>
 
-<p><strong>Individual Inventors</strong> - Inventors who "own" their own patents. The first-named inventor is also the assignee if no assignee is identified on the patent application or granted patent.</p>
+<p><strong>Independent Inventors</strong> - Inventors who "own" their own patents and do not assign title to the patent to another entity (e.g, company, foundation, partnership, or holding). </p>
 
-<p><strong>Inventor</strong> - The creator of the invention for which patent protection is sought.</p>
+<p><strong>International Patent Classification (IPC)</strong> - The system of patent classifications published by the World Intellectual Property Organization (WIPO).</p>
 
-<p><strong>International Patent Classification (IPC)</strong> - A hierarchical patent classification system published by the World Intellectual Property Organization (WIPO).</p>
+<p><strong>Inventor</strong> - The individual who conceived the invention.</p>
 
-<p><strong>Kind</strong> - A code assigned by the USPTO to all patents. The code includes a letter, and in many cases a number, that distinguishes the kind of patent document (e.g., patent application publication, patent, plant patent application publication, plant patent, or design patent) and the level of publication (e.g., first publication, second publication, or corrected publication). (http://www.uspto.gov/learning-and-resources/support-centers/electronic-business-center/kind-codes-included-uspto-patent) </p>
+<p><strong>Kind</strong> - A code assigned by the USPTO to patents consisting of a letter, and in many cases a number, that distinguishes the kind of document (e.g., utility patent application publication, utility patent, plant patent application publication, plant patent, or design patent) and sequence of publication (e.g., first publication, second publication, or corrected publication).</p>
 
-<p><strong>Location, at-issue</strong> - The location for an inventor or assignee as recorded on a patent grant or published application.</p>
+<p><strong>Location, At-issue</strong> - The location for an inventor or assignee as recorded on a published patent grant or application.</p>
 
-<p><strong>Location, most recent</strong> - The location for an inventor or assignees as recorded on the most recent patent associated with that entity in the PatentsView database.  This date is determined by the results of inventor and assignee disambiguation and is the default location setting for both inventors and assignees in the data visualization tool.</p>
+<p><strong>Location, Most Recent</strong> - The location recorded on an inventor or assignee’s most recent patent in the PatentsView database. This data is determined by the results of the inventor and assignee disambiguation and is the default location setting for both inventors and assignees in the data visualization tool.</p>
 
-<p><strong>NBER Category</strong> - The system of patent technological categories/subcategories classification designed by the National Bureau of Economic Research (NBER) as part of the patent database project (Hall, Jaffe, and Trajtenberg 2002).   USPTO has generated an algorithm to assign current NBER subcategories to all US patents and published applications based on a USPC crosswalk generated by the NBER team in 2006 (Marco et. al. 2015 forthcoming).</p>
-
-<p><strong>At</strong> -Issue or Original Classification - The primary classification assigned to a patent at the time it is granted. This classification is also called the original classification. It appears in bold on the face of a patent.</p>
+<p><strong>NBER Category</strong> - The patent technological categories/subcategories designed by the National Bureau of Economic Research (NBER) as part of the patent database project (Hall, Jaffe, and Trajtenberg 2002). USPTO has generated an algorithm to assign NBER subcategories to US patents issued after 2006. For details, see http://ssrn.com/abstract=2616724.</p>
 
 <p><strong>Patent</strong> - A property right granted by the Government of the United States of America to an inventor "to exclude others from making, using, offering for sale, or selling the invention throughout the United States or importing the invention into the United States" for a limited time in exchange for public disclosure of the invention when the patent is granted.</p>
 
-<p><strong>Patent Processing Time</strong> - The duration between application filing date and patent grant date for an individual patent.</p>
+<p><strong>Patent Processing Time</strong> - The duration between a patent application filing date and grant date.</p>
 
-<p><strong>Plant Patent</strong> - Patents granted to an inventor who has invented or discovered and asexually reproduced a distinct and new variety of plant.</p>
+<p><strong>Plant Patent</strong> - Patents granted for the invention or discovery and asexual reproduction of a distinct and new variety of plant.</p>
 
 <p><strong>Title</strong> - The title of a patent.</p>
 
-<p><strong>Type</strong> - USPTO issues different types of patent documents offering different kinds of protection and covering distinct subject matter.  These are: utility, design, plant, reissue, defensive, and statutory invention registration.</p>
+<p><strong>Type</strong> - The type of patent document—utility, design, plant, reissue, defensive, and statutory invention registration—that offers different kinds of protection for distinct types of subject matter.</p>
 
-<p><strong>United States Patent Classification System (USPC)</strong> - The patent classification system used by the USPTO to classify and organize applications filed and patents granted in the United States. Every class has a unique alphanumeric identifier. A class/subclass pair uniquely identifies a subclass within a class.</p>
+<p><strong>United States Patent Classification System (USPC)</strong> - The patent classification system used by the USPTO to classify and organize patent applications filed and patents granted in the United States. Every class has a unique alphanumeric identifier. A class/subclass pair of identifiers uniquely identifies a subclass within a class.</p>
 
-<p><strong>Utility Patent</strong> - Utility patents are issued for the invention of a new, useful, and non-obvious process, machine, manufacture, or composition of matter, or a new, useful, and non-obvious improvement upon an existing process, machine, manufacture, or composition of matter. </p>
+<p><strong>USPTO</strong> - The United States Patent and Trademark Office — An Agency in the US Department of Commerce responsible for matters related to intellectual property.</p>
 
-<p><strong>USPTO</strong> - The United States Patent and Trademark Office - An Agency in the US Department of Commerce responsible for granting U.S patents and registering trademarks.</p>
-
-            </div>
+<p><strong>Utility Patent</strong> - Utility patents are issued for the invention of a new and useful process, machine, manufacture, or composition of matter, or a new and useful improvement.</p>           </div>
         </div>
     </div>
-    <footer class="thin-footer">
-                <div>
-                    <p>© 2014</p>
-                    <nav>
-                        <ul>
-                            <li class="about"><a href="#" title="About">About</a></li>
-                            <li class="methods"><a href="#" title="Methods and Sources">Methods and Sources</a></li>
-                            <li class="feedback"><a href="#" title="Send Feedback">Send Feedback</a></li>
-                            <li class="glossary"><a href="#" title="Glossary">Glossary</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </footer>
+ 
+<div class="overlay"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
-<script src="js/svg-pan-zoom.min.js"></script>
+ <script src="js/svg-pan-zoom.min.js"></script>
 <script>
 $(function() {
         var dg = svgPanZoom('#diagram svg', {

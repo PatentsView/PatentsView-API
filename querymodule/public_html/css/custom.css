@@ -247,6 +247,16 @@ table tr p {
     padding: 0;
 }
 
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    max-width: 195px;
+    word-wrap:break-word;
+    word-break: break-word;
+
+-webkit-hyphens: auto;
+   -moz-hyphens: auto;
+        hyphens: auto;
+}
+
 /* ----------------------- Subnav ------------------------ */
 
 .sub-nav {
@@ -401,6 +411,9 @@ ul.dropdown-nav li a:hover {
         width: 100%;
     }
 
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    max-width: 100%;
+}
 
 }
 

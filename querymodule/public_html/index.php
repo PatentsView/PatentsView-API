@@ -1,4 +1,5 @@
 <?php
+ini_set('max_execution_time', 300);
 // Step 1: Require the Slim Framework
 require_once dirname(__FILE__) . '/../thirdparty/Slim/Slim/Slim.php';
 require_once dirname(__FILE__) . '/../app/config.php';

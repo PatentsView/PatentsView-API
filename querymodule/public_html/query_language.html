@@ -1,19 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PatentsView Query Module API</title>
-  <link rel="icon" href="//patentsview.org/webtool/favicon.ico" type="image/x-icon" />  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
-
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="sass/font-awesome/font-awesome.min.css" />
-    <link rel="stylesheet" href="sass/query.css" />
     <link rel="stylesheet" href="css/custom.css" />
-    <link rel="stylesheet" href="css/headfoot.css" />
     <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -25,111 +20,95 @@
     </script>
 </head>
 <body role="document">
-
-<header class="med-header">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid container">
-          <div class="navbar-header centered-header">
-            <a href="/" class="navbar-brand logo" title="PatentsView - USPTO" alt="PatentsView Logo"></a>
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            
-          </div>
-
-          <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
-            
-            <ul class="nav navbar-nav navbar-right">
-              <li class="api active"><a href="//www.patentsview.org/api/">API</a><div class="nav-tooltip">provides developers and researchers programmatic access to the underlying data</div></li>
-                <li class="data-query"><a href="//www.patentsview.org/query/">Data Query</a><div class="nav-tooltip">provides a graphical interface for researchers to query the entire underlying database</div></li>
-                <li class="data-download"><a href="//www.patentsview.org/download/">Data Download</a><div class="nav-tooltip">provides downloadable tables as csv files covering the underlying database</div></li>
-            </ul>
-
-          </div><!--/.nav-collapse -->
-        </div><!--/.container-fluid -->
-      </nav>
-</header>
-
-    <!--<header class="med-header">
-            <div class="centered-header">
-                <a href="/" class="logo" title="PatentsView - USPTO" alt="PatentsView Logo"></a>
-                <nav>
-                    <ul>
-                        <li class="api active"><a href="#">API</a><div class="nav-tooltip">provides developers and researchers programmatic access to the underlying data</div></li>
-                        <li class="data-query"><a href="#">Data Query</a><div class="nav-tooltip">provides a graphical interface for researchers to query the entire underlying database</div></li>
-                        <li class="data-download"><a href="#">Data Download</a><div class="nav-tooltip">provides downloadable tables as csv files covering the underlying database</div></li>
-                    </ul>
-                </nav>
-            </div>
-
-        </header> -->
-
-    <div class="sub-nav">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <ul class="right-header">
-                <li><a href="doc.html">Why Explore Patent Data?</a></li>
-                <li><a href="faqs.html">FAQs</a></li>
-                <li><a href="glossary.html">Glossary</a></li>
-                <li class="active"><a href="query-language.html">API Query Language</a></li>
-                <li class="api-endpoints-li">7 API Endpoints
-                    <ul class="dropdown-nav">
-                        <li><a href="patent.html">Patents Endpoint</a></li>
-                        <li><a href="inventor.html">Inventors Endpoint</a></li>
-                        <li><a href="assignee.html">Assignees Endpoint</a></li>
-                        <li><a href="location.html">Locations Endpoint</a></li>
-                        <li><a href="cpc_subsection.html">CPC Endpoint</a></li>
-                        <li><a href="uspc.html">USPC Endpoint</a></li>
-                        <li><a href="nber_subcat.html">NBER Endpoint</a></li>
-                    </ul>
-                </li>
-            </ul>  
-        </div>  
-    </div>    
+            <div class="navbar-header">
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="logo"><a href="doc.html" title="PatentsView - USPTO"><img alt="PatentsView Logo" src="img/logo.png" /></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <div class="container" role="main">
-
-         <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+        <div class="col-md-3">
             <ul class="list-group" id="contents">
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="doc.html">Introduction</a></p>
+                    <ul class="section-list">
+                        <li><a href="doc.html#overview">PatentsView Overview</a></li>
+                        <li><a href="doc.html#database_schema">Database Schema</a></li>
+                        <li><a href="doc.html#inventor_disambiguation">Inventor Disambiguation</a></li>
+                        <li><a href="doc.html#patent_classes_and_technologies">Patent Classes and Technologies</a></li>
+                        <li><a href="doc.html#glossary">Glossary of Key Terms</a></li>
+                        <li><a href="doc.html#copyright_notice">Copyright Notice</a></li>
+                    </ul>
+                </li>
                 <li class="list-group-item section-selected">
-                    <p class="section-name"><a>API Query Language</a></p>
-                </li>
-                
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="#query_string_format">Query String Format</a></p>
-                </li>
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="#field_list_format">Field List Format</a></p>
-                </li>
-                <li class="list-group-item ">
-                    <p class="section-name"><a href="#options_parameter">Options Parameter</a></p>
+                    <p class="section-name"><a href="query_language.html">Query Language</a></p>
+                    <ul class="section-list">
+                        <li><a href="query_language.html#query_string_format">Query String Format</a></li>
+                        <li><a href="query_language.html#field_list_format">Field List Format</a></li>
+                        <li><a href="query_language.html#options_parameter">Options Parameter</a></li>
+                        <li><a href="query_language.html#sort_parameter">Sort Parameter</a></li>
+                        <li><a href="query_language.html#results_format">Results Format</a></li>
+                        <li><a href="query_language.html#response_status_codes">Response Status Codes</a></li>
+                    </ul>
                 </li>
                 <li class="list-group-item ">
-                    <p class="section-name"><a href="#sort_parameter">Sort Parameter</a></p>
+                    <p class="section-name"><a href="patent.html">Patents Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="patent.html#field_list">Patent Field List</a></li>
+                    </ul>
                 </li>
                 <li class="list-group-item ">
-                    <p class="section-name"><a href="#results_format">Results Format</a></p>
+                    <p class="section-name"><a href="inventor.html">Inventors Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="inventor.html#field_list">Inventor Field List</a></li>
+                    </ul>
                 </li>
                 <li class="list-group-item ">
-                    <p class="section-name"><a href="#response_status_codes">Response Status Codes</a></p>
+                    <p class="section-name"><a href="assignee.html">Assignees Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="assignee.html#field_list">Assignee Field List</a></li>
+                    </ul>
                 </li>
-                    
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="location.html">Locations Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="location.html#field_list">Location Field List</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="cpc_subsection.html">CPC Subsections Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="cpc_subsection.html#field_list">CPC Subsection Field List</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="uspc.html">USPC Mainclasses Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="uspc.html#field_list">USPC Mainclass Field List</a></li>
+                    </ul>
+                </li>
+                <li class="list-group-item ">
+                    <p class="section-name"><a href="nber_subcat.html">NBER Subcategories Query</a></p>
+                    <ul class="section-list">
+                        <li><a href="nber_subcat.html#field_list">NBER Subcategory Field List</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
-
-        
-        
-        <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+        <div class="col-md-9">
             <div id="documentation">
 
-<h1>API Query Language</h1>
+<h1>Query Language</h1>
 
 <p>To access prior or specific versions of the api, insert <span class="code">/vN</span> after <span class="code">api</span> in the URL. For example, </p>
 
-<p class="code top-code"><strong>GET</strong> /api/v1/patents/query?q{,f,o,s}</p>
+<p class="code"><strong>GET</strong> /api/v1/patents/query?q{,f,o,s}</p>
 
 <h2><a class="anchor" name="query_string_format"></a>Query String Format</h2>
 
@@ -165,15 +144,15 @@ simple_pair
 
 <h3><a class="anchor" name="single_criterion"></a>Single Criterion</h3>
 
-<p>The basic criterion, which checks for equality, has the format: <span class="code">{&lt;field&gt;:&lt;value&gt;}</span>, where <span class="code">&lt;field&gt;</span> is the name of a database field and <span class="code">&lt;value&gt;</span> is the value the field will be compared to for equality (Each API Endpoint section contains a list of the data fields that can be selected for inclusion in output datasets). For example, this query string will return the patent with the patent number of 7861317: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"patent_number":7861317}'></a></p>
+<p>The basic criterion, which checks for equality, has the format: <span class="code">{&lt;field&gt;:&lt;value&gt;}</span>, where <span class="code">&lt;field&gt;</span> is the name of a database field and <span class="code">&lt;value&gt;</span> is the value the field will be compared to for equality (see &ldquo;<a href="">Field List</a>&rdquo; for a list of fields and their value data types). For example, this query string will return the patent with the patent number of 7861317: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"patent_number":7861317}'></a></p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"patent_number":"7861317"}'>http://www.patentsview.org/api/patents/query?q={"patent_number":"7861317"}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"patent_number":"7861317"}'>http://www.dev.patentsview.org/api/patents/query?q={"patent_number":"7861317"}</a></p>
 
 <h3><a class="anchor" name="joining_criteria"></a>Joining Criteria</h3>
 
 <p>Multiple criteria can be added to a query using a join operator (<span class="code">_and</span>, <span class="code">_or</span>) and putting the criteria in an array using square brackets (&ldquo;<span class="code">[</span>&rdquo; and &ldquo;<span class="code">]</span>&rdquo;). The following has multiple criteria, and will return patents that have &ldquo;Whitney&rdquo; as an inventor and a grant date of January 4, 2007: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json=={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}'></a></p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}'>http://www.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}'>http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"2007-01-04"}]}</a></p>
 
 <h3><a class="anchor" name="comparison_operators"></a> Comparison Operators</h3>
 
@@ -207,7 +186,7 @@ simple_pair
 
 <p>To specify a comparison operator for a criterion, nest the element containing the criterion inside an element that uses the comparison operator. For example, this query string will return all patents that have a grant date on or after January 4, 2007: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_gte":{"patent_date":"2007-01-04"}}'></a></p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_gte":{"patent_date":"2007-01-04"}}'>http://www.patentsview.org/api/patents/query?q={"_gte":{"patent_date":"2007-01-04"}}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_gte":{"patent_date":"2007-01-04"}}'>http://www.dev.patentsview.org/api/patents/query?q={"_gte":{"patent_date":"2007-01-04"}}</a></p>
 
 <p>Note that <span class="code">q={"_eq":{"patent_date":"2007-01-04"}}</span> <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_eq":{"patent_date":"2007-01-04"}}'></a> is functionally equivalent to <span class="code">q={"patent_date":"2007-01-04"}</span> <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"patent_date":"2007-01-04"}'></a>.</p>
 
@@ -215,13 +194,13 @@ simple_pair
 
 <p>Negation does the opposite of the specified comparison. To specify the negation operator for a criterion, nest the element containing the criterion inside an element that uses the negation operator: <span class="code">_not</span>. For example, this query string will return all patents that are not design patents: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_not":{"patent_type":"design"}}'></a></p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_not":{"patent_type":"design"}}'>http://www.patentsview.org/api/patents/query?q={"_not":{"patent_type":"design"}}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_not":{"patent_type":"design"}}'>http://www.dev.patentsview.org/api/patents/query?q={"_not":{"patent_type":"design"}}</a></p>
 
 <h3><a class="anchor" name="value_arrays"></a> Value Arrays</h3>
 
 <p>If the value of a criterion is an array, then the query will accept a match of any one of the array values. For example, this query will return all patents that have &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; as an inventor: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"inventor_last_name":["Whitney","Hopper"]}'></a></p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"inventor_last_name":["Whitney","Hopper"]}'>http://www.patentsview.org/api/patents/query?q={"inventor_last_name":["Whitney","Hopper"]}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"inventor_last_name":["Whitney","Hopper"]}'>http://www.dev.patentsview.org/api/patents/query?q={"inventor_last_name":["Whitney","Hopper"]}</a></p>
 
 <p>Note that this is functionally equivalent to: <span class="code">q={"_or":[{"inventor_last_name":"Whitney"},{"inventor_last_name":"Hopper"}]}</span> <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_or":[{"inventor_last_name":"Whitney"},{"inventor_last_name":"Hopper"}]}'></a></p>
 
@@ -231,19 +210,19 @@ simple_pair
 
 <p>Patents with a grant date in 2007: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}'></a></p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}'>http://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}'>http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}</a></p>
 
 <p>Patents with an inventor with the last name of &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; and not a design patent and with a grant date in 2007: <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}"></a></p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}'>http://www.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}'>http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":["Whitney","Hopper"]},{"_not":{"patent_type":"design"}},{"_gte":{"patent_date":"2007-01-04"}},{"_lte":{"patent_date":"2007-12-31"}}]}</a></p>
 
 <p>Patents with an inventor with the last name of &ldquo;Whitney&rdquo; or &ldquo;Hopper&rdquo; or with a title that contains &ldquo;cotton&rdquo; or &ldquo;gin&rdquo; or &ldquo;COBOL&rdquo;: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_or":[{"name_last":["Whitney","Hopper"]},{"_contains":{"title":"cotton%20gin"}},{"_contains":{"title":"COBOL"}}]}'></a><p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_or":[{"inventor_last_name":["Whitney","Hopper"]},{"_text_any":{"patent_title":"COBOL cotton gin"}}]}'>http://www.patentsview.org/api/patents/query?q={"_or":[{"inventor_last_name":["Whitney","Hopper"]},{"_text_any":{"patent_title":"COBOL cotton gin"}}]}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_or":[{"inventor_last_name":["Whitney","Hopper"]},{"_text_any":{"patent_title":"COBOL cotton gin"}}]}'>http://www.dev.patentsview.org/api/patents/query?q={"_or":[{"inventor_last_name":["Whitney","Hopper"]},{"_text_any":{"patent_title":"COBOL cotton gin"}}]}</a></p>
 
 <p>Patents with an inventor with the last name of &ldquo;Whitney&rdquo; and with &ldquo;cotton gin&rdquo; in the title, or with an inventor with the last name of &ldquo;Hopper&rdquo; and with &ldquo;COBOL&rdquo; in the title: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json=={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton%20gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}'></a></p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}'>http://www.patentsview.org/api/patents/query?q={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}'>http://www.dev.patentsview.org/api/patents/query?q={"_or":[{"_and":[{"inventor_last_name":"Whitney"},{"_text_phrase":{"patent_title":"cotton gin"}}]},{"_and":[{"inventor_last_name":"Hopper"},{"_text_all":{"patent_title":"COBOL"}}]}]}</a></p>
 
 <h3><a class="anchor" name="formats"></a>Formats</h3>
 
@@ -251,7 +230,7 @@ simple_pair
 
 <h2><a class="anchor" name="field_list_format"></a>Field List Format</h2>
 
-<p>The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return a default set of fields. Each API Endpoint section contains a list of the data fields that can be selected for inclusion in output datasets. The following example would return the patent numbers, inventor names, and date patent was granted that meet the query criteria:</p>
+<p>The field list parameter is a JSON array of the names of the fields to be returned by the query. If not provided, the API will return a default set of fields. See &ldquo;<a href="#field_list">Field List</a>&rdquo; for the fields available for the results. The following example would return the patent numbers, inventor names, and date patent was granted that meet the query criteria:</p>
 
 <p class="well code">f=["patent_number","inventor_last_name","patent_date"]</p>
 
@@ -260,7 +239,7 @@ simple_pair
 <p>The options parameter is a JSON formatted object of options to modify the query or results. Available options are:</p>
 
 <ul>
-    <li><span class="code">page</span> and <span class="code">per_page</span> &mdash; customize how many patents to return per page and which page.</li>
+    <li><span class="code">page</span> and <span class="code">per_page</span> &mdash; customize how may patents to return per page and which page.</li>
     <li><span class="code">matched_subentities_only</span> &mdash; whether a query should return all related subentities or just those that match query criteria. Defaults to <span class="code">"false"</span>.</li>
     <li><span class="code">include_subentity_total_counts</span> &mdash; whether the query results should include the total counts of unique subentities. Defaults to <span class="code">"false"</span>.</li>
 </ul>
@@ -289,7 +268,7 @@ simple_pair
 <th class="col-md-4">NUMBER</th>
 <th class="col-md-4">PATENT_DATE</th>
 </tr>
-<tr class="even">
+<tr>
 <td>PAT1</td>
 <td>7202770</td>
 <td>4/10/2007</td>
@@ -302,13 +281,13 @@ simple_pair
 <tr>
 <th>INVENTOR_ID</th><th>PATENT_NUMBER</th><th>NAME_FIRST</th><th>NAME_LAST</th>
 </tr>
-<tr class="even">
+<tr>
 <td>INV1</td><td>pat1</td><td>Stephen J.</td><td>Whitney</td>
 </tr>
 <tr>
 <td>INV2</td><td>pat1</td><td>Scott</td><td>Davidson</td>
 </tr>
-<tr class="even"s>
+<tr>
 <td>INV3</td><td>pat1</td><td>David</td><td>Perry</td>
 </tr>
 <tr>
@@ -318,7 +297,7 @@ simple_pair
 
 <p>This query: <a class="fa fa-external-link" href="http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}"></a></p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]'>http://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]'>http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]</a></p>
 
 <p>produces results that include all patents that have a grant date on or after April 10, 2007 and all associated inventor last names, be it "Whitney" or not: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"patents":[{"patent_number":"7202770","patent_date":"2007-04-10","inventors":[{"inventor_first_name":"Stephen J.","inventor_last_name":"Whitney"},{"inventor_first_name":"Scott","inventor_last_name":"Davidson"},{"inventor_first_name":"David","inventor_last_name":"Perry"},{"inventor_first_name":"Edwin James","inventor_last_name":"Harris"}]}...'></a></p>
 
@@ -327,7 +306,7 @@ simple_pair
 
 <p>However, if the query includes <span class="code">{"matched_subentities_only": true}</code>, the results will include all patents granted on or after April 10, 2007 and associated inventor data only if the inventor's last name is "Whitney": <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}'></a></p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":true}'>http://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":true}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":true}'>http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&amp;f=["patent_number","patent_date","inventor_last_name"]&amp;o={"matched_subentities_only":true}</a></p>
 
 <p>the results would include subentity (i.e. inventor) data: <p class="well code">{"patents":[{"patent_number":"7202770","patent_date":"2007-04-10","inventors":[{"inventor_last_name":"Whitney"}]}...</p>
 
@@ -335,11 +314,11 @@ simple_pair
 
 <h3><a class="anchor" name="include_subentity_total_counts"></a>Include Subentity Total Counts</h3>
 
-<p>The <span class="code">include_subentity_total_counts</span> option is provided to indicate whether the query results should include the total counts of unique subentities. By default, these counts are not returned. If this option is set to <span class="code">true</span>, then there will be a count of unique subentities for those subentities that have at least one field included in the result fields. These will be named, e.g., <span class="code">total_inventor_count</span>, <span class="code">total_assignee_count</span>, etc. </p>
+<p>The <span class="code">include_subentity_total_counts</span> option is provided to indicate whether the query results should include the total counts of unique subentities. By default, these counts are not returned. If this option is set to<span class="code">true</span>, then there will be a count of unique subentities for those subentities that have at least one field included in the result fields. These will be named, e.g., <span class="code">total_inventor_count</span>, <span class="code">total_assignee_count</span>, etc. </p>
 
 <p>For example, suppose the following patent query is submitted:</p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_organization"]'>http://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_organization"]</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_organization"]'>http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_organization"]</a></p>
 
 <p>In addition to the matching patents, the result will only include the total number of patents matching the query.</p>
 
@@ -349,7 +328,7 @@ simple_pair
 
 <p>If we set the <span class="code">include_subentity_total_counts</span> to <span class="code">"true"</span>:
 
-<p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_organization"]&o={"include_subentity_total_counts":"true"}'>http://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_organization"]&o={"include_subentity_total_counts":"true"}</a></p>
+<p class="well code"><a href='http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_organization"]&o={"include_subentity_total_counts":"true"}'>http://www.dev.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2007-04-10"}},{"inventor_last_name":"Whitney"}]}&f=["patent_number","patent_date","inventor_last_name","assignee_organization"]&o={"include_subentity_total_counts":"true"}</a></p>
 
 <p>then the output will also include the total numbers of inventors and assignees associated to matching patents.</p>
 
@@ -433,12 +412,8 @@ key_value_pair
         </div>
     </div>
 
-   
-<div class="overlay"></div>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-   
 
 </body>
 </html>

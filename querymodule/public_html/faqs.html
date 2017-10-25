@@ -4,16 +4,25 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PatentsView Query Modle API</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <title>PatentsView Query Module API</title>
+  <link rel="icon" href="//patentsview.org/webtool/favicon.ico" type="image/x-icon" />  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="../assets/sass/font-awesome/font-awesome.min.css" />
-    <link rel="stylesheet" href="../assets/sass/query.css" />
+    <link rel="stylesheet" href="sass/font-awesome/font-awesome.min.css" />
+    <link rel="stylesheet" href="sass/query.css" />
     <link rel="stylesheet" href="css/custom.css" />
     <link rel="stylesheet" href="css/headfoot.css" />
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-90540397-1', 'auto');
+    ga('send', 'pageview', {/*sequence*/ metric1: 0});
+    </script>
 </head>
 <body role="document">
 
@@ -34,9 +43,9 @@
           <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
             
             <ul class="nav navbar-nav navbar-right">
-              <li class="api active"><a href="#">API</a><div class="nav-tooltip">provides developers and researchers programmatic access to the underlying data</div></li>
-                <li class="data-query"><a href="#">Data Query</a><div class="nav-tooltip">provides a graphical interface for researchers to query the entire underlying database</div></li>
-                <li class="data-download"><a href="#">Data Download</a><div class="nav-tooltip">provides downloadable tables as csv files covering the underlying database</div></li>
+              <li class="api active"><a href="//www.patentsview.org/api/">API</a><div class="nav-tooltip">provides developers and researchers programmatic access to the underlying data</div></li>
+                <li class="data-query"><a href="//www.patentsview.org/query/">Data Query</a><div class="nav-tooltip">provides a graphical interface for researchers to query the entire underlying database</div></li>
+                <li class="data-download"><a href="//www.patentsview.org/download/">Data Download</a><div class="nav-tooltip">provides downloadable tables as csv files covering the underlying database</div></li>
             </ul>
 
           </div><!--/.nav-collapse -->
@@ -86,7 +95,7 @@
                     <p class="section-name"><a>FAQs</a></p>
                 </li>
                 <li class="list-group-item ">
-                    <p class="section-name"><a href="#what">What is Patents View?</a></p>
+                    <p class="section-name"><a href="#what">What is PatentsView?</a></p>
                     
                 </li>
                 <li class="list-group-item ">
@@ -99,7 +108,11 @@
 </a></p>
                     
                 </li>
-                <li class="list-group-item ">
+               <li class="list-group-item ">
+                    <p class="section-name"><a href="#data-updates">How frequently are the data driving the API updated?</a></p>
+                    
+                </li>
+  <li class="list-group-item ">
                     <p class="section-name"><a href="#what-version">What version of the API am I using?</a></p>
                     
                 </li>
@@ -123,67 +136,55 @@
 
 <p>The PatentsView application programming interface (API) provides web developers and researchers programmatic access to longitudinal data and metadata on patents, inventors, companies, and geographic locations. </p>
 
-<p>PatentsView is a prototype patent data visualization and analysis platform intended to increase the value, utility, and transparency of US patent data.  The initiative is supported by the <a href="http://www.uspto.gov/about-us/organizational-offices/office-policy-and-international-affairs/office-chief-economist-6">Office of Chief Economist</a> at the US Patent &amp; Trademark Office (USPTO).</p>
+<p>PatentsView is a prototype patent data visualization and analysis platform intended to increase the value, utility, and transparency of US patent data.  The initiative is supported by the <a href="//www.uspto.gov/economics">Office of Chief Economist</a> at the US Patent &amp; Trademark Office (USPTO).</p>
 
-<p>The PatentsView platform is built on a <a href="http://www.sciencedirect.com/science/article/pii/S0048733314000225">newly developed database</a> that longitudinally links inventors, organizations, locations, and patenting activity since 1976. The data visualization tool, query tool, and flexible API enable a broad spectrum of users to examine the dynamics of inventor patenting activity over time and location. They also permit users to explore technology categories, assignees, citation patterns, and co-inventor networks. </p>
+<p>The PatentsView platform is built on a <a href="http://www.sciencedirect.com/science/article/pii/S0048733314000225">newly developed database</a> that longitudinally links inventors, organizations, locations, and patenting activity since 1976. The data visualization tool, query tool, and flexible API enable a broad spectrum of users to examine the dynamics of inventor patenting activity over time and space. These tools also permit users to explore technology categories, assignees, citation patterns, and co-inventor networks. </p>
 
 <p>PatentsView is intended to encourage the study and enhanced understanding of the intellectual property (IP) and innovation systems; to serve as a fundamental function of the government in creating "public good" platforms in these data; and to eliminate wasteful and redundant cleaning, converting, and matching efforts necessary for individual researchers to use these data, thus freeing up researchers to do what they do best-study IP, innovation, and technological change.</p>
 
-<p>The current PatentsView API is a prototype and the team welcomes <a href="mailto:cssip@air.org">feedback</a> on data discrepancies.  </p>
+<p>The current PatentsView API is a prototype, and the team welcomes <a href="mailto:cssip@air.org">feedback</a> on data discrepancies.  </p>
 
 <h2><a class="anchor" name="why"></a>Why does PatentsView rely on inventor disambiguation?</h2>
 
-<p>When an inventor applies for a patent, the USPTO does not require that he or she record a unique identifier. As a result, searching for all the patents associated with a specific inventor can be difficult. This is particularly true if the inventor's name is common or has multiple forms. The PatentsView tool relies on a large scale-clustering algorithm (adaptive K-means) to automatically associate patents with the same inventor, a technique known as disambiguation. The algorithm considers statistical correlations on patent attributes (published name, patent technology class, city, his/her co-inventor names, and assignee) to determine whether or not the inventor names belong to the same individual. Data are fed into the inventor disambiguation algorithm and clusters of inventor names that are determined to be the same individual are assigned a unique ID that is a combination of their first patent number and their inventor sequence in that patent.</p>
+<p>When an inventor applies for a patent, the USPTO does not require that he or she record a unique identifier. As a result, searching for all the patents associated with a specific inventor can be difficult. This is particularly true if the inventor's name is common or has multiple forms. The USPTO hosted an <a href="http://www.patentsview.org/workshop/" target="_blank">Inventor Disambiguation Workshop</a> on September 24, 2015. The research team from the University of Massachusetts Amherst led by Andrew McCallum and Nicholas Monath authored the successful algorithm that was integrated in the PatentsView data platform in March 2016. The algorithm uses <a href="http://www.patentsview.org/data/presentations/UMassInventorDisambiguation.pdf" target="_blank">discriminative hierarchical coreference</a> as a new approach to increase the quality of PatentsView data.</p>
+  
 
-<p>Because the disambiguation of inventor identities is an ongoing effort, there are likely to be errors observable in the PatentsView query results. The team welcomes feedback as we continue to improve our disambiguation methodology.
-What are patent classes and technologies?</p>
+<p>Because the disambiguation of inventor identities is an ongoing effort, errors are likely to be observable in the PatentsView query results. The team welcomes feedback as we continue to improve our disambiguation methodology.</p>
 
 <h2><a class="anchor" name="patent_classes_and_technologies"></a>What are patent classes and technologies?</h2>
 
-<p>Patents are classified by four distinct schemes in the PatentsView database: 1) US patent classification (USPC), 2) cooperative patent classification (CPC), 3) the <a href="http://www.nber.org/papers/w8498.pdf">National Bureau of Economic Research (NBER) technology categories</a>, and 4) International patent classification (IPC).  All USPC, CPC, and NBER patent classes appearing in the API results represent the current patent class, unless otherwise noted.  All IPC patent classes in the Patents View database represent the at-issue patent class.</p>
-
-<h2><a class="anchor" name="what-version"></a>What version of the API am I using?</h2>
+<p>Patent classes are based primarily on the technological and functional features of inventions and are continuously updated to reflect evolving technology. Patents are classified by four distinct schemes in the PatentsView database: 1) <a href="http://www.uspto.gov/web/patents/classification/selectnumwithtitle.htm">US patent classification (USPC)</a>, 2) <a href="http://www.uspto.gov/web/patents/classification/cpc.html">cooperative patent classification (CPC)</a>, 3) the <a href="http://www.nber.org/papers/w8498.pdf">National Bureau of Economic Research (NBER) technology categories</a>, and 4) International patent classification (IPC).  All USPC, CPC, and NBER patent classes appearing in the API results represent the current patent class, unless otherwise noted.  All IPC patent classes in the PatentsView database represent the at-issue patent class.</p><h2><a class="anchor" name="data-updates"></a>How frequently are the data driving the API updated?</h2><p>The US patent database driving the PatentsView API is updated with data from newly issued patents and publication patent applications every even month of the year. Each update integrates the most recent USPC and CPC classification released by the USPTO and applied retrospectively to all US patents dating back to 1976. The NBER classification after 2006 is also reproduced based on the current USPC and CPC classification. The inventor, assignee and location disambiguation algorithms are re-run on the entire database each time the data update process is complete.<h2><a class="anchor" name="what-version"></a>What version of the API am I using?</h2>
 
 <ul class="body-bullet">
-    <li>The most recent version of the API is posted on the <a href="www.patentsview.org/api" target="_blank">www.patentsview.org/api</a> and is version #X. </li>
-    <li>Previous versions of the API can be accessed through <a href="www.patentsview.org/api/vX" target="_blank">www.patentsview.org/api/vX</a>.</li>
+    <li>The current version of the API is at <a href="//www.patentsview.org/api/latest" target="_blank">www.patentsview.org/api/latest</a> and delivers the most recently updated US patent data. </li>
+    <li>The two preceding versions of the current API are accessible via "www.patentsview.org/api/YYYYMM/". For example, if the current version was updated in April 2016, the two preceding versions of the API can be accessed at www.patenstview.org/api/201602/ and www.patentsview.org/api/201512/.</li>
 </ul>
 
 <h2><a class="anchor" name="how"></a>How can I send feedback on the API and data discrepancies?</h2>
 
 <ul class="body-bullet">
-    <li>The current PatentsView API is a prototype and the team welcomes all inquiries and feedback.  Please send emails to <a href="mailto:cssip@air.org.">cssip@air.org.</a> </li>
+    <li>The current PatentsView API is a prototype and the team welcomes all inquiries and <a href="mailto:cssip@air.org">feedback</a>.</li>
 </ul>
 
 <h2><a class="anchor" name="what-api"></a>What are the terms of use for this API?</h2>
 
 <ul class="body-bullet">
-    <li>Currently no API key is necessary to access the PatentsView API.  However, we reserve the right to throttle excessive usage of the API.   Please send an email to <a href="mailto:cssip@air.org.">cssip@air.org.</a> if you feel your access has been unfairly throttled.
-    USPTO encourages the broad use and dissemination of research and products generated with this data.  There are no restrictions on the use and reuse of this data and API.   USPTO does encourage data users and developers to attribute PatentsView as source data for any derived research and products.</li>
+    <li>Currently no key is necessary to access the PatentsView API.  However, we reserve the right to halt excessive usage of the API.   Please <a href="mailto:cssip@air.org.">contact us</a> if you feel access has been unfairly restricted.</li>
+   
+    <li>The current PatentsView API is a prototype and the team cannot guarantee the accuracy of the data in the API.   The team welcomes <a href="mailto:cssip@air.org">feedback</a> on data discrepancies.</li>
 
-    <li>The current PatentsView API is a prototype and the team cannot guarantee the accuracy of the data in the API.   The team welcomes feedback on data discrepancies.</li>
-
-    <li>This work was created through a government contract which assigned copyright to the US Patent and Trademark Office (USPTO). USPTO waives copyright and related rights in the work worldwide through the CC0 1.0 Universal Public Domain Dedication (which can be found at <a href="https://creativecommons.org/publicdomain/zero/1.0/)" target="_blank">https://creativecommons.org/publicdomain/zero/1.0/)</a>.</li>
+    <li>This work was created through a government contract funded by the Office of Chief Economist in the US Patent and Trademark Office. Users are free to use, share, or adapt the material for any purpose, subject to the standards of the Creative Commons Attribution 4.0 International License (<a href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</a>).</li> 
+<li>Attribution should be given to PatentsView (<a href="www.patentsview.org">www.patentsview.org</a>) for use, distribution, or derivative works. 
+    </li>
 </ul>
             </div>
         </div>
     </div>
-    <footer class="thin-footer">
-                <div>
-                    <p>© 2014</p>
-                    <nav>
-                        <ul>
-                            <li class="about"><a href="#" title="About">About</a></li>
-                            <li class="methods"><a href="#" title="Methods and Sources">Methods and Sources</a></li>
-                            <li class="feedback"><a href="#" title="Send Feedback">Send Feedback</a></li>
-                            <li class="glossary"><a href="#" title="Glossary">Glossary</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </footer>
+   <div class="overlay"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+   </script>
 
 <script src="js/svg-pan-zoom.min.js"></script>
 <script>
