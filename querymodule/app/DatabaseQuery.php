@@ -283,25 +283,25 @@ class DatabaseQuery
 
         $selectSt = "SELECT $select FROM $from $where $order";
         $selectSt = preg_replace('/"/', '\"', $selectSt);
-        $cmd = '"C:/Program Files/MySQL/MySQL Server 5.7/bin/mysql" -B -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['database']) . ' -e "' . $selectSt . '" > ' . escapeshellarg('c:/temp/' . $insertHash . '.txt');
+        $cmd = '"C:/Program Files/MySQL/MySQL Server 5.7/bin/mysql" -B -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['database']) . ' -e "' . $selectSt . '" > ' . escapeshellarg('/tmp/' . $insertHash . '.txt');
         shell_exec($cmd);
-        $cmd2 = '"C:/Program Files/MySQL/MySQL Server 5.7/bin/mysql" -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'c:/temp/" . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
+        $cmd2 = '"C:/Program Files/MySQL/MySQL Server 5.7/bin/mysql" -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'/tmp/" . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
 
         try {
-            if (filesize("c:/temp/" . $insertHash . ".txt") !== 0) {
-                $outfile = fopen("c:/temp/" . $insertHash . ".txt", 'r');
-                $outstr = fread($outfile, filesize("c:/temp/" . $insertHash . ".txt"));
+            if (filesize("/tmp/" . $insertHash . ".txt") !== 0) {
+                $outfile = fopen("/tmp/" . $insertHash . ".txt", 'r');
+                $outstr = fread($outfile, filesize("/tmp/" . $insertHash . ".txt"));
                 $outstr = preg_replace('/\s+\n/', "\n", $outstr);
                 $outstr = preg_replace('/\n$/', '', $outstr);
 
                 fclose($outfile);
-                unlink('c:/temp/' . $insertHash . '.txt');
-                $outfile = fopen("c:/temp/" . $insertHash . ".txt", 'w');
+                unlink('/tmp/' . $insertHash . '.txt');
+                $outfile = fopen("/tmp/" . $insertHash . ".txt", 'w');
                 fwrite($outfile, $outstr);
                 fclose($outfile);
             }
             $results = shell_exec($cmd2);
-            unlink('c:/temp/' . $insertHash . '.txt');
+            unlink('/tmp/' . $insertHash . '.txt');
             //$st = $this->db->prepare($sqlQuery);
             //$results = $st->execute();
             //$st->closeCursor();
