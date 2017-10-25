@@ -283,9 +283,9 @@ class DatabaseQuery
 
         $selectSt = "SELECT $select FROM $from $where $order";
         $selectSt = preg_replace('/"/', '\"', $selectSt);
-        $cmd = '"C:/Program Files/MySQL/MySQL Server 5.7/bin/mysql" -B -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['database']) . ' -e "' . $selectSt . '" > ' . escapeshellarg('/tmp/' . $insertHash . '.txt');
+        $cmd = 'mysql" -B -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['database']) . ' -e "' . $selectSt . '" > ' . escapeshellarg('/tmp/' . $insertHash . '.txt');
         shell_exec($cmd);
-        $cmd2 = '"C:/Program Files/MySQL/MySQL Server 5.7/bin/mysql" -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'/tmp/" . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
+        $cmd2 = 'mysql" -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'/tmp/" . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
 
         try {
             if (filesize("/tmp/" . $insertHash . ".txt") !== 0) {
