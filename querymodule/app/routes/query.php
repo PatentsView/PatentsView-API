@@ -36,7 +36,7 @@ $app->get(
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
-
+        $fieldsParam=array_keys($PATENT_FIELD_SPECS);
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
 
         $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
