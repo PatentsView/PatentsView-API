@@ -34,9 +34,12 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam=n
     $dbResults = $dbQuery->queryDatabase($entitySpecs, $fieldSpecs, $whereClause, $qp->getFieldsUsed(),
         $entitySpecificWhereClauses, $qp->getOnlyAndsWereUsed(), $selectFieldSpecs, $sortParam, $optionsParam);
 
+//    file_put_contents('php://stderr', print_r($dbResults, TRUE));
+//    file_put_contents('php://stderr', print_r("\n", TRUE));
     // Convert the DB result structures to PHO structures. The DB results will be in multiple tables, and the
     // PHP structures will be nested (only one-level) PHP arrays.
     $results = convertDBResultsToNestedStructure($entitySpecs, $dbResults, $selectFieldSpecs);
+
     foreach ($dbQuery->getTotalCounts() as $entityName=>$count)
         $results['total_' . $entityName . '_count'] = $count;
     return $results;

@@ -222,9 +222,41 @@ class QueryParser
                 if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
                 if ($datatype == 'string') {
                     if ($operator == '_begins')
-                        $returnString = "($dbField like '$val%')";
+                        if(is_array($val))
+                        {
+                            $returnString = "(";
+                            for($i = 0; $i < count($val); $i++)
+                            {
+                                $returnString .= "$dbField like '$val[$i]%'";
+                                if($i < count($val)-1)
+                                {
+                                    $returnString .= " OR ";
+                                }
+                            }
+                            $returnString .= ")";
+                        }
+                        else
+                        {
+                            $returnString = "($dbField like '$val%')";
+                        }
                     elseif ($operator == '_contains')
-                        $returnString = "($dbField like '%$val%')";
+                        if(is_array($val))
+                        {
+                            $returnString = "(";
+                            for($i = 0; $i < count($val); $i++)
+                            {
+                                $returnString .= "$dbField like '%$val[$i]%'";
+                                if($i < count($val)-1)
+                                {
+                                    $returnString .= " OR ";
+                                }
+                            }
+                            $returnString .= ")";
+                        }
+                        else
+                        {
+                            $returnString = "($dbField like '%$val%')";
+                        }
                 } else {
                     ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
                     throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");

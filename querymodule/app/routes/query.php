@@ -1,23 +1,91 @@
 <?php
+ini_set('memory_limit', '3G');
 require_once dirname(__FILE__) . '/../executeQuery.php';
 require_once dirname(__FILE__) . '/../ErrorHandler.php';
 require_once dirname(__FILE__) . '/../entitySpecs.php';
+require_once dirname(__FILE__) . '/../AddEmailDatabase.php';
 
 // query/q=<query in json format>[&f=<field in json format>][&o=<options in json format>]
+
+//Add to capture the email info
+$app->post(
+    '/addemail',
+    function () use ($app) {
+        $body = $app->request->getBody();
+	$bodyJSON = json_decode($body,true);
+	    if ($bodyJSON['email'] == null) {
+            $app->response->status(400);
+	        ErrorHandler::getHandler()->sendError(400, "No email provided");
+	    } else {
+		$email = $bodyJSON['email'];
+            if (strpos($email,"@") === false || strpos($email,".") === false) {
+                $app->response->status(400);
+                ErrorHandler::getHandler()->sendError(400, "Email is invalid: $email");
+            }
+        }	
+
+	$addEmailDB = new AddEmailDatabase();
+	$addEmailDB->addEmail($email);
+    }
+);
+
 $app->get(
     '/patents/query',
     function () use ($app) {
+
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
 
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+
         $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
 
+$app->get(
+    '/patents/export',
+    function () use ($app) {
+
+
+        global $PATENT_ENTITY_SPECS;
+        global $PATENT_FIELD_SPECS;
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
+        $total_found=-1;
+        $page=1;
+        while($total_found !=0 ){
+            file_put_contents('php://stderr', print_r($page,TRUE));
+            $time_start = microtime(true);
+            $optionsParam=array("page"=>$page, "per_page"=>10000);
+            $fieldsParam=array_keys($PATENT_FIELD_SPECS);
+            $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+            file_put_contents('php://stderr', print_r($results),TRUE);
+            if (in_array("count", $results)){
+                $total_found=$results['count'];
+            }else{
+                $total_found=0;
+            }
+
+            if ($total_found !=0){
+                $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
+                $fp = fopen('results_1977_'.$page.'.json', 'w');
+                fwrite($fp, $results);
+                fclose($fp);
+            }
+
+            $time_end = microtime(true);
+            $time = $time_end - $time_start;
+            file_put_contents('php://stderr', print_r("Did some stuff in $time seconds\n",TRUE));
+            $page+=1;
+        }
+
+
+
+
+        $app->response->setBody("");
+    }
+);
 
 $app->post(
     '/patents/query',
@@ -121,6 +189,38 @@ $app->post(
         $app->response->setBody($results);
     }
 );
+
+
+$app->get(
+    '/cpc_groups/query',
+    function () use ($app) {
+        global $CPC_GROUP_ENTITY_SPECS;
+        global $CPC_GROUP_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
+
+        $results = executeQuery($CPC_GROUP_ENTITY_SPECS, $CPC_GROUP_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results, $CPC_GROUP_ENTITY_SPECS);
+        $app->response->setBody($results);
+    }
+);
+
+
+$app->post(
+    '/cpc_groups/query',
+    function () use ($app) {
+        global $CPC_GROUP_ENTITY_SPECS;
+        global $CPC_GROUP_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
+
+        $results = executeQuery($CPC_GROUP_ENTITY_SPECS, $CPC_GROUP_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results, $CPC_GROUP_ENTITY_SPECS);
+        $app->response->setBody($results);
+    }
+);
+
+
 
 
 $app->get(
@@ -227,8 +327,10 @@ function CheckGetParameters($app)
     if ($app->request->get('q') == null) {
         ErrorHandler::getHandler()->sendError(400, "'q' parameter: missing.", $app->request->get());
     }
+
     // Convert the query param to json, return error if empty or not valid
     $queryParam = json_decode($app->request->get('q'), true);
+
     if ($queryParam == null) {
         ErrorHandler::getHandler()->sendError(400, "'q' parameter: not valid json.", $app->request->get());
     }
@@ -262,6 +364,9 @@ function CheckGetParameters($app)
         if ($optionsParam == null) {
             ErrorHandler::getHandler()->sendError(400, "'o' parameter: not valid json.", $app->request->get());
         }
+    }
+    else{
+        $optionsParam=array("per_page"=>10);
     }
 
     $formatParam = 'json';

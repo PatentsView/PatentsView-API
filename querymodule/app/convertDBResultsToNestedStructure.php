@@ -18,6 +18,8 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults=
     // a hundred lines of code, but some readability is lost. For debugging in PHPStorm, which doesn't show
     // dynamic variables in its debugger window, you need to create them as watch variables to see the values.
     // For example, ${$group['priorId']} gets resolved to $priorinventorId; ${$group['group_name']} to $inventors
+
+
     $groupVars = $entitySpecs;
     foreach ($groupVars as &$group) {
         $name = $group['entity_name'];
@@ -59,15 +61,20 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults=
 
     // Iterate through the primary entity DB results one row at a time. It might be possible to slice or subset the rows by
     // primary entity ID, but iterating straight through the list is probably most efficient
+
     foreach ($dbResults[$primaryEntityGroup['group_name']] as $row) {
         ${$primaryEntityGroup['thisId']} = $row[$primaryEntityGroup['keyId']];
         ${$primaryEntityGroup['entity_name']} = array();
-        foreach ($row as $apiField => $val)
+        foreach ($row as $apiField => $val) {
             // Check to make sure the field was in the original field list, and not a field we added
-            if (isset($selectFieldSpecs[$apiField]))
-                ${$primaryEntityGroup['entity_name']}[$apiField] = $val;    // add the field/value to the primary entity
 
+            if (isset($selectFieldSpecs[$apiField])) {
+
+                ${$primaryEntityGroup['entity_name']}[$apiField] = $val;    // add the field/value to the primary entity
+            }
+        }
         foreach (array_slice($groupVars, 1) as $group) {
+
             if (isset($dbResults[$group['group_name']])) {
                 ${$group['group_name']} = array();
                 if (array_key_exists(${$primaryEntityGroup['thisId']}, ${$group['byPrimaryEntityId']})) {
@@ -75,9 +82,17 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults=
                         ${$group['entity_name']} = $groupRow;
                         unset(${$group['entity_name']}[$primaryEntityGroup['keyId']]);
                         // Check to make sure the field was in the original field list, and not a field we added
-                        foreach ($groupRow as $apiField => $val)
-                            if (!isset($selectFieldSpecs[$apiField]))
-                                unset(${$group['entity_name']}[$apiField]);
+//                        foreach ($groupRow as $apiField => $val){
+////                            file_put_contents('php://stderr', print_r($selectFieldSpecs, TRUE));
+////                            file_put_contents('php://stderr', print_r("\n", TRUE));
+////                            file_put_contents('php://stderr', print_r($apiField, TRUE));
+////                            file_put_contents('php://stderr', print_r("\n", TRUE));
+////                            file_put_contents('php://stderr', print_r($group['entity_name'], TRUE));
+////                            file_put_contents('php://stderr', print_r("\n", TRUE));
+//
+//                            if (!isset($selectFieldSpecs[$apiField]))
+//                                unset(${$group['entity_name']}[$apiField]);
+//                        }
                         ${$group['group_name']}[] = ${$group['entity_name']};
                     }
                     ${$primaryEntityGroup['entity_name']}[$group['group_name']] = ${$group['group_name']};
@@ -86,6 +101,7 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults=
         }
         ${$primaryEntityGroup['group_name']}[] = ${$primaryEntityGroup['entity_name']};
     }
+
 
     return array($primaryEntityGroup['group_name'] => ${$primaryEntityGroup['group_name']}, 'count' => count(${$primaryEntityGroup['group_name']}));
 }
