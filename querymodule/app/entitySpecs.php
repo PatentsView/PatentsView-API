@@ -90,12 +90,12 @@ $PATENT_FIELD_SPECS=array
     'lawyer_total_num_patents' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_assignees' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_inventors' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_doctype' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_102_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_371_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_kind' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_docnumber' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_doctype' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_102_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
         
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'y'),
@@ -278,7 +278,7 @@ $INVENTOR_ENTITY_SPECS=array(
     array('entity_name'=>'lawyer', 'group_name'=>'lawyers', 'keyId'=>'', 'distinctCountId'=>'lawyer_id','join'=>'left outer join patent_lawyer ON patent_inventor.patent_id=patent_lawyer.patent_id left outer join lawyer on lawyer.lawyer_id=patent_lawyer.lawyer_id'),
     array('entity_name'=>'examiner', 'group_name'=>'examiners', 'keyId'=>'', 'distinctCountId'=>'examiner_id','join'=>'left outer join patent_examiner on patent_examiner.patent_id=patent_inventor.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id'),
     array('entity_name'=>'foreign_prior', 'group_name'=>'foreign_priority', 'keyId'=>'', 'distinctCountId'=>'foreign_doc_number','join'=>'left outer join foreignpriority on foreignpriority.patent_id=patent_inventor.patent_id'),
-    array('entity_name'=>'pct_data', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=patent_inventor.patent_id')  
+    array('entity_name'=>'pct_dat', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=patent_inventor.patent_id')  
 );
 
 $INVENTOR_FIELD_SPECS=array
@@ -311,12 +311,12 @@ $INVENTOR_FIELD_SPECS=array
     'lawyer_total_num_patents' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_assignees' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_inventors' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_doctype' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_102_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_371_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_kind' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_docnumber' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_doctype' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_102_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
 
@@ -505,7 +505,7 @@ $ASSIGNEE_ENTITY_SPECS=array(
     array('entity_name'=>'lawyer', 'group_name'=>'lawyers', 'keyId'=>'', 'distinctCountId'=>'lawyer_id','join'=>'left outer join patent_lawyer ON patent_assignee.patent_id=patent_lawyer.patent_id left outer join lawyer on lawyer.lawyer_id=patent_lawyer.lawyer_id'),
     array('entity_name'=>'examiner', 'group_name'=>'examiners', 'keyId'=>'', 'distinctCountId'=>'examiner_id','join'=>'left outer join patent_examiner on patent_examiner.patent_id=patent_assignee.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id'),
     array('entity_name'=>'foreign_prior', 'group_name'=>'foreign_priority', 'keyId'=>'', 'distinctCountId'=>'foreign_doc_number','join'=>'left outer join foreignpriority on foreignpriority.patent_id=patent_assignee.patent_id'),
-    array('entity_name'=>'pct_data', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=patent_assignee.patent_id')
+    array('entity_name'=>'pct_dat', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=patent_assignee.patent_id')
 
 
 );
@@ -540,12 +540,12 @@ $ASSIGNEE_FIELD_SPECS=array
     'lawyer_total_num_patents' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_assignees' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_inventors' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_doctype' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_102_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_371_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_kind' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_docnumber' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_doctype' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_102_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
@@ -717,7 +717,7 @@ $CPC_GROUP_ENTITY_SPECS=array(
     array('entity_name'=>'lawyer', 'group_name'=>'lawyers', 'keyId'=>'', 'distinctCountId'=>'lawyer_id','join'=>'left outer join patent_lawyer ON patent_lawyer.patent_id=cpc_current_group_copy.patent_id left outer join lawyer on lawyer.lawyer_id=patent_lawyer.lawyer_id'),
     array('entity_name'=>'examiner', 'group_name'=>'examiners', 'keyId'=>'', 'distinctCountId'=>'examiner_id','join'=>'left outer join patent_examiner on patent_examiner.patent_id=cpc_current_group_copy.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id'),
     array('entity_name'=>'foreign_prior', 'group_name'=>'foreign_priority', 'keyId'=>'', 'distinctCountId'=>'foreign_doc_number','join'=>'left outer join foreignpriority on foreignpriority.patent_id=cpc_current_group_copy.patent_id'),
-    array('entity_name'=>'pct_data', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=cpc_current_group_copy.patent_id')
+    array('entity_name'=>'pct_dat', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=cpc_current_group_copy.patent_id')
 
 );
 
@@ -751,12 +751,12 @@ $CPC_GROUP_FIELD_SPECS=array
     'lawyer_total_num_patents' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_assignees' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_inventors' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_doctype' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_102_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_371_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_kind' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_docnumber' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_doctype' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_102_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
 
@@ -918,7 +918,7 @@ $CPC_ENTITY_SPECS=array(
     array('entity_name'=>'lawyer', 'group_name'=>'lawyers', 'keyId'=>'', 'distinctCountId'=>'lawyer_id','join'=>'left outer join patent_lawyer ON patent_lawyer.patent_id=cpc_current_subsection_copy.patent_id left outer join lawyer on lawyer.lawyer_id=patent_lawyer.lawyer_id'),
     array('entity_name'=>'examiner', 'group_name'=>'examiners', 'keyId'=>'', 'distinctCountId'=>'examiner_id','join'=>'left outer join patent_examiner on patent_examiner.patent_id=cpc_current_subsection_copy.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id'),
     array('entity_name'=>'foreign_prior', 'group_name'=>'foreign_priority', 'keyId'=>'', 'distinctCountId'=>'foreign_doc_number','join'=>'left outer join foreignpriority on foreignpriority.patent_id=cpc_current_subsection_copy.patent_id'),
-    array('entity_name'=>'pct_data', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=cpc_current_subsection_copy.patent_id')
+    array('entity_name'=>'pct_dat', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=cpc_current_subsection_copy.patent_id')
 );
 
 $CPC_FIELD_SPECS=array
@@ -951,12 +951,12 @@ $CPC_FIELD_SPECS=array
     'lawyer_total_num_patents' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_assignees' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_inventors' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_doctype' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_102_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_371_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_kind' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_docnumber' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_doctype' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_102_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
 
@@ -1118,7 +1118,7 @@ $USPC_ENTITY_SPECS=array(
     array('entity_name'=>'lawyer', 'group_name'=>'lawyers', 'keyId'=>'', 'distinctCountId'=>'lawyer_id','join'=>'left outer join patent_lawyer ON patent_lawyer.patent_id=uspc_current_mainclass_copy.patent_id left outer join lawyer on lawyer.lawyer_id=patent_lawyer.lawyer_id'),
     array('entity_name'=>'examiner', 'group_name'=>'examiners', 'keyId'=>'', 'distinctCountId'=>'examiner_id','join'=>'left outer join patent_examiner on patent_examiner.patent_id=uspc_current_mainclass_copy.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id'),
     array('entity_name'=>'foreign_prior', 'group_name'=>'foreign_priority', 'keyId'=>'', 'distinctCountId'=>'foreign_doc_number','join'=>'left outer join foreignpriority on foreignpriority.patent_id=uspc_current_mainclass_copy.patent_id'),
-    array('entity_name'=>'pct_data', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=uspc_current_mainclass_copy.patent_id')
+    array('entity_name'=>'pct_dat', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=uspc_current_mainclass_copy.patent_id')
 
 );
 
@@ -1152,12 +1152,12 @@ $USPC_FIELD_SPECS=array
     'lawyer_total_num_patents' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_assignees' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_inventors' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
-//    'pct_doctype' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-//    'pct_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-//    'pct_102_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-//    'pct_371_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-//    'pct_kind' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-//    'pct_docnumber' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+//    'pct_doctype' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+//    'pct_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+//    'pct_102_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+//    'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+//    'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+//    'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
 
@@ -1320,7 +1320,7 @@ $NBER_ENTITY_SPECS=array(
     array('entity_name'=>'lawyer', 'group_name'=>'lawyers', 'keyId'=>'', 'distinctCountId'=>'lawyer_id','join'=>'left outer join patent_lawyer ON patent_lawyer.patent_id=nber_copy.patent_id left outer join lawyer on lawyer.lawyer_id=patent_lawyer.lawyer_id'),
     array('entity_name'=>'examiner', 'group_name'=>'examiners', 'keyId'=>'', 'distinctCountId'=>'examiner_id','join'=>'left outer join patent_examiner on patent_examiner.patent_id=nber_copy.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id'),
     array('entity_name'=>'foreign_prior', 'group_name'=>'foreign_priority', 'keyId'=>'', 'distinctCountId'=>'foreign_doc_number','join'=>'left outer join foreignpriority on foreignpriority.patent_id=nber_copy.patent_id'),
-    array('entity_name'=>'pct_data', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=nber_copy.patent_id')
+    array('entity_name'=>'pct_dat', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=nber_copy.patent_id')
 
 );
 
@@ -1355,12 +1355,12 @@ $NBER_FIELD_SPECS=array
     'lawyer_total_num_patents' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_assignees' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_inventors' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_doctype' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_102_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_371_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_kind' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_docnumber' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_doctype' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_102_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
@@ -1530,7 +1530,7 @@ $LOCATION_ENTITY_SPECS=array(
     array('entity_name'=>'lawyer', 'group_name'=>'lawyers', 'keyId'=>'', 'distinctCountId'=>'lawyer_id','join'=>'left outer join patent_lawyer ON patent_lawyer.patent_id=patent.patent_id left outer join lawyer on lawyer.lawyer_id=patent_lawyer.lawyer_id'),
     array('entity_name'=>'examiner', 'group_name'=>'examiners', 'keyId'=>'', 'distinctCountId'=>'examiner_id','join'=>'left outer join patent_examiner on patent_examiner.patent_id=patent.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id'),
     array('entity_name'=>'foreign_prior', 'group_name'=>'foreign_priority', 'keyId'=>'', 'distinctCountId'=>'foreign_doc_number','join'=>'left outer join foreignpriority on foreignpriority.patent_id=patent.patent_id'),
-    array('entity_name'=>'pct_data', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=patent.patent_id')
+    array('entity_name'=>'pct_dat', 'group_name'=>'pct_data', 'keyId'=>'', 'distinctCountId'=>'pct_id','join'=>'left outer join pctdata on pctdata.patent_id=patent.patent_id')
 
 );
 
@@ -1561,12 +1561,12 @@ $LOCATION_FIELD_SPECS=array
     'lawyer_total_num_patents' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_patents', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_assignees' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_assignees', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'lawyer_total_num_inventors' => array('entity_name'=>'lawyer', 'column_name' => 'lawyer.num_inventors', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_doctype' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_102_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_371_date' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_kind' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'pct_docnumber' => array('entity_name'=>'pct_data', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_doctype' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_type', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_102_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.102_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     
 
