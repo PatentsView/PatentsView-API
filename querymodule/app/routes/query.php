@@ -35,57 +35,15 @@ $app->get(
 
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
+        
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
-        $fieldsParam=array_keys($PATENT_FIELD_SPECS);
+        
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-
         $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
         $app->response->setBody($results);
     }
 );
 
-$app->get(
-    '/patents/export',
-    function () use ($app) {
-
-
-        global $PATENT_ENTITY_SPECS;
-        global $PATENT_FIELD_SPECS;
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
-        $total_found=-1;
-        $page=1;
-        while($total_found !=0 ){
-            file_put_contents('php://stderr', print_r($page,TRUE));
-            $time_start = microtime(true);
-            $optionsParam=array("page"=>$page, "per_page"=>10000);
-            $fieldsParam=array_keys($PATENT_FIELD_SPECS);
-            $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-            file_put_contents('php://stderr', print_r($results),TRUE);
-            if (in_array("count", $results)){
-                $total_found=$results['count'];
-            }else{
-                $total_found=0;
-            }
-
-            if ($total_found !=0){
-                $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
-                $fp = fopen('results_1977_'.$page.'.json', 'w');
-                fwrite($fp, $results);
-                fclose($fp);
-            }
-
-            $time_end = microtime(true);
-            $time = $time_end - $time_start;
-            file_put_contents('php://stderr', print_r("Did some stuff in $time seconds\n",TRUE));
-            $page+=1;
-        }
-
-
-
-
-        $app->response->setBody("");
-    }
-);
 
 $app->post(
     '/patents/query',
@@ -365,9 +323,7 @@ function CheckGetParameters($app)
             ErrorHandler::getHandler()->sendError(400, "'o' parameter: not valid json.", $app->request->get());
         }
     }
-    else{
-        $optionsParam=array("per_page"=>10);
-    }
+    
 
     $formatParam = 'json';
     // Look for a "format" parameter; it may not exist.
