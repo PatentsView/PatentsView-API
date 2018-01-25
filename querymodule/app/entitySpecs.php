@@ -1615,6 +1615,7 @@ $LOCATION_FIELD_SPECS=array
     'cpc_first_seen_date' => array('entity_name' => 'cpc', 'column_name' => 'cpc_group.first_seen_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
     'cpc_group_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_group.id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'cpc_group_title' => array('entity_name'=>'cpc', 'column_name' => 'cpc_group.title', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
+    'cpc_sequence' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current_copy.sequence', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     'cpc_last_seen_date' => array('entity_name' => 'cpc', 'column_name' => 'cpc_group.last_seen_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
     'cpc_section_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current_group_copy.section_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'cpc_subgroup_id' => array('entity_name'=>'cpc', 'column_name' => 'cpc_current_copy.subgroup_id', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
