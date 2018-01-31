@@ -1,4 +1,4 @@
-1<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -171,7 +171,7 @@ simple_pair
 
 <h3><a class="anchor" name="joining_criteria"></a>Joining Criteria</h3>
 
-<p>Multiple criteria can be added to a query using a join operator (<span class="code">_and</span>, <span class="code">_or</span>) and putting the criteria in an array using square brackets (&ldquo;<span class="code">[</span>&rdquo; and &ldquo;<span class="code">]</span>&rdquo;). The following has multiple criteria, and will return patents that have &ldquo;Whitney&rdquo; as an inventor and a grant date of October 6, 1986: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json=={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"1981-10-06"}]}'></a></p>
+<p>Multiple criteria can be added to a query using a join operator (<span class="code">_and</span>, <span class="code">_or</span>) and putting the criteria in an array using square brackets (&ldquo;<span class="code">[</span>&rdquo; and &ldquo;<span class="code">]</span>&rdquo;). The following has multiple criteria, and will return patents that have &ldquo;Whitney&rdquo; as an inventor and a grant date of October 6, 1981: <a class="fa fa-external-link" href='http://jsoneditoronline.org/?json=={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"1981-10-06"}]}'></a></p>
 
 <p class="well code"><a href='http://www.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"1981-10-06"}]}'>http://www.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Whitney"},{"patent_date":"1981-10-06"}]}</a></p>
 
