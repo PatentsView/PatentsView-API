@@ -1,6 +1,11 @@
 <?php
 require_once dirname(__FILE__) . '/entitySpecs.php';
 
+function validateDate($date, $format = 'Y-m-d\TH:i:s\Z')
+{
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) == $date;
+}
 
 /**
  * This function will convert an array of rows of columns of data into an array of primary entities, with each element
