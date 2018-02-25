@@ -197,7 +197,7 @@ class AddEmailDatabase
 
         if ($orderString != '')
             $orderString .= ', ';
-        $orderString .= getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']);
+        $orderString .= getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId'])["dbField"];
 	return $orderString;
     }
 
