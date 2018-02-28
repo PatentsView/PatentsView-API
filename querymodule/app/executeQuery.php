@@ -4,60 +4,44 @@ require_once dirname(__FILE__) . '/DatabaseQuery.php';
 require_once dirname(__FILE__) . '/SolrQuery.php';
 require_once dirname(__FILE__) . '/convertDBResultsToNestedStructure.php';
 
+
 function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam = null, array $fieldsParam = null, array $sortParam = null, array $optionsParam = null)
 {
     $qp = new QueryParser();
 
-    $entitySpecificWhereClauses = array();
 
-    // Get each subentity-specific "where" clause. This will be used when getting the results from the DB and needing
-    // to limit the results based on the "matched_subentities_only" flag.
-/*    foreach ($entitySpecs as $entity) {
-        $entityName = $entity['entity_name'];
-        $entitySpecificWhereClauses[$entityName] = $qp->parse($fieldSpecs, $queryParam, $entityName, $entitySpecs);
-    }*/
+    $main_entity_name = $entitySpecs[0]["entity_name"];
+    $queryString = json_encode($queryParam);
+    //$queryString=implode(",",$queryParam);
 
+    $uniqueQueryString = "key->" . $entitySpecs[0]['keyId'] . "::query->$queryString";
+    $whereHash = crc32($uniqueQueryString);   // Using crc32 rather than md5 since we only have 32-bits to work with.
+    $queryDefId = sprintf('%u', $whereHash);
     // Build the where clause to determine the primary entities for the results
-    $whereClause = $qp->parse($fieldSpecs, $queryParam, 'all',$entitySpecs );
+    $whereClause = $qp->parse($fieldSpecs, $queryParam, 'all', $entitySpecs);
 
-    // If the caller did not explicitly list fields to be returned, get them from the other parameters.
-    # if (!$fieldsParam) $fieldsParam = $qp->getFieldsUsed();
+
     // Changed so that if the caller did not explicitly list fields to be returned, we will use a pre-defined set
     // for the primary entity.
     if (!$fieldsParam) $fieldsParam = $entitySpecs[0]['default_fields'];
 
     // Get the FieldSpecs for the list of fields to be returned.
-    $selectFieldSpecs = parseFieldList($fieldSpecs, $fieldsParam);
+    $selectFieldSpecs = parseFieldList($entitySpecs, $fieldSpecs, $fieldsParam);
+    $sortFieldSpecs = parseFieldList($entitySpecs, $fieldSpecs, $sortParam);
 
-    //$dbQuery = new DatabaseQuery();
-    $solrQuery = new PVSolrQuery($entitySpecs);
-    $solrQuery->query($whereClause);
-    $main_entity_name=$entitySpecs[0]["solr_collection"];
+    $dbQuery = new DatabaseQuery($entitySpecs, $fieldSpecs);
+    $queryResultsStatus = $dbQuery->checkQueryDef($queryDefId);
+    $solrQuery = new PVSolrQuery($entitySpecs, $fieldSpecs);
+    if ($queryResultsStatus < 1) {
+        $table_usage = array("base" => array(0, 0), "supp" => array(0, 0));
+        $solrQuery->loadQuery($whereClause, $queryDefId, $dbQuery, $table_usage);
+        $dbQuery->addQueryDef($queryDefId, $queryString);
+    }
 
-    //$solrQuery->loadMainEntity($main_entity_name, $entitySpecificWhereClauses[$main_entity_name], $dbQuery);
-    exit(0);
-//    $entitySpecificCounts=array();
-//    foreach (array_keys($entitySpecificWhereClauses) as $entity) {
-//        foreach (array_keys($entitySpecificWhereClauses[$entity]) as $typeClause) {
-//            if (count($entitySpecificWhereClauses[$entity][$typeClause]) < 1) {
-//                unset($entitySpecificWhereClauses[$entity][$typeClause]);
-//            }
-//
-//        }
-//        $solrQuery->countRowsForQuery($entity,$entitySpecificWhereClauses[$entity] );
-//
-//    }
-    // Run the query against the DB
-    $dbResults = $dbQuery->queryDatabase($entitySpecs, $fieldSpecs, $whereClause, $qp->getFieldsUsed(),
-        $entitySpecificWhereClauses, $qp->getOnlyAndsWereUsed(), $selectFieldSpecs, $sortParam, $optionsParam);
+    $dbResults = $solrQuery->fetchQuery($selectFieldSpecs, $whereClause, $queryDefId, $dbQuery, $optionsParam, $sortFieldSpecs);
 
-//    file_put_contents('php://stderr', print_r($dbResults, TRUE));
-//    file_put_contents('php://stderr', print_r("\n", TRUE));
-    // Convert the DB result structures to PHO structures. The DB results will be in multiple tables, and the
-    // PHP structures will be nested (only one-level) PHP arrays.
-    $results = convertDBResultsToNestedStructure($entitySpecs, $dbResults, $selectFieldSpecs);
 
-    foreach ($dbQuery->getTotalCounts() as $entityName => $count)
-        $results['total_' . $entityName . '_count'] = $count;
+
+    $results = convertDBResultsToNestedStructure($entitySpecs, $fieldSpecs, $dbResults, $selectFieldSpecs);
     return $results;
 }

@@ -26,6 +26,18 @@ class DatabaseQuery
 
     private $supportDatabase = "";
 
+    public function __construct($entitySpecs, $fieldSpecs)
+    {
+        global $config;
+        $dbSettings = $config->getDbSettings();
+        $this->supportDatabase = $dbSettings['supportDatabase'];
+
+        $memUsed = memory_get_usage();
+        $this->errorHandler = ErrorHandler::getHandler();
+        $this->entitySpecs = $entitySpecs;
+        $this->fieldSpecs = $fieldSpecs;
+    }
+
     public function getTotalCounts()
     {
         return $this->entityTotalCounts;
@@ -249,7 +261,7 @@ class DatabaseQuery
     }
 
 
-    private function runQuery($select, $from, $where, $order)
+    private function runQuery($select, $from, $where, $order, $fetch_type = PDO::FETCH_ASSOC)
     {
 
         $this->connectToDB();
@@ -260,7 +272,7 @@ class DatabaseQuery
         $this->errorHandler->getLogger()->debug($sqlQuery);
 
         try {
-            $st = $this->db->query("$sqlQuery", PDO::FETCH_ASSOC);
+            $st = $this->db->query("$sqlQuery", $fetch_type);
             $results = $st->fetchAll();
             $st->closeCursor();
         } catch (Exception $e) {
@@ -508,7 +520,7 @@ class DatabaseQuery
         unset($group);
     }
 
-    private function connectToDB()
+    public function connectToDB()
     {
         global $config;
         if ($this->db === null) {
@@ -527,26 +539,125 @@ class DatabaseQuery
 
     }
 
-    public function loadEntityID($data)
+    public function loadEntityID($data, $entity_name, $queryDefId, $tableName)
     {
-$this->connectToDB();
-        $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
+        $datafields = array('QueryDefId', 'Sequence', 'EntityId');
+        $keyField = $this->entitySpecs[0]["solr_key_id"];
+        $insertData = array();
+        foreach ($data as $doc) {
+            $insertData[] = array("QueryDefId" => $queryDefId, "Sequence" => $doc->$keyField, "EntityId" => $doc->$keyField);
+        }
+        $this->connectToDB();
+
+
+
+        $insert_values = array();
+        foreach ($insertData as $d) {
+            $question_marks[] = '(' . placeholders('?', sizeof($d)) . ')';
+            $insert_values = array_merge($insert_values, array_values($d));
+        }
+
+        $sql = "INSERT INTO " . $this->supportDatabase . "." . $tableName . " (" . implode(",", $datafields) . ") VALUES " .
+            implode(',', $question_marks);
+
+        $stmt = $this->db->prepare($sql);
+        try {
+            $stmt->execute($insert_values);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            throw $e;
+        }
+        //$this->commitTransaction();
     }
 
-    private function startTransaction()
+    public function retrieveEntityIdForSolr($queryDefId)
+    {
+        $this->connectToDB();
+        $results = $this->runQuery('DISTINCT EntityId', $this->supportDatabase . '.QueryResultsBase', "QueryDefID=$queryDefId", null);
+        $ids = array();
+        foreach ($results as $result) {
+            $ids[] = $result["EntityId"];
+        }
+        return $ids;
+    }
+
+    public function updateBase($whereJoin, $table_usage)
+    {
+        $source_table = "QueryResultsSupp";
+        $dest_table = "QueryResultsBase";
+        if ($table_usage["supp"][0] == 1) {
+            if ($table_usage["base"][1] == 1) {
+                $dest_table = "QueryResultsBaseLevel2";
+            }
+        } else {
+            $source_table = "QueryResultsBaseLevel2";
+        }
+
+        if ($whereJoin == "AND") {
+            $updateQuery = "DELETE FROM  " . $this->supportDatabase . "." . $dest_table . " WHERE EntityID NOT IN (SELECT EntityId FROM " . $this->supportDatabase . "." . $source_table . ");";
+        } else {
+            $updateQuery = "INSERT INTO  " . $this->supportDatabase . "." . $dest_table . " SELECT * FROM " . $this->supportDatabase . "." . $source_table . "  WHERE EntityID NOT IN (SELECT " . $this->supportDatabase . ".EntityId FROM " . $this->supportDatabase . "." . $dest_table . ");";
+        }
+        $this->startTransaction();
+        $stmt = $this->db->prepare($updateQuery);
+        try {
+            $stmt->execute();
+            $this->commitTransaction();
+            $stmt = $this->db->prepare("TRUNCATE TABLE " . $this->supportDatabase . "." . $source_table);
+            if ($source_table == "QueryResultsSupp") {
+                $table_usage["supp"][0] = 0;
+            } else {
+                $table_usage["base"][1] = 0;
+            }
+            $stmt->execute();
+
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            $this->rollbackTransaction();
+            throw $e;
+        }
+    return $table_usage;
+    }
+
+    public function checkQueryDef($queryDefId)
+    {
+        $this->connectToDB();
+        $results = $this->runQuery('QueryDefID, QueryString', $this->supportDatabase . '.QueryDef', "QueryDefID=$queryDefId", null);
+        return count($results);
+    }
+
+    public function addQueryDef($queryDefId, $queryString)
+    {
+        $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
+        $this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $queryString));
+    }
+
+    public function startTransaction()
     {
         $this->db->beginTransaction();
     }
 
-    private function commitTransaction()
+    public function commitTransaction()
     {
         $this->db->commit();
     }
 
-    private function rollbackTransaction()
+    public function rollbackTransaction()
     {
         $this->db->rollback();
     }
 
 
+}
+
+function placeholders($text, $count = 0, $separator = ",")
+{
+    $result = array();
+    if ($count > 0) {
+        for ($x = 0; $x < $count; $x++) {
+            $result[] = $text;
+        }
+    }
+
+    return implode($separator, $result);
 }

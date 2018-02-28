@@ -103,24 +103,39 @@ class QueryParser
             $joinString = $this->JOIN_OPERATORS[$operatorOrField];
             $queryArray[$joinString] = array();
             $collections = array();
+            $entities = array();
             for ($i = 0; $i < count($rightHandValue); $i++) {
                 $retv = $this->processQueryCriterion($rightHandValue[$i], $level + 1);
-                $collections[] = $retv["c"];
+                if (array_key_exists("c", $retv)) {
+                    $collections[] = $retv["c"];
+                    $entities[] = $retv["e"];
+                }
+
                 $queryArray[$joinString][] = $retv;
             }
             $value_counts = array_count_values($collections);
-            if ((count($value_counts) == 1) || (count($value_counts) == 2 && $value_counts[$this->entitySpecs[0]["solr_collection"]] > 0)) {
-                $collection_to_use="";
-                foreach(array_keys($value_counts) as $collection){
-                    if ($collection != $this->entitySpecs[0]["solr_collection"]){
-                        $collection_to_use=$collection;
+            if ((count($value_counts) == 1) || (count($value_counts) == 2 && array_key_exists($this->entitySpecs[0]["solr_collection"], $value_counts) && $value_counts[$this->entitySpecs[0]["solr_collection"]] > 0)) {
+                $collection_to_use = $this->entitySpecs[0]["solr_collection"];
+                $entity_to_use = $this->entitySpecs[0]["entity_name"];
+                foreach (array_keys($value_counts) as $collection) {
+                    if ($collection != $this->entitySpecs[0]["solr_collection"]) {
+                        $collection_to_use = $collection;
+                        foreach ($this->entitySpecs as $entitySpec) {
+                            if ($entitySpec["solr_collection"] == "$collection_to_use") {
+                                $entity_to_use = $entitySpec["entity_name"];
+                            }
+                        }
+
+
                     }
                 }
-                $mergedQueryArray=array($joinString=>array("c"=>$collection_to_use, "q"=>array()));
-                foreach($queryArray[$joinString] as $query){
-                    $mergedQueryArray[$joinString]["q"][]= $query["q"];
+
+                $mergedQueryArray = array($joinString => array(array("c" => $collection_to_use, "q" => array(), "e" => $entity_to_use)));
+                foreach ($queryArray[$joinString] as $query) {
+                    $mergedQueryArray[$joinString][0]["q"][] = $query["q"];
                 }
-                $queryArray=$mergedQueryArray;
+                $mergedQueryArray[$joinString][0]["q"] = implode(" $joinString ", $mergedQueryArray[$joinString][0]["q"]);
+                $queryArray = $mergedQueryArray;
             }
 
         } // If the operator is a negation, then the right hand value will be a criterion: { operator : { criterion } }
@@ -156,14 +171,14 @@ class QueryParser
         $dbFieldInfo = getDBField($this->fieldSpecs, $apiField);
         $dbField = $dbFieldInfo["dbField"];
         $solr_collection = $this->entitySpecs[0]["solr_collection"];
-        $entity=$dbFieldInfo["entity_name"];
+        $entity = $dbFieldInfo["entity_name"];
         foreach ($this->entitySpecs as $entitySpec) {
             if ($entitySpec["entity_name"] == $dbFieldInfo["entity_name"]) {
                 $solr_collection = $entitySpec["solr_collection"];
 
             }
         }
-        return array("dbField" => $dbField, "solr_collection" => $solr_collection,"entity_name"=> $entity);
+        return array("dbField" => $dbField, "solr_collection" => $solr_collection, "entity_name" => $entity);
     }
 
     private function processPair($operator, $criterion)
@@ -229,7 +244,7 @@ class QueryParser
         }
 
 
-        return array("q" => $returnString, "c" => $solr_collection,"e"=>$dbFieldInfo["entity_name"]);
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity_name"]);
     }
 
 
@@ -284,7 +299,7 @@ class QueryParser
                 throw new ErrorException($msg);
             }
         }
-        return array("q" => $returnString, "c" => $solr_collection,"e"=>$dbFieldInfo["entity_name"]);
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity_name"]);
 
     }
 
@@ -339,7 +354,7 @@ class QueryParser
                 throw new ErrorException($msg);
             }
         }
-        return array("q" => $returnString, "c" => $solr_collection,"e"=>$dbFieldInfo["entity_name"]);
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity_name"]);
 
     }
 
@@ -371,7 +386,7 @@ class QueryParser
                 throw new ErrorException($msg);
             }
         }
-        return array("q" => $returnString, "c" => $solr_collection,"e"=>$dbFieldInfo["entity_name"]);
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity_name"]);
     }
 
     private function processTextSearch($operator, $criterion)
@@ -419,23 +434,36 @@ class QueryParser
                     throw new ErrorException($msg);
                 }
             }
-            return array("q" => $returnString, "c" => $solr_collection,"e"=>$dbFieldInfo["entity_name"]);
+            return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity_name"]);
         }
 
     }
 }
 
-function parseFieldList(array $fieldSpecs, array $fieldsParam = null)
+function parseFieldList(array $entitySpecs, array $fieldSpecs, array $fieldsParam = null)
 {
     $returnFieldSpecs = array();
 
     for ($i = 0; $i < count($fieldsParam); $i++) {
+        $current_entity = $entitySpecs[0]["entity_name"];
         try {
-            $returnFieldSpecs[$fieldsParam[$i]] = $fieldSpecs[$fieldsParam[$i]];
+            foreach ($entitySpecs as $entitySpec) {
+                if ($entitySpec["entity_name"] == $fieldSpecs[$fieldsParam[$i]]["entity_name"]) {
+                    $current_entity = $entitySpec["entity_name"];
+                }
+            }
+            if (!array_key_exists($current_entity, $returnFieldSpecs)) {
+                $returnFieldSpecs[$current_entity] = array();
+                $returnFieldSpecs[$current_entity][$entitySpecs[0]["solr_key_id"]] = $fieldSpecs[$entitySpecs[0]["solr_key_id"]];
+            }
+
+            $returnFieldSpecs[$current_entity][$fieldsParam[$i]] = $fieldSpecs[$fieldsParam[$i]];
         } catch (Exception $e) {
             ErrorHandler::getHandler()->sendError(400, 'Invalid field specified: ' . $fieldsParam[$i], $e);
         }
+
     }
+
 
     return $returnFieldSpecs;
 }
