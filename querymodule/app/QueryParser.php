@@ -53,7 +53,7 @@ class QueryParser
         return $sortSpecs;
     }
 
-    public function parse(array $fieldSpecs, array $query, $entityName, $entitySpecs)
+    public function parse(array $fieldSpecs, array $query, $entityName, array $entitySpecs)
     {
         $this->fieldSpecs = $fieldSpecs;
         $this->entitySpecs = $entitySpecs;
@@ -373,7 +373,7 @@ class QueryParser
                 if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
                 if ($datatype == 'string') {
                     if ($operator == '_begins')
-                        $returnString = "$dbField : ^$val*";
+                        $returnString = "$dbField : $val*";
                     elseif ($operator == '_contains')
                         $returnString = "$dbField :'*$val*'";
                 } else {

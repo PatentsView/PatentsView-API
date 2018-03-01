@@ -37,7 +37,7 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
             if (array_key_exists($entitySpec["entity_name"], $selectFieldSpecs)) {
 
 
-                $currentSolrDocs = $dbResults[$entitySpecs[0]["entity_name"]][$entityIdValue];
+                $currentSolrDocs = $dbResults[$entitySpec["entity_name"]][$entityIdValue];
 
                 foreach ($currentSolrDocs as $currentSolrDoc) {
                     $currentSubDocArray = array();
