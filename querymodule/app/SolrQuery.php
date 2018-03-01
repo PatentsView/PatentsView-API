@@ -201,7 +201,7 @@ class PVSolrQuery
         $entitiesToFetch = array_keys($fieldList);
         $returned_values = array();
         $main_group = $this->entitySpecs[0]["group_name"];
-        $return_array = array($main_group => array(), "total_" . $main_group . "_count" => 0);
+        $return_array = array();
         foreach ($entitiesToFetch as $entity) {
             $solr_response = $this->fetchEntityQuery($entity, $this->entitySpecs[0]["solr_key_id"] . ":" . $entityValueString, $start, $rows, $fieldList[$entity]);
             $current_array = array();
@@ -213,7 +213,7 @@ class PVSolrQuery
                 $current_array[$solrDoc->$keyName][] = $solrDoc;
             }
             if ($subEntityCounts || $entity == $this->entitySpecs[0]["entity_name"]) {
-                $return_array[$main_group]["total_" . $entity . "_count"] = $solr_response["numFound"];
+                $return_array["total_" . $entity . "_count"] = $solr_response["numFound"];
             }
 
             $returned_values[$entity] = $current_array;
@@ -229,7 +229,7 @@ class PVSolrQuery
                 $current_array[$solrDoc->$keyName][] = $solrDoc;
             }
             if ($subEntityCounts || $this->entitySpecs[0]["entity_name"] == $this->entitySpecs[0]["entity_name"]) {
-                $return_array[$main_group]["total_" . $this->entitySpecs[0]["entity_name"] . "_count"] = $solr_response["numFound"];
+                $return_array["total_" . $this->entitySpecs[0]["entity_name"] . "_count"] = $solr_response["numFound"];
             }
 
             $returned_values[$this->entitySpecs[0]["entity_name"]] = $current_array;

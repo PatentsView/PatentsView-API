@@ -24,7 +24,9 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
     // dynamic variables in its debugger window, you need to create them as watch variables to see the values.
     // For example, ${$group['priorId']} gets resolved to $priorinventorId; ${$group['group_name']} to $inventors
     $dbResults = $resultGroup["db_results"];
-    $return_array = $resultGroup["count_results"];
+    $count_results = $resultGroup["count_results"];
+    $return_array = array();
+
     $main_group = $entitySpecs[0]["group_name"];
     foreach (array_unique(array_keys($dbResults[$entitySpecs[0]["entity_name"]])) as $entityIdValue) {
         $currDocArray = array();
@@ -45,18 +47,21 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
                         $field_name = $entitySpec["group_name"] . "." . $field;
                         if ($isPrimaryEntity) {
                             $field_name = $field;
+                            $field_key = $field;
                         }
                         if ($field == $entitySpecs[0]["solr_key_id"]) {
                             $field_name = $field;
+                            if ($entitySpec["entity_name"] != $entitySpecs[0]["entity_name"])
+                                continue;
                         }
                         try {
-                            $currentSubDocArray[$field_name] = $currentSolrDoc->$field_name;
+                            $currentSubDocArray[$field] = $currentSolrDoc->$field_name;
                         } catch (ErrorException $e) {
                             print($e->getMessage());
                         }
                     }
                     if ($entitySpec["entity_name"] == $entitySpecs[0]["entity_name"]) {
-                        $currDocArray = array_merge($currDocArray, $currentSubDocArray);
+                        $currDocEntityArray = array_merge($currDocArray, $currentSubDocArray);
                     } else {
                         $currDocEntityArray[$entitySpec["group_name"]][] = $currentSubDocArray;
 
@@ -69,9 +74,11 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
             }
 
         }
-        $return_array[$main_group][] = $currDocArray;
+        $return_array[$main_group][] = $currDocEntityArray;
     }
-
+    foreach (array_keys($count_results) as $count_key) {
+        $return_array[$count_key] = $count_results[$count_key];
+    }
 
     return $return_array;
 
