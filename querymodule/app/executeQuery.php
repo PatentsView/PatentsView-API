@@ -43,5 +43,8 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
 
 
     $results = convertDBResultsToNestedStructure($entitySpecs, $fieldSpecs, $dbResults, $selectFieldSpecs);
+
+//    foreach ($dbQuery->getTotalCounts() as $entityName => $count)
+//        $results['total_' . $entityName . '_count'] = $count;
     return $results;
 }

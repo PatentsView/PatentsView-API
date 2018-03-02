@@ -1,1367 +1,1554 @@
 {
-  "examiner_first_name": {
-    "entity_name": "examiner",
-    "column_name": "examiner.name_first",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "examiner_id": {
-    "entity_name": "examiner",
-    "column_name": "examiner.persistent_examiner_id",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "examiner_key_id": {
-    "entity_name": "examiner",
-    "column_name": "examiner.examiner_id",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "examiner_last_name": {
-    "entity_name": "examiner",
-    "column_name": "examiner.name_last",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "examiner_role": {
-    "entity_name": "examiner",
-    "column_name": "patent_examiner.role",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "examiner_group": {
-    "entity_name": "examiner",
-    "column_name": "examiner.group",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "forprior_country": {
-    "entity_name": "foreign_prior",
-    "column_name": "foreignpriority.country",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "forprior_date": {
-    "entity_name": "foreign_prior",
-    "column_name": "foreignpriority.date",
-    "datatype": "date",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "forprior_kind": {
-    "entity_name": "foreign_prior",
-    "column_name": "foreignpriority.kind",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "forprior_docnumber": {
-    "entity_name": "foreign_prior",
-    "column_name": "foreignpriority.foreign_doc_number",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "forprior_sequence": {
-    "entity_name": "foreign_prior",
-    "column_name": "foreignpriority.sequence",
-    "datatype": "int",
-    "query": "n",
-    "sort": "suppl"
-  },
-  "location_county": {
-    "entity_name": "location",
-    "column_name": "location_county",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "location_county_fips": {
-    "entity_name": "location",
-    "column_name": "location_county_fips",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "location_state_fips": {
-    "entity_name": "location",
-    "column_name": "location_state_fips",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_first_name": {
-    "entity_name": "lawyer",
-    "column_name": "lawyer.name_first",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_first_seen_date": {
-    "entity_name": "lawyer",
-    "column_name": "lawyer.first_seen_date",
-    "datatype": "date",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_id": {
-    "entity_name": "lawyer",
-    "column_name": "lawyer.persistent_lawyer_id",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_key_id": {
-    "entity_name": "lawyer",
-    "column_name": "lawyer.lawyer_id",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_last_name": {
-    "entity_name": "lawyer",
-    "column_name": "lawyer.name_last",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_last_seen_date": {
-    "entity_name": "lawyer",
-    "column_name": "lawyer.last_seen_date",
-    "datatype": "date",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_organization": {
-    "entity_name": "lawyer",
-    "column_name": "lawyer.organization",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_sequence": {
-    "entity_name": "lawyer",
-    "column_name": "patent_lawyer.sequence",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_total_num_patents": {
-    "entity_name": "lawyer",
-    "column_name": "lawyer.num_patents",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_total_num_assignees": {
-    "entity_name": "lawyer",
-    "column_name": "lawyer.num_assignees",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "lawyer_total_num_inventors": {
-    "entity_name": "lawyer",
-    "column_name": "lawyer.num_inventors",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "pct_doctype": {
-    "entity_name": "pct_dat",
-    "column_name": "pctdata.doc_type",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "pct_date": {
-    "entity_name": "pct_dat",
-    "column_name": "pctdata.date",
-    "datatype": "date",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "pct_102_date": {
-    "entity_name": "pct_dat",
-    "column_name": "pctdata.102_date",
-    "datatype": "date",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "pct_371_date": {
-    "entity_name": "pct_dat",
-    "column_name": "pctdata.371_date",
-    "datatype": "date",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "pct_kind": {
-    "entity_name": "pct_dat",
-    "column_name": "pctdata.kind",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "pct_docnumber": {
-    "entity_name": "pct_dat",
-    "column_name": "pctdata.doc_number",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "detail_desc_length": {
-    "entity_name": "patent",
-    "column_name": "patents.detail_desc_length",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
   "app_country": {
-    "entity_name": "application",
     "column_name": "application.country",
     "datatype": "string",
+    "entity_name": "application",
     "query": "y",
+    "solr_column_name": "applications.app_country",
     "sort": "y"
   },
   "app_date": {
-    "entity_name": "application",
     "column_name": "application.date",
     "datatype": "date",
+    "entity_name": "application",
     "query": "y",
+    "solr_column_name": "applications.app_date",
     "sort": "y"
   },
   "app_id": {
-    "entity_name": "application",
     "column_name": "application.application_id",
     "datatype": "string",
+    "entity_name": "application",
     "query": "y",
+    "solr_column_name": "applications.app_id",
     "sort": "Y"
   },
   "app_number": {
-    "entity_name": "application",
     "column_name": "application.number",
     "datatype": "string",
+    "entity_name": "application",
     "query": "y",
+    "solr_column_name": "applications.app_number",
     "sort": "y"
   },
   "app_type": {
-    "entity_name": "application",
     "column_name": "application.type",
     "datatype": "string",
+    "entity_name": "application",
     "query": "y",
+    "solr_column_name": "applications.app_type",
     "sort": "y"
   },
   "appcit_app_number": {
-    "entity_name": "application_citation",
     "column_name": "usapplicationcitation.cited_application_id",
     "datatype": "string",
+    "entity_name": "application_citation",
     "query": "y",
+    "solr_column_name": "application_citations.appcit_app_number",
     "sort": "suppl"
   },
   "appcit_category": {
-    "entity_name": "application_citation",
     "column_name": "usapplicationcitation.category",
     "datatype": "string",
+    "entity_name": "application_citation",
     "query": "y",
+    "solr_column_name": "application_citations.appcit_category",
     "sort": "suppl"
   },
   "appcit_date": {
-    "entity_name": "application_citation",
     "column_name": "usapplicationcitation.date",
     "datatype": "date",
+    "entity_name": "application_citation",
     "query": "y",
+    "solr_column_name": "application_citations.appcit_date",
     "sort": "suppl"
   },
   "appcit_kind": {
-    "entity_name": "application_citation",
     "column_name": "usapplicationcitation.kind",
     "datatype": "string",
+    "entity_name": "application_citation",
     "query": "y",
+    "solr_column_name": "application_citations.appcit_kind",
     "sort": "suppl"
   },
   "appcit_name": {
-    "entity_name": "application_citation",
     "column_name": "usapplicationcitation.name",
     "datatype": "string",
+    "entity_name": "application_citation",
     "query": "y",
+    "solr_column_name": "application_citations.appcit_name",
     "sort": "suppl"
   },
   "appcit_sequence": {
-    "entity_name": "application_citation",
     "column_name": "usapplicationcitation.sequence",
     "datatype": "int",
+    "entity_name": "application_citation",
     "query": "n",
+    "solr_column_name": "application_citations.appcit_sequence",
     "sort": "suppl"
   },
   "assignee_first_name": {
-    "entity_name": "assignee",
     "column_name": "assignee.name_first",
     "datatype": "string",
+    "entity_name": "assignee",
     "query": "y",
+    "solr_column_name": "assignees.assignee_first_name",
     "sort": "suppl"
   },
   "assignee_first_seen_date": {
-    "entity_name": "assignee",
     "column_name": "assignee.first_seen_date",
     "datatype": "date",
+    "entity_name": "assignee",
     "query": "y",
+    "solr_column_name": "assignees.assignee_first_seen_date",
     "sort": "suppl"
   },
   "assignee_id": {
-    "entity_name": "assignee",
     "column_name": "assignee.persistent_assignee_id",
     "datatype": "string",
+    "entity_name": "assignee",
     "query": "y",
+    "solr_column_name": "assignees.assignee_id",
     "sort": "suppl"
   },
   "assignee_key_id": {
-    "entity_name": "assignee",
     "column_name": "assignee.assignee_id",
     "datatype": "int",
+    "entity_name": "assignee",
     "query": "y",
-    "sort": "suppl"
-  },
-  "assignee_lastknown_city": {
-    "entity_name": "assignee",
-    "column_name": "assignee.lastknown_city",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "assignee_lastknown_country": {
-    "entity_name": "assignee",
-    "column_name": "assignee.lastknown_country",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "assignee_lastknown_latitude": {
-    "entity_name": "assignee",
-    "column_name": "assignee.lastknown_latitude",
-    "datatype": "float",
-    "query": "n",
-    "sort": "suppl"
-  },
-  "assignee_lastknown_location_id": {
-    "entity_name": "assignee",
-    "column_name": "assignee.lastknown_persistent_location_id",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "assignee_lastknown_longitude": {
-    "entity_name": "assignee",
-    "column_name": "assignee.lastknown_longitude",
-    "datatype": "float",
-    "query": "n",
-    "sort": "suppl"
-  },
-  "assignee_lastknown_state": {
-    "entity_name": "assignee",
-    "column_name": "assignee.lastknown_state",
-    "datatype": "string",
-    "query": "y",
+    "solr_column_name": "assignees.assignee_key_id",
     "sort": "suppl"
   },
   "assignee_last_name": {
-    "entity_name": "assignee",
     "column_name": "assignee.name_last",
     "datatype": "string",
+    "entity_name": "assignee",
     "query": "y",
+    "solr_column_name": "assignees.assignee_last_name",
     "sort": "suppl"
   },
   "assignee_last_seen_date": {
-    "entity_name": "assignee",
     "column_name": "assignee.last_seen_date",
     "datatype": "date",
+    "entity_name": "assignee",
     "query": "y",
+    "solr_column_name": "assignees.assignee_last_seen_date",
+    "sort": "suppl"
+  },
+  "assignee_lastknown_city": {
+    "column_name": "assignee.lastknown_city",
+    "datatype": "string",
+    "entity_name": "assignee",
+    "query": "y",
+    "solr_column_name": "assignees.assignee_lastknown_city",
+    "sort": "suppl"
+  },
+  "assignee_lastknown_country": {
+    "column_name": "assignee.lastknown_country",
+    "datatype": "string",
+    "entity_name": "assignee",
+    "query": "y",
+    "solr_column_name": "assignees.assignee_lastknown_country",
+    "sort": "suppl"
+  },
+  "assignee_lastknown_latitude": {
+    "column_name": "assignee.lastknown_latitude",
+    "datatype": "float",
+    "entity_name": "assignee",
+    "query": "n",
+    "solr_column_name": "assignees.assignee_lastknown_latitude",
+    "sort": "suppl"
+  },
+  "assignee_lastknown_location_id": {
+    "column_name": "assignee.lastknown_persistent_location_id",
+    "datatype": "string",
+    "entity_name": "assignee",
+    "query": "y",
+    "solr_column_name": "assignees.assignee_lastknown_location_id",
+    "sort": "suppl"
+  },
+  "assignee_lastknown_longitude": {
+    "column_name": "assignee.lastknown_longitude",
+    "datatype": "float",
+    "entity_name": "assignee",
+    "query": "n",
+    "solr_column_name": "assignees.assignee_lastknown_longitude",
+    "sort": "suppl"
+  },
+  "assignee_lastknown_state": {
+    "column_name": "assignee.lastknown_state",
+    "datatype": "string",
+    "entity_name": "assignee",
+    "query": "y",
+    "solr_column_name": "assignees.assignee_lastknown_state",
     "sort": "suppl"
   },
   "assignee_num_patents_for_location": {
-    "entity_name": "assignee",
     "column_name": "location_assignee.num_patents",
     "datatype": "int",
+    "entity_name": "assignee",
     "query": "n",
+    "solr_column_name": "assignees.assignee_num_patents_for_location",
     "sort": "suppl"
   },
   "assignee_organization": {
-    "entity_name": "assignee",
     "column_name": "assignee.organization",
     "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "assignee_total_num_patents": {
     "entity_name": "assignee",
-    "column_name": "assignee.num_patents",
-    "datatype": "int",
     "query": "y",
+    "solr_column_name": "assignees.assignee_organization",
     "sort": "suppl"
   },
   "assignee_total_num_inventors": {
-    "entity_name": "assignee",
     "column_name": "assignee.num_inventors",
     "datatype": "int",
+    "entity_name": "assignee",
     "query": "y",
+    "solr_column_name": "assignees.assignee_total_num_inventors",
+    "sort": "suppl"
+  },
+  "assignee_total_num_patents": {
+    "column_name": "assignee.num_patents",
+    "datatype": "int",
+    "entity_name": "assignee",
+    "query": "y",
+    "solr_column_name": "assignees.assignee_total_num_patents",
     "sort": "suppl"
   },
   "assignee_type": {
-    "entity_name": "assignee",
     "column_name": "assignee.type",
     "datatype": "string",
+    "entity_name": "assignee",
     "query": "y",
-    "sort": "suppl"
-  },
-  "citedby_patent_category": {
-    "entity_name": "citedby_patent",
-    "column_name": "patentcit_fromcited_tociting.category",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "citedby_patent_date": {
-    "entity_name": "citedby_patent",
-    "column_name": "citingpatent.date",
-    "datatype": "date",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "citedby_patent_id": {
-    "entity_name": "citedby_patent",
-    "column_name": "citingpatent.patent_id",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "citedby_patent_kind": {
-    "entity_name": "citedby_patent",
-    "column_name": "citingpatent.kind",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "citedby_patent_number": {
-    "entity_name": "citedby_patent",
-    "column_name": "citingpatent.number",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "citedby_patent_title": {
-    "entity_name": "citedby_patent",
-    "column_name": "citingpatent.title",
-    "datatype": "string",
-    "query": "y",
+    "solr_column_name": "assignees.assignee_type",
     "sort": "suppl"
   },
   "cited_patent_category": {
-    "entity_name": "cited_patent",
     "column_name": "patentcit_fromciting_tocited.category",
     "datatype": "string",
+    "entity_name": "cited_patent",
     "query": "y",
+    "solr_column_name": "cited_patents.cited_patent_category",
     "sort": "suppl"
   },
   "cited_patent_date": {
-    "entity_name": "cited_patent",
     "column_name": "citedpatent.date",
     "datatype": "date",
+    "entity_name": "cited_patent",
     "query": "y",
+    "solr_column_name": "cited_patents.cited_patent_date",
     "sort": "suppl"
   },
   "cited_patent_id": {
-    "entity_name": "cited_patent",
     "column_name": "citedpatent.kind",
     "datatype": "string",
+    "entity_name": "cited_patent",
     "query": "y",
+    "solr_column_name": "cited_patents.cited_patent_id",
     "sort": "suppl"
   },
   "cited_patent_kind": {
-    "entity_name": "cited_patent",
     "column_name": "citedpatent.kind",
     "datatype": "string",
+    "entity_name": "cited_patent",
     "query": "y",
+    "solr_column_name": "cited_patents.cited_patent_kind",
     "sort": "suppl"
   },
   "cited_patent_number": {
-    "entity_name": "cited_patent",
     "column_name": "citedpatent.number",
     "datatype": "string",
+    "entity_name": "cited_patent",
     "query": "y",
+    "solr_column_name": "cited_patents.cited_patent_number",
     "sort": "suppl"
   },
   "cited_patent_sequence": {
-    "entity_name": "cited_patent",
     "column_name": "patentcit_fromciting_tocited.sequence",
     "datatype": "int",
+    "entity_name": "cited_patent",
     "query": "n",
+    "solr_column_name": "cited_patents.cited_patent_sequence",
     "sort": "suppl"
   },
   "cited_patent_title": {
-    "entity_name": "cited_patent",
     "column_name": "citedpatent.title",
     "datatype": "string",
+    "entity_name": "cited_patent",
     "query": "y",
+    "solr_column_name": "cited_patents.cited_patent_title",
+    "sort": "suppl"
+  },
+  "citedby_patent_category": {
+    "column_name": "patentcit_fromcited_tociting.category",
+    "datatype": "string",
+    "entity_name": "citedby_patent",
+    "query": "y",
+    "solr_column_name": "citedby_patents.citedby_patent_category",
+    "sort": "suppl"
+  },
+  "citedby_patent_date": {
+    "column_name": "citingpatent.date",
+    "datatype": "date",
+    "entity_name": "citedby_patent",
+    "query": "y",
+    "solr_column_name": "citedby_patents.citedby_patent_date",
+    "sort": "suppl"
+  },
+  "citedby_patent_id": {
+    "column_name": "citingpatent.patent_id",
+    "datatype": "string",
+    "entity_name": "citedby_patent",
+    "query": "y",
+    "solr_column_name": "citedby_patents.citedby_patent_id",
+    "sort": "suppl"
+  },
+  "citedby_patent_kind": {
+    "column_name": "citingpatent.kind",
+    "datatype": "string",
+    "entity_name": "citedby_patent",
+    "query": "y",
+    "solr_column_name": "citedby_patents.citedby_patent_kind",
+    "sort": "suppl"
+  },
+  "citedby_patent_number": {
+    "column_name": "citingpatent.number",
+    "datatype": "string",
+    "entity_name": "citedby_patent",
+    "query": "y",
+    "solr_column_name": "citedby_patents.citedby_patent_number",
+    "sort": "suppl"
+  },
+  "citedby_patent_title": {
+    "column_name": "citingpatent.title",
+    "datatype": "string",
+    "entity_name": "citedby_patent",
+    "query": "y",
+    "solr_column_name": "citedby_patents.citedby_patent_title",
     "sort": "suppl"
   },
   "cpc_category": {
-    "entity_name": "cpc",
     "column_name": "cpc_current_copy.category",
     "datatype": "string",
+    "entity_name": "cpc",
     "query": "y",
+    "solr_column_name": "cpcs.cpc_category",
     "sort": "suppl"
   },
   "cpc_first_seen_date": {
-    "entity_name": "cpc",
     "column_name": "cpc_group.first_seen_date",
     "datatype": "date",
+    "entity_name": "cpc",
     "query": "y",
+    "solr_column_name": "cpcs.cpc_first_seen_date",
     "sort": "suppl"
   },
   "cpc_group_id": {
-    "entity_name": "cpc",
     "column_name": "cpc_group.id",
     "datatype": "string",
+    "entity_name": "cpc",
     "query": "y",
+    "solr_column_name": "cpcs.cpc_group_id",
     "sort": "suppl"
   },
   "cpc_group_title": {
-    "entity_name": "cpc",
     "column_name": "cpc_group.title",
     "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "cpc_sequence": {
     "entity_name": "cpc",
-    "column_name": "cpc_current_copy.sequence",
-    "datatype": "int",
     "query": "y",
+    "solr_column_name": "cpcs.cpc_group_title",
     "sort": "suppl"
   },
   "cpc_last_seen_date": {
-    "entity_name": "cpc",
     "column_name": "cpc_group.last_seen_date",
     "datatype": "date",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "cpc_section_id": {
     "entity_name": "cpc",
-    "column_name": "cpc_current_group_copy.section_id",
-    "datatype": "string",
     "query": "y",
-    "sort": "suppl"
-  },
-  "cpc_subgroup_id": {
-    "entity_name": "cpc",
-    "column_name": "cpc_current_copy.subgroup_id",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "cpc_subgroup_title": {
-    "entity_name": "cpc",
-    "column_name": "cpc_subgroup.title",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "cpc_subsection_id": {
-    "entity_name": "cpc",
-    "column_name": "cpc_current_copy.subsection_id",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "cpc_subsection_title": {
-    "entity_name": "cpc",
-    "column_name": "cpc_subsection.title",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "cpc_total_num_assignees": {
-    "entity_name": "cpc",
-    "column_name": "cpc_group.num_assignees",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "cpc_total_num_inventors": {
-    "entity_name": "cpc",
-    "column_name": "cpc_group.num_inventors",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "cpc_total_num_patents": {
-    "entity_name": "cpc",
-    "column_name": "cpc_group.num_patents",
-    "datatype": "int",
-    "query": "y",
+    "solr_column_name": "cpcs.cpc_last_seen_date",
     "sort": "suppl"
   },
   "cpc_num_patents_for_location": {
-    "entity_name": "cpc",
     "column_name": "location_cpc_group.num_patents",
     "datatype": "int",
+    "entity_name": "cpc",
     "query": "n",
+    "solr_column_name": "cpcs.cpc_num_patents_for_location",
     "sort": "suppl"
   },
-  "govint_raw_statement": {
-    "entity_name": "government_interest",
-    "column_name": "government_interest.gi_statement",
-    "datatype": "fulltext",
+  "cpc_section_id": {
+    "column_name": "cpc_current_group_copy.section_id",
+    "datatype": "string",
+    "entity_name": "cpc",
     "query": "y",
+    "solr_column_name": "cpcs.cpc_section_id",
     "sort": "suppl"
   },
-  "govint_org_id": {
-    "entity_name": "government_interest",
-    "column_name": "patent_govintorg.organization_id",
+  "cpc_subgroup_id": {
+    "column_name": "cpc_current_copy.subgroup_id",
+    "datatype": "string",
+    "entity_name": "cpc",
+    "query": "y",
+    "solr_column_name": "cpcs.cpc_subgroup_id",
+    "sort": "suppl"
+  },
+  "cpc_subgroup_title": {
+    "column_name": "cpc_subgroup.title",
+    "datatype": "string",
+    "entity_name": "cpc",
+    "query": "y",
+    "solr_column_name": "cpcs.cpc_subgroup_title",
+    "sort": "suppl"
+  },
+  "cpc_subsection_id": {
+    "column_name": "cpc_current_copy.subsection_id",
+    "datatype": "string",
+    "entity_name": "cpc",
+    "query": "y",
+    "solr_column_name": "cpcs.cpc_subsection_id",
+    "sort": "suppl"
+  },
+  "cpc_subsection_title": {
+    "column_name": "cpc_subsection.title",
+    "datatype": "string",
+    "entity_name": "cpc",
+    "query": "y",
+    "solr_column_name": "cpcs.cpc_subsection_title",
+    "sort": "suppl"
+  },
+  "cpc_total_num_assignees": {
+    "column_name": "cpc_group.num_assignees",
     "datatype": "int",
+    "entity_name": "cpc",
     "query": "y",
+    "solr_column_name": "cpcs.cpc_total_num_assignees",
     "sort": "suppl"
   },
-  "govint_org_name": {
-    "entity_name": "government_interest",
-    "column_name": "government_organization.name",
-    "datatype": "string",
+  "cpc_total_num_inventors": {
+    "column_name": "cpc_group.num_inventors",
+    "datatype": "int",
+    "entity_name": "cpc",
     "query": "y",
+    "solr_column_name": "cpcs.cpc_total_num_inventors",
     "sort": "suppl"
   },
-  "govint_org_level_one": {
-    "entity_name": "government_interest",
-    "column_name": "government_organization.level_one",
-    "datatype": "string",
+  "cpc_total_num_patents": {
+    "column_name": "cpc_group.num_patents",
+    "datatype": "int",
+    "entity_name": "cpc",
     "query": "y",
+    "solr_column_name": "cpcs.cpc_total_num_patents",
     "sort": "suppl"
   },
-  "govint_org_level_two": {
-    "entity_name": "government_interest",
-    "column_name": "government_organization.level_two",
-    "datatype": "string",
+  "detail_desc_length": {
+    "column_name": "patent.detail_desc_length",
+    "datatype": "int",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.detail_desc_length",
     "sort": "suppl"
   },
-  "govint_org_level_three": {
-    "entity_name": "government_interest",
-    "column_name": "government_organization.level_three",
+  "examiner_first_name": {
+    "column_name": "examiner.name_first",
     "datatype": "string",
+    "entity_name": "examiner",
     "query": "y",
+    "solr_column_name": "examiners.examiner_first_name",
+    "sort": "suppl"
+  },
+  "examiner_group": {
+    "column_name": "examiner.group",
+    "datatype": "string",
+    "entity_name": "examiner",
+    "query": "y",
+    "solr_column_name": "examiners.examiner_group",
+    "sort": "suppl"
+  },
+  "examiner_id": {
+    "column_name": "examiner.persistent_examiner_id",
+    "datatype": "string",
+    "entity_name": "examiner",
+    "query": "y",
+    "solr_column_name": "examiners.examiner_id",
+    "sort": "suppl"
+  },
+  "examiner_key_id": {
+    "column_name": "examiner.examiner_id",
+    "datatype": "int",
+    "entity_name": "examiner",
+    "query": "y",
+    "solr_column_name": "examiners.examiner_key_id",
+    "sort": "suppl"
+  },
+  "examiner_last_name": {
+    "column_name": "examiner.name_last",
+    "datatype": "string",
+    "entity_name": "examiner",
+    "query": "y",
+    "solr_column_name": "examiners.examiner_last_name",
+    "sort": "suppl"
+  },
+  "examiner_role": {
+    "column_name": "patent_examiner.role",
+    "datatype": "string",
+    "entity_name": "examiner",
+    "query": "y",
+    "solr_column_name": "examiners.examiner_role",
+    "sort": "suppl"
+  },
+  "forprior_country": {
+    "column_name": "foreignpriority.country",
+    "datatype": "string",
+    "entity_name": "foreign_priority",
+    "query": "y",
+    "solr_column_name": "foreign_priority.forprior_country",
+    "sort": "suppl"
+  },
+  "forprior_date": {
+    "column_name": "foreignpriority.date",
+    "datatype": "date",
+    "entity_name": "foreign_priority",
+    "query": "y",
+    "solr_column_name": "foreign_priority.forprior_date",
+    "sort": "suppl"
+  },
+  "forprior_docnumber": {
+    "column_name": "foreignpriority.foreign_doc_number",
+    "datatype": "string",
+    "entity_name": "foreign_priority",
+    "query": "y",
+    "solr_column_name": "foreign_priority.forprior_docnumber",
+    "sort": "suppl"
+  },
+  "forprior_kind": {
+    "column_name": "foreignpriority.kind",
+    "datatype": "string",
+    "entity_name": "foreign_priority",
+    "query": "y",
+    "solr_column_name": "foreign_priority.forprior_kind",
+    "sort": "suppl"
+  },
+  "forprior_sequence": {
+    "column_name": "foreignpriority.sequence",
+    "datatype": "int",
+    "entity_name": "foreign_priority",
+    "query": "n",
+    "solr_column_name": "foreign_priority.forprior_sequence",
     "sort": "suppl"
   },
   "govint_contract_award_number": {
-    "entity_name": "government_interest",
     "column_name": "patent_contractawardnumber.contract_award_number",
     "datatype": "string",
+    "entity_name": "government_interest",
     "query": "y",
+    "solr_column_name": "gov_interests.govint_contract_award_number",
+    "sort": "suppl"
+  },
+  "govint_org_id": {
+    "column_name": "patent_govintorg.organization_id",
+    "datatype": "int",
+    "entity_name": "government_interest",
+    "query": "y",
+    "solr_column_name": "gov_interests.govint_org_id",
+    "sort": "suppl"
+  },
+  "govint_org_level_one": {
+    "column_name": "government_organization.level_one",
+    "datatype": "string",
+    "entity_name": "government_interest",
+    "query": "y",
+    "solr_column_name": "gov_interests.govint_org_level_one",
+    "sort": "suppl"
+  },
+  "govint_org_level_three": {
+    "column_name": "government_organization.level_three",
+    "datatype": "string",
+    "entity_name": "government_interest",
+    "query": "y",
+    "solr_column_name": "gov_interests.govint_org_level_three",
+    "sort": "suppl"
+  },
+  "govint_org_level_two": {
+    "column_name": "government_organization.level_two",
+    "datatype": "string",
+    "entity_name": "government_interest",
+    "query": "y",
+    "solr_column_name": "gov_interests.govint_org_level_two",
+    "sort": "suppl"
+  },
+  "govint_org_name": {
+    "column_name": "government_organization.name",
+    "datatype": "string",
+    "entity_name": "government_interest",
+    "query": "y",
+    "solr_column_name": "gov_interests.govint_org_name",
+    "sort": "suppl"
+  },
+  "govint_raw_statement": {
+    "column_name": "government_interest.gi_statement",
+    "datatype": "fulltext",
+    "entity_name": "government_interest",
+    "query": "y",
+    "solr_column_name": "gov_interests.govint_raw_statement",
     "sort": "suppl"
   },
   "inventor_first_name": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_first_name",
+    "column_name": "inventor.name_first",
     "datatype": "string",
+    "entity_name": "inventor",
     "query": "y",
+    "solr_column_name": "inventors.inventor_first_name",
     "sort": "suppl"
   },
   "inventor_first_seen_date": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_first_seen_date",
+    "column_name": "inventor.first_seen_date",
     "datatype": "date",
+    "entity_name": "inventor",
     "query": "y",
+    "solr_column_name": "inventors.inventor_first_seen_date",
     "sort": "suppl"
   },
   "inventor_id": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_id",
+    "column_name": "inventor.persistent_inventor_id",
     "datatype": "string",
+    "entity_name": "inventor",
     "query": "y",
+    "solr_column_name": "inventors.inventor_id",
     "sort": "suppl"
   },
   "inventor_key_id": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_key_id",
+    "column_name": "inventor.inventor_id",
     "datatype": "int",
+    "entity_name": "inventor",
     "query": "y",
+    "solr_column_name": "inventors.inventor_key_id",
     "sort": "suppl"
   },
   "inventor_last_name": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_last_name",
+    "column_name": "inventor.name_last",
     "datatype": "string",
+    "entity_name": "inventor",
     "query": "y",
-    "sort": "suppl"
-  },
-  "inventor_lastknown_city": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_lastknown_city",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "inventor_lastknown_country": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_lastknown_country",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "inventor_lastknown_latitude": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_lastknown_latitude",
-    "datatype": "float",
-    "query": "n",
-    "sort": "suppl"
-  },
-  "inventor_lastknown_location_id": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_lastknown_location_id",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "inventor_lastknown_longitude": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_lastknown_longitude",
-    "datatype": "float",
-    "query": "n",
+    "solr_column_name": "inventors.inventor_last_name",
     "sort": "suppl"
   },
   "inventor_last_seen_date": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_last_seen_date",
+    "column_name": "inventor.last_seen_date",
     "datatype": "date",
+    "entity_name": "inventor",
     "query": "y",
+    "solr_column_name": "inventors.inventor_last_seen_date",
+    "sort": "suppl"
+  },
+  "inventor_lastknown_city": {
+    "column_name": "inventor.lastknown_city",
+    "datatype": "string",
+    "entity_name": "inventor",
+    "query": "y",
+    "solr_column_name": "inventors.inventor_lastknown_city",
+    "sort": "suppl"
+  },
+  "inventor_lastknown_country": {
+    "column_name": "inventor.lastknown_country",
+    "datatype": "string",
+    "entity_name": "inventor",
+    "query": "y",
+    "solr_column_name": "inventors.inventor_lastknown_country",
+    "sort": "suppl"
+  },
+  "inventor_lastknown_latitude": {
+    "column_name": "inventor.lastknown_latitude",
+    "datatype": "float",
+    "entity_name": "inventor",
+    "query": "n",
+    "solr_column_name": "inventors.inventor_lastknown_latitude",
+    "sort": "suppl"
+  },
+  "inventor_lastknown_location_id": {
+    "column_name": "inventor.lastknown_persistent_location_id",
+    "datatype": "string",
+    "entity_name": "inventor",
+    "query": "y",
+    "solr_column_name": "inventors.inventor_lastknown_location_id",
+    "sort": "suppl"
+  },
+  "inventor_lastknown_longitude": {
+    "column_name": "inventor.lastknown_longitude",
+    "datatype": "float",
+    "entity_name": "inventor",
+    "query": "n",
+    "solr_column_name": "inventors.inventor_lastknown_longitude",
     "sort": "suppl"
   },
   "inventor_lastknown_state": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_lastknown_state",
+    "column_name": "inventor.lastknown_state",
     "datatype": "string",
+    "entity_name": "inventor",
     "query": "y",
+    "solr_column_name": "inventors.inventor_lastknown_state",
     "sort": "suppl"
   },
   "inventor_num_patents_for_location": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_num_patents_for_location",
+    "column_name": "location_inventor.num_patents",
     "datatype": "int",
+    "entity_name": "inventor",
     "query": "n",
-    "sort": "suppl"
-  },
-  "inventor_total_num_patents": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_total_num_patents",
-    "datatype": "int",
-    "query": "y",
+    "solr_column_name": "inventors.inventor_num_patents_for_location",
     "sort": "suppl"
   },
   "inventor_total_num_assignees": {
-    "entity_name": "inventor",
-    "column_name": "inventors.inventor_total_num_assignees",
+    "column_name": "inventor.num_assignees",
     "datatype": "int",
+    "entity_name": "inventor",
     "query": "y",
+    "solr_column_name": "inventors.inventor_total_num_assignees",
+    "sort": "suppl"
+  },
+  "inventor_total_num_patents": {
+    "column_name": "inventor.num_patents",
+    "datatype": "int",
+    "entity_name": "inventor",
+    "query": "y",
+    "solr_column_name": "inventors.inventor_total_num_patents",
     "sort": "suppl"
   },
   "ipc_action_date": {
-    "entity_name": "ipc",
     "column_name": "ipcr.action_date",
     "datatype": "date",
+    "entity_name": "ipc",
     "query": "n",
+    "solr_column_name": "IPCs.ipc_action_date",
     "sort": "suppl"
   },
   "ipc_class": {
-    "entity_name": "ipc",
     "column_name": "ipcr.ipc_class",
     "datatype": "string",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_class",
     "sort": "suppl"
   },
   "ipc_classification_data_source": {
-    "entity_name": "ipc",
     "column_name": "ipcr.classification_data_source",
     "datatype": "string",
+    "entity_name": "ipc",
     "query": "n",
+    "solr_column_name": "IPCs.ipc_classification_data_source",
     "sort": "suppl"
   },
   "ipc_classification_value": {
-    "entity_name": "ipc",
     "column_name": "ipcr.classification_value",
     "datatype": "string",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_classification_value",
     "sort": "suppl"
   },
   "ipc_first_seen_date": {
-    "entity_name": "ipc",
     "column_name": "ipcr.first_seen_date",
     "datatype": "date",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_first_seen_date",
     "sort": "suppl"
   },
   "ipc_last_seen_date": {
-    "entity_name": "ipc",
     "column_name": "ipcr.last_seen_date",
     "datatype": "date",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_last_seen_date",
     "sort": "suppl"
   },
   "ipc_main_group": {
-    "entity_name": "ipc",
     "column_name": "ipcr.main_group",
     "datatype": "string",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_main_group",
     "sort": "suppl"
   },
   "ipc_section": {
-    "entity_name": "ipc",
     "column_name": "ipcr.section",
     "datatype": "string",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_section",
     "sort": "suppl"
   },
   "ipc_sequence": {
-    "entity_name": "ipc",
     "column_name": "ipcr.sequence",
     "datatype": "int",
+    "entity_name": "ipc",
     "query": "n",
+    "solr_column_name": "IPCs.ipc_sequence",
     "sort": "suppl"
   },
   "ipc_subclass": {
-    "entity_name": "ipc",
     "column_name": "ipcr.subclass",
     "datatype": "string",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_subclass",
     "sort": "suppl"
   },
   "ipc_subgroup": {
-    "entity_name": "ipc",
     "column_name": "ipcr.subgroup",
     "datatype": "string",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_subgroup",
     "sort": "suppl"
   },
   "ipc_symbol_position": {
-    "entity_name": "ipc",
     "column_name": "ipcr.symbol_position",
     "datatype": "string",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_symbol_position",
     "sort": "suppl"
   },
   "ipc_total_num_assignees": {
-    "entity_name": "ipc",
     "column_name": "ipcr.num_assignees",
     "datatype": "int",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_total_num_assignees",
     "sort": "suppl"
   },
   "ipc_total_num_inventors": {
-    "entity_name": "ipc",
     "column_name": "ipcr.num_inventors",
     "datatype": "int",
+    "entity_name": "ipc",
     "query": "y",
+    "solr_column_name": "IPCs.ipc_total_num_inventors",
     "sort": "suppl"
   },
   "ipc_version_indicator": {
-    "entity_name": "ipc",
     "column_name": "ipcr.ipc_version_indicator",
     "datatype": "date",
+    "entity_name": "ipc",
     "query": "n",
+    "solr_column_name": "IPCs.ipc_version_indicator",
+    "sort": "suppl"
+  },
+  "lawyer_first_name": {
+    "column_name": "lawyer.name_first",
+    "datatype": "string",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_first_name",
+    "sort": "suppl"
+  },
+  "lawyer_first_seen_date": {
+    "column_name": "lawyer.first_seen_date",
+    "datatype": "date",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_first_seen_date",
+    "sort": "suppl"
+  },
+  "lawyer_id": {
+    "column_name": "lawyer.persistent_lawyer_id",
+    "datatype": "string",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_id",
+    "sort": "suppl"
+  },
+  "lawyer_key_id": {
+    "column_name": "lawyer.lawyer_id",
+    "datatype": "int",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_key_id",
+    "sort": "suppl"
+  },
+  "lawyer_last_name": {
+    "column_name": "lawyer.name_last",
+    "datatype": "string",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_last_name",
+    "sort": "suppl"
+  },
+  "lawyer_last_seen_date": {
+    "column_name": "lawyer.last_seen_date",
+    "datatype": "date",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_last_seen_date",
+    "sort": "suppl"
+  },
+  "lawyer_organization": {
+    "column_name": "lawyer.organization",
+    "datatype": "string",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_organization",
+    "sort": "suppl"
+  },
+  "lawyer_sequence": {
+    "column_name": "patent_lawyer.sequence",
+    "datatype": "int",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_sequence",
+    "sort": "suppl"
+  },
+  "lawyer_total_num_assignees": {
+    "column_name": "lawyer.num_assignees",
+    "datatype": "int",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_total_num_assignees",
+    "sort": "suppl"
+  },
+  "lawyer_total_num_inventors": {
+    "column_name": "lawyer.num_inventors",
+    "datatype": "int",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_total_num_inventors",
+    "sort": "suppl"
+  },
+  "lawyer_total_num_patents": {
+    "column_name": "lawyer.num_patents",
+    "datatype": "int",
+    "entity_name": "lawyer",
+    "query": "y",
+    "solr_column_name": "lawyers.lawyer_total_num_patents",
     "sort": "suppl"
   },
   "location_city": {
-    "entity_name": "location",
-    "column_name": "location_city",
+    "column_name": "location.city",
     "datatype": "string",
+    "entity_name": "location",
     "query": "y",
+    "solr_column_name": "location_city",
     "sort": "y"
   },
   "location_country": {
-    "entity_name": "location",
-    "column_name": "location_country",
+    "column_name": "location.country",
     "datatype": "string",
+    "entity_name": "location",
     "query": "y",
+    "solr_column_name": "location_country",
     "sort": "y"
   },
-  "location_id": {
-    "entity_name": "location",
-    "column_name": "location_id",
+  "location_county": {
+    "column_name": "location.county",
     "datatype": "string",
+    "entity_name": "location",
     "query": "y",
+    "solr_column_name": "location_county",
+    "sort": "suppl"
+  },
+  "location_county_fips": {
+    "column_name": "location.county_fips",
+    "datatype": "string",
+    "entity_name": "location",
+    "query": "y",
+    "solr_column_name": "location_county_fips",
+    "sort": "suppl"
+  },
+  "location_id": {
+    "column_name": "location.persistent_location_id",
+    "datatype": "string",
+    "entity_name": "location",
+    "query": "y",
+    "solr_column_name": "location_id",
     "sort": "y"
   },
   "location_key_id": {
-    "entity_name": "location",
-    "column_name": "location_key_id",
+    "column_name": "location.location_id",
     "datatype": "int",
+    "entity_name": "location",
     "query": "n",
+    "solr_column_name": "location_key_id",
     "sort": "suppl"
   },
   "location_latitude": {
-    "entity_name": "location",
-    "column_name": "location_latitude",
+    "column_name": "location.latitude",
     "datatype": "float",
+    "entity_name": "location",
     "query": "n",
+    "solr_column_name": "location_latitude",
     "sort": "suppl"
   },
   "location_longitude": {
-    "entity_name": "location",
-    "column_name": "location_longitude",
+    "column_name": "location.longitude",
     "datatype": "float",
+    "entity_name": "location",
     "query": "n",
+    "solr_column_name": "location_longitude",
+    "sort": "suppl"
+  },
+  "location_state": {
+    "column_name": "location.state",
+    "datatype": "string",
+    "entity_name": "location",
+    "query": "y",
+    "solr_column_name": "location_state",
+    "sort": "y"
+  },
+  "location_state_fips": {
+    "column_name": "location.state_fips",
+    "datatype": "string",
+    "entity_name": "location",
+    "query": "y",
+    "solr_column_name": "location_state_fips",
     "sort": "suppl"
   },
   "location_total_num_assignees": {
-    "entity_name": "location",
-    "column_name": "location_total_num_assignees",
+    "column_name": "location.num_assignees",
     "datatype": "int",
+    "entity_name": "location",
     "query": "y",
+    "solr_column_name": "location_total_num_assignees",
     "sort": "y"
   },
   "location_total_num_inventors": {
-    "entity_name": "location",
-    "column_name": "location_total_num_inventors",
+    "column_name": "location.num_inventors",
     "datatype": "int",
+    "entity_name": "location",
     "query": "y",
+    "solr_column_name": "location_total_num_inventors",
     "sort": "y"
   },
   "location_total_num_patents": {
-    "entity_name": "location",
-    "column_name": "location_total_num_patents",
+    "column_name": "location.num_patents",
     "datatype": "int",
-    "query": "y",
-    "sort": "y"
-  },
-  "location_state": {
     "entity_name": "location",
-    "column_name": "location_state",
-    "datatype": "string",
     "query": "y",
+    "solr_column_name": "location_total_num_patents",
     "sort": "y"
   },
   "nber_category_id": {
-    "entity_name": "nber",
     "column_name": "nber_copy.category_id",
     "datatype": "string",
+    "entity_name": "nber",
     "query": "y",
+    "solr_column_name": "nbers.nber_category_id",
     "sort": "y"
   },
   "nber_category_title": {
-    "entity_name": "nber",
     "column_name": "nber_category.title",
     "datatype": "string",
+    "entity_name": "nber",
     "query": "y",
+    "solr_column_name": "nbers.nber_category_title",
     "sort": "y"
   },
   "nber_first_seen_date": {
-    "entity_name": "nber",
     "column_name": "nber_subcategory.first_seen_date",
     "datatype": "date",
+    "entity_name": "nber",
     "query": "y",
+    "solr_column_name": "nbers.nber_first_seen_date",
     "sort": "y"
   },
   "nber_last_seen_date": {
-    "entity_name": "nber",
     "column_name": "nber_subcategory.last_seen_date",
     "datatype": "date",
-    "query": "y",
-    "sort": "y"
-  },
-  "nber_subcategory_id": {
     "entity_name": "nber",
-    "column_name": "nber_copy.subcategory_id",
-    "datatype": "string",
     "query": "y",
-    "sort": "y"
-  },
-  "nber_subcategory_title": {
-    "entity_name": "nber",
-    "column_name": "nber_subcategory.title",
-    "datatype": "string",
-    "query": "y",
-    "sort": "y"
-  },
-  "nber_total_num_assignees": {
-    "entity_name": "nber",
-    "column_name": "nber_subcategory.num_assignees",
-    "datatype": "int",
-    "query": "y",
-    "sort": "y"
-  },
-  "nber_total_num_inventors": {
-    "entity_name": "nber",
-    "column_name": "nber_subcategory.num_inventors",
-    "datatype": "int",
-    "query": "y",
-    "sort": "y"
-  },
-  "nber_total_num_patents": {
-    "entity_name": "nber",
-    "column_name": "nber_subcategory.num_patents",
-    "datatype": "int",
-    "query": "y",
+    "solr_column_name": "nbers.nber_last_seen_date",
     "sort": "y"
   },
   "nber_num_patents_for_location": {
-    "entity_name": "nber",
     "column_name": "location_nber_subcategory.num_patents",
     "datatype": "int",
+    "entity_name": "nber",
     "query": "n",
+    "solr_column_name": "nbers.nber_num_patents_for_location",
     "sort": "suppl"
   },
-  "patent_abstract": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_abstract",
-    "datatype": "fulltext",
+  "nber_subcategory_id": {
+    "column_name": "nber_copy.subcategory_id",
+    "datatype": "string",
+    "entity_name": "nber",
     "query": "y",
+    "solr_column_name": "nbers.nber_subcategory_id",
+    "sort": "y"
+  },
+  "nber_subcategory_title": {
+    "column_name": "nber_subcategory.title",
+    "datatype": "string",
+    "entity_name": "nber",
+    "query": "y",
+    "solr_column_name": "nbers.nber_subcategory_title",
+    "sort": "y"
+  },
+  "nber_total_num_assignees": {
+    "column_name": "nber_subcategory.num_assignees",
+    "datatype": "int",
+    "entity_name": "nber",
+    "query": "y",
+    "solr_column_name": "nbers.nber_total_num_assignees",
+    "sort": "y"
+  },
+  "nber_total_num_inventors": {
+    "column_name": "nber_subcategory.num_inventors",
+    "datatype": "int",
+    "entity_name": "nber",
+    "query": "y",
+    "solr_column_name": "nbers.nber_total_num_inventors",
+    "sort": "y"
+  },
+  "nber_total_num_patents": {
+    "column_name": "nber_subcategory.num_patents",
+    "datatype": "int",
+    "entity_name": "nber",
+    "query": "y",
+    "solr_column_name": "nbers.nber_total_num_patents",
+    "sort": "y"
+  },
+  "patent_abstract": {
+    "column_name": "patent.abstract",
+    "datatype": "fulltext",
+    "entity_name": "patent",
+    "query": "y",
+    "solr_column_name": "patents.patent_abstract",
+    "sort": "suppl"
+  },
+  "patent_average_processing_time": {
+    "column_name": "patent.uspc_current_mainclass_average_patent_processing_days",
+    "datatype": "int",
+    "entity_name": "patent",
+    "query": "y",
+    "solr_column_name": "patents.patent_average_processing_time",
     "sort": "suppl"
   },
   "patent_date": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_date",
+    "column_name": "patent.date",
     "datatype": "date",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_date",
     "sort": "y"
   },
-  "patent_firstnamed_assignee_id": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_assignee_id",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
   "patent_firstnamed_assignee_city": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_assignee_city",
+    "column_name": "patent.firstnamed_assignee_city",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_firstnamed_assignee_city",
     "sort": "suppl"
   },
   "patent_firstnamed_assignee_country": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_assignee_country",
+    "column_name": "patent.firstnamed_assignee_country",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_firstnamed_assignee_country",
+    "sort": "suppl"
+  },
+  "patent_firstnamed_assignee_id": {
+    "column_name": "patent.firstnamed_assignee_persistent_id",
+    "datatype": "string",
+    "entity_name": "patent",
+    "query": "y",
+    "solr_column_name": "patents.patent_firstnamed_assignee_id",
     "sort": "suppl"
   },
   "patent_firstnamed_assignee_latitude": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_assignee_latitude",
+    "column_name": "patent.firstnamed_assignee_latitude",
     "datatype": "float",
+    "entity_name": "patent",
     "query": "n",
+    "solr_column_name": "patents.patent_firstnamed_assignee_latitude",
     "sort": "suppl"
   },
   "patent_firstnamed_assignee_location_id": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_assignee_location_id",
+    "column_name": "patent.firstnamed_assignee_persistent_location_id",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_firstnamed_assignee_location_id",
     "sort": "suppl"
   },
   "patent_firstnamed_assignee_longitude": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_assignee_longitude",
+    "column_name": "patent.firstnamed_assignee_longitude",
     "datatype": "float",
+    "entity_name": "patent",
     "query": "n",
+    "solr_column_name": "patents.patent_firstnamed_assignee_longitude",
     "sort": "suppl"
   },
   "patent_firstnamed_assignee_state": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_assignee_state",
+    "column_name": "patent.firstnamed_assignee_state",
     "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "patent_firstnamed_inventor_id": {
     "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_inventor_id",
-    "datatype": "string",
     "query": "y",
+    "solr_column_name": "patents.patent_firstnamed_assignee_state",
     "sort": "suppl"
   },
   "patent_firstnamed_inventor_city": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_inventor_city",
+    "column_name": "patent.firstnamed_inventor_city",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_firstnamed_inventor_city",
     "sort": "suppl"
   },
   "patent_firstnamed_inventor_country": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_inventor_country",
+    "column_name": "patent.firstnamed_inventor_country",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_firstnamed_inventor_country",
+    "sort": "suppl"
+  },
+  "patent_firstnamed_inventor_id": {
+    "column_name": "patent.firstnamed_inventor_persistent_id",
+    "datatype": "string",
+    "entity_name": "patent",
+    "query": "y",
+    "solr_column_name": "patents.patent_firstnamed_inventor_id",
     "sort": "suppl"
   },
   "patent_firstnamed_inventor_latitude": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_inventor_latitude",
+    "column_name": "patent.firstnamed_inventor_latitude",
     "datatype": "float",
+    "entity_name": "patent",
     "query": "n",
+    "solr_column_name": "patents.patent_firstnamed_inventor_latitude",
     "sort": "suppl"
   },
   "patent_firstnamed_inventor_location_id": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_inventor_location_id",
+    "column_name": "patent.firstnamed_inventor_persistent_location_id",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_firstnamed_inventor_location_id",
     "sort": "suppl"
   },
   "patent_firstnamed_inventor_longitude": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_inventor_longitude",
+    "column_name": "patent.firstnamed_inventor_longitude",
     "datatype": "float",
+    "entity_name": "patent",
     "query": "n",
+    "solr_column_name": "patents.patent_firstnamed_inventor_longitude",
     "sort": "suppl"
   },
   "patent_firstnamed_inventor_state": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_firstnamed_inventor_state",
+    "column_name": "patent.firstnamed_inventor_state",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_firstnamed_inventor_state",
     "sort": "suppl"
   },
   "patent_id": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_id",
+    "column_name": "patent.patent_id",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_id",
     "sort": "y"
   },
   "patent_kind": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_kind",
+    "column_name": "patent.kind",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_kind",
     "sort": "y"
   },
   "patent_num_cited_by_us_patents": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_num_cited_by_us_patents",
+    "column_name": "patent.num_times_cited_by_us_patents",
     "datatype": "int",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_num_cited_by_us_patents",
     "sort": "y"
   },
   "patent_num_cited_by_us_patents_for_location": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_num_cited_by_us_patents_for_location",
+    "column_name": "(select count(distinct uspatentcitationX.citing_patent_id) from uspatentcitation as uspatentcitationX left outer join patent_inventor as patent_inventorX on uspatentcitationX.cited_patent_id=patent_inventorX.patent_id left outer join patent_inventor as patent_inventorX2 on uspatentcitationX.citing_patent_id=patent_inventorX2.patent_id WHERE patent_inventorX2.location_id=patent_inventor.location_id and uspatentcitationX.cited_patent_id=patent_inventor.patent_id)",
     "datatype": "int",
+    "entity_name": "patent",
     "query": "n",
+    "solr_column_name": "patents.patent_num_cited_by_us_patents_for_location",
     "sort": "suppl"
   },
-  "patent_num_combined_citations": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_num_combined_citations",
+  "patent_num_claims": {
+    "column_name": "patent.num_claims",
     "datatype": "int",
+    "entity_name": "patent",
+    "query": "n",
+    "solr_column_name": "patents.patent_num_claims",
+    "sort": "y"
+  },
+  "patent_num_combined_citations": {
+    "column_name": "patent.num_total_documents_cited",
+    "datatype": "int",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_num_combined_citations",
     "sort": "y"
   },
   "patent_num_foreign_citations": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_num_foreign_citations",
+    "column_name": "patent.num_foreign_documents_cited",
     "datatype": "int",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_num_foreign_citations",
     "sort": "y"
   },
   "patent_num_us_application_citations": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_num_us_application_citations",
+    "column_name": "patent.num_us_applications_cited",
     "datatype": "int",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_num_us_application_citations",
     "sort": "y"
   },
   "patent_num_us_patent_citations": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_num_us_patent_citations",
+    "column_name": "patent.num_us_patents_cited",
     "datatype": "int",
+    "entity_name": "patent",
     "query": "y",
-    "sort": "y"
-  },
-  "patent_num_claims": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_num_claims",
-    "datatype": "int",
-    "query": "n",
+    "solr_column_name": "patents.patent_num_us_patent_citations",
     "sort": "y"
   },
   "patent_number": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_number",
+    "column_name": "patent.number",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_number",
     "sort": "y"
   },
-  "patent_average_processing_time": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_average_processing_time",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
   "patent_processing_time": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_processing_time",
+    "column_name": "patent.patent_processing_days",
     "datatype": "int",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_processing_time",
     "sort": "y"
   },
   "patent_title": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_title",
+    "column_name": "patent.title",
     "datatype": "fulltext",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_title",
     "sort": "y"
   },
   "patent_type": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_type",
+    "column_name": "patent.type",
     "datatype": "string",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_type",
     "sort": "y"
   },
   "patent_year": {
-    "entity_name": "patent",
-    "column_name": "patents.patent_year",
+    "column_name": "patent.year",
     "datatype": "int",
+    "entity_name": "patent",
     "query": "y",
+    "solr_column_name": "patents.patent_year",
     "sort": "y"
   },
+  "pct_102_date": {
+    "column_name": "pctdata.102_date",
+    "datatype": "date",
+    "entity_name": "pct_data",
+    "query": "y",
+    "solr_column_name": "pct_data.pct_102_date",
+    "sort": "suppl"
+  },
+  "pct_371_date": {
+    "column_name": "pctdata.371_date",
+    "datatype": "date",
+    "entity_name": "pct_data",
+    "query": "y",
+    "solr_column_name": "pct_data.pct_371_date",
+    "sort": "suppl"
+  },
+  "pct_date": {
+    "column_name": "pctdata.date",
+    "datatype": "date",
+    "entity_name": "pct_data",
+    "query": "y",
+    "solr_column_name": "pct_data.pct_date",
+    "sort": "suppl"
+  },
+  "pct_docnumber": {
+    "column_name": "pctdata.doc_number",
+    "datatype": "string",
+    "entity_name": "pct_data",
+    "query": "y",
+    "solr_column_name": "pct_data.pct_docnumber",
+    "sort": "suppl"
+  },
+  "pct_doctype": {
+    "column_name": "pctdata.doc_type",
+    "datatype": "string",
+    "entity_name": "pct_data",
+    "query": "y",
+    "solr_column_name": "pct_data.pct_doctype",
+    "sort": "suppl"
+  },
+  "pct_kind": {
+    "column_name": "pctdata.kind",
+    "datatype": "string",
+    "entity_name": "pct_data",
+    "query": "y",
+    "solr_column_name": "pct_data.pct_kind",
+    "sort": "suppl"
+  },
   "rawinventor_first_name": {
-    "entity_name": "rawinventor",
     "column_name": "inventor_rawinventor.name_first",
     "datatype": "string",
+    "entity_name": "rawinventor",
     "query": "y",
+    "solr_column_name": "rawinventors.rawinventor_first_name",
     "sort": "y"
   },
   "rawinventor_last_name": {
-    "entity_name": "rawinventor",
     "column_name": "inventor_rawinventor.name_last",
     "datatype": "string",
+    "entity_name": "rawinventor",
     "query": "y",
+    "solr_column_name": "rawinventors.rawinventor_last_name",
     "sort": "y"
   },
   "uspc_first_seen_date": {
-    "entity_name": "uspc",
     "column_name": "uspc_mainclass.first_seen_date",
     "datatype": "date",
+    "entity_name": "uspc",
     "query": "y",
+    "solr_column_name": "uspcs.uspc_first_seen_date",
     "sort": "suppl"
   },
   "uspc_last_seen_date": {
-    "entity_name": "uspc",
     "column_name": "uspc_mainclass.last_seen_date",
     "datatype": "date",
+    "entity_name": "uspc",
     "query": "y",
+    "solr_column_name": "uspcs.uspc_last_seen_date",
     "sort": "suppl"
   },
   "uspc_mainclass_id": {
-    "entity_name": "uspc",
     "column_name": "uspc_mainclass.id",
     "datatype": "string",
+    "entity_name": "uspc",
     "query": "y",
+    "solr_column_name": "uspcs.uspc_mainclass_id",
     "sort": "suppl"
   },
   "uspc_mainclass_title": {
-    "entity_name": "uspc",
     "column_name": "uspc_mainclass.title",
     "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "uspc_sequence": {
     "entity_name": "uspc",
-    "column_name": "uspc_current_copy.sequence",
-    "datatype": "int",
     "query": "y",
-    "sort": "suppl"
-  },
-  "uspc_subclass_id": {
-    "entity_name": "uspc",
-    "column_name": "uspc_current_copy.subclass_id",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "uspc_subclass_title": {
-    "entity_name": "uspc",
-    "column_name": "uspc_subclass.title",
-    "datatype": "string",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "uspc_total_num_assignees": {
-    "entity_name": "uspc",
-    "column_name": "uspc_mainclass.num_assignees",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "uspc_total_num_inventors": {
-    "entity_name": "uspc",
-    "column_name": "uspc_mainclass.num_inventors",
-    "datatype": "int",
-    "query": "y",
-    "sort": "suppl"
-  },
-  "uspc_total_num_patents": {
-    "entity_name": "uspc",
-    "column_name": "uspc_mainclass.num_patents",
-    "datatype": "int",
-    "query": "y",
+    "solr_column_name": "uspcs.uspc_mainclass_title",
     "sort": "suppl"
   },
   "uspc_num_patents_for_location": {
-    "entity_name": "uspc",
     "column_name": "location_uspc_mainclass.num_patents",
     "datatype": "int",
+    "entity_name": "uspc",
     "query": "n",
+    "solr_column_name": "uspcs.uspc_num_patents_for_location",
     "sort": "suppl"
   },
-  "year_id": {
-    "entity_name": "year",
-    "column_name": "patent.year",
+  "uspc_sequence": {
+    "column_name": "uspc_current_copy.sequence",
     "datatype": "int",
+    "entity_name": "uspc",
     "query": "y",
+    "solr_column_name": "uspcs.uspc_sequence",
     "sort": "suppl"
   },
-  "year_num_patents_for_location": {
-    "entity_name": "year",
-    "column_name": "location_year.num_patents",
+  "uspc_subclass_id": {
+    "column_name": "uspc_current_copy.subclass_id",
+    "datatype": "string",
+    "entity_name": "uspc",
+    "query": "y",
+    "solr_column_name": "uspcs.uspc_subclass_id",
+    "sort": "suppl"
+  },
+  "uspc_subclass_title": {
+    "column_name": "uspc_subclass.title",
+    "datatype": "string",
+    "entity_name": "uspc",
+    "query": "y",
+    "solr_column_name": "uspcs.uspc_subclass_title",
+    "sort": "suppl"
+  },
+  "uspc_total_num_assignees": {
+    "column_name": "uspc_mainclass.num_assignees",
     "datatype": "int",
-    "query": "n",
+    "entity_name": "uspc",
+    "query": "y",
+    "solr_column_name": "uspcs.uspc_total_num_assignees",
+    "sort": "suppl"
+  },
+  "uspc_total_num_inventors": {
+    "column_name": "uspc_mainclass.num_inventors",
+    "datatype": "int",
+    "entity_name": "uspc",
+    "query": "y",
+    "solr_column_name": "uspcs.uspc_total_num_inventors",
+    "sort": "suppl"
+  },
+  "uspc_total_num_patents": {
+    "column_name": "uspc_mainclass.num_patents",
+    "datatype": "int",
+    "entity_name": "uspc",
+    "query": "y",
+    "solr_column_name": "uspcs.uspc_total_num_patents",
     "sort": "suppl"
   },
   "wipo_field_id": {
-    "entity_name": "wipo",
     "column_name": "wipo.field_id",
-    "datatype": "string",
+    "datatype": "int",
+    "entity_name": "wipo",
     "query": "y",
+    "solr_column_name": "wipos.wipo_field_id",
     "sort": "suppl"
   },
   "wipo_field_title": {
-    "entity_name": "wipo",
     "column_name": "wipo_field.field_title",
     "datatype": "string",
+    "entity_name": "wipo",
     "query": "y",
+    "solr_column_name": "wipos.wipo_field_title",
     "sort": "suppl"
   },
   "wipo_sector_title": {
-    "entity_name": "wipo",
     "column_name": "wipo_field.sector_title",
     "datatype": "string",
+    "entity_name": "wipo",
     "query": "y",
+    "solr_column_name": "wipos.wipo_sector_title",
     "sort": "suppl"
   },
   "wipo_sequence": {
-    "entity_name": "wipo",
     "column_name": "wipo.sequence",
     "datatype": "int",
+    "entity_name": "wipo",
     "query": "y",
+    "solr_column_name": "wipos.wipo_sequence",
+    "sort": "suppl"
+  },
+  "year_id": {
+    "column_name": "patent.year",
+    "datatype": "int",
+    "entity_name": "year",
+    "query": "y",
+    "solr_column_name": "years.year_id",
+    "sort": "suppl"
+  },
+  "year_num_patents_for_location": {
+    "column_name": "location_year.num_patents",
+    "datatype": "int",
+    "entity_name": "year",
+    "query": "n",
+    "solr_column_name": "years.year_num_patents_for_location",
     "sort": "suppl"
   }
 }

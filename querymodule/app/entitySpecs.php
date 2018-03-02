@@ -7,7 +7,7 @@ function getDBField(array $fieldSpecs, $apiFieldName)
         ErrorHandler::getHandler()->sendError(400, "Field name is invalid: $apiFieldName.",
             "Field name not in FIELD_SPECS: $apiFieldName.");
     }
-    return array("dbField" => $fieldSpecs[$apiFieldName]['column_name'], "entity_name" => $fieldSpecs[$apiFieldName]['entity_name']);
+    return array("dbField" => $fieldSpecs[$apiFieldName]['solr_column_name'], "entity_name" => $fieldSpecs[$apiFieldName]['entity_name']);
 }
 
 /*

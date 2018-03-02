@@ -6,12 +6,12 @@ require_once dirname(__FILE__) . '/ErrorHandler.php';
 
 class QueryParser
 {
-    private $COMPARISON_OPERATORS = array('_eq' => ':', '_neq' => ':');
+    private $COMPARISON_OPERATORS = array('_eq' => ':');
     private $STRING_OPERATORS = array('_begins' => '', '_contains' => '');
     private $FULLTEXT_OPERATORS = array('_text_all' => '', '_text_any' => '', '_text_phrase' => '');
     private $JOIN_OPERATORS = array('_and' => 'AND', '_or' => 'OR');
-    private $NEGATION_OPERATORS = array('_not' => '-');
-    private $RANGE_OPERATORS = array('_lt' => '%s: {* TO %s }', '_lte' => ' %s:[ * TO %s ]', '_gt' => ' %s:{ %s TO * }', '_gte' => ' %s:[%s TO * ]');
+    private $NEGATION_OPERATORS = array('_not' => '-', '_neq' => '-');
+    private $RANGE_OPERATORS = array('_lt' => '%s : { * TO %s }', '_lte' => '%s : [ * TO %s ]', '_gt' => '%s : { %s TO * }', '_gte' => '%s : [ %s TO * ]');
     private $fieldsUsed;
     private $whereClause;
     private $entityName;
@@ -86,7 +86,7 @@ class QueryParser
 
 
         }
-        if (isset($this->RANGE_OPERATORS[$operatorOrField])) {
+        elseif (isset($this->RANGE_OPERATORS[$operatorOrField])) {
             $queryArray = $this->processRangePair($operatorOrField, $rightHandValue);
 
 //            $queryString = $simpleQuery;
@@ -147,8 +147,9 @@ class QueryParser
                 $rightHandString = $simpleQueryArray['q'];
                 $queryString = "$notString$rightHandString";
                 $simpleQueryArray["q"] = $queryString;
+
             }
-            $queryArray = $simpleQueryArray["q"];
+            $queryArray = $simpleQueryArray;
 
 
         } // If the operator for for full text searching, then it will be: { operator : { field : value } }
@@ -299,6 +300,7 @@ class QueryParser
                 throw new ErrorException($msg);
             }
         }
+
         return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity_name"]);
 
     }
@@ -325,24 +327,24 @@ class QueryParser
                         ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $val.");
                         throw new ErrorException("Invalid integer value provided: $val.");
                     }
-                    $returnString = sprintf("($operatorString)", $dbField, $val);
+                    $returnString = sprintf("$operatorString", $dbField, $val);
 
                 } elseif ($datatype == 'int') {
                     if (!is_numeric($val)) {
                         ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $val.");
                         throw new ErrorException("Invalid integer value provided: $val.");
                     }
-                    $returnString = sprintf("($operatorString)", $dbField, $val);
+                    $returnString = sprintf("$operatorString", $dbField, $val);
 
                 } elseif ($datatype == 'date') {
                     if (!strtotime($val)) {
                         ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $val.");
                         throw new ErrorException("Invalid date provided: $val.");
                     }
-                    $returnString = sprintf("($operatorString)", $dbField, date('Y-m-d\TH\\\\:i\\\\:s\Z', strtotime($val)));
+                    $returnString = sprintf("$operatorString", $dbField, date('Y-m-d\TH\\\\:i\\\\:s\Z', strtotime($val)));
 
                 } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
-                    $returnString = sprintf("($operatorString)", $dbField, $val);
+                    $returnString = sprintf("$operatorString", $dbField, $val);
 
                 } else {
                     ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
@@ -375,7 +377,7 @@ class QueryParser
                     if ($operator == '_begins')
                         $returnString = "$dbField : $val*";
                     elseif ($operator == '_contains')
-                        $returnString = "$dbField :'*$val*'";
+                        $returnString = "$dbField : *$val*";
                 } else {
                     ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
                     throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
@@ -412,20 +414,11 @@ class QueryParser
                     $returnString = "$dbField : \"$val\"";
                 } elseif ($operator == '_text_any') {
                     $pieces = explode(" ", $val);
-                    $values = array();
-                    foreach ($pieces as $piece) {
-                        array_push($values, "$dbField : $piece");
+                    $returnString = "$dbField : ".implode(" OR ", $pieces);
 
-                    }
-                    $returnString = implode(" OR ", $values);
                 } elseif ($operator == '_text_all') {
                     $pieces = explode(" ", $val);
-                    $values = array();
-                    foreach ($pieces as $piece) {
-                        array_push($values, "$dbField : $piece");
-
-                    }
-                    $returnString = implode(" AND ", $values);
+                    $returnString = "$dbField : ".implode(" AND ", $pieces);
 
 
                 } else {
