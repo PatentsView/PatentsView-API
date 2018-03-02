@@ -29,7 +29,7 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
 
     $main_group = $entitySpecs[0]["group_name"];
     foreach (array_unique(array_keys($dbResults[$entitySpecs[0]["entity_name"]])) as $entityIdValue) {
-        $currDocArray = array();
+
         $currDocEntityArray = array();
         foreach ($entitySpecs as $entitySpec) {
             $isPrimaryEntity = false;
@@ -38,44 +38,48 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
             }
             if (array_key_exists($entitySpec["entity_name"], $selectFieldSpecs)) {
 
+                if (array_key_exists($entityIdValue, $dbResults[$entitySpec["entity_name"]])) {
 
-                $currentSolrDocs = $dbResults[$entitySpec["entity_name"]][$entityIdValue];
 
-                foreach ($currentSolrDocs as $currentSolrDoc) {
-                    $currentSubDocArray = array();
-                    foreach (array_keys($selectFieldSpecs[$entitySpec["entity_name"]]) as $field) {
-                        $field_name = $entitySpec["group_name"] . "." . $field;
-                        if ($isPrimaryEntity) {
-                            $field_name = $field;
-                            $field_key = $field;
+                    $currentSolrDocs = $dbResults[$entitySpec["entity_name"]][$entityIdValue];
+
+                    foreach ($currentSolrDocs as $currentSolrDoc) {
+                        $currentSubDocArray = array();
+                        foreach (array_keys($selectFieldSpecs[$entitySpec["entity_name"]]) as $field) {
+                            $field_name = $entitySpec["group_name"] . "." . $field;
+                            if ($isPrimaryEntity) {
+                                $field_name = $field;
+                                $field_key = $field;
+                            }
+                            if ($field == $entitySpecs[0]["solr_key_id"]) {
+                                $field_name = $field;
+                                if ($entitySpec["entity_name"] != $entitySpecs[0]["entity_name"])
+                                    continue;
+                            }
+                            try {
+                                $currentSubDocArray[$field] = $currentSolrDoc->$field_name;
+                            } catch (ErrorException $e) {
+                                print($e->getMessage());
+                            }
                         }
-                        if ($field == $entitySpecs[0]["solr_key_id"]) {
-                            $field_name = $field;
-                            if ($entitySpec["entity_name"] != $entitySpecs[0]["entity_name"])
-                                continue;
+                        if ($entitySpec["entity_name"] == $entitySpecs[0]["entity_name"]) {
+                            $currDocEntityArray = array_merge($currentSubDocArray, $currentSubDocArray);
+                        } else {
+                            $currDocEntityArray[$entitySpec["group_name"]][] = $currentSubDocArray;
+
                         }
-                        try {
-                            $currentSubDocArray[$field] = $currentSolrDoc->$field_name;
-                        } catch (ErrorException $e) {
-                            print($e->getMessage());
-                        }
-                    }
-                    if ($entitySpec["entity_name"] == $entitySpecs[0]["entity_name"]) {
-                        $currDocEntityArray = array_merge($currDocArray, $currentSubDocArray);
-                    } else {
-                        $currDocEntityArray[$entitySpec["group_name"]][] = $currentSubDocArray;
 
                     }
 
                 }
-
-
                 //$currDocArray[] = $currDocEntityArray;
             }
 
         }
-        $return_array[$main_group][] = $currDocEntityArray;
+        if (count($currDocEntityArray) > 0)
+            $return_array[$main_group][] = $currDocEntityArray;
     }
+
     foreach (array_keys($count_results) as $count_key) {
         $return_array[$count_key] = $count_results[$count_key];
     }

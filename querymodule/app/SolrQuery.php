@@ -64,6 +64,43 @@ class PVSolrQuery
         return $response["response"]["numFound"];
     }
 
+    public function loadQuery($whereClause, $queryDefId, $db, $table_usage)
+    {
+        $base = 1;
+        if ($table_usage["base"][0] == 1) {
+            $base = 2;
+        }
+        if (!(array_key_exists("AND", $whereClause)) && (!array_key_exists("OR", $whereClause))) {
+            $this->loadEntityQuery($whereClause["e"], $whereClause["q"], $queryDefId, $db, $table_usage, $base);
+
+        } else {
+            foreach (array_keys($whereClause) as $whereJoin) {
+                if ($table_usage["base"][0] == 1) {
+                    $base = 2;
+                }
+                foreach ($whereClause[$whereJoin] as $clause) {
+                    if (array_key_exists("e", $clause)) {
+                        $table_usage = $this->loadEntityQuery($clause["e"], $clause["q"], $queryDefId, $db, $table_usage, $base);
+
+                    } else {
+                        $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage);
+                        if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0) || ((array_sum($table_usage['base']) > 1))) {
+                            $table_usage = $db->updateBase($whereJoin, $table_usage,$queryDefId);
+                        }
+                    }
+                    if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0)) {
+                        $table_usage = $db->updateBase($whereJoin, $table_usage,$queryDefId);
+                    }
+                    $base = 1;
+
+                }
+
+            }
+
+        }
+        return $table_usage;
+    }
+
     public function loadEntityQuery($entity_name, $query_string, $queryDefId, $db, $table_usage, $base)
     {
 
@@ -115,61 +152,6 @@ class PVSolrQuery
         return $table_usage;
     }
 
-    public function loadQuery($whereClause, $queryDefId, $db, $table_usage)
-    {
-        $base = 1;
-        if ($table_usage["base"][0] == 1) {
-            $base = 2;
-        }
-        if (!(array_key_exists("AND", $whereClause)) && (!array_key_exists("OR", $whereClause))) {
-            $this->loadEntityQuery($whereClause["e"], $whereClause["q"], $queryDefId, $db, $table_usage, $base);
-
-        } else {
-            foreach (array_keys($whereClause) as $whereJoin) {
-                if ($table_usage["base"][0] == 1) {
-                    $base = 2;
-                }
-                foreach ($whereClause[$whereJoin] as $clause) {
-                    if (array_key_exists("e", $clause)) {
-                        $table_usage = $this->loadEntityQuery($clause["e"], $clause["q"], $queryDefId, $db, $table_usage, $base);
-
-                    } else {
-                        $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage);
-                    }
-                    if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0)) {
-                        $table_usage = $db->updateBase($whereJoin, $table_usage);
-                    }
-                    $base = 1;
-                    //if($table_usage)
-
-                }
-                if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0) || ((array_sum($table_usage['base']) > 1))) {
-                    $table_usage = $db->updateBase($whereJoin, $table_usage);
-                }
-            }
-        }
-        return $table_usage;
-    }
-
-    public
-    function fetchEntityQuery($entity_name, $queryString, $start, $rows, $fieldList)
-    {
-
-        $connectionToUse = $this->solr_connections[$entity_name];
-        $query = new SolrQuery();
-        $query->setQuery($queryString);
-        $query->setStart($start);
-        $query->setRows($rows);
-        foreach (array_keys($fieldList) as $field) {
-            $query->addField($fieldList[$field]["solr_column_name"]);
-        }
-
-        $q = $connectionToUse->query($query);
-        $response = $q->getResponse();
-        return $response["response"];
-
-    }
-
     public
     function fetchQuery($fieldList, $whereClause, $queryDefId, $db, $options, $sort)
     {
@@ -197,6 +179,9 @@ class PVSolrQuery
         }
 
         $entityValuesToFetch = $db->retrieveEntityIdForSolr($queryDefId);
+        if (count($entityValuesToFetch) < 1) {
+            return array("db_results" => array($this->entitySpecs[0]["entity_name"] => array()), "count_results" => array("total_" . $this->entitySpecs[0]["entity_name"] . "_count" => 0));
+        }
         $entityValueString = "( " . (implode(" ", $entityValuesToFetch)) . " ) ";
         $entitiesToFetch = array_keys($fieldList);
         $returned_values = array();
@@ -235,5 +220,24 @@ class PVSolrQuery
             $returned_values[$this->entitySpecs[0]["entity_name"]] = $current_array;
         }
         return array("db_results" => $returned_values, "count_results" => $return_array);
+    }
+
+    public
+    function fetchEntityQuery($entity_name, $queryString, $start, $rows, $fieldList)
+    {
+
+        $connectionToUse = $this->solr_connections[$entity_name];
+        $query = new SolrQuery();
+        $query->setQuery($queryString);
+        $query->setStart($start);
+        $query->setRows($rows);
+        foreach (array_keys($fieldList) as $field) {
+            $query->addField($fieldList[$field]["solr_column_name"]);
+        }
+
+        $q = $connectionToUse->query($query);
+        $response = $q->getResponse();
+        return $response["response"];
+
     }
 }
