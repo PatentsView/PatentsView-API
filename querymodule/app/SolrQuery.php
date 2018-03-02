@@ -161,7 +161,7 @@ class PVSolrQuery
         $query->setStart($start);
         $query->setRows($rows);
         foreach (array_keys($fieldList) as $field) {
-            $query->addField($fieldList[$field]["column_name"]);
+            $query->addField($fieldList[$field]["solr_column_name"]);
         }
 
         $q = $connectionToUse->query($query);
