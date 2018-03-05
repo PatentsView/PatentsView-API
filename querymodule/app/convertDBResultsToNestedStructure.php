@@ -83,7 +83,11 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
     foreach (array_keys($count_results) as $count_key) {
         $return_array[$count_key] = $count_results[$count_key];
     }
-    $return_array["count"]=count($return_array[$main_group]);
+    $doc_count = 0;
+    if (array_key_exists($main_group, $return_array)) {
+        $doc_count = count($return_array[$main_group]);
+    }
+    $return_array["count"] = $doc_count;
     return $return_array;
 
 }
