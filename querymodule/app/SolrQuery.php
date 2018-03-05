@@ -117,29 +117,30 @@ class PVSolrQuery
         $query->setQuery($query_string);
         $db->connectToDb();
         $db->startTransaction();
-
+        $query->setGroup(true);
+        $query->setGroupMain(true);
+        $keyField = $this->entitySpecs[0]["solr_key_id"];
+        $fieldPresence = array("keyField" => $keyField);
+        if (array_key_exists("secondary_key_id", $entitySpec) & $useSecondary) {
+            $secondaryKeyField = $entitySpec["secondary_key_id"];
+            $query->addField($secondaryKeyField);
+            $query->addGroupField($secondaryKeyField);
+            $fieldPresence["secondaryKeyField"] = $secondaryKeyField;
+        }
+        $query->addField($keyField);
+        $query->addGroupField($keyField);
         $rows_fetched = 0;
         $total_fetched = 0;
         try {
             do {
                 $query->setRows(1000);
                 $query->setStart($total_fetched);
-                $query->setGroup(true);
-                $query->setGroupMain(true);
-                $keyField = $this->entitySpecs[0]["solr_key_id"];
-                $fieldPresence = array("keyField" => $keyField);
-                if (array_key_exists("secondary_key_id", $entitySpec) & $useSecondary) {
-                    $secondaryKeyField = $entitySpec["secondary_key_id"];
-                    $query->addField($secondaryKeyField);
-                    $query->addGroupField($secondaryKeyField);
-                    $fieldPresence["secondaryKeyField"] = $secondaryKeyField;
-                }
+
                 //http://ec2-52-23-55-147.compute-1.amazonaws.com:8983/solr/location_patent_join/select?indent=on&q=patents.patent_num_cited_by_us_patents%20:%203&wt=json&group=true&group.main=true&group.field=location_key_id&group.field=inventor_id&fl=location_key_id,inventor_id&rows=10000
 
-                $query->addField($keyField);
-                $query->addGroupField($keyField);
+
                 try{
-                $query->setTimeAllowed(0);
+                $query->setTimeAllowed(600);
                 $q = $connectionToUse->query($query);
                 }catch (SolrClientException $e){
 
@@ -247,7 +248,7 @@ class PVSolrQuery
             $connectionToUse = $this->solr_connections["main_entity_fetch"];
         }
         $query = new SolrQuery();
-        $query->setTimeAllowed(0);
+        $query->setTimeAllowed(600  );
         $query->setQuery($queryString);
         $query->setStart($start);
         $query->setRows($rows);
