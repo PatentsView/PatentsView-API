@@ -537,20 +537,22 @@ class DatabaseQuery
         return $selectString;
     }
 
-    public function loadEntityID($data, array $fieldPresence, $queryDefId, $tableName)
+    public function loadEntityID($data, array $fieldPresence, $queryDefId, $tableName,$sequenceStart=0)
     {
         $datafields = array('QueryDefId', 'Sequence', 'EntityId', 'SecondaryEntityId');
         $keyField = $this->entitySpecs[0]["solr_key_id"];
         $insertData = array();
         foreach ($data as $doc) {
-            $data_array = array("QueryDefId" => $queryDefId, "Sequence" => $doc->$keyField, "EntityId" => $doc->$keyField);
+            $data_array = array("QueryDefId" => $queryDefId, "Sequence" => $sequenceStart, "EntityId" => $doc->$keyField);
             if (array_key_exists("secondaryKeyField", $fieldPresence)) {
-                $secField=$fieldPresence["secondaryKeyField"];
+                $secField = $fieldPresence["secondaryKeyField"];
                 $data_array["SecondaryEntityId"] = $doc->$secField;
             } else {
                 $data_array["SecondaryEntityId"] = $doc->$keyField;
             }
+
             $insertData[] = $data_array;
+            $sequenceStart+=1;
         }
         $this->connectToDB();
 
@@ -574,10 +576,14 @@ class DatabaseQuery
         //$this->commitTransaction();
     }
 
-    public function retrieveEntityIdForSolr($queryDefId)
+    public function retrieveEntityIdForSolr($queryDefId, $start, $rows, $getEverything = false)
     {
         $this->connectToDB();
-        $results = $this->runQuery('DISTINCT EntityId', $this->supportDatabase . '.QueryResultsBase', "QueryDefID=$queryDefId order by Sequence LIMIT 10000", null);
+        $where = "QueryDefID=$queryDefId  order by Sequence";
+        if (!$getEverything) {
+            $where .= " LIMIT $rows OFFSET $start";
+        }
+        $results = $this->runQuery('DISTINCT EntityId', $this->supportDatabase . '.QueryResultsBase', $where, null);
 //        $count_results = $this->runQuery('COUNT(DISTINCT EntityId)', $this->supportDatabase . '.QueryResultsBase', "QueryDefID=$queryDefId", null);
 
         $ids = array();
@@ -586,6 +592,7 @@ class DatabaseQuery
         }
         return $ids;
     }
+
 
     public function updateBase($whereJoin, $table_usage, $queryDefId, $useSecondary = false)
     {

@@ -52,14 +52,14 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
                                 $field_key = $field;
                             }
                             if ($field == $entitySpecs[0]["solr_key_id"]) {
-                                $field_name = $field;
-                                if ($entitySpec["entity_name"] != $entitySpecs[0]["entity_name"])
-                                    continue;
+                                //$field_name = $field;
+                                //if ($entitySpec["entity_name"] != $entitySpecs[0]["entity_name"])
+                                continue;
                             }
                             try {
                                 $currentSubDocArray[$field] = $currentSolrDoc->$field_name;
                             } catch (ErrorException $e) {
-                                $currentSubDocArray[$field]=null;
+                                $currentSubDocArray[$field] = null;
                             }
                         }
                         if ($entitySpec["entity_name"] == $entitySpecs[0]["entity_name"]) {
@@ -83,7 +83,7 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
     foreach (array_keys($count_results) as $count_key) {
         $return_array[$count_key] = $count_results[$count_key];
     }
-
+    $return_array["count"]=count($return_array[$main_group]);
     return $return_array;
 
 }
