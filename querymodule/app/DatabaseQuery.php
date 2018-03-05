@@ -537,13 +537,20 @@ class DatabaseQuery
         return $selectString;
     }
 
-    public function loadEntityID($data, $entity_name, $queryDefId, $tableName)
+    public function loadEntityID($data, array $fieldPresence, $queryDefId, $tableName)
     {
-        $datafields = array('QueryDefId', 'Sequence', 'EntityId');
+        $datafields = array('QueryDefId', 'Sequence', 'EntityId', 'SecondaryEntityId');
         $keyField = $this->entitySpecs[0]["solr_key_id"];
         $insertData = array();
         foreach ($data as $doc) {
-            $insertData[] = array("QueryDefId" => $queryDefId, "Sequence" => $doc->$keyField, "EntityId" => $doc->$keyField);
+            $data_array = array("QueryDefId" => $queryDefId, "Sequence" => $doc->$keyField, "EntityId" => $doc->$keyField);
+            if (array_key_exists("secondaryKeyField", $fieldPresence)) {
+                $secField=$fieldPresence["secondaryKeyField"];
+                $data_array["SecondaryEntityId"] = $doc->$secField;
+            } else {
+                $data_array["SecondaryEntityId"] = $doc->$keyField;
+            }
+            $insertData[] = $data_array;
         }
         $this->connectToDB();
 
@@ -570,7 +577,9 @@ class DatabaseQuery
     public function retrieveEntityIdForSolr($queryDefId)
     {
         $this->connectToDB();
-        $results = $this->runQuery('DISTINCT EntityId', $this->supportDatabase . '.QueryResultsBase', "QueryDefID=$queryDefId", null);
+        $results = $this->runQuery('DISTINCT EntityId', $this->supportDatabase . '.QueryResultsBase', "QueryDefID=$queryDefId order by Sequence LIMIT 10000", null);
+//        $count_results = $this->runQuery('COUNT(DISTINCT EntityId)', $this->supportDatabase . '.QueryResultsBase', "QueryDefID=$queryDefId", null);
+
         $ids = array();
         foreach ($results as $result) {
             $ids[] = $result["EntityId"];
@@ -578,8 +587,12 @@ class DatabaseQuery
         return $ids;
     }
 
-    public function updateBase($whereJoin, $table_usage, $queryDefId)
+    public function updateBase($whereJoin, $table_usage, $queryDefId, $useSecondary = false)
     {
+        $filterField = "EntityId";
+        if ($useSecondary) {
+            $filterField = "SecondaryEntityId";
+        }
         $source_table = "QueryResultsSupp";
         $dest_table = "QueryResultsBase";
         if ($table_usage["supp"][0] == 1) {
@@ -591,9 +604,9 @@ class DatabaseQuery
         }
 
         if ($whereJoin == "AND") {
-            $updateQuery = "DELETE FROM  " . $this->supportDatabase . "." . $dest_table . " WHERE EntityID NOT IN (SELECT EntityId FROM " . $this->supportDatabase . "." . $source_table . " WHERE QueryDefId = ?) AND QueryDefId = ?;";
+            $updateQuery = "DELETE FROM  " . $this->supportDatabase . "." . $dest_table . " WHERE " . $filterField . " NOT IN (SELECT " . $filterField . " FROM " . $this->supportDatabase . "." . $source_table . " WHERE QueryDefId = ?) AND QueryDefId = ?;";
         } else {
-            $updateQuery = "INSERT INTO  " . $this->supportDatabase . "." . $dest_table . " SELECT * FROM " . $this->supportDatabase . "." . $source_table . "  WHERE EntityID NOT IN (SELECT EntityId FROM " . $this->supportDatabase . "." . $dest_table . " WHERE QueryDefId = ? ) AND QueryDefId = ?;";
+            $updateQuery = "INSERT INTO  " . $this->supportDatabase . "." . $dest_table . " SELECT * FROM " . $this->supportDatabase . "." . $source_table . "  WHERE " . $filterField . " NOT IN (SELECT " . $filterField . " FROM " . $this->supportDatabase . "." . $dest_table . " WHERE QueryDefId = ? ) AND QueryDefId = ?;";
         }
         $this->startTransaction();
         $stmt = $this->db->prepare($updateQuery);

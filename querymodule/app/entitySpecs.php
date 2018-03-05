@@ -10,6 +10,16 @@ function getDBField(array $fieldSpecs, $apiFieldName)
     return array("dbField" => $fieldSpecs[$apiFieldName]['solr_column_name'], "entity_name" => $fieldSpecs[$apiFieldName]['entity_name']);
 }
 
+function getEntitySpecs(array $entitySpecs, $entity_name)
+{
+    foreach ($entitySpecs as $entitySpec) {
+        if ($entitySpec["entity_name"] == $entity_name) {
+            return $entitySpec;
+        }
+    }
+    return array();
+}
+
 /*
  * ENTITY_SPECS: defines the entities we are dealing with. The first one is the primary entity; the others are
  *              subentities.
@@ -1503,10 +1513,10 @@ $NBER_FIELD_SPECS = array
 );
 
 
-$location_entity_json = file_get_contents(dirname(__FILE__) .'/../app/specs/location-entity-specs.json');
-$LOCATION_ENTITY_SPECS = json_decode($location_entity_json,true);
-$location_field_json = file_get_contents(dirname(__FILE__) .'/../app/specs/location-field-specs.json');
-$LOCATION_FIELD_SPECS = json_decode($location_field_json,true);
+$location_entity_json = file_get_contents(dirname(__FILE__) . '/../app/specs/location-entity-specs.json');
+$LOCATION_ENTITY_SPECS = json_decode($location_entity_json, true);
+$location_field_json = file_get_contents(dirname(__FILE__) . '/../app/specs/location-field-specs.json');
+$LOCATION_FIELD_SPECS = json_decode($location_field_json, true);
 //
 //
 //$LOCATION_ENTITY_SPECS = array(

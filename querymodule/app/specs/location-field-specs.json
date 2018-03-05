@@ -383,6 +383,14 @@
     "solr_column_name": "cpcs.cpc_section_id",
     "sort": "suppl"
   },
+  "cpc_sequence": {
+    "column_name": "cpc_current_copy.sequence",
+    "datatype": "int",
+    "entity_name": "cpc",
+    "query": "y",
+    "solr_column_name": "cpcs.cpc_sequence",
+    "sort": "suppl"
+  },
   "cpc_subgroup_id": {
     "column_name": "cpc_current_copy.subgroup_id",
     "datatype": "string",
@@ -498,7 +506,7 @@
   "forprior_country": {
     "column_name": "foreignpriority.country",
     "datatype": "string",
-    "entity_name": "foreign_priority",
+    "entity_name": "foreign_prior",
     "query": "y",
     "solr_column_name": "foreign_priority.forprior_country",
     "sort": "suppl"
@@ -506,7 +514,7 @@
   "forprior_date": {
     "column_name": "foreignpriority.date",
     "datatype": "date",
-    "entity_name": "foreign_priority",
+    "entity_name": "foreign_prior",
     "query": "y",
     "solr_column_name": "foreign_priority.forprior_date",
     "sort": "suppl"
@@ -514,7 +522,7 @@
   "forprior_docnumber": {
     "column_name": "foreignpriority.foreign_doc_number",
     "datatype": "string",
-    "entity_name": "foreign_priority",
+    "entity_name": "foreign_prior",
     "query": "y",
     "solr_column_name": "foreign_priority.forprior_docnumber",
     "sort": "suppl"
@@ -522,7 +530,7 @@
   "forprior_kind": {
     "column_name": "foreignpriority.kind",
     "datatype": "string",
-    "entity_name": "foreign_priority",
+    "entity_name": "foreign_prior",
     "query": "y",
     "solr_column_name": "foreign_priority.forprior_kind",
     "sort": "suppl"
@@ -530,7 +538,7 @@
   "forprior_sequence": {
     "column_name": "foreignpriority.sequence",
     "datatype": "int",
-    "entity_name": "foreign_priority",
+    "entity_name": "foreign_prior",
     "query": "n",
     "solr_column_name": "foreign_priority.forprior_sequence",
     "sort": "suppl"
@@ -1354,7 +1362,7 @@
   "pct_102_date": {
     "column_name": "pctdata.102_date",
     "datatype": "date",
-    "entity_name": "pct_data",
+    "entity_name": "pct_dat",
     "query": "y",
     "solr_column_name": "pct_data.pct_102_date",
     "sort": "suppl"
@@ -1362,7 +1370,7 @@
   "pct_371_date": {
     "column_name": "pctdata.371_date",
     "datatype": "date",
-    "entity_name": "pct_data",
+    "entity_name": "pct_dat",
     "query": "y",
     "solr_column_name": "pct_data.pct_371_date",
     "sort": "suppl"
@@ -1370,7 +1378,7 @@
   "pct_date": {
     "column_name": "pctdata.date",
     "datatype": "date",
-    "entity_name": "pct_data",
+    "entity_name": "pct_dat",
     "query": "y",
     "solr_column_name": "pct_data.pct_date",
     "sort": "suppl"
@@ -1378,7 +1386,7 @@
   "pct_docnumber": {
     "column_name": "pctdata.doc_number",
     "datatype": "string",
-    "entity_name": "pct_data",
+    "entity_name": "pct_dat",
     "query": "y",
     "solr_column_name": "pct_data.pct_docnumber",
     "sort": "suppl"
@@ -1386,7 +1394,7 @@
   "pct_doctype": {
     "column_name": "pctdata.doc_type",
     "datatype": "string",
-    "entity_name": "pct_data",
+    "entity_name": "pct_dat",
     "query": "y",
     "solr_column_name": "pct_data.pct_doctype",
     "sort": "suppl"
@@ -1394,7 +1402,7 @@
   "pct_kind": {
     "column_name": "pctdata.kind",
     "datatype": "string",
-    "entity_name": "pct_data",
+    "entity_name": "pct_dat",
     "query": "y",
     "solr_column_name": "pct_data.pct_kind",
     "sort": "suppl"

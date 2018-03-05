@@ -59,7 +59,7 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
                             try {
                                 $currentSubDocArray[$field] = $currentSolrDoc->$field_name;
                             } catch (ErrorException $e) {
-                                print($e->getMessage());
+                                $currentSubDocArray[$field]=null;
                             }
                         }
                         if ($entitySpec["entity_name"] == $entitySpecs[0]["entity_name"]) {

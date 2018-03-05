@@ -19,10 +19,14 @@ class PVSolrQuery
         global $config;
         $this->entitySpecs = $entitySpecs;
         $this->fieldSpecs = $fieldSpecs;
+        $currentDBSetting = $config->getSOLRSettings();
+        $currentDBSetting["path"] = "solr/" . $entitySpecs[0]['solr_fetch_collection'];
+        $this->solr_connections["main_entity_fetch"] = new SolrClient($currentDBSetting);
+
         foreach ($entitySpecs as $entitySpec) {
             if (!array_key_exists($entitySpec["entity_name"], $this->solr_connections)) {
-
                 $currentDBSetting = $config->getSOLRSettings();
+
                 $currentDBSetting["path"] = "solr/" . $entitySpec['solr_collection'];
                 try {
 //                file_put_contents('php://stderr', print_r($currentDBSetting, TRUE));
@@ -71,25 +75,32 @@ class PVSolrQuery
             $base = 2;
         }
         if (!(array_key_exists("AND", $whereClause)) && (!array_key_exists("OR", $whereClause))) {
-            $this->loadEntityQuery($whereClause["e"], $whereClause["q"], $queryDefId, $db, $table_usage, $base);
+            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base);
 
         } else {
             foreach (array_keys($whereClause) as $whereJoin) {
                 if ($table_usage["base"][0] == 1) {
                     $base = 2;
                 }
+                $isSecondaryKeyUpdate = false;
                 foreach ($whereClause[$whereJoin] as $clause) {
+                    if (array_key_exists("s", $clause) && $clause["s"]) {
+                        $isSecondaryKeyUpdate = true;
+                    }
                     if (array_key_exists("e", $clause)) {
-                        $table_usage = $this->loadEntityQuery($clause["e"], $clause["q"], $queryDefId, $db, $table_usage, $base);
+                        $table_usage = $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $clause["e"]), $clause["q"], $queryDefId, $db, $table_usage, $base);
 
                     } else {
                         $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage);
                         if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0) || ((array_sum($table_usage['base']) > 1))) {
-                            $table_usage = $db->updateBase($whereJoin, $table_usage,$queryDefId);
+                            $table_usage = $db->updateBase($whereJoin, $table_usage, $queryDefId, $isSecondaryKeyUpdate);
+                            $isSecondaryKeyUpdate = false;
                         }
                     }
                     if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0)) {
-                        $table_usage = $db->updateBase($whereJoin, $table_usage,$queryDefId);
+                        $table_usage = $db->updateBase($whereJoin, $table_usage, $queryDefId, $isSecondaryKeyUpdate);
+                        $isSecondaryKeyUpdate = false;
+
                     }
                     $base = 1;
 
@@ -101,7 +112,7 @@ class PVSolrQuery
         return $table_usage;
     }
 
-    public function loadEntityQuery($entity_name, $query_string, $queryDefId, $db, $table_usage, $base)
+    public function loadEntityQuery($entitySpec, $query_string, $queryDefId, $db, $table_usage, $base)
     {
 
         if ($table_usage["base"][0] == 0) {
@@ -121,7 +132,7 @@ class PVSolrQuery
             //$table_usage["supp"][0] = 1;
         }
 
-        $connectionToUse = $this->solr_connections[$entity_name];
+        $connectionToUse = $this->solr_connections[$entitySpec["entity_name"]];
         $query = new SolrQuery();
         $query->setQuery($query_string);
         $db->connectToDb();
@@ -133,6 +144,14 @@ class PVSolrQuery
                 $query->setRows(10000);
                 $query->setStart($rows_fetched);
                 $keyField = $this->entitySpecs[0]["solr_key_id"];
+                $fieldPresence = array("keyField" => $keyField);
+                if (array_key_exists("secondary_key_id", $entitySpec)) {
+                    $secondaryKeyField = $entitySpec["secondary_key_id"];
+                    $query->addField($secondaryKeyField);
+                    $fieldPresence["secondaryKeyField"] = $secondaryKeyField;
+                }
+
+
                 $query->addField($keyField);
                 $q = $connectionToUse->query($query);
                 $response = $q->getResponse();
@@ -141,7 +160,7 @@ class PVSolrQuery
                 } else {
                     $table_usage[$baseKey][$baseIndex] = 1;
                 }
-                $db->loadEntityID($response["response"]["docs"], $entity_name, $queryDefId, $tableName);
+                $db->loadEntityID($response["response"]["docs"], $fieldPresence, $queryDefId, $tableName);
                 $rows_fetched += 10000;
                 $rows_left = $response["response"]["numFound"] - $rows_fetched;
             } while ($rows_left > 0);
@@ -149,6 +168,7 @@ class PVSolrQuery
         } catch (PDOException $e) {
             $db->rollbackTransaction();
         }
+
         return $table_usage;
     }
 
@@ -227,7 +247,11 @@ class PVSolrQuery
     {
 
         $connectionToUse = $this->solr_connections[$entity_name];
+        if ($entity_name == $this->entitySpecs[0]["entity_name"]) {
+            $connectionToUse = $this->solr_connections["main_entity_fetch"];
+        }
         $query = new SolrQuery();
+        $query->setTimeAllowed(0);
         $query->setQuery($queryString);
         $query->setStart($start);
         $query->setRows($rows);
