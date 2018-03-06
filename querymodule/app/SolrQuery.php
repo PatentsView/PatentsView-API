@@ -92,7 +92,7 @@ class PVSolrQuery
         return $table_usage;
     }
 
-    public function loadEntityQuery($entitySpec, $query_string, $queryDefId, $db, $table_usage, $base,$sort, $useSecondary = false)
+    public function loadEntityQuery($entitySpec, $query_string, $queryDefId, $db, $table_usage, $base, $sort, $useSecondary = false)
     {
 
         if ($table_usage["base"][0] == 0) {
@@ -118,44 +118,52 @@ class PVSolrQuery
         $db->connectToDb();
         $db->startTransaction();
         $query->setGroup(true);
-        $query->setGroupMain(true);
         $keyField = $this->entitySpecs[0]["solr_key_id"];
         $fieldPresence = array("keyField" => $keyField);
+        $query->addField($keyField);
+        $query->addGroupField($keyField);
         if (array_key_exists("secondary_key_id", $entitySpec) & $useSecondary) {
             $secondaryKeyField = $entitySpec["secondary_key_id"];
             $query->addField($secondaryKeyField);
             $query->addGroupField($secondaryKeyField);
             $fieldPresence["secondaryKeyField"] = $secondaryKeyField;
         }
-        $query->addField($keyField);
-        $query->addGroupField($keyField);
+
         $rows_fetched = 0;
         $total_fetched = 0;
+        $keys = array();
         try {
             do {
-                $query->setRows(1000);
+                $query->setRows(10000);
                 $query->setStart($total_fetched);
 
                 //http://ec2-52-23-55-147.compute-1.amazonaws.com:8983/solr/location_patent_join/select?indent=on&q=patents.patent_num_cited_by_us_patents%20:%203&wt=json&group=true&group.main=true&group.field=location_key_id&group.field=inventor_id&fl=location_key_id,inventor_id&rows=10000
 
 
-                try{
-                $query->setTimeAllowed(600);
-                $q = $connectionToUse->query($query);
-                }catch (SolrClientException $e){
+                try {
+                    $query->setTimeAllowed(300000);
+                    $q = $connectionToUse->query($query);
+                } catch (SolrClientException $e) {
 
                 }
                 $response = $q->getResponse();
-                if ($response["response"]["numFound"] < 1) {
+                $rows_fetched = count($response["grouped"][$keyField]["groups"]);
+                if ($rows_fetched < 1) {
                     break;
                 } else {
                     $table_usage[$baseKey][$baseIndex] = 1;
                 }
-                $rows_fetched = count($response["response"]["docs"]);
-                if ($rows_fetched < 1) {
-                    break;
-                }
-                $db->loadEntityID($response["response"]["docs"], $fieldPresence, $queryDefId, $tableName,$sequenceStart=$total_fetched);
+
+
+//                foreach ($response["response"]["docs"] as $doc) {
+//                    if (!array_key_exists($doc->location_key_id, $keys)) {
+//                        $keys[$doc->location_key_id] = 0;
+//                    }else{
+//                        null;
+//                    }
+//                    $keys[$doc->location_key_id] += 1;
+//                }
+                $db->loadEntityID($response["grouped"][$keyField]["groups"], $fieldPresence, $queryDefId, $tableName, $total_fetched);
                 $total_fetched += $rows_fetched;
 
 
@@ -248,7 +256,7 @@ class PVSolrQuery
             $connectionToUse = $this->solr_connections["main_entity_fetch"];
         }
         $query = new SolrQuery();
-        $query->setTimeAllowed(600  );
+        $query->setTimeAllowed(300000);
         $query->setQuery($queryString);
         $query->setStart($start);
         $query->setRows($rows);
@@ -270,7 +278,7 @@ class PVSolrQuery
 
         if ($entity == $this->entitySpecs[0]["entity_name"]) {
 
-            $entityValuesToFetch = $db->retrieveEntityIdForSolr($queryDefId, $offset, $rows,true);
+            $entityValuesToFetch = $db->retrieveEntityIdForSolr($queryDefId, $offset, $rows, true);
             return count($entityValuesToFetch);
         }
 

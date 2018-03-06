@@ -542,13 +542,14 @@ class DatabaseQuery
         $datafields = array('QueryDefId', 'Sequence', 'EntityId', 'SecondaryEntityId');
         $keyField = $this->entitySpecs[0]["solr_key_id"];
         $insertData = array();
-        foreach ($data as $doc) {
-            $data_array = array("QueryDefId" => $queryDefId, "Sequence" => $sequenceStart, "EntityId" => $doc->$keyField);
+
+        foreach ($data as $solrDocument) {
+            $data_array = array("QueryDefId" => $queryDefId, "Sequence" => $sequenceStart, "EntityId" => $solrDocument->groupValue);
             if (array_key_exists("secondaryKeyField", $fieldPresence)) {
                 $secField = $fieldPresence["secondaryKeyField"];
-                $data_array["SecondaryEntityId"] = $doc->$secField;
+                $data_array["SecondaryEntityId"] = $solrDocument->doclist->docs[0]->$secField;
             } else {
-                $data_array["SecondaryEntityId"] = $doc->$keyField;
+                $data_array["SecondaryEntityId"] = $solrDocument->groupValue;
             }
 
             $insertData[] = $data_array;
@@ -579,11 +580,11 @@ class DatabaseQuery
     public function retrieveEntityIdForSolr($queryDefId, $start, $rows, $getEverything = false)
     {
         $this->connectToDB();
-        $where = "QueryDefID=$queryDefId  order by Sequence";
+        $where = "QueryDefID=$queryDefId  order by Sequence asc";
         if (!$getEverything) {
             $where .= " LIMIT $rows OFFSET $start";
         }
-        $results = $this->runQuery('DISTINCT EntityId', $this->supportDatabase . '.QueryResultsBase', $where, null);
+        $results = $this->runQuery('EntityId', $this->supportDatabase . '.QueryResultsBase', $where, null);
 //        $count_results = $this->runQuery('COUNT(DISTINCT EntityId)', $this->supportDatabase . '.QueryResultsBase', "QueryDefID=$queryDefId", null);
 
         $ids = array();
