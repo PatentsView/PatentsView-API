@@ -622,7 +622,7 @@ class DatabaseQuery
         try {
             $stmt->execute(array($queryDefId, $queryDefId));
             $this->commitTransaction();
-            $stmt = $this->db->prepare("TRUNCATE TABLE " . $this->supportDatabase . "." . $source_table);
+            $stmt = $this->db->prepare("DELETE FROM " . $this->supportDatabase . "." . $source_table . " where QueryDefId=$queryDefId");
             if ($source_table == "QueryResultsSupp") {
                 $table_usage["supp"][0] = 0;
             } else {
