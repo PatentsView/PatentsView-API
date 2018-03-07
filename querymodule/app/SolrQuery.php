@@ -55,10 +55,11 @@ class PVSolrQuery
         }
         if (!(array_key_exists("AND", $whereClause)) && (!array_key_exists("OR", $whereClause))) {
             $current_sort = array();
+
             if (array_key_exists($whereClause["e"], $sort)) {
                 $current_sort = $sort[$whereClause["e"]];
             }
-            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base, $whereClause["s"], $current_sort);
+            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base,  $current_sort,$whereClause["s"]);
 
         } else {
             foreach (array_keys($whereClause) as $whereJoin) {
