@@ -47,43 +47,62 @@ class PVSolrQuery
         return $this->solr_connections[$entity_name];
     }
 
-    public function loadQuery($whereClause, $queryDefId, $db, $table_usage)
+    public function loadQuery($whereClause, $queryDefId, $db, $table_usage, array $isSecondaryKeyUpdate, $level = 0)
     {
-        $isSecondaryKeyUpdate = false;
         $base = 1;
         if ($table_usage["base"][0] == 1) {
             $base = 2;
         }
         if (!(array_key_exists("AND", $whereClause)) && (!array_key_exists("OR", $whereClause))) {
-            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base, $isSecondaryKeyUpdate);
+            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base, $whereClause["s"]);
 
         } else {
             foreach (array_keys($whereClause) as $whereJoin) {
                 if ($table_usage["base"][0] == 1) {
                     $base = 2;
                 }
-                $isSecondaryKeyUpdate = false;
+                $isSecondaryKeyUpdate[$level] = false;
+                $i = 0;
+                $joins = array_keys($whereClause[$whereJoin]);
                 foreach ($whereClause[$whereJoin] as $clause) {
-                    if (array_key_exists("s", $clause) && $clause["s"]) {
-                        $isSecondaryKeyUpdate = true;
+                    if ((array_key_exists("s", $clause) && $clause["s"])) {
+                        $isSecondaryKeyUpdate[$level] = true;
                     }
+                }
+
+                foreach ($whereClause[$whereJoin] as $clause) {
+
                     if (array_key_exists("e", $clause)) {
-                        $table_usage = $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $clause["e"]), $clause["q"], $queryDefId, $db, $table_usage, $base, $isSecondaryKeyUpdate);
+                        $secondarySoFar = array_sum(array_slice($isSecondaryKeyUpdate, 0, $level + 1));
+                        $table_usage = $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $clause["e"]), $clause["q"], $queryDefId, $db, $table_usage, $base, $secondarySoFar);
 
                     } else {
-                        $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage);
+                        $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage, $isSecondaryKeyUpdate, $level + 1);
                         if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0) || ((array_sum($table_usage['base']) > 1))) {
-                            $table_usage = $db->updateBase($whereJoin, $table_usage, $queryDefId, $isSecondaryKeyUpdate);
-                            $isSecondaryKeyUpdate = false;
+                            $table_usage = $db->updateBase($whereJoin, $table_usage, $queryDefId, $isSecondaryKeyUpdate[$level]);
+                            $isSecondaryKeyUpdate[$level] = false;
+                            for ($k = $i; $k < count($joins); $k++) {
+                                $lookAheadClause = $whereClause[$joins[$k]];
+                                if ((array_key_exists("s", $lookAheadClause) && $lookAheadClause["s"])) {
+                                    $isSecondaryKeyUpdate[$level] = true;
+                                }
+                            }
                         }
                     }
                     if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0)) {
-                        $table_usage = $db->updateBase($whereJoin, $table_usage, $queryDefId, $isSecondaryKeyUpdate);
-                        $isSecondaryKeyUpdate = false;
+                        $table_usage = $db->updateBase($whereJoin, $table_usage, $queryDefId, $isSecondaryKeyUpdate[$level]);
+
+                        $isSecondaryKeyUpdate[$level] = false;
+                        for ($k = $i; $k < count($joins); $k++) {
+                            $lookAheadClause = $whereClause[$joins[$k]];
+                            if ((array_key_exists("s", $lookAheadClause) && $lookAheadClause["s"])) {
+                                $isSecondaryKeyUpdate[$level] = true;
+                            }
+                        }
 
                     }
                     $base = 1;
-
+                    $i += 1;
                 }
 
             }
@@ -92,7 +111,7 @@ class PVSolrQuery
         return $table_usage;
     }
 
-    public function loadEntityQuery($entitySpec, $query_string, $queryDefId, $db, $table_usage, $base, $sort, $useSecondary = false)
+    public function loadEntityQuery($entitySpec, $query_string, $queryDefId, $db, $table_usage, $base, $useSecondary = false)
     {
 
         if ($table_usage["base"][0] == 0) {
@@ -141,17 +160,16 @@ class PVSolrQuery
 
 
                 try {
-                    $query->setTimeAllowed(300000);
+                    //$query->setTimeAllowed(300000);
                     $q = $connectionToUse->query($query);
                 } catch (SolrClientException $e) {
 
                 }
                 $response = $q->getResponse();
                 $rows_fetched = count($response["grouped"][$keyField]["groups"]);
+                $table_usage[$baseKey][$baseIndex] = 1;
                 if ($rows_fetched < 1) {
                     break;
-                } else {
-                    $table_usage[$baseKey][$baseIndex] = 1;
                 }
 
 
@@ -256,7 +274,7 @@ class PVSolrQuery
             $connectionToUse = $this->solr_connections["main_entity_fetch"];
         }
         $query = new SolrQuery();
-        $query->setTimeAllowed(300000);
+        //$query->setTimeAllowed(300000);
         $query->setQuery($queryString);
         $query->setStart($start);
         $query->setRows($rows);

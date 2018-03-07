@@ -317,10 +317,16 @@ class QueryParser
                 $datatype = $this->fieldSpecs[$apiField]['datatype'];
                 if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
                 if ($datatype == 'string') {
-                    if ($operator == '_begins')
-                        $returnString = "$dbField : $val*";
-                    elseif ($operator == '_contains')
-                        $returnString = "$dbField : *$val*";
+
+                    if ($operator == '_begins') {
+                        $values = array("$val*", strtolower($val) . "*");
+                        $val = "(" . implode(" OR ", $values) . ")";
+                    } elseif ($operator == '_contains') {
+                        $values = array("*$val*", "*" . strtolower($val) . "*");
+                        $val = "(" . implode(" OR ", $values) . ")";
+                    }
+
+                    $returnString = "$dbField : $val";
                 } else {
                     ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
                     throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");

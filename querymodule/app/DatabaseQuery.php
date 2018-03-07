@@ -584,7 +584,7 @@ class DatabaseQuery
         if (!$getEverything) {
             $where .= " LIMIT $rows OFFSET $start";
         }
-        $results = $this->runQuery('EntityId', $this->supportDatabase . '.QueryResultsBase', $where, null);
+        $results = $this->runQuery('DISTINCT EntityId', $this->supportDatabase . '.QueryResultsBase', $where, null);
 //        $count_results = $this->runQuery('COUNT(DISTINCT EntityId)', $this->supportDatabase . '.QueryResultsBase', "QueryDefID=$queryDefId", null);
 
         $ids = array();

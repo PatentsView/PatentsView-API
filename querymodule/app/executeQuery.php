@@ -34,12 +34,11 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
     $solrQuery = new PVSolrQuery($entitySpecs, $fieldSpecs);
     if ($queryResultsStatus < 1) {
         $table_usage = array("base" => array(0, 0), "supp" => array(0, 0));
-        $solrQuery->loadQuery($whereClause, $queryDefId, $dbQuery, $table_usage);
+        $solrQuery->loadQuery($whereClause, $queryDefId, $dbQuery, $table_usage, array(0 => false));
         $dbQuery->addQueryDef($queryDefId, $queryString);
     }
 
     $dbResults = $solrQuery->fetchQuery($selectFieldSpecs, $whereClause, $queryDefId, $dbQuery, $optionsParam, $sortFieldSpecs);
-
 
 
     $results = convertDBResultsToNestedStructure($entitySpecs, $fieldSpecs, $dbResults, $selectFieldSpecs);
