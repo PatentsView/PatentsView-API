@@ -47,14 +47,18 @@ class PVSolrQuery
         return $this->solr_connections[$entity_name];
     }
 
-    public function loadQuery($whereClause, $queryDefId, $db, $table_usage, array $isSecondaryKeyUpdate, $level = 0)
+    public function loadQuery($whereClause, $queryDefId, $db, $table_usage, $sort, array $isSecondaryKeyUpdate, $level = 0)
     {
         $base = 1;
         if ($table_usage["base"][0] == 1) {
             $base = 2;
         }
         if (!(array_key_exists("AND", $whereClause)) && (!array_key_exists("OR", $whereClause))) {
-            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base, $whereClause["s"]);
+            $current_sort = array();
+            if (array_key_exists($whereClause["e"], $sort)) {
+                $current_sort = $sort[$whereClause["e"]];
+            }
+            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base, $whereClause["s"], $current_sort);
 
         } else {
             foreach (array_keys($whereClause) as $whereJoin) {
@@ -74,7 +78,11 @@ class PVSolrQuery
 
                     if (array_key_exists("e", $clause)) {
                         $secondarySoFar = array_sum(array_slice($isSecondaryKeyUpdate, 0, $level + 1));
-                        $table_usage = $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $clause["e"]), $clause["q"], $queryDefId, $db, $table_usage, $base, $secondarySoFar);
+                        $current_sort = array();
+                        if (array_key_exists($clause["e"], $sort)) {
+                            $current_sort = $sort[$clause["e"]];
+                        }
+                        $table_usage = $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $clause["e"]), $clause["q"], $queryDefId, $db, $table_usage, $base, $current_sort, $secondarySoFar);
 
                     } else {
                         $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage, $isSecondaryKeyUpdate, $level + 1);
@@ -111,7 +119,7 @@ class PVSolrQuery
         return $table_usage;
     }
 
-    public function loadEntityQuery($entitySpec, $query_string, $queryDefId, $db, $table_usage, $base, $useSecondary = false)
+    public function loadEntityQuery($entitySpec, $query_string, $queryDefId, $db, $table_usage, $base, $sort, $useSecondary = false)
     {
 
         if ($table_usage["base"][0] == 0) {

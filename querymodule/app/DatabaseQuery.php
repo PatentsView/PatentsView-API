@@ -398,6 +398,7 @@ class DatabaseQuery
             $results = $st->fetchAll();
             $st->closeCursor();
         } catch (Exception $e) {
+
             $this->errorHandler->sendError(500, "Query execution failed.", $e);
             throw new $e;
         }
@@ -537,7 +538,7 @@ class DatabaseQuery
         return $selectString;
     }
 
-    public function loadEntityID($data, array $fieldPresence, $queryDefId, $tableName,$sequenceStart=0)
+    public function loadEntityID($data, array $fieldPresence, $queryDefId, $tableName, $sequenceStart = 0)
     {
         $datafields = array('QueryDefId', 'Sequence', 'EntityId', 'SecondaryEntityId');
         $keyField = $this->entitySpecs[0]["solr_key_id"];
@@ -553,7 +554,7 @@ class DatabaseQuery
             }
 
             $insertData[] = $data_array;
-            $sequenceStart+=1;
+            $sequenceStart += 1;
         }
         $this->connectToDB();
 

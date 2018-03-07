@@ -34,7 +34,7 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
     $solrQuery = new PVSolrQuery($entitySpecs, $fieldSpecs);
     if ($queryResultsStatus < 1) {
         $table_usage = array("base" => array(0, 0), "supp" => array(0, 0));
-        $solrQuery->loadQuery($whereClause, $queryDefId, $dbQuery, $table_usage, array(0 => false));
+        $solrQuery->loadQuery($whereClause, $queryDefId, $dbQuery, $table_usage, $sortFieldSpecs, array(0 => false));
         $dbQuery->addQueryDef($queryDefId, $queryString);
     }
 
