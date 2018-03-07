@@ -90,7 +90,7 @@ class PVSolrQuery
                             $table_usage = $db->updateBase($whereJoin, $table_usage, $queryDefId, $isSecondaryKeyUpdate[$level]);
                             $isSecondaryKeyUpdate[$level] = false;
                             for ($k = $i; $k < count($joins); $k++) {
-                                $lookAheadClause = $whereClause[$joins[$k]];
+                                $lookAheadClause = $whereClause[$whereJoin][$joins[$k]];
                                 if ((array_key_exists("s", $lookAheadClause) && $lookAheadClause["s"])) {
                                     $isSecondaryKeyUpdate[$level] = true;
                                 }
@@ -102,7 +102,7 @@ class PVSolrQuery
 
                         $isSecondaryKeyUpdate[$level] = false;
                         for ($k = $i; $k < count($joins); $k++) {
-                            $lookAheadClause = $whereClause[$joins[$k]];
+                            $lookAheadClause = $whereClause[$whereJoin][$joins[$k]];
                             if ((array_key_exists("s", $lookAheadClause) && $lookAheadClause["s"])) {
                                 $isSecondaryKeyUpdate[$level] = true;
                             }
@@ -149,6 +149,7 @@ class PVSolrQuery
         $fieldPresence = array("keyField" => $keyField);
         $query->addField($keyField);
         $query->addGroupField($keyField);
+
         if (array_key_exists("secondary_key_id", $entitySpec) & $useSecondary) {
             $secondaryKeyField = $entitySpec["secondary_key_id"];
             $query->addField($secondaryKeyField);
@@ -201,6 +202,7 @@ class PVSolrQuery
 
         return $table_usage;
     }
+
 
     public
     function fetchQuery($fieldList, $whereClause, $queryDefId, $db, $options)
