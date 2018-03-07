@@ -24,6 +24,7 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
     // Changed so that if the caller did not explicitly list fields to be returned, we will use a pre-defined set
     // for the primary entity.
     if (!$fieldsParam) $fieldsParam = $entitySpecs[0]['default_fields'];
+    if (!$sortParam) $sortParam =array($entitySpecs[0]['default_fields'][0]);
 
     // Get the FieldSpecs for the list of fields to be returned.
     $selectFieldSpecs = parseFieldList($entitySpecs, $fieldSpecs, $fieldsParam);

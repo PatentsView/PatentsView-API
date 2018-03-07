@@ -455,7 +455,6 @@ function parseFieldList(array $entitySpecs, array $fieldSpecs, array $fieldsPara
     $returnFieldSpecs = array();
 
     for ($i = 0; $i < count($fieldsParam); $i++) {
-        $current_entity = $entitySpecs[0]["entity_name"];
         try {
             $current_entity = getEntitySpecs($entitySpecs, $fieldSpecs[$fieldsParam[$i]]["entity_name"]);
             if (!array_key_exists($current_entity["entity_name"], $returnFieldSpecs)) {
