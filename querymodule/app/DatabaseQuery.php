@@ -548,15 +548,24 @@ class DatabaseQuery
         if (array_key_exists("secondaryKeyField", $fieldPresence)) {
             $secondary = True;
         }
-        for ($docNumber = 0; $docNumber < count($data[$keyField]) / 2; $docNumber++) {
-            $keyValue = $data[$keyField][$docNumber * 2];
-            $secValue = ($secondary) ? $data[$fieldPresence["secondaryKeyField"]][$docNumber * 2] : $keyValue;
-            //$data_array = array("QueryDefId" => $queryDefId, "Sequence" => $sequenceStart, "EntityId" => $keyValue, "SecondaryEntityId" => $secValue);
+        for ($docNumber = 0; $docNumber < count($data); $docNumber++) {
+            $keyValue = $data[$docNumber]["value"];
+
+            if ($secondary) {
+                foreach ($data[$docNumber]["pivot"] as $innerDoc) {
+                    $insert_values[] = $queryDefId;
+                    $insert_values[] = $sequenceStart;
+                    $insert_values[] = $keyValue;
+                    $insert_values[] = $innerDoc["value"];
+                }
+            } else {
+                $insert_values[] = $queryDefId;
+                $insert_values[] = $sequenceStart;
+                $insert_values[] = $keyValue;
+                $insert_values[] = $keyValue;
+
+            }
             $question_marks[] = '(?,?,?,? )';
-            $insert_values[] = $queryDefId;
-            $insert_values[] = $sequenceStart;
-            $insert_values[] = $keyValue;
-            $insert_values[] = $secValue;
             $sequenceStart += 1;
             //array_merge($insert_values, array_values($data_array));
         }
