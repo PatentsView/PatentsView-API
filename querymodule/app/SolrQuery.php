@@ -21,6 +21,7 @@ class PVSolrQuery
         $this->fieldSpecs = $fieldSpecs;
         $currentDBSetting = $config->getSOLRSettings();
         $currentDBSetting["path"] = "solr/" . $entitySpecs[0]['solr_fetch_collection'];
+        $currentDBSetting["wt"] = "json";
         $this->solr_connections["main_entity_fetch"] = new SolrClient($currentDBSetting);
 
         foreach ($entitySpecs as $entitySpec) {
@@ -28,6 +29,7 @@ class PVSolrQuery
                 $currentDBSetting = $config->getSOLRSettings();
 
                 $currentDBSetting["path"] = "solr/" . $entitySpec['solr_collection'];
+                $currentDBSetting["wt"] = "phps";
                 try {
 //                file_put_contents('php://stderr', print_r($currentDBSetting, TRUE));
                     $this->solr_connections[$entitySpec["entity_name"]] = new SolrClient($currentDBSetting);
@@ -143,21 +145,20 @@ class PVSolrQuery
         $connectionToUse = $this->solr_connections[$entitySpec["entity_name"]];
         $query = new SolrQuery();
         $query->setQuery($query_string);
-        $query->setFacet(true);
+
+
         $db->connectToDb();
         $db->startTransaction();
         $keyField = $this->entitySpecs[0]["solr_key_id"];
         $fieldPresence = array("keyField" => $keyField);
-        //$query->addField($keyField);
-        $query->addFacetField($keyField);
-        //$query->addSortField("location_id");
-
+        $facetString = $keyField;
         if (array_key_exists("secondary_key_id", $entitySpec) & $useSecondary) {
             $secondaryKeyField = $entitySpec["secondary_key_id"];
-            //$query->addField($secondaryKeyField);
-            $query->addFacetField($secondaryKeyField);
             $fieldPresence["secondaryKeyField"] = $secondaryKeyField;
+            $facetString += ",$secondaryKeyField";
         }
+        $query->setFacet(true);
+        $query->addParam("facet.pivot", $facetString);
         $query->setStart(0);
         $query->setRows(0);
         $rows_fetched = 0;
@@ -180,7 +181,7 @@ class PVSolrQuery
                 }
                 $queryToRun = $q->getRequestUrl();
                 $response = $q->getResponse();
-                $rows_fetched = count($response["facet_counts"]['facet_fields'][$keyField])/2;
+                $rows_fetched = count($response["facet_counts"]["facet_pivot"][$facetString]);
 
                 $table_usage[$baseKey][$baseIndex] = 1;
                 if ($rows_fetched < 1) {
@@ -196,7 +197,7 @@ class PVSolrQuery
 //                    }
 //                    $keys[$doc->location_key_id] += 1;
 //                }
-                $db->loadEntityID($response["facet_counts"]["facet_fields"], $fieldPresence, $queryDefId, $tableName, $total_fetched);
+                $db->loadEntityID($response["facet_counts"]["facet_pivot"][$facetString], $fieldPresence, $queryDefId, $tableName, $total_fetched);
                 $total_fetched += $rows_fetched;
 
 
