@@ -543,27 +543,31 @@ class DatabaseQuery
         $datafields = array('QueryDefId', 'Sequence', 'EntityId', 'SecondaryEntityId');
         $keyField = $this->entitySpecs[0]["solr_key_id"];
         $insertData = array();
-
-        foreach ($data as $solrDocument) {
-            $data_array = array("QueryDefId" => $queryDefId, "Sequence" => $sequenceStart, "EntityId" => $solrDocument->groupValue);
-            if (array_key_exists("secondaryKeyField", $fieldPresence)) {
-                $secField = $fieldPresence["secondaryKeyField"];
-                $data_array["SecondaryEntityId"] = $solrDocument->doclist->docs[0]->$secField;
-            } else {
-                $data_array["SecondaryEntityId"] = $solrDocument->groupValue;
-            }
-
-            $insertData[] = $data_array;
-            $sequenceStart += 1;
+        $insert_values = array();
+        $secondary = False;
+        if (array_key_exists("secondaryKeyField", $fieldPresence)) {
+            $secondary = True;
         }
+        for ($docNumber = 0; $docNumber < count($data[$keyField]) / 2; $docNumber++) {
+            $keyValue = $data[$keyField][$docNumber * 2];
+            $secValue = ($secondary) ? $data[$fieldPresence["secondaryKeyField"]][$docNumber * 2] : $keyValue;
+            //$data_array = array("QueryDefId" => $queryDefId, "Sequence" => $sequenceStart, "EntityId" => $keyValue, "SecondaryEntityId" => $secValue);
+            $question_marks[] = '(?,?,?,? )';
+            $insert_values[] = $queryDefId;
+            $insert_values[] = $sequenceStart;
+            $insert_values[] = $keyValue;
+            $insert_values[] = $secValue;
+            $sequenceStart += 1;
+            //array_merge($insert_values, array_values($data_array));
+        }
+
         $this->connectToDB();
 
 
-        $insert_values = array();
-        foreach ($insertData as $d) {
-            $question_marks[] = '(' . placeholders('?', sizeof($d)) . ')';
-            $insert_values = array_merge($insert_values, array_values($d));
-        }
+//        foreach ($insertData as $d) {
+//            $question_marks[] = '(' . placeholders('?', sizeof($d)) . ')';
+//            $insert_values = array_merge($insert_values, array_values($d));
+//        }
 
         $sql = "INSERT INTO " . $this->supportDatabase . "." . $tableName . " (" . implode(",", $datafields) . ") VALUES " .
             implode(',', $question_marks);
@@ -571,7 +575,8 @@ class DatabaseQuery
         $stmt = $this->db->prepare($sql);
         try {
             $stmt->execute($insert_values);
-        } catch (PDOException $e) {
+        } catch
+        (PDOException $e) {
             echo $e->getMessage();
             throw $e;
         }

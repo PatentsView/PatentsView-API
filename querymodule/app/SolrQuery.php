@@ -59,7 +59,7 @@ class PVSolrQuery
             if (array_key_exists($whereClause["e"], $sort)) {
                 $current_sort = $sort[$whereClause["e"]];
             }
-            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base,  $current_sort,$whereClause["s"]);
+            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base, $current_sort, $whereClause["s"]);
 
         } else {
             foreach (array_keys($whereClause) as $whereJoin) {
@@ -86,7 +86,7 @@ class PVSolrQuery
                         $table_usage = $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $clause["e"]), $clause["q"], $queryDefId, $db, $table_usage, $base, $current_sort, $secondarySoFar);
 
                     } else {
-                        $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage, $sort,$isSecondaryKeyUpdate, $level + 1);
+                        $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage, $sort, $isSecondaryKeyUpdate, $level + 1);
                         if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0) || ((array_sum($table_usage['base']) > 1))) {
                             $table_usage = $db->updateBase($whereJoin, $table_usage, $queryDefId, $isSecondaryKeyUpdate[$level]);
                             $isSecondaryKeyUpdate[$level] = false;
@@ -143,40 +143,45 @@ class PVSolrQuery
         $connectionToUse = $this->solr_connections[$entitySpec["entity_name"]];
         $query = new SolrQuery();
         $query->setQuery($query_string);
+        $query->setFacet(true);
         $db->connectToDb();
         $db->startTransaction();
-        $query->setGroup(true);
         $keyField = $this->entitySpecs[0]["solr_key_id"];
         $fieldPresence = array("keyField" => $keyField);
-        $query->addField($keyField);
-        $query->addGroupField($keyField);
+        //$query->addField($keyField);
+        $query->addFacetField($keyField);
+        //$query->addSortField("location_id");
 
         if (array_key_exists("secondary_key_id", $entitySpec) & $useSecondary) {
             $secondaryKeyField = $entitySpec["secondary_key_id"];
-            $query->addField($secondaryKeyField);
-            $query->addGroupField($secondaryKeyField);
+            //$query->addField($secondaryKeyField);
+            $query->addFacetField($secondaryKeyField);
             $fieldPresence["secondaryKeyField"] = $secondaryKeyField;
         }
-
+        $query->setStart(0);
+        $query->setRows(0);
         $rows_fetched = 0;
         $total_fetched = 0;
         $keys = array();
         try {
             do {
-                $query->setRows(10000);
-                $query->setStart($total_fetched);
+                $query->setFacetMinCount(1);
+                $query->setFacetOffset($total_fetched);
+                $query->setFacetLimit(10000);
 
-                //http://ec2-52-23-55-147.compute-1.amazonaws.com:8983/solr/location_patent_join/select?indent=on&q=patents.patent_num_cited_by_us_patents%20:%203&wt=json&group=true&group.main=true&group.field=location_key_id&group.field=inventor_id&fl=location_key_id,inventor_id&rows=10000
+                //http://ec2-52-23-55-147.compute-1.amazonaws.com:8983/solr/location_patent_join/select?facet.field=location_key_id&facet.minCount=1&facet.offset=30&facet=on&indent=on&q=patents.patent_date:{%202015-01-05T00:00:00Z%20TO%20*}&rows=0&start=0&wt=json
 
 
                 try {
                     //$query->setTimeAllowed(300000);
                     $q = $connectionToUse->query($query);
                 } catch (SolrClientException $e) {
-
+                    print_r($e);
                 }
+                $queryToRun = $q->getRequestUrl();
                 $response = $q->getResponse();
-                $rows_fetched = count($response["grouped"][$keyField]["groups"]);
+                $rows_fetched = count($response["facet_counts"]['facet_fields'][$keyField])/2;
+
                 $table_usage[$baseKey][$baseIndex] = 1;
                 if ($rows_fetched < 1) {
                     break;
@@ -191,7 +196,7 @@ class PVSolrQuery
 //                    }
 //                    $keys[$doc->location_key_id] += 1;
 //                }
-                $db->loadEntityID($response["grouped"][$keyField]["groups"], $fieldPresence, $queryDefId, $tableName, $total_fetched);
+                $db->loadEntityID($response["facet_counts"]["facet_fields"], $fieldPresence, $queryDefId, $tableName, $total_fetched);
                 $total_fetched += $rows_fetched;
 
 
