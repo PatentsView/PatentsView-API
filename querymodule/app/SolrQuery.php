@@ -86,7 +86,7 @@ class PVSolrQuery
                         $table_usage = $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $clause["e"]), $clause["q"], $queryDefId, $db, $table_usage, $base, $current_sort, $secondarySoFar);
 
                     } else {
-                        $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage, $isSecondaryKeyUpdate, $level + 1);
+                        $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage, $sort,$isSecondaryKeyUpdate, $level + 1);
                         if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0) || ((array_sum($table_usage['base']) > 1))) {
                             $table_usage = $db->updateBase($whereJoin, $table_usage, $queryDefId, $isSecondaryKeyUpdate[$level]);
                             $isSecondaryKeyUpdate[$level] = false;
