@@ -287,14 +287,16 @@ class PVSolrQuery
     {
 
         $connectionToUse = $this->solr_connections[$entity_name];
+        $query = new SolrQuery();
         if ($entity_name == $this->entitySpecs[0]["entity_name"]) {
             $connectionToUse = $this->solr_connections["main_entity_fetch"];
+            $query->setRows($rows);
         }
-        $query = new SolrQuery();
+
         //$query->setTimeAllowed(300000);
         $query->setQuery($queryString);
-        $query->setStart($start);
-        $query->setRows($rows);
+        //$query->setStart($start);
+
         foreach (array_keys($fieldList) as $field) {
             $query->addField($fieldList[$field]["solr_column_name"]);
         }
