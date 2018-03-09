@@ -319,14 +319,12 @@ class QueryParser
                 if ($datatype == 'string') {
 
                     if ($operator == '_begins') {
-                        $values = array("$val*", strtolower($val) . "*");
-                        $val = "(" . implode(" OR ", $values) . ")";
+                        $returnString = "$dbField : *$val";
                     } elseif ($operator == '_contains') {
-                        $values = array("*$val*", "*" . strtolower($val) . "*");
-                        $val = "(" . implode(" OR ", $values) . ")";
+                        $returnString = "$dbField : *$val*";
                     }
 
-                    $returnString = "$dbField : $val";
+
                 } else {
                     ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
                     throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
