@@ -155,7 +155,7 @@ class PVSolrQuery
         if (array_key_exists("secondary_key_id", $entitySpec) & $useSecondary) {
             $secondaryKeyField = $entitySpec["secondary_key_id"];
             $fieldPresence["secondaryKeyField"] = $secondaryKeyField;
-            $facetString += ",$secondaryKeyField";
+            $facetString .= ",$secondaryKeyField";
         }
         $query->setFacet(true);
         $query->addParam("facet.pivot", $facetString);
@@ -174,10 +174,12 @@ class PVSolrQuery
 
 
                 try {
-                    //$query->setTimeAllowed(300000);
+                    $query->setTimeAllowed(120000);
                     $q = $connectionToUse->query($query);
                 } catch (SolrClientException $e) {
-                    print_r($e);
+                    //print_r($e);
+                    $this->errorHandler->sendError(500, "Error in querying data");
+                    break;
                 }
                 $queryToRun = $q->getRequestUrl();
                 $response = $q->getResponse();
@@ -293,7 +295,7 @@ class PVSolrQuery
             $query->setRows($rows);
         }
 
-        //$query->setTimeAllowed(300000);
+        $query->setTimeAllowed(120000);
         $query->setQuery($queryString);
         //$query->setStart($start);
 
