@@ -22,7 +22,7 @@ class PVSolrQuery
         $currentDBSetting = $config->getSOLRSettings();
         $currentDBSetting["path"] = "solr/" . $entitySpecs[0]['solr_fetch_collection'];
         $currentDBSetting["wt"] = "phps";
-        $currentDBSetting["timeout"] = 60;
+        $currentDBSetting["timeout"] = 300;
         $this->solr_connections["main_entity_fetch"] = new SolrClient($currentDBSetting);
 
         foreach ($entitySpecs as $entitySpec) {
@@ -31,7 +31,7 @@ class PVSolrQuery
 
                 $currentDBSetting["path"] = "solr/" . $entitySpec['solr_collection'];
                 $currentDBSetting["wt"] = "phps";
-                $currentDBSetting["timeout"] = 60;
+                $currentDBSetting["timeout"] = 300;
                 try {
 //                file_put_contents('php://stderr', print_r($currentDBSetting, TRUE));
                     $this->solr_connections[$entitySpec["entity_name"]] = new SolrClient($currentDBSetting);
@@ -189,7 +189,7 @@ class PVSolrQuery
                 $rows_fetched = count($response["facet_counts"]["facet_pivot"][$facetString]);
 
                 $table_usage[$baseKey][$baseIndex] = 1;
-                if ($rows_fetched < 1) {
+                if ($rows_fetched < 1 || $total_fetched >= 100000) {
                     break;
                 }
 
