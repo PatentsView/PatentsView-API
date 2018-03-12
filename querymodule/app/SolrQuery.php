@@ -17,10 +17,15 @@ class PVSolrQuery
     public function __construct(array $entitySpecs, array $fieldSpecs)
     {
         global $config;
+        $this->errorHandler = ErrorHandler::getHandler();
         $this->entitySpecs = $entitySpecs;
         $this->fieldSpecs = $fieldSpecs;
         $currentDBSetting = $config->getSOLRSettings();
         $currentDBSetting["path"] = "solr/" . $entitySpecs[0]['solr_fetch_collection'];
+
+        $currentDBSetting["wt"] = "phps";
+        $currentDBSetting["timeout"] = 60;
+
         $this->solr_connections["main_entity_fetch"] = new SolrClient($currentDBSetting);
 
         foreach ($entitySpecs as $entitySpec) {
@@ -28,6 +33,10 @@ class PVSolrQuery
                 $currentDBSetting = $config->getSOLRSettings();
 
                 $currentDBSetting["path"] = "solr/" . $entitySpec['solr_collection'];
+
+                $currentDBSetting["wt"] = "phps";
+                $currentDBSetting["timeout"] = 60;
+
                 try {
 //                file_put_contents('php://stderr', print_r($currentDBSetting, TRUE));
                     $this->solr_connections[$entitySpec["entity_name"]] = new SolrClient($currentDBSetting);
@@ -59,7 +68,7 @@ class PVSolrQuery
             if (array_key_exists($whereClause["e"], $sort)) {
                 $current_sort = $sort[$whereClause["e"]];
             }
-            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base,  $current_sort,$whereClause["s"]);
+            $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $whereClause["e"]), $whereClause["q"], $queryDefId, $db, $table_usage, $base, $current_sort, $whereClause["s"]);
 
         } else {
             foreach (array_keys($whereClause) as $whereJoin) {
@@ -86,7 +95,7 @@ class PVSolrQuery
                         $table_usage = $this->loadEntityQuery(getEntitySpecs($this->entitySpecs, $clause["e"]), $clause["q"], $queryDefId, $db, $table_usage, $base, $current_sort, $secondarySoFar);
 
                     } else {
-                        $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage, $sort,$isSecondaryKeyUpdate, $level + 1);
+                        $table_usage = $this->loadQuery($clause, $queryDefId, $db, $table_usage, $sort, $isSecondaryKeyUpdate, $level + 1);
                         if ((array_sum($table_usage['base']) > 0) && (array_sum($table_usage["supp"]) > 0) || ((array_sum($table_usage['base']) > 1))) {
                             $table_usage = $db->updateBase($whereJoin, $table_usage, $queryDefId, $isSecondaryKeyUpdate[$level]);
                             $isSecondaryKeyUpdate[$level] = false;
@@ -173,6 +182,10 @@ class PVSolrQuery
                     //$query->setTimeAllowed(300000);
                     $q = $connectionToUse->query($query);
                 } catch (SolrClientException $e) {
+                    //print_r($e);
+                    $endtime = microtime(true);
+                    $this->errorHandler->sendError(500, "Error in querying data");
+                    break;
 
                 }
                 $response = $q->getResponse();
