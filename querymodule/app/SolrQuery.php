@@ -21,7 +21,8 @@ class PVSolrQuery
         $this->fieldSpecs = $fieldSpecs;
         $currentDBSetting = $config->getSOLRSettings();
         $currentDBSetting["path"] = "solr/" . $entitySpecs[0]['solr_fetch_collection'];
-        $currentDBSetting["wt"] = "json";
+        $currentDBSetting["wt"] = "phps";
+        $currentDBSetting["timeout"] = 60;
         $this->solr_connections["main_entity_fetch"] = new SolrClient($currentDBSetting);
 
         foreach ($entitySpecs as $entitySpec) {
@@ -30,6 +31,7 @@ class PVSolrQuery
 
                 $currentDBSetting["path"] = "solr/" . $entitySpec['solr_collection'];
                 $currentDBSetting["wt"] = "phps";
+                $currentDBSetting["timeout"] = 60;
                 try {
 //                file_put_contents('php://stderr', print_r($currentDBSetting, TRUE));
                     $this->solr_connections[$entitySpec["entity_name"]] = new SolrClient($currentDBSetting);
@@ -178,6 +180,7 @@ class PVSolrQuery
                     $q = $connectionToUse->query($query);
                 } catch (SolrClientException $e) {
                     //print_r($e);
+                    $endtime = microtime(true);
                     $this->errorHandler->sendError(500, "Error in querying data");
                     break;
                 }
