@@ -19,11 +19,11 @@
   {
     "entity_name": "patent",
     "group_name": "patents",
-    "keyId": "patent_id",
+      "keyId": "patent_id",
     "distinctCountId": "patent_id",
     "join": "",
     "solr_collection": "location_patent_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patents.patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -33,7 +33,7 @@
     "distinctCountId": "inventor_key_id",
     "join": "left join inventor using(inventor_id) left outer join location_inventor on location.location_id=location_inventor.location_id and inventor.inventor_id=location_inventor.inventor_id",
     "solr_collection": "location_inventor_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventors.inventor_key_id",
     "secondarySource": true
   },
@@ -44,7 +44,7 @@
     "distinctCountId": "rawinventor_key_id",
     "join": "left outer join inventor_rawinventor on inventor_rawinventor.patent_id = patent.patent_id",
     "solr_collection": "location_rawinventor_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -54,7 +54,7 @@
     "distinctCountId": "assignee_key_id",
     "join": "left join patent_assignee on location.location_id=patent_assignee.location_id left join assignee using(assignee_id) left outer join location_assignee on location.location_id=location_assignee.location_id and assignee.assignee_id=location_assignee.assignee_id",
     "solr_collection": "location_assignee_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -64,6 +64,7 @@
     "distinctCountId": "app_id",
     "join": "left outer join application using(patent_id)",
     "solr_collection": "location_application_join",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -73,7 +74,7 @@
     "distinctCountId": "ipc_class",
     "join": "left outer join ipcr using(patent_id)",
     "solr_collection": "location_ipc_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -83,7 +84,7 @@
     "distinctCountId": "appcit_app_number",
     "join": "left outer join usapplicationcitation on patent.patent_id=usapplicationcitation.citing_patent_id ",
     "solr_collection": "location_application_citation_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -93,7 +94,7 @@
     "distinctCountId": "cited_patent_id",
     "join": "left outer join uspatentcitation as patentcit_fromciting_tocited on patent.patent_id=patentcit_fromciting_tocited.citing_patent_id left outer join patent as citedpatent on patentcit_fromciting_tocited.cited_patent_id=citedpatent.patent_id",
     "solr_collection": "location_cited_patent_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -103,7 +104,7 @@
     "distinctCountId": "citedby_patent_id",
     "join": "left outer join uspatentcitation as patentcit_fromcited_tociting on patent.patent_id=patentcit_fromcited_tociting.cited_patent_id left outer join patent as citingpatent on patentcit_fromcited_tociting.citing_patent_id=citingpatent.patent_id",
     "solr_collection": "location_citedby_patent_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -113,7 +114,7 @@
     "distinctCountId": "uspc_mainclass_id",
     "join": "left outer join uspc_current_mainclass_copy using(patent_id) left outer join uspc_current_copy using (patent_id, mainclass_id) left outer join location_uspc_mainclass on location.location_id=location_uspc_mainclass.location_id and uspc_current_mainclass_copy.mainclass_id=location_uspc_mainclass.mainclass_id left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id left outer join uspc_subclass on uspc_current_copy.subclass_id=uspc_subclass.id",
     "solr_collection": "location_uspc_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -123,7 +124,7 @@
     "distinctCountId": "cpc_group_id",
     "join": "left outer join cpc_current_group_copy using(patent_id) left outer join cpc_group on cpc_current_group_copy.group_id=cpc_group.id left outer join cpc_current_copy using (patent_id, group_id) left outer join cpc_subsection on cpc_current_copy.subsection_id=cpc_subsection.id left outer join cpc_subgroup on cpc_current_copy.subgroup_id=cpc_subgroup.id left outer join location_cpc_group on location.location_id=location_cpc_group.location_id and cpc_group.id=location_cpc_group.group_id ",
     "solr_collection": "location_cpc_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -133,7 +134,7 @@
     "distinctCountId": "nber_subcategory_id",
     "join": "left outer join nber_copy using(patent_id) left outer join location_nber_subcategory on location.location_id=location_nber_subcategory.location_id and nber_copy.subcategory_id=location_nber_subcategory.subcategory_id left outer join nber_subcategory on nber_copy.subcategory_id=nber_subcategory.id left outer join nber_category on nber_copy.category_id=nber_category.id",
     "solr_collection": "location_nber_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -143,7 +144,7 @@
     "distinctCountId": "year_id",
     "join": "left outer join location_year on patent_inventor.location_id=location_year.location_id and patent.year=location_year.year",
     "solr_collection": "location_year_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -153,7 +154,7 @@
     "distinctCountId": "wipo_field_id",
     "join": "left outer join wipo on patent.patent_id=wipo.patent_id left outer join wipo_field on wipo.field_id=wipo_field.id",
     "solr_collection": "location_wipo_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -163,7 +164,7 @@
     "distinctCountId": "govint_patent_id",
     "join": "left outer join government_interest on patent.patent_id=government_interest.patent_id left outer join patent_govintorg on patent.patent_id=patent_govintorg.patent_id left outer join patent_contractawardnumber on patent.patent_id=patent_contractawardnumber.patent_id left outer join government_organization on patent_govintorg.organization_id=government_organization.organization_id",
     "solr_collection": "location_government_interest_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -173,7 +174,7 @@
     "distinctCountId": "lawyer_id",
     "join": "left outer join patent_lawyer ON patent_lawyer.patent_id=patent.patent_id left outer join lawyer on lawyer.lawyer_id=patent_lawyer.lawyer_id",
     "solr_collection": "location_lawyer_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -183,7 +184,7 @@
     "distinctCountId": "examiner_id",
     "join": "left outer join patent_examiner on patent_examiner.patent_id=patent.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id",
     "solr_collection": "location_examiner_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -193,7 +194,7 @@
     "distinctCountId": "foreign_doc_number",
     "join": "left outer join foreignpriority on foreignpriority.patent_id=patent.patent_id",
     "solr_collection": "location_foreign_priority_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -203,7 +204,7 @@
     "distinctCountId": "pct_id",
     "join": "left outer join pctdata on pctdata.patent_id=patent.patent_id",
     "solr_collection": "location_pct_dat_join",
-    "solr_key_id": "location_key_id",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   }
 ]

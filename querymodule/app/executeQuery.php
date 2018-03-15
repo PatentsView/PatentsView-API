@@ -30,7 +30,7 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
     $selectFieldSpecs = parseFieldList($entitySpecs, $fieldSpecs, $fieldsParam);
     $sortFieldSpecs = parseFieldList($entitySpecs, $fieldSpecs, $sortParam);
 
-    $dbQuery = new DatabaseQuery($entitySpecs, $fieldSpecs);
+    $dbQuery = new DatabaseQuery($entitySpecs, $fieldSpecs, $queryDefId);
     $queryResultsStatus = $dbQuery->checkQueryDef($queryDefId);
     $solrQuery = new PVSolrQuery($entitySpecs, $fieldSpecs);
     if ($queryResultsStatus < 1) {

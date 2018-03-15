@@ -1,0 +1,6 @@
+{
+    "require": {
+        "salsify/json-streaming-parser": "^6.0",
+        "guzzlehttp/guzzle": "^6.3"
+    }
+}
