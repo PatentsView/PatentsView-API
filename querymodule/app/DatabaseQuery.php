@@ -265,7 +265,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
         if ($key == $this->entitySpecs[0]["solr_key_id"]) {
             $this->rightKey = true;
         } else {
-            $this->rightKey = true;
+            $this->rightKey = false;
         }
 
         // TODO: Implement key() method.
