@@ -8,6 +8,7 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\StreamWrapper;
+
 class PVSolrQuery
 {
     private $solr_connections = array();
@@ -71,7 +72,7 @@ class PVSolrQuery
         $tempDir = $config->getTempPath();
         $currentResponseFile = $tempDir . $queryDefId . ".json";
         $currentDBSetting = $config->getSOLRSettings();
-        $entityIDResponse = $this->httpClient->request('GET', 'stream', ['query' => ['expr' => $whereClause["query"]],'stream'=>true]);
+        $entityIDResponse = $this->httpClient->request('GET', 'stream', ['query' => ['expr' => $whereClause["query"]], 'stream' => true]);
         //$urlToRequest = 'http://' . $currentDBSetting["hostname"] . ":" . $currentDBSetting["port"] . "/solr/" . $this->entitySpecs[0]["solr_fetch_collection"] . "/stream?expr=" . urlencode($whereClause["query"]);
         $body = $entityIDResponse->getBody();
         $resource = StreamWrapper::getResource($body);
@@ -81,7 +82,7 @@ class PVSolrQuery
         // $body->
 //        while (!$body->eof()) {
 //            $current_str = $body->read(2097152);
-         //file_put_contents($currentResponseFile, $body);
+        //file_put_contents($currentResponseFile, $body);
 //        }
         //$stream = fopen($currentResponseFile, 'r');
         try {
@@ -92,7 +93,7 @@ class PVSolrQuery
         } catch (Exception $e) {
 
             $db->rollbackTransaction();
-            unlink($currentResponseFile);
+            
             throw $e;
         }
 //        $all_entity_data = json_decode($body);
@@ -119,7 +120,7 @@ class PVSolrQuery
 //            }
 //            $sequence += 1;
 //        }
-        unlink($currentResponseFile);
+
 
     }
 //    public function loadQuery($whereClause, $queryDefId, $db, $table_usage, $sort, array $isSecondaryKeyUpdate, $level = 0)
