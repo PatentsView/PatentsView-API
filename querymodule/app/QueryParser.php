@@ -525,7 +525,7 @@ function parseFieldList(array $entitySpecs, array $fieldSpecs, array $fieldsPara
             $current_entity = getEntitySpecs($entitySpecs, $fieldSpecs[$fieldsParam[$i]]["entity_name"]);
             if (!array_key_exists($current_entity["entity_name"], $returnFieldSpecs)) {
                 $returnFieldSpecs[$current_entity["entity_name"]] = array();
-                $returnFieldSpecs[$current_entity["entity_name"]][$entitySpecs[0]["solr_key_id"]] = $fieldSpecs[$entitySpecs[0]["solr_key_id"]];
+                $returnFieldSpecs[$current_entity["entity_name"]][$entitySpecs[0]["solr_fetch_id"]] = $fieldSpecs[$entitySpecs[0]["solr_fetch_id"]];
             }
 
             $returnFieldSpecs[$current_entity["entity_name"]][$fieldsParam[$i]] = $fieldSpecs[$fieldsParam[$i]];
