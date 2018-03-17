@@ -188,8 +188,9 @@ class QueryParser
                     if ($argument_name != "q")
                         $streamSourceString .= $argument_name . '="' . $argument_value . '",';
                 }
+                $streamSourceString='complement(' . $streamSourceString . ',q=*:*),' . $streamSourceString . 'q=' . $clauseArray["query"]["q"] . ')' . ',on="' . $this->entitySpecs[0]["solr_key_id"] . '")';
             }
-            $queryArray["query"] = 'complement(' . $streamSourceString . ',q=*:*),' . $streamSourceString . 'q=' . $clauseArray["query"]["q"] . ')' . ',on="' . $this->entitySpecs[0]["solr_key_id"] . '")';
+            $queryArray["query"] = $streamSourceString;
             //$queryArray["collection"] = $clauseArray['collection'];
             $queryArray["collection"] = "join_stream";
 
