@@ -181,12 +181,14 @@ class QueryParser
             $clauseArray = $this->processQueryCriterion($rightHandValue);
             $collection = $clauseArray["collection"];
             //$streamArray = array("q" => $clauseArray["query"]["q"], "fl" => $clauseArray["query"]["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["query"]["e"]["solr_key_id"] . ' asc', "qt" => "/export");
-            $streamSourceString = 'search (' . $collection . ', ';
-            foreach ($clauseArray["query"] as $argument_name => $argument_value) {
-                if ($argument_name != "q")
-                    $streamSourceString .= $argument_name . '="' . $argument_value . '",';
+            $streamSourceString = $clauseArray["query"];
+            if (is_array($clauseArray["query"])) {
+                $streamSourceString = 'search (' . $collection . ', ';
+                foreach ($clauseArray["query"] as $argument_name => $argument_value) {
+                    if ($argument_name != "q")
+                        $streamSourceString .= $argument_name . '="' . $argument_value . '",';
+                }
             }
-
             $queryArray["query"] = 'complement(' . $streamSourceString . ',q=*:*),' . $streamSourceString . 'q=' . $clauseArray["query"]["q"] . ')' . ',on="' . $this->entitySpecs[0]["solr_key_id"] . '")';
             //$queryArray["collection"] = $clauseArray['collection'];
             $queryArray["collection"] = "join_stream";
