@@ -186,7 +186,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     public function loadEntityID($data = null, $question_marks = null)
     {
         $datafields = array('QueryDefId', 'Sequence', 'EntityId');
-        $keyField = $this->entitySpecs[0]["solr_key_id"];
+        $keyField = $this->entitySpecs[0]["solr_fetch_id"];
         $insertData = array();
         if (!$data)
             $data = $this->dataArray;
@@ -262,7 +262,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     public
     function key($key)
     {
-        if ($key == $this->entitySpecs[0]["solr_key_id"]) {
+        if ($key == $this->entitySpecs[0]["solr_fetch_id"]) {
             $this->rightKey = true;
         } else {
             $this->rightKey = false;

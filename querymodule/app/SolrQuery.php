@@ -93,7 +93,7 @@ class PVSolrQuery
         } catch (Exception $e) {
 
             $db->rollbackTransaction();
-            
+
             throw $e;
         }
 //        $all_entity_data = json_decode($body);
@@ -321,10 +321,10 @@ class PVSolrQuery
         $main_group = $this->entitySpecs[0]["group_name"];
         $return_array = array();
         foreach ($entitiesToFetch as $entity) {
-            $solr_response = $this->fetchEntityQuery($entity, $this->entitySpecs[0]["solr_key_id"] . ":" . $entityValueString, $start, $rows, $fieldList[$entity]);
+            $solr_response = $this->fetchEntityQuery($entity, $this->entitySpecs[0]["solr_fetch_id"] . ":" . $entityValueString, $start, $rows, $fieldList[$entity]);
             $current_array = array();
             foreach ($solr_response["docs"] as $solrDoc) {
-                $keyName = $this->entitySpecs[0]["solr_key_id"];
+                $keyName = $this->entitySpecs[0]["solr_fetch_id"];
                 if (!array_key_exists($solrDoc->$keyName, $current_array)) {
                     $current_array[$solrDoc->$keyName] = array();
                 }
@@ -338,10 +338,10 @@ class PVSolrQuery
             $returned_values[$entity] = $current_array;
         }
         if (!array_key_exists($this->entitySpecs[0]["entity_name"], $returned_values)) {
-            $solr_response = $this->fetchEntityQuery($this->entitySpecs[0]["entity_name"], $this->entitySpecs[0]["solr_key_id"] . ":" . $entityValueString, $start, $rows, array($this->fieldSpecs[$this->entitySpecs[0]["solr_key_id"]]));
+            $solr_response = $this->fetchEntityQuery($this->entitySpecs[0]["entity_name"], $this->entitySpecs[0]["solr_fetch_id"] . ":" . $entityValueString, $start, $rows, array($this->fieldSpecs[$this->entitySpecs[0]["solr_fetch_id"]]));
             $current_array = array();
             foreach ($solr_response["docs"] as $solrDoc) {
-                $keyName = $this->entitySpecs[0]["solr_key_id"];
+                $keyName = $this->entitySpecs[0]["solr_fetch_id"];
                 if (!array_key_exists($solrDoc->$keyName, $current_array)) {
                     $current_array[$solrDoc->$keyName] = array();
                 }
@@ -398,7 +398,7 @@ class PVSolrQuery
                 break;
             }
             $entityValueString = "( " . (implode(" ", $entityValuesToFetch)) . " ) ";
-            $entity_count += $this->countRowsForQuery($entity, $this->entitySpecs[0]["solr_key_id"] . ":" . $entityValueString);
+            $entity_count += $this->countRowsForQuery($entity, $this->entitySpecs[0]["solr_fetch_id"] . ":" . $entityValueString);
             $offset += $rows;
         } while (true);
         return $entity_count;
