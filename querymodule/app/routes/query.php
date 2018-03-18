@@ -1,9 +1,29 @@
 <?php
+
+// Overrides default limit 0f 256 MB since we process lots of data
+// TO DO: Experiment & find optimal value
 ini_set('memory_limit', '3G');
 require_once dirname(__FILE__) . '/../executeQuery.php';
 require_once dirname(__FILE__) . '/../ErrorHandler.php';
+
+// API Specs in regular and associative array format.
 require_once dirname(__FILE__) . '/../entitySpecs.php';
+// TO Do : Find out need for this file & its function
 require_once dirname(__FILE__) . '/../AddEmailDatabase.php';
+
+/**
+ * Next sections has "registration" of api urls. All api endpoints that serves
+ * patents data performs the following broad operations
+ *
+ * 1. Validate and parse request parameters - CheckPostParameters/CheckGetParameters
+ *      a. Returns 400 bad request when url is malformed or if business logic is violated
+ * 2. Execute the database/solr query that corresponds to requested api query
+ * 3. Format the results in primary entity - sub-entity format
+ *      a. See the *-entity-specs for finding related entities for any given entity
+ *      b. When querying for patents, fields that are requested from other entities
+ *         (assignees, inventors) etc are nested under (as "assignees" etc) patent main entity
+ * 4. Send reponse
+ */
 
 // query/q=<query in json format>[&f=<field in json format>][&o=<options in json format>]
 
@@ -279,6 +299,13 @@ $app->get(
 );
 
 
+/**
+ * @param $app  Slim App - contains means for accessing request parameters
+ * @return array JSON decoded PHP Arrays containing, query, sort, options and field list parameters
+ *
+ * Processes GET parameters
+ * 'q' parameter is mandatory. s, o, f and format parameters are  optional
+ */
 function CheckGetParameters($app)
 {
 // Make sure the 'q' parameter exists.
@@ -343,6 +370,13 @@ function CheckGetParameters($app)
     return array($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam);
 }
 
+/**
+ * @param $app  Slim App - contains means for accessing request parameters
+ * @return array JSON decoded PHP Arrays containing, query, sort, options and field list parameters
+ *
+ * Processes GET parameters
+ * 'q' parameter is mandatory. s, o, f and format parameters are  optional
+ */
 function CheckPostParameters($app)
 {
     $body = $app->request->getBody();
@@ -395,6 +429,12 @@ function CheckPostParameters($app)
     return array($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam);
 }
 
+/**
+ * @param $formatParam Specifies response format
+ * @param $results query results in php array format
+ * @param $entitySpecs current entity's api specification
+ * @return string|mixed Returns query results in json/xml format
+ */
 function FormatResults($formatParam, $results, $entitySpecs)
 {
     if (strtolower($formatParam) == 'xml') {
@@ -405,6 +445,14 @@ function FormatResults($formatParam, $results, $entitySpecs)
         $results = json_encode($results);return $results;
 }
 
+/**
+ * @param array $arr Data array
+ * @param SimpleXMLElement $xml Base XML element (with <root>
+ * @param $parentTag
+ * @param $entitySpecs current entity's api specification
+ * @return SimpleXMLElement
+ */
+# TO DO : Explore more 'out of the box' XML options
 function array_to_xml(array $arr, SimpleXMLElement $xml, $parentTag, $entitySpecs) {
     foreach ($arr as $k => $v) {
 
@@ -445,6 +493,6 @@ function array_to_xml(array $arr, SimpleXMLElement $xml, $parentTag, $entitySpec
             }
         }
     }
-
+//TO DO : Try $xml->asXML() to check if string with proper format is returned
     return $xml;
 }

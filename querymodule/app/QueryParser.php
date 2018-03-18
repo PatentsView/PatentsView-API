@@ -53,13 +53,13 @@ class QueryParser
         return $sortSpecs;
     }
 
-    public function parse(array $fieldSpecs, array $query, $entityName, array $entitySpecs)
+    public function parse(array $fieldSpecs, array $query, array $entitySpecs)
     {
         $this->fieldSpecs = $fieldSpecs;
         $this->entitySpecs = $entitySpecs;
         $this->whereClause = '';
         $this->fieldsUsed = array();
-        $this->entityName = $entityName;
+        $this->entityName = "all";
         $this->onlyAndsWereUsed = true;
         // There should only be one pair in this array
         if (count($query) == 1) {
