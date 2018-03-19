@@ -84,13 +84,13 @@ class QueryParser
         // If the operator is a comparison, then the right hand value will be a simple pair: { operator : { field : value } }
         if (isset($this->COMPARISON_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processSimplePair($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
 
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
         } elseif (isset($this->RANGE_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processRangePair($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
 
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
@@ -100,7 +100,7 @@ class QueryParser
         } // If the operator is for strings, then the right hand value will be a simple pair: { operator : { field : value } }
         elseif (isset($this->STRING_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processStringPair($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
 
 
             $queryArray["query"] = $streamArray;
@@ -144,7 +144,7 @@ class QueryParser
                     if ($argument_name != "q")
                         $streamSourceString .= $argument_name . '="' . $argument_value . '",';
                 }
-                $flatStreamArray[] = $streamSourceString . 'q=' . implode(" ".$joinString." ", $queries) . ")";
+                $flatStreamArray[] = $streamSourceString . 'q=' . implode(" " . $joinString . " ", $queries) . ")";
             }
 
 
@@ -189,7 +189,11 @@ class QueryParser
                     if ($argument_name != "q")
                         $streamSourceString .= $argument_name . '="' . $argument_value . '",';
                 }
-                $streamSourceString='complement(' . $streamSourceString . ',q=*:*),' . $streamSourceString . 'q=' . $clauseArray["query"]["q"] . ')' . ',on="' . $this->entitySpecs[0]["solr_key_id"] . '")';
+                $streamSourceString = 'complement(' . $streamSourceString . ',q=*:*),' . $streamSourceString . 'q=' . $clauseArray["query"]["q"] . ')' . ',on="' . $this->entitySpecs[0]["solr_key_id"] . '")';
+            } else {
+                $queryParts = explode(',', $clauseArray["query"]);
+
+                $streamSourceString = 'complement(' . implode(",", array_slice($queryParts, 0, count($queryParts) - 1)) . ",q=*:*)," . $clauseArray["query"] . ',on="' . $this->entitySpecs[0]["solr_key_id"] . '")';
             }
             $queryArray["query"] = $streamSourceString;
             //$queryArray["collection"] = $clauseArray['collection'];
@@ -199,7 +203,7 @@ class QueryParser
         elseif (isset($this->FULLTEXT_OPERATORS[$operatorOrField])) {
 
             $clauseArray = $this->processTextSearch($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
 
 
             $queryArray["query"] = $streamArray;
@@ -208,7 +212,7 @@ class QueryParser
         } // Otherwise it is not an operator, but a regular equality pair: { field : value } or { field : [ values, ... ] }
         else {
             $clauseArray = $this->processPair('_eq', $criterion);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
         }
@@ -280,7 +284,7 @@ class QueryParser
             }
         }
 
-        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"],"df"=>$dbField);
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
 
     }
 
@@ -297,7 +301,7 @@ class QueryParser
             $secondaryUsage = true;
 
 
-        return array("dbField" => $dbField, "solr_collection" => $solr_collection, "entity" => $entitySpec, "secondaryUsage" => $secondaryUsage,"df"=>$dbField);
+        return array("dbField" => $dbField, "solr_collection" => $solr_collection, "entity" => $entitySpec, "secondaryUsage" => $secondaryUsage, "df" => $dbField);
     }
 
     private
@@ -353,7 +357,7 @@ class QueryParser
                 throw new ErrorException($msg);
             }
         }
-        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"],"df"=>$dbField);
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
 
     }
 
@@ -390,7 +394,7 @@ class QueryParser
                 throw new ErrorException($msg);
             }
         }
-        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"],"df"=>$dbField);
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
     }
 
     private
@@ -430,7 +434,7 @@ class QueryParser
                     throw new ErrorException($msg);
                 }
             }
-            return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"],"df"=>$dbField);
+            return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
         }
 
     }
@@ -501,14 +505,14 @@ class QueryParser
         }
 
 
-        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"],"df"=>$dbField);
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
     }
 }
 
 
 function processConjugation($clauses, $join, $field)
 {
-    if(count($clauses)==1){
+    if (count($clauses) == 1) {
         return $clauses[0];
     }
     $streamDecorator = "intersect";
