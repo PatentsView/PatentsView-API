@@ -20,7 +20,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     private $queryDefId;
     private $db = null;
     private $errorHandler = null;
-
+    private $entityIDs = array();
     private $matchedSubentitiesOnly = false;
     private $include_subentity_total_counts = false;
     private $sort_by_subentity_counts = false;
@@ -280,13 +280,14 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     {
 
         if (!is_array($value)) {
-            if ($this->rightKey) {
+            if ($this->rightKey && !array_key_exists($value, $this->entityIDs)) {
 
 
                 $this->nextSequence += 1;
                 $this->dataArray[] = $this->queryDefId;
                 $this->dataArray[] = $this->nextSequence;
                 $this->dataArray[] = $value;
+                $this->entityIDs[$value] = 1;
                 $this->question_marks[] = '(' . placeholders('?', 3) . ')';
                 if ($this->nextSequence % 10000 == 0) {
                     $this->loadEntityID();
