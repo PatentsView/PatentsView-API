@@ -373,9 +373,9 @@ class QueryParser
                 if ($datatype == 'string') {
 
                     if ($operator == '_begins') {
-                        $returnString = "$dbField : *$val";
+                        $returnString = "$dbField : $val*";
                     } elseif ($operator == '_contains') {
-                        $returnString = "$dbField : *$val * ";
+                        $returnString = "$dbField : *$val* ";
                     }
 
 
