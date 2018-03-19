@@ -3,7 +3,7 @@ require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
 require_once dirname(__FILE__) . '/../vendor/autoload.php';
-require_once dirname(__FILE__) . 'MaxEntitiesLoadedException.php';
+require_once dirname(__FILE__) . '/MaxEntitiesLoadedException.php';
 
 class DatabaseQuery implements \JsonStreamingParser\Listener
 {

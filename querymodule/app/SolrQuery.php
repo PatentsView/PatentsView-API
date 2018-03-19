@@ -8,7 +8,7 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\StreamWrapper;
-
+require_once dirname(__FILE__) . '/MaxEntitiesLoadedException.php';
 class PVSolrQuery
 {
     private $solr_connections = array();
