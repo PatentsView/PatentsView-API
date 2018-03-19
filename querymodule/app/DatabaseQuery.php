@@ -3,6 +3,7 @@ require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
 require_once dirname(__FILE__) . '/../vendor/autoload.php';
+require_once dirname(__FILE__) . 'MaxEntitiesLoadedException.php';
 
 class DatabaseQuery implements \JsonStreamingParser\Listener
 {
@@ -278,23 +279,24 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     public
     function value($value)
     {
-
+        global $config;
         if (!is_array($value)) {
             if ($this->rightKey && !array_key_exists($value, $this->entityIDs)) {
-
-
                 $this->nextSequence += 1;
                 $this->dataArray[] = $this->queryDefId;
                 $this->dataArray[] = $this->nextSequence;
                 $this->dataArray[] = $value;
                 $this->entityIDs[$value] = 1;
                 $this->question_marks[] = '(' . placeholders('?', 3) . ')';
-                if ($this->nextSequence % 10000 == 0) {
+                if ($this->nextSequence % $config->getMaxPageSize() == 0) {
                     $this->loadEntityID();
 
                     $time_elapsed = microtime(true) - $this->start_time;
                     $this->dataArray = array();
                     $this->question_marks = array();
+                    if ($this->nextSequence >= $config->getQueryResultLimit()) {
+                        throw new MaxEntitiesLoadedException("Entities loaded exceeds max limit");
+                    }
                 }
 
             }

@@ -90,10 +90,10 @@ class PVSolrQuery
             $parser = new \JsonStreamingParser\Parser($resource, $db);
             $parser->parse();
 
+        } catch (MaxEntitiesLoadedException $e) {
+            $db->commitTransaction();
         } catch (Exception $e) {
-
             $db->rollbackTransaction();
-
             throw $e;
         }
 //        $all_entity_data = json_decode($body);
