@@ -84,13 +84,13 @@ class QueryParser
         // If the operator is a comparison, then the right hand value will be a simple pair: { operator : { field : value } }
         if (isset($this->COMPARISON_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processSimplePair($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
 
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
         } elseif (isset($this->RANGE_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processRangePair($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
 
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
@@ -100,7 +100,7 @@ class QueryParser
         } // If the operator is for strings, then the right hand value will be a simple pair: { operator : { field : value } }
         elseif (isset($this->STRING_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processStringPair($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
 
 
             $queryArray["query"] = $streamArray;
@@ -198,7 +198,7 @@ class QueryParser
         elseif (isset($this->FULLTEXT_OPERATORS[$operatorOrField])) {
 
             $clauseArray = $this->processTextSearch($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
 
 
             $queryArray["query"] = $streamArray;
@@ -207,7 +207,7 @@ class QueryParser
         } // Otherwise it is not an operator, but a regular equality pair: { field : value } or { field : [ values, ... ] }
         else {
             $clauseArray = $this->processPair('_eq', $criterion);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
         }
