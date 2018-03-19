@@ -4,72 +4,106 @@ require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
 
 
+/**
+ * Class QueryParser
+ *
+ * Contains variables & methods used to convert query parameters into SOLR streaming expression
+ */
 class QueryParser
 {
+    /**
+     * @var array API Query to SOLR query operator mapping for equality comparison
+     */
     private $COMPARISON_OPERATORS = array('_eq' => ':');
+    /**
+     * @var array API Query to SOLR query operator mapping for string operations
+     */
     private $STRING_OPERATORS = array('_begins' => '', '_contains' => '');
+    /**
+     * @var array API Query to SOLR query operator mapping for full text operations
+     */
     private $FULLTEXT_OPERATORS = array('_text_all' => '', '_text_any' => '', '_text_phrase' => '');
+    /**
+     * @var array API Query to SOLR query operator mapping for conjugation operations
+     */
     private $JOIN_OPERATORS = array('_and' => 'AND', '_or' => 'OR');
+    /**
+     * @var array API Query to SOLR query operator mapping for (non) equality comparison
+     */
     private $NEGATION_OPERATORS = array('_not' => '-', '_neq' => '-');
+    /**
+     * @var array API Query to SOLR query operator mapping for range query
+     */
     private $RANGE_OPERATORS = array('_lt' => '%s : { * TO %s }', '_lte' => '%s : [ * TO %s ]', '_gt' => '%s : { %s TO * }', '_gte' => '%s : [ %s TO * ]');
+
+    /**
+     * @var Holds the specs for primary entity
+     */
+    private $primaryEntity;
+    /**
+     * @var Holds all the fields that are used in current query (Not used currently)
+     */
     private $fieldsUsed;
-    private $whereClause;
-    private $entityName;
-    private $onlyAndsWereUsed; #Used to keep track of whether the query criteria are only joined by ANDs.
+    /**
+     * @var Holds streaming expression for current query
+     */
+    private $streamingXpression;
+    /**
+     * @var Primary entity specs for current query
+     */
     private $entitySpecs;
+    /**
+     * @var Field specs for current primary entity
+     */
     private $fieldSpecs;
 
+    /**
+     * @return mixed returns the fields that are used (Not used currently)
+     */
     public function getFieldsUsed()
     {
         return $this->fieldsUsed;
     }
 
-    public function getWhereClause()
+    /**
+     * @return string Returns streaming expression for current query
+     */
+    public function getStreamingXpression()
     {
-        return $this->whereClause;
+        return $this->streamingXpression;
     }
 
-    public function getOnlyAndsWereUsed()
-    {
-        return $this->onlyAndsWereUsed;
-    }
 
-    public function parseSortQuery(array $fieldSpecs, array $orderQuery)
-    {
-
-        $this->fieldSpecs = $fieldSpecs;
-        $sortSpecs = array();
-
-        foreach ($orderQuery as $order) {
-            $currKey = "";
-            $currValue = "";
-            foreach ($order as $key => $value) {
-                $currKey = getDBField($this->fieldSpecs, $key)["dbField"];
-                $currValue = $value;
-            }
-            $sortSpecs[$currKey] = $currValue;
-        }
-
-        return $sortSpecs;
-    }
-
+    /**
+     * @param array $fieldSpecs field specs of current entity
+     * @param array $query PHP Array containing query terms (possibly nested)
+     * @param array $entitySpecs primary entity specifications
+     * @return array Array containing streaming expression & collection indicating collection/join
+     * Method which intitializes parse values & makes first invocation of recursive function
+     */
     public function parse(array $fieldSpecs, array $query, array $entitySpecs)
     {
+        // TO DO : Move initializatins to constructor
         $this->fieldSpecs = $fieldSpecs;
         $this->entitySpecs = $entitySpecs;
-        $this->whereClause = '';
-        $this->fieldsUsed = array();
-        $this->entityName = "all";
-        $this->onlyAndsWereUsed = true;
+        $this->streamingXpression = '';
+        $this->primaryEntity = $this->entitySpecs[0];
         // There should only be one pair in this array
+        // TO DO: Verify if this check is already implemented in check*Parameters methods
         if (count($query) == 1) {
             $criteria = $query;
-            $this->whereClause = $this->processQueryCriterion($criteria);
+            $this->streamingXpression = $this->processQueryCriterion($criteria);
         }
 
-        return $this->whereClause;
+        return $this->streamingXpression;
     }
 
+    /**
+     * @param array $criterion a query clause, made of operator & operands (which itself can be subclauses)
+     * @param int $level an integer which tracks number of recursion
+     * @return array Containing streaming expression for current clause & collection to operate on
+     * @throws ErrorException
+     */
     private function processQueryCriterion(array $criterion, $level = 0)
     {
 
@@ -78,39 +112,42 @@ class QueryParser
 
         // A criterion should always be a single name-value pair
         reset($criterion);
-        $operatorOrField = key($criterion);
+
+
+        // The key can either be an operator greater
+        // less etc, or a field ( in such case equality operator is assumed)
+        // TO DO : Link API documentation
+        $operatorOrField = key($criterion); // Read the variable name as "operator OR Field",
         $rightHandValue = current($criterion);
 
         // If the operator is a comparison, then the right hand value will be a simple pair: { operator : { field : value } }
         if (isset($this->COMPARISON_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processSimplePair($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
-
+            // Construction of array containing keys representing streaming expression components
+            // TO DO : Link streaming expression page
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->primaryEntity["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
-        } elseif (isset($this->RANGE_OPERATORS[$operatorOrField])) {
+        }
+
+        elseif (isset($this->RANGE_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processRangePair($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
-
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->primatyEntity["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
-//            $queryString = $simpleQuery;
-//            array_push($filterQueryArray, $simpleQueryArray[1]);
+        }
 
-        } // If the operator is for strings, then the right hand value will be a simple pair: { operator : { field : value } }
+        // If the operator is for strings, then the right hand value will be a simple pair: { operator : { field : value } }
         elseif (isset($this->STRING_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processStringPair($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
-
-
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->primatyEntity["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
+        }
 
-        } // If the operator is a join, then the right hand value will be a list of criteria: { operator : [ criterion, ... ] }
+        // If the operator is a join, then the right hand value will be a list of criteria: { operator : [ criterion, ... ] }
         elseif (isset($this->JOIN_OPERATORS[$operatorOrField])) {
-
             $joinString = $this->JOIN_OPERATORS[$operatorOrField];
-            //$queryArray[$joinString] = array();
             $streamArray = array();
             if (count($rightHandValue) < 2) {
                 ErrorHandler::getHandler()->sendError(400, "Less than 2 operands provided for : $operatorOrField . ");
@@ -127,17 +164,22 @@ class QueryParser
                     array_push($streamArray[$collection], $retv["query"]);
                 }
             }
+            // Collect the clauses in an array
             $flatStreamArray = array();
+
+            // Merge clauses if they share same collection
             foreach ($streamArray as $collection => $clauses) {
+                // Expressions which are already conjugated can't be merged
+                // since they will query multiple collections
                 if ($collection == "join_stream") {
                     $flatStreamArray = array_merge($flatStreamArray, $clauses);
                     continue;
-
                 }
                 $queries = array();
                 foreach ($clauses as $clause) {
                     $queries[] = $clause['q'];
                 }
+                // Generate expression after merging & add them to array
                 $streamSourceString = 'search (' . $collection . ', ';
                 foreach ($clauses[0] as $argument_name => $argument_value) {
                     if ($argument_name != "q")
@@ -145,51 +187,32 @@ class QueryParser
                 }
                 $flatStreamArray[] = $streamSourceString . 'q=' . implode($joinString, $queries) . ")";
             }
-
-
-            $query = processConjugation(array_values($flatStreamArray), $joinString, $this->entitySpecs[0]["solr_key_id"]);
+            // Join the expressions using suitable join (AND / OR)
+            $query = processConjugation(array_values($flatStreamArray), $joinString, $this->primatyEntity["solr_key_id"]);
             $queryArray = array("collection" => "join_stream", "query" => $query);
 
-//            $value_counts = array_count_values($collections);
-//            if ((count($value_counts) == 1) || (count($value_counts) == 2 && array_key_exists($this->entitySpecs[0]["solr_collection"], $value_counts) && $value_counts[$this->entitySpecs[0]["solr_collection"]] > 0)) {
-//                $collection_to_use = $this->entitySpecs[0]["solr_collection"];
-//                $entity_to_use = $this->entitySpecs[0]["entity_name"];
-//                foreach (array_keys($value_counts) as $collection) {
-//                    if ($collection != $this->entitySpecs[0]["solr_collection"]) {
-//                        $collection_to_use = $collection;
-//                        foreach ($this->entitySpecs as $entitySpec) {
-//                            if ($entitySpec["solr_collection"] == "$collection_to_use") {
-//                                $entity_to_use = $entitySpec["entity_name"];
-//                            }
-//                        }
-//
-//
-//                    }
-//                }
-//
-//                $mergedQueryArray = array($joinString => array(array("c" => $collection_to_use, "q" => array(), "e" => $entity_to_use)));
-//                foreach ($queryArray[$joinString] as $query) {
-//                    $mergedQueryArray[$joinString][0]["q"][] = $query["q"];
-//                }
-//                $mergedQueryArray[$joinString][0]["q"] = implode(" $joinString ", $mergedQueryArray[$joinString][0]["q"]);
-//                $queryArray = $mergedQueryArray;
-            //}
-
-        } // If the operator is a negation, then the right hand value will be a criterion: { operator : { criterion } }
+        }
+        // If the operator is a negation, then the right hand value will be a criterion: { operator : { criterion } }
         elseif (isset($this->NEGATION_OPERATORS[$operatorOrField])) {
+            // To Do : Find why SOLR negation operator does not work with stream expression
             $notString = $this->NEGATION_OPERATORS[$operatorOrField];
             $clauseArray = $this->processQueryCriterion($rightHandValue);
+            // not can be applied on both direct fiels & conjugations
+            // so we have to handle both cases
             $collection = $clauseArray["collection"];
-            //$streamArray = array("q" => $clauseArray["query"]["q"], "fl" => $clauseArray["query"]["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["query"]["e"]["solr_key_id"] . ' asc', "qt" => "/export");
+            // Case 1: Field
             $streamSourceString = $clauseArray["query"];
+
+            // Case 1: Field
             if (is_array($clauseArray["query"])) {
                 $streamSourceString = 'search (' . $collection . ', ';
                 foreach ($clauseArray["query"] as $argument_name => $argument_value) {
                     if ($argument_name != "q")
                         $streamSourceString .= $argument_name . '="' . $argument_value . '",';
                 }
-                $streamSourceString='complement(' . $streamSourceString . ',q=*:*),' . $streamSourceString . 'q=' . $clauseArray["query"]["q"] . ')' . ',on="' . $this->entitySpecs[0]["solr_key_id"] . '")';
+                $streamSourceString = 'complement(' . $streamSourceString . ',q=*:*),' . $streamSourceString . 'q=' . $clauseArray["query"]["q"] . ')' . ',on="' . $this->primatyEntity["solr_key_id"] . '")';
             }
+
             $queryArray["query"] = $streamSourceString;
             //$queryArray["collection"] = $clauseArray['collection'];
             $queryArray["collection"] = "join_stream";
@@ -198,7 +221,7 @@ class QueryParser
         elseif (isset($this->FULLTEXT_OPERATORS[$operatorOrField])) {
 
             $clauseArray = $this->processTextSearch($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->primatyEntity["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
 
 
             $queryArray["query"] = $streamArray;
@@ -207,7 +230,7 @@ class QueryParser
         } // Otherwise it is not an operator, but a regular equality pair: { field : value } or { field : [ values, ... ] }
         else {
             $clauseArray = $this->processPair('_eq', $criterion);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export","df"=>$clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->primatyEntity["solr_key_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
         }
@@ -224,6 +247,12 @@ class QueryParser
         return $queryArray;
     }
 
+    /**
+     * @param $operator
+     * @param $criterion
+     * @return array
+     * @throws ErrorException
+     */
     private function processSimplePair($operator, $criterion)
     {
 
@@ -233,61 +262,64 @@ class QueryParser
         $dbFieldInfo = $this->getDBInfo($apiField);
         $dbField = $dbFieldInfo["dbField"];
         $solr_collection = $dbFieldInfo["solr_collection"];
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
+        if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+            $val = current($criterion);
 
-                $datatype = $this->fieldSpecs[$apiField]['datatype'];
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                $operatorString = $this->COMPARISON_OPERATORS[$operator];
-                if ($datatype == 'float') {
-                    if (!is_float($val)) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $val . ");
-                        throw new ErrorException("Invalid integer value provided: $val . ");
-                    }
-                    $returnString = "$dbField $operatorString $val";
-
-                } elseif ($datatype == 'int') {
-                    if (!is_numeric($val)) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $val . ");
-                        throw new ErrorException("Invalid integer value provided: $val . ");
-                    }
-                    $returnString = "$dbField $operatorString $val";
-
-                } elseif ($datatype == 'date') {
-                    if (!strtotime($val)) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $val . ");
-                        throw new ErrorException("Invalid date provided: $val . ");
-                    }
-                    $returnString = "$dbField $operatorString " . date('Y-m-d\TH\\\:i\\\:s\Z', strtotime($val)) . "";
-
-                    file_put_contents('php://stderr', print_r($returnString, TRUE));
-                } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
-                    if ($val == trim($val) && strpos($val, ' ') !== false) {
-                        $val = '"' . $val . '"';
-                    }
-                    $returnString = "$dbField $operatorString $val";
-
-                } else {
-                    ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField' . ");
-                    throw new ErrorException("Invalid field type '$datatype' found for '$apiField' . ");
+            $datatype = $this->fieldSpecs[$apiField]['datatype'];
+            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+            $operatorString = $this->COMPARISON_OPERATORS[$operator];
+            if ($datatype == 'float') {
+                if (!is_float($val)) {
+                    ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $val . ");
+                    throw new ErrorException("Invalid integer value provided: $val . ");
                 }
+                $returnString = "$dbField $operatorString $val";
+
+            } elseif ($datatype == 'int') {
+                if (!is_numeric($val)) {
+                    ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $val . ");
+                    throw new ErrorException("Invalid integer value provided: $val . ");
+                }
+                $returnString = "$dbField $operatorString $val";
+
+            } elseif ($datatype == 'date') {
+                if (!strtotime($val)) {
+                    ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $val . ");
+                    throw new ErrorException("Invalid date provided: $val . ");
+                }
+                $returnString = "$dbField $operatorString " . date('Y-m-d\TH\\\:i\\\:s\Z', strtotime($val)) . "";
+
+                file_put_contents('php://stderr', print_r($returnString, TRUE));
+            } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
+                if ($val == trim($val) && strpos($val, ' ') !== false) {
+                    $val = '"' . $val . '"';
+                }
+                $returnString = "$dbField $operatorString $val";
+
             } else {
-                $msg = "Not a valid field for querying: $apiField";
-                ErrorHandler::getHandler()->sendError(400, $msg);
-                throw new ErrorException($msg);
+                ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField' . ");
+                throw new ErrorException("Invalid field type '$datatype' found for '$apiField' . ");
             }
+        } else {
+            $msg = "Not a valid field for querying: $apiField";
+            ErrorHandler::getHandler()->sendError(400, $msg);
+            throw new ErrorException($msg);
         }
 
-        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"],"df"=>$dbField);
+
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
 
     }
 
+    /**
+     * @param $apiField
+     * @return array
+     */
     private function getDBInfo($apiField)
     {
         $dbFieldInfo = getDBField($this->fieldSpecs, $apiField);
         $dbField = $dbFieldInfo["dbField"];
-        $solr_collection = $this->entitySpecs[0]["solr_collection"];
+        $solr_collection = $this->primatyEntity["solr_collection"];
         $entity = $dbFieldInfo["entity_name"];
         $entitySpec = getEntitySpecs($this->entitySpecs, $entity);
         $solr_collection = $entitySpec["solr_collection"];
@@ -296,9 +328,15 @@ class QueryParser
             $secondaryUsage = true;
 
 
-        return array("dbField" => $dbField, "solr_collection" => $solr_collection, "entity" => $entitySpec, "secondaryUsage" => $secondaryUsage,"df"=>$dbField);
+        return array("dbField" => $dbField, "solr_collection" => $solr_collection, "entity" => $entitySpec, "secondaryUsage" => $secondaryUsage, "df" => $dbField);
     }
 
+    /**
+     * @param $operator
+     * @param $criterion
+     * @return array
+     * @throws ErrorException
+     */
     private
     function processRangePair($operator, $criterion)
     {
@@ -310,52 +348,58 @@ class QueryParser
         $dbField = $dbFieldInfo["dbField"];
         $solr_collection = $dbFieldInfo["solr_collection"];
 
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
 
-                $datatype = $this->fieldSpecs[$apiField]['datatype'];
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                $operatorString = $this->RANGE_OPERATORS[$operator];
+        if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+            $val = current($criterion);
 
-                if ($datatype == 'float') {
-                    if (!is_float($val)) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $val . ");
-                        throw new ErrorException("Invalid integer value provided: $val . ");
-                    }
-                    $returnString = sprintf("$operatorString", $dbField, $val);
+            $datatype = $this->fieldSpecs[$apiField]['datatype'];
+            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+            $operatorString = $this->RANGE_OPERATORS[$operator];
 
-                } elseif ($datatype == 'int') {
-                    if (!is_numeric($val)) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $val . ");
-                        throw new ErrorException("Invalid integer value provided: $val . ");
-                    }
-                    $returnString = sprintf("$operatorString", $dbField, $val);
-
-                } elseif ($datatype == 'date') {
-                    if (!strtotime($val)) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $val . ");
-                        throw new ErrorException("Invalid date provided: $val . ");
-                    }
-                    $returnString = sprintf("$operatorString", $dbField, date('Y-m-d\TH\\\\:i\\\\:s\Z', strtotime($val)));
-
-                } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
-                    $returnString = sprintf("$operatorString", $dbField, $val);
-
-                } else {
-                    ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField' . ");
-                    throw new ErrorException("Invalid field type '$datatype' found for '$apiField' . ");
+            if ($datatype == 'float') {
+                if (!is_float($val)) {
+                    ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $val . ");
+                    throw new ErrorException("Invalid integer value provided: $val . ");
                 }
+                $returnString = sprintf("$operatorString", $dbField, $val);
+
+            } elseif ($datatype == 'int') {
+                if (!is_numeric($val)) {
+                    ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $val . ");
+                    throw new ErrorException("Invalid integer value provided: $val . ");
+                }
+                $returnString = sprintf("$operatorString", $dbField, $val);
+
+            } elseif ($datatype == 'date') {
+                if (!strtotime($val)) {
+                    ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $val . ");
+                    throw new ErrorException("Invalid date provided: $val . ");
+                }
+                $returnString = sprintf("$operatorString", $dbField, date('Y-m-d\TH\\\\:i\\\\:s\Z', strtotime($val)));
+
+            } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
+                $returnString = sprintf("$operatorString", $dbField, $val);
+
             } else {
-                $msg = "Not a valid field for querying: $apiField";
-                ErrorHandler::getHandler()->sendError(400, $msg);
-                throw new ErrorException($msg);
+                ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField' . ");
+                throw new ErrorException("Invalid field type '$datatype' found for '$apiField' . ");
             }
+        } else {
+            $msg = "Not a valid field for querying: $apiField";
+            ErrorHandler::getHandler()->sendError(400, $msg);
+            throw new ErrorException($msg);
         }
-        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"],"df"=>$dbField);
+
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
 
     }
 
+    /**
+     * @param $operator
+     * @param $criterion
+     * @return array
+     * @throws ErrorException
+     */
     private
     function processStringPair($operator, $criterion)
     {
@@ -365,33 +409,39 @@ class QueryParser
         $dbFieldInfo = $this->getDBInfo($apiField);
         $dbField = $dbFieldInfo["dbField"];
         $solr_collection = $dbFieldInfo["solr_collection"];
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
-                $datatype = $this->fieldSpecs[$apiField]['datatype'];
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                if ($datatype == 'string') {
 
-                    if ($operator == '_begins') {
-                        $returnString = "$dbField : *$val";
-                    } elseif ($operator == '_contains') {
-                        $returnString = "$dbField : *$val * ";
-                    }
+        if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+            $val = current($criterion);
+            $datatype = $this->fieldSpecs[$apiField]['datatype'];
+            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+            if ($datatype == 'string') {
 
-
-                } else {
-                    ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField' . ");
-                    throw new ErrorException("Invalid field type '$datatype' found for '$apiField' . ");
+                if ($operator == '_begins') {
+                    $returnString = "$dbField : *$val";
+                } elseif ($operator == '_contains') {
+                    $returnString = "$dbField : *$val * ";
                 }
+
+
             } else {
-                $msg = "Not a valid field for querying: $apiField";
-                ErrorHandler::getHandler()->sendError(400, $msg);
-                throw new ErrorException($msg);
+                ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField' . ");
+                throw new ErrorException("Invalid field type '$datatype' found for '$apiField' . ");
             }
+        } else {
+            $msg = "Not a valid field for querying: $apiField";
+            ErrorHandler::getHandler()->sendError(400, $msg);
+            throw new ErrorException($msg);
         }
-        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"],"df"=>$dbField);
+
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
     }
 
+    /**
+     * @param $operator
+     * @param $criterion
+     * @return array
+     * @throws ErrorException
+     */
     private
     function processTextSearch($operator, $criterion)
     {
@@ -401,39 +451,45 @@ class QueryParser
         $dbFieldInfo = $this->getDBInfo($apiField);
         $dbField = $dbFieldInfo["dbField"];
         $solr_collection = $dbFieldInfo["solr_collection"];
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
+
+        if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+            $val = current($criterion);
 
 
-                if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
-                    ErrorHandler::getHandler()->sendError(400, "The operation '$operator' is not valid on '$apiField''.");
-                    throw new ErrorException("The operation '$operator' is not valid on '$apiField'' . ");
-                }
-
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                if ($operator == '_text_phrase') {
-                    $returnString = "$dbField : \"$val\"";
-                } elseif ($operator == '_text_any') {
-                    $pieces = explode(" ", $val);
-                    $returnString = "$dbField : " . implode(" OR ", $pieces);
-
-                } elseif ($operator == '_text_all') {
-                    $pieces = explode(" ", $val);
-                    $returnString = "$dbField : " . implode(" AND ", $pieces);
-
-
-                } else {
-                    $msg = "Not a valid field for querying: $apiField";
-                    ErrorHandler::getHandler()->sendError(400, $msg);
-                    throw new ErrorException($msg);
-                }
+            if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
+                ErrorHandler::getHandler()->sendError(400, "The operation '$operator' is not valid on '$apiField''.");
+                throw new ErrorException("The operation '$operator' is not valid on '$apiField'' . ");
             }
-            return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"],"df"=>$dbField);
+
+            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+            if ($operator == '_text_phrase') {
+                $returnString = "$dbField : \"$val\"";
+            } elseif ($operator == '_text_any') {
+                $pieces = explode(" ", $val);
+                $returnString = "$dbField : " . implode(" OR ", $pieces);
+
+            } elseif ($operator == '_text_all') {
+                $pieces = explode(" ", $val);
+                $returnString = "$dbField : " . implode(" AND ", $pieces);
+
+
+            } else {
+                $msg = "Not a valid field for querying: $apiField";
+                ErrorHandler::getHandler()->sendError(400, $msg);
+                throw new ErrorException($msg);
+            }
         }
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
+
 
     }
 
+    /**
+     * @param $operator
+     * @param $criterion
+     * @return array
+     * @throws ErrorException
+     */
     private
     function processPair($operator, $criterion)
     {
@@ -500,11 +556,17 @@ class QueryParser
         }
 
 
-        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"],"df"=>$dbField);
+        return array("q" => $returnString, "c" => $solr_collection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
     }
 }
 
 
+/**
+ * @param $clauses
+ * @param $join
+ * @param $field
+ * @return string
+ */
 function processConjugation($clauses, $join, $field)
 {
     $streamDecorator = "intersect";
@@ -516,6 +578,12 @@ function processConjugation($clauses, $join, $field)
     return $streamDecorator . '(' . implode(",", $clauses) . ',on="' . $field . '")';
 }
 
+/**
+ * @param array $entitySpecs
+ * @param array $fieldSpecs
+ * @param array|null $fieldsParam
+ * @return array
+ */
 function parseFieldList(array $entitySpecs, array $fieldSpecs, array $fieldsParam = null)
 {
     $returnFieldSpecs = array();
