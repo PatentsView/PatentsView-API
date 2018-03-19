@@ -110,6 +110,7 @@ class QueryParser
         elseif (isset($this->JOIN_OPERATORS[$operatorOrField])) {
 
             $joinString = $this->JOIN_OPERATORS[$operatorOrField];
+
             //$queryArray[$joinString] = array();
             $streamArray = array();
             if (count($rightHandValue) < 2) {
@@ -143,7 +144,7 @@ class QueryParser
                     if ($argument_name != "q")
                         $streamSourceString .= $argument_name . '="' . $argument_value . '",';
                 }
-                $flatStreamArray[] = $streamSourceString . 'q=' . implode($joinString, $queries) . ")";
+                $flatStreamArray[] = $streamSourceString . 'q=' . implode(" ".$joinString." ", $queries) . ")";
             }
 
 
