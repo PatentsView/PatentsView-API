@@ -508,6 +508,9 @@ class QueryParser
 
 function processConjugation($clauses, $join, $field)
 {
+    if(count($clauses)==1){
+        return $clauses[0];
+    }
     $streamDecorator = "intersect";
     if ($join == "OR") {
         $field = $field . " asc";
