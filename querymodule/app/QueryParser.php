@@ -372,14 +372,22 @@ class QueryParser
         $solr_collection = $dbFieldInfo["solr_collection"];
         if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
             if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
+                $value = current($criterion);
+
                 $datatype = $this->fieldSpecs[$apiField]['datatype'];
                 if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                $val=$value;
                 if ($datatype == 'string') {
 
                     if ($operator == '_begins') {
+                        if (is_array($value)) {
+                            $val = implode("* OR ", $value);
+                        }
                         $returnString = "$dbField : $val*";
                     } elseif ($operator == '_contains') {
+                        if (is_array($value)) {
+                            $val = implode("* OR *", $value);
+                        }
                         $returnString = "$dbField : *$val* ";
                     }
 
@@ -468,7 +476,7 @@ class QueryParser
                             throw new ErrorException("Invalid date provided: $singleVal.");
                         }
                     }
-                    $returnString = "($dbField : (" . implode(" OR ", $val) . "))";
+                    $returnString = "$dbField : (" . implode(" OR ", $val) . "))";
                 } elseif ($datatype == 'float') {
                     foreach ($val as $singleVal) {
                         if (!is_float($singleVal)) {
@@ -476,7 +484,7 @@ class QueryParser
                             throw new ErrorException("Invalid date provided: $singleVal.");
                         }
                     }
-                    $returnString = "($dbField : (" . implode(" OR ", $val) . "))";
+                    $returnString = "$dbField : (" . implode(" OR ", $val) . "))";
                     $nullString = "-$dbField:\\-1";
                 } elseif ($datatype == 'date') {
                     $dateVals = array();

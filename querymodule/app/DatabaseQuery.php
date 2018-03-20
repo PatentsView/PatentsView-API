@@ -294,7 +294,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
                     $time_elapsed = microtime(true) - $this->start_time;
                     $this->dataArray = array();
                     $this->question_marks = array();
-                    if ($this->nextSequence >= $config->getQueryResultLimit()) {
+                    if ($this->nextSequence > $config->getQueryResultLimit()) {
                         throw new MaxEntitiesLoadedException("Entities loaded exceeds max limit");
                     }
                 }

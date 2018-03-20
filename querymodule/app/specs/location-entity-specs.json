@@ -13,18 +13,18 @@
     "join": "location left join patent_inventor using(location_id) left join patent using(patent_id)",
     "solr_collection": "location_patent_join",
     "solr_fetch_collection": "location_table",
-    "solr_fetch_id":"location_key_id",
-    "solr_key_id": "patent_id_query",
+    "solr_fetch_id": "location_key_id",
+    "solr_key_id": "patents.patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
     "entity_name": "patent",
     "group_name": "patents",
-      "keyId": "patent_id",
+    "keyId": "patent_id",
     "distinctCountId": "patent_id",
     "join": "",
     "solr_collection": "location_patent_join",
-    "solr_key_id": "patent_id_query",
+    "solr_key_id": "patents.patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -35,8 +35,7 @@
     "join": "left join inventor using(inventor_id) left outer join location_inventor on location.location_id=location_inventor.location_id and inventor.inventor_id=location_inventor.inventor_id",
     "solr_collection": "location_inventor_join",
     "solr_key_id": "patent_id_query",
-    "secondary_key_id": "inventors.inventor_key_id",
-    "secondarySource": true
+    "secondary_key_id": "inventors.inventor_key_id"
   },
   {
     "entity_name": "rawinventor",
@@ -56,7 +55,8 @@
     "join": "left join patent_assignee on location.location_id=patent_assignee.location_id left join assignee using(assignee_id) left outer join location_assignee on location.location_id=location_assignee.location_id and assignee.assignee_id=location_assignee.assignee_id",
     "solr_collection": "location_assignee_join",
     "solr_key_id": "patent_id_query",
-    "secondary_key_id": "inventor_id"
+    "secondary_key_id": "location_key_id",
+    "secondarySource": true
   },
   {
     "entity_name": "application",
