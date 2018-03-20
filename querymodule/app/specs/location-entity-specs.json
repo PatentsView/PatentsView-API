@@ -14,7 +14,7 @@
     "solr_collection": "location_patent_join",
     "solr_fetch_collection": "location_table",
     "solr_fetch_id": "location_key_id",
-    "solr_key_id": "patents.patent_id_query",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {
@@ -24,7 +24,7 @@
     "distinctCountId": "patent_id",
     "join": "",
     "solr_collection": "location_patent_join",
-    "solr_key_id": "patents.patent_id_query",
+    "solr_key_id": "patent_id_query",
     "secondary_key_id": "inventor_id"
   },
   {

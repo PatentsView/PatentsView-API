@@ -476,7 +476,7 @@ class QueryParser
                             throw new ErrorException("Invalid date provided: $singleVal.");
                         }
                     }
-                    $returnString = "$dbField : (" . implode(" OR ", $val) . "))";
+                    $returnString = "$dbField : (" . implode(" OR ", $val) . ")";
                 } elseif ($datatype == 'float') {
                     foreach ($val as $singleVal) {
                         if (!is_float($singleVal)) {
@@ -484,7 +484,7 @@ class QueryParser
                             throw new ErrorException("Invalid date provided: $singleVal.");
                         }
                     }
-                    $returnString = "$dbField : (" . implode(" OR ", $val) . "))";
+                    $returnString = "$dbField : (" . implode(" OR ", $val) . ")";
                     $nullString = "-$dbField:\\-1";
                 } elseif ($datatype == 'date') {
                     $dateVals = array();
