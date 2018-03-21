@@ -8,7 +8,10 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\StreamWrapper;
+
 require_once dirname(__FILE__) . '/MaxEntitiesLoadedException.php';
+require_once dirname(__FILE__) . '/convertDBResultsToNestedStructure.php';
+
 class PVSolrQuery
 {
     private $solr_connections = array();
@@ -286,7 +289,7 @@ class PVSolrQuery
 
 
     public
-    function fetchQuery($fieldList, $whereClause, $queryDefId, $db, $options)
+    function fetchQuery($selectFieldSpecs, $whereClause, $queryDefId, $db, $options,$sort)
     {
         $rows = 25;
         $start = 0;
@@ -315,45 +318,49 @@ class PVSolrQuery
         if (count($entityValuesToFetch) < 1) {
             return array("db_results" => array($this->entitySpecs[0]["entity_name"] => array()), "count_results" => array("total_" . $this->entitySpecs[0]["entity_name"] . "_count" => 0));
         }
-        $entityValueString = "( " . (implode(" ", $entityValuesToFetch)) . " ) ";
-        $entitiesToFetch = array_keys($fieldList);
-        $returned_values = array();
-        $main_group = $this->entitySpecs[0]["group_name"];
-        $return_array = array();
-        foreach ($entitiesToFetch as $entity) {
-            $solr_response = $this->fetchEntityQuery($entity, $this->entitySpecs[0]["solr_fetch_id"] . ":" . $entityValueString, $start, $rows, $fieldList[$entity]);
-            $current_array = array();
-            foreach ($solr_response["docs"] as $solrDoc) {
-                $keyName = $this->entitySpecs[0]["solr_fetch_id"];
-                if (!array_key_exists($solrDoc->$keyName, $current_array)) {
-                    $current_array[$solrDoc->$keyName] = array();
-                }
-                $current_array[$solrDoc->$keyName][] = $solrDoc;
-            }
-            if ($subEntityCounts || $entity == $this->entitySpecs[0]["entity_name"]) {
-                $total_count = $this->getEntityCounts($entity, $queryDefId, $db);
-                $return_array["total_" . $entity . "_count"] = $total_count;
-            }
-
-            $returned_values[$entity] = $current_array;
+        $entitiesLeft = count($entityValuesToFetch);
+        $queryCounts = array();
+        $queryResults = array();
+        $entitiesToFetch = array_keys($selectFieldSpecs);
+        if (!in_array($this->entitySpecs[0]["entity_name"], $entitiesToFetch)) {
+            array_push($entitiesToFetch, $this->entitySpecs[0]["entity_name"]);
         }
-        if (!array_key_exists($this->entitySpecs[0]["entity_name"], $returned_values)) {
-            $solr_response = $this->fetchEntityQuery($this->entitySpecs[0]["entity_name"], $this->entitySpecs[0]["solr_fetch_id"] . ":" . $entityValueString, $start, $rows, array($this->fieldSpecs[$this->entitySpecs[0]["solr_fetch_id"]]));
-            $current_array = array();
-            foreach ($solr_response["docs"] as $solrDoc) {
-                $keyName = $this->entitySpecs[0]["solr_fetch_id"];
-                if (!array_key_exists($solrDoc->$keyName, $current_array)) {
-                    $current_array[$solrDoc->$keyName] = array();
-                }
-                $current_array[$solrDoc->$keyName][] = $solrDoc;
-            }
-            if ($subEntityCounts || $this->entitySpecs[0]["entity_name"] == $this->entitySpecs[0]["entity_name"]) {
-                $return_array["total_" . $this->entitySpecs[0]["entity_name"] . "_count"] = $solr_response["numFound"];
-            }
 
-            $returned_values[$this->entitySpecs[0]["entity_name"]] = $current_array;
-        }
-        return array("db_results" => $returned_values, "count_results" => $return_array);
+        do {
+            $entityValueString = "( " . (implode(" ", array_slice($entityValuesToFetch, count($entityValuesToFetch) - $entitiesLeft, 1024))) . " ) ";
+            $main_group = $this->entitySpecs[0]["group_name"];
+
+            foreach ($entitiesToFetch as $entity) {
+                $numFound = 0;
+                $numFetched = 0;
+                $solrStart = 0;
+                $solrRows = 10000;
+                $current_array = array_fill_keys($entityValuesToFetch, array());
+                do {
+                    $currentEntityFieldList = array_key_exists($entity, $selectFieldSpecs) ? $selectFieldSpecs [$entity] : array($this->fieldSpecs[$this->entitySpecs[0]["solr_fetch_id"]]);
+                    $solr_response = $this->fetchEntityQuery($entity, $this->entitySpecs[0]["solr_fetch_id"] . ":" . $entityValueString, $solrStart, $solrRows, $currentEntityFieldList);
+                    $numFound = $solr_response["numFound"];
+
+                    foreach ($solr_response["docs"] as $solrDoc) {
+                        $keyName = $this->entitySpecs[0]["solr_fetch_id"];
+                        $current_array[$solrDoc->$keyName][] = $solrDoc;
+                    }
+                    if ($subEntityCounts || $entity == $this->entitySpecs[0]["entity_name"]) {
+                        $total_count = $this->getEntityCounts($entity, $queryDefId, $db);
+                        $queryCounts["total_" . $entity . "_count"] = $total_count;
+                    }
+
+                    $queryResults[$entity] = $current_array;
+                    $numFetched += 10000;
+
+                    $solrStart += 10000;
+                } while ($numFetched < $numFound);
+            }
+            $entitiesLeft -= 1024;
+        } while ($entitiesLeft >= 0);
+        $dbResults = array("db_results" => $queryResults, "count_results" => $queryCounts);
+        $results = convertDBResultsToNestedStructure($this->entitySpecs, $this->fieldSpecs, $dbResults, $selectFieldSpecs);
+        return $results;
     }
 
     public
@@ -369,6 +376,7 @@ class PVSolrQuery
         $query->setQuery($queryString);
         $query->setStart($start);
         $query->setRows($rows);
+
         foreach (array_keys($fieldList) as $field) {
             $query->addField($fieldList[$field]["solr_column_name"]);
         }

@@ -18,6 +18,7 @@ class QueryParser
     private $onlyAndsWereUsed; #Used to keep track of whether the query criteria are only joined by ANDs.
     private $entitySpecs;
     private $fieldSpecs;
+    private $useSecondary;
 
     public function getFieldsUsed()
     {
@@ -61,6 +62,7 @@ class QueryParser
         $this->fieldsUsed = array();
         $this->entityName = $entityName;
         $this->onlyAndsWereUsed = true;
+        $this->useSecondary = false;
         // There should only be one pair in this array
         if (count($query) == 1) {
             $criteria = $query;
@@ -151,31 +153,6 @@ class QueryParser
             $query = processConjugation(array_values($flatStreamArray), $joinString, $this->entitySpecs[0]["solr_key_id"]);
             $queryArray = array("collection" => "join_stream", "query" => $query);
 
-//            $value_counts = array_count_values($collections);
-//            if ((count($value_counts) == 1) || (count($value_counts) == 2 && array_key_exists($this->entitySpecs[0]["solr_collection"], $value_counts) && $value_counts[$this->entitySpecs[0]["solr_collection"]] > 0)) {
-//                $collection_to_use = $this->entitySpecs[0]["solr_collection"];
-//                $entity_to_use = $this->entitySpecs[0]["entity_name"];
-//                foreach (array_keys($value_counts) as $collection) {
-//                    if ($collection != $this->entitySpecs[0]["solr_collection"]) {
-//                        $collection_to_use = $collection;
-//                        foreach ($this->entitySpecs as $entitySpec) {
-//                            if ($entitySpec["solr_collection"] == "$collection_to_use") {
-//                                $entity_to_use = $entitySpec["entity_name"];
-//                            }
-//                        }
-//
-//
-//                    }
-//                }
-//
-//                $mergedQueryArray = array($joinString => array(array("c" => $collection_to_use, "q" => array(), "e" => $entity_to_use)));
-//                foreach ($queryArray[$joinString] as $query) {
-//                    $mergedQueryArray[$joinString][0]["q"][] = $query["q"];
-//                }
-//                $mergedQueryArray[$joinString][0]["q"] = implode(" $joinString ", $mergedQueryArray[$joinString][0]["q"]);
-//                $queryArray = $mergedQueryArray;
-            //}
-
         } // If the operator is a negation, then the right hand value will be a criterion: { operator : { criterion } }
         elseif (isset($this->NEGATION_OPERATORS[$operatorOrField])) {
             $notString = $this->NEGATION_OPERATORS[$operatorOrField];
@@ -225,6 +202,9 @@ class QueryParser
             }
             $streamSourceString = $streamSourceString . 'q=' . $queryArray["query"]["q"] . ")";
             $queryArray["query"] = $streamSourceString;
+        }
+        if ($level == 0 && $this->useSecondary) {
+            $queryArray["query"] = str_replace($this->entitySpecs[0]["solr_key_id"], $this->secondaryField, $queryArray["query"]);
         }
         return $queryArray;
     }
@@ -297,8 +277,11 @@ class QueryParser
         $entitySpec = getEntitySpecs($this->entitySpecs, $entity);
         $solr_collection = $entitySpec["solr_collection"];
         $secondaryUsage = false;
-        if (array_key_exists("secondarySource", $entitySpec))
+        if (array_key_exists("secondarySource", $entitySpec)) {
             $secondaryUsage = true;
+            $this->useSecondary = true;
+            $this->secondaryField = $entitySpec["secondary_key_id"];
+        }
 
 
         return array("dbField" => $dbField, "solr_collection" => $solr_collection, "entity" => $entitySpec, "secondaryUsage" => $secondaryUsage, "df" => $dbField);
@@ -376,7 +359,7 @@ class QueryParser
 
                 $datatype = $this->fieldSpecs[$apiField]['datatype'];
                 if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                $val=$value;
+                $val = $value;
                 if ($datatype == 'string') {
 
                     if ($operator == '_begins') {
@@ -529,7 +512,13 @@ function processConjugation($clauses, $join, $field)
         $streamDecorator = "merge";
 
     }
-    return $streamDecorator . '(' . implode(",", $clauses) . ',on="' . $field . '")';
+    $baseStreamDecorator = $streamDecorator . '(' . implode(",", array_slice($clauses, 0, 2)) . ',on="' . $field . '")';
+    //$baseStreamDecorator=$clauses[0];
+    for ($i = 2; $i < count($clauses); $i++) {
+        $baseStreamDecorator = $streamDecorator . '(' . $baseStreamDecorator . ',' . $clauses[$i] . ',on="' . $field . '")';
+
+    }
+    return $baseStreamDecorator;
 }
 
 function parseFieldList(array $entitySpecs, array $fieldSpecs, array $fieldsParam = null)

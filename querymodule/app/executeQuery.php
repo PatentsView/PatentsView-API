@@ -2,7 +2,7 @@
 require_once dirname(__FILE__) . '/QueryParser.php';
 require_once dirname(__FILE__) . '/DatabaseQuery.php';
 require_once dirname(__FILE__) . '/SolrQuery.php';
-require_once dirname(__FILE__) . '/convertDBResultsToNestedStructure.php';
+
 
 
 function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam = null, array $fieldsParam = null, array $sortParam = null, array $optionsParam = null)
@@ -39,10 +39,10 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
         $dbQuery->addQueryDef($queryDefId, $queryString);
     }
 
-    $dbResults = $solrQuery->fetchQuery($selectFieldSpecs, $whereClause, $queryDefId, $dbQuery, $optionsParam, $sortFieldSpecs);
+    $results = $solrQuery->fetchQuery($selectFieldSpecs, $whereClause, $queryDefId, $dbQuery, $optionsParam, $sortFieldSpecs);
 
 
-    $results = convertDBResultsToNestedStructure($entitySpecs, $fieldSpecs, $dbResults, $selectFieldSpecs);
+
 
 //    foreach ($dbQuery->getTotalCounts() as $entityName => $count)
 //        $results['total_' . $entityName . '_count'] = $count;
