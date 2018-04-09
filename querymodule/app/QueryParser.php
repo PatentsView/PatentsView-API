@@ -98,6 +98,7 @@ class QueryParser
             $this->streamingXpression = $this->processQueryCriterion($criteria);
         }
 
+
         return $this->streamingXpression;
     }
 
@@ -315,6 +316,7 @@ class QueryParser
                 if ($val == trim($val) && strpos($val, ' ') !== false) {
                     $val = '"' . $val . '"';
                 }
+                $val= replaceMinusSign($val);
                 $returnString = "$dbField $operatorString $val";
 
             } else {
@@ -402,6 +404,7 @@ class QueryParser
                 $returnString = sprintf("$operatorString", $dbField, date('Y-m-d\TH\\\\:i\\\\:s\Z', strtotime($val)));
 
             } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
+                $val = replaceMinusSign($val);
                 $returnString = sprintf("$operatorString", $dbField, $val);
 
             } else {
@@ -440,7 +443,7 @@ class QueryParser
             $datatype = $this->fieldSpecs[$apiField]['datatype'];
             if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
             if ($datatype == 'string') {
-
+                $val = replaceMinusSign($val);
                 if ($operator == '_begins') {
                     $returnString = "$dbField : *$val";
                 } elseif ($operator == '_contains') {
@@ -537,7 +540,6 @@ class QueryParser
                 $returnString = $simpleQueryArray["q"];
             } // Else of the type { field : [value,...] }
             else {
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
                 if ($datatype == 'int') {
                     foreach ($val as $singleVal) {
                         if (!is_numeric($singleVal)) {
@@ -568,7 +570,13 @@ class QueryParser
                     }
                     $returnString = "$dbField : (" . implode(" OR ", $dateVals) . ")";
                 } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
+                    foreach ($val as &$singleVal){
+                        $singleVal = replaceMinusSign($singleVal);
+                    }
+
                     $returnString = "$dbField : (" . implode(" OR ", $val) . ")";
+
+
 
                 } else {
                     ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' found for '$apiField'.");
@@ -640,4 +648,12 @@ function parseFieldList(array $entitySpecs, array $fieldSpecs, array $fieldsPara
 
 
     return $returnFieldSpecs;
+}
+
+function replaceMinusSign($queryValue)
+{
+    if (substr($queryValue, 0, 1) === "-"){
+        $queryValue = "\\".$queryValue;
+    }
+    return $queryValue;
 }
