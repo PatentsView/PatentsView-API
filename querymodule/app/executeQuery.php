@@ -25,7 +25,7 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
 
     // Generate a unique string based on query, to be used as cache key
     // Use only query & sort parameters since fields selected do not impact which documents are selected
-    $uniqueQueryString = "key->" . $primaryEntity['keyId'] . "::query->$queryString::sort->$sortParam";
+    $uniqueQueryString = "key->" . $primaryEntity['keyId'] . "::query->$queryString";
     $whereHash = crc32($uniqueQueryString);   // Using crc32 rather than md5 since we only have 32-bits to work with.
     $queryDefId = sprintf('%u', $whereHash);
 
@@ -39,12 +39,10 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
 
     // Check if the query results are cached
     $queryResultCountFromCache = $dbQuery->checkQueryDef($queryDefId);
-
-
+    // Initialize SOLR Connections and variables
+    $solrQuery = new PVSolrQuery($entitySpecs, $fieldSpecs);
     if ($queryResultCountFromCache < 1) {
         // Cache Miss
-        // Initialize SOLR Connections and variables
-        $solrQuery = new PVSolrQuery($entitySpecs, $fieldSpecs);
         // Load entity ids into MySQL cache table for current api query
         $solrQuery->loadQuery($streamingXpression, $queryDefId, $dbQuery, $sortFieldSpecs, array(0 => false));
         // Create cache entry

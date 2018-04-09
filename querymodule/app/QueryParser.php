@@ -287,7 +287,7 @@ class QueryParser
             $val = current($criterion);
 
             $datatype = $this->fieldSpecs[$apiField]['datatype'];
-            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+            //if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
             $operatorString = $this->COMPARISON_OPERATORS[$operator];
             if ($datatype == 'float') {
                 if (!is_float($val)) {
@@ -340,7 +340,7 @@ class QueryParser
     {
         $dbFieldInfo = getDBField($this->fieldSpecs, $apiField);
         $dbField = $dbFieldInfo["dbField"];
-        $solr_collection = $this->primatyEntity["solr_collection"];
+        //$solr_collection = $this->primatyEntity["solr_collection"];
         $entity = $dbFieldInfo["entity_name"];
         $entitySpec = getEntitySpecs($this->entitySpecs, $entity);
         $solr_collection = $entitySpec["solr_collection"];
