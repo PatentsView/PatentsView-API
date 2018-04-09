@@ -69,7 +69,7 @@ class PVSolrQuery
         return $this->solr_connections[$entity_name];
     }
 
-    public function loadQuery($whereClause, $queryDefId, $db, $table_usage, $sort, array $isSecondaryKeyUpdate, $level = 0)
+    public function loadQuery($whereClause, $queryDefId, $db, $sort, array $isSecondaryKeyUpdate, $level = 0)
     {
         global $config;
         $tempDir = $config->getTempPath();
