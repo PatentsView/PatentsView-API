@@ -158,7 +158,7 @@ class QueryParser
             $streamArray = array();
             if (count($rightHandValue) < 2) {
                 ErrorHandler::getHandler()->sendError(400, "Less than 2 operands provided for : $operatorOrField . ");
-                throw new ErrorException("$operatorOrField has to have atleast 2 operands");
+                throw new ErrorException("$operatorOrField has to have at least 2 operands");
             }
             for ($i = 0; $i < count($rightHandValue); $i++) {
                 $retv = $this->processQueryCriterion($rightHandValue[$i], $level + 1);
@@ -195,7 +195,7 @@ class QueryParser
                 $flatStreamArray[] = $streamSourceString . 'q=' . implode(" " . $joinString . " ", $queries) . ")";
             }
             // Join the expressions using suitable join (AND / OR)
-            $query = processConjugation(array_values($flatStreamArray), $joinString, $this->primatyEntity["solr_key_id"]);
+            $query = processConjugation(array_values($flatStreamArray), $joinString, $this->primaryEntity["solr_key_id"]);
             $queryArray = array("collection" => "join_stream", "query" => $query);
 
 
@@ -379,7 +379,6 @@ class QueryParser
             $val = current($criterion);
 
             $datatype = $this->fieldSpecs[$apiField]['datatype'];
-            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
             $operatorString = $this->RANGE_OPERATORS[$operator];
 
             if ($datatype == 'float') {
@@ -441,7 +440,6 @@ class QueryParser
         if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
             $val = current($criterion);
             $datatype = $this->fieldSpecs[$apiField]['datatype'];
-            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
             if ($datatype == 'string') {
                 $val = replaceMinusSign($val);
                 if ($operator == '_begins') {
