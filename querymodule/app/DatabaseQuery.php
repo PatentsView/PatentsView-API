@@ -18,7 +18,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     private $selectFieldSpecs;
     private $sortFieldsUsed;
     private $sortFieldsUsedSec;
-    private $resultCounter;
+
     private $queryDefId;
     private $db = null;
     private $errorHandler = null;
@@ -44,7 +44,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
         $this->fieldSpecs = $fieldSpecs;
         $this->queryDefId = $queryDefId;
         $this->nextSequence = 1;
-        $this->resultCounter = 0;
+        
     }
 
     public
@@ -283,10 +283,6 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     {
         global $config;
         if (!is_array($value)) {
-            $this->resultCounter += 1;
-            if ($this->resultCounter % 10000 == 0) {
-                    $this->resultCounter;
-            }
             if ($this->rightKey && !array_key_exists($value, $this->entityIDs)) {
                 $this->nextSequence += 1;
                 $this->dataArray[] = $this->queryDefId;
