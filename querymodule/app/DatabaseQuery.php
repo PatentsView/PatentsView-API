@@ -18,6 +18,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     private $selectFieldSpecs;
     private $sortFieldsUsed;
     private $sortFieldsUsedSec;
+    private $resultCounter;
     private $queryDefId;
     private $db = null;
     private $errorHandler = null;
@@ -43,6 +44,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
         $this->fieldSpecs = $fieldSpecs;
         $this->queryDefId = $queryDefId;
         $this->nextSequence = 1;
+        $this->resultCounter = 0;
     }
 
     public
@@ -181,14 +183,14 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
 
         $this->dataArray = array();
         $this->commitTransaction();
-        // TODO: Implement endDocument() method.
+
     }
 
     public function loadEntityID($data = null, $question_marks = null)
     {
         $datafields = array('QueryDefId', 'Sequence', 'EntityId');
-        $keyField = $this->entitySpecs[0]["solr_fetch_id"];
-        $insertData = array();
+
+
         if (!$data)
             $data = $this->dataArray;
         if (!$question_marks)
@@ -263,7 +265,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     public
     function key($key)
     {
-        if ($key == $this->entitySpecs[0]["solr_fetch_id"]) {
+        if ($key == $this->entitySpecs[0]["solr_key_id"]) {
             $this->rightKey = true;
         } else {
             $this->rightKey = false;
@@ -281,6 +283,10 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     {
         global $config;
         if (!is_array($value)) {
+            $this->resultCounter += 1;
+            if ($this->resultCounter % 10000 == 0) {
+                    $this->resultCounter;
+            }
             if ($this->rightKey && !array_key_exists($value, $this->entityIDs)) {
                 $this->nextSequence += 1;
                 $this->dataArray[] = $this->queryDefId;
@@ -315,20 +321,6 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
     function whitespace($whitespace)
     {
         // TODO: Implement whitespace() method.
-    }
-
-    private
-    function buildSelectString()
-    {
-        $selectString = '';
-
-        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
-            if ($selectString != '')
-                $selectString .= ', ';
-            $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
-        }
-
-        return $selectString;
     }
 }
 

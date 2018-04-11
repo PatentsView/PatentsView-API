@@ -39,7 +39,7 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
 
     // Check if the query results are cached
     $queryResultCountFromCache = $dbQuery->checkQueryDef($queryDefId);
-    // Initialize SOLR Connections and variables
+        // Initialize SOLR Connections and variables
     $solrQuery = new PVSolrQuery($entitySpecs, $fieldSpecs);
     if ($queryResultCountFromCache < 1) {
         // Cache Miss
@@ -50,5 +50,7 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
     }
     // Use cached entity IDs to fetch requested fields from SOLR
     $dbResults = $solrQuery->fetchQuery($selectFieldSpecs, $streamingXpression, $queryDefId, $dbQuery, $optionsParam, $sortFieldSpecs);
-    return $dbResults;
+    $results = convertDBResultsToNestedStructure($entitySpecs, $fieldSpecs, $dbResults, $selectFieldSpecs);
+    return $results;
+
 }

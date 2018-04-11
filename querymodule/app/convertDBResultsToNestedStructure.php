@@ -51,7 +51,7 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
                                 $field_name = $field;
                                 $field_key = $field;
                             }
-                            if ($field == $entitySpecs[0]["solr_fetch_id"]) {
+                            if ($field == $entitySpecs[0]["solr_key_id"]) {
                                 //$field_name = $field;
                                 //if ($entitySpec["entity_name"] != $entitySpecs[0]["entity_name"])
                                 continue;

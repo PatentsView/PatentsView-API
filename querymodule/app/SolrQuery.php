@@ -337,12 +337,12 @@ class PVSolrQuery
                     $solrRows = 10000;
                     $current_array = array_fill_keys($entityValuesToFetch, array());
                     do {
-                        $currentEntityFieldList = array_key_exists($entity, $selectFieldSpecs) ? $selectFieldSpecs [$entity] : array($this->fieldSpecs[$this->entitySpecs[0]["solr_fetch_id"]]);
-                        $solr_response = $this->fetchEntityQuery($entity, $this->entitySpecs[0]["solr_fetch_id"] . ":" . $entityValueString, $solrStart, $solrRows, $currentEntityFieldList);
+                        $currentEntityFieldList = array_key_exists($entity, $selectFieldSpecs) ? $selectFieldSpecs [$entity] : array($this->fieldSpecs[$this->entitySpecs[0]["solr_key_id"]]);
+                        $solr_response = $this->fetchEntityQuery($entity, $this->entitySpecs[0]["solr_key_id"] . ":" . $entityValueString, $solrStart, $solrRows, $currentEntityFieldList);
                         $numFound = $solr_response["numFound"];
 
                         foreach ($solr_response["docs"] as $solrDoc) {
-                            $keyName = $this->entitySpecs[0]["solr_fetch_id"];
+                            $keyName = $this->entitySpecs[0]["solr_key_id"];
                             $current_array[$solrDoc->$keyName][] = $solrDoc;
                         }
                         if ($subEntityCounts || $entity == $this->entitySpecs[0]["entity_name"]) {
@@ -360,8 +360,8 @@ class PVSolrQuery
             } while ($entitiesLeft >= 0);
             $dbResults = array("db_results" => $queryResults, "count_results" => $queryCounts);
         }
-        $results = convertDBResultsToNestedStructure($this->entitySpecs, $this->fieldSpecs, $dbResults, $selectFieldSpecs);
-        return $results;
+        return $dbResults;
+
     }
 
     public
@@ -407,7 +407,7 @@ class PVSolrQuery
                 break;
             }
             $entityValueString = "( " . (implode(" ", $entityValuesToFetch)) . " ) ";
-            $entity_count += $this->countRowsForQuery($entity, $this->entitySpecs[0]["solr_fetch_id"] . ":" . $entityValueString);
+            $entity_count += $this->countRowsForQuery($entity, $this->entitySpecs[0]["solr_key_id"] . ":" . $entityValueString);
             $offset += $rows;
         } while (true);
         return $entity_count;

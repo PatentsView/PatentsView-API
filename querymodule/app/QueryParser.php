@@ -130,13 +130,13 @@ class QueryParser
             // Construction of array containing keys representing streaming expression components
             // TO DO : Link streaming expression page
 
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_join_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_join_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
 
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
         } elseif (isset($this->RANGE_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processRangePair($operatorOrField, $rightHandValue);
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_join_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_join_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
         }
@@ -145,7 +145,7 @@ class QueryParser
         elseif (isset($this->STRING_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processStringPair($operatorOrField, $rightHandValue);
 
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_join_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_join_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
 
 
             $queryArray["query"] = $streamArray;
@@ -237,7 +237,7 @@ class QueryParser
 
             $clauseArray = $this->processTextSearch($operatorOrField, $rightHandValue);
 
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_join_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_join_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
 
 
 
@@ -248,7 +248,7 @@ class QueryParser
         else {
             $clauseArray = $this->processPair('_eq', $criterion);
 
-            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_key_id"] . "," . $this->entitySpecs[0]["solr_fetch_id"], "sort" => $clauseArray["e"]["solr_key_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
+            $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_join_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_join_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
 
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
@@ -634,7 +634,7 @@ function parseFieldList(array $entitySpecs, array $fieldSpecs, array $fieldsPara
             $current_entity = getEntitySpecs($entitySpecs, $fieldSpecs[$fieldsParam[$i]]["entity_name"]);
             if (!array_key_exists($current_entity["entity_name"], $returnFieldSpecs)) {
                 $returnFieldSpecs[$current_entity["entity_name"]] = array();
-                $returnFieldSpecs[$current_entity["entity_name"]][$entitySpecs[0]["solr_fetch_id"]] = $fieldSpecs[$entitySpecs[0]["solr_fetch_id"]];
+                $returnFieldSpecs[$current_entity["entity_name"]][$entitySpecs[0]["solr_key_id"]] = $fieldSpecs[$entitySpecs[0]["solr_key_id"]];
             }
 
             $returnFieldSpecs[$current_entity["entity_name"]][$fieldsParam[$i]] = $fieldSpecs[$fieldsParam[$i]];
