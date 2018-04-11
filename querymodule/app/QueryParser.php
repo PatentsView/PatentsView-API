@@ -195,7 +195,7 @@ class QueryParser
                 $flatStreamArray[] = $streamSourceString . 'q=' . implode(" " . $joinString . " ", $queries) . ")";
             }
             // Join the expressions using suitable join (AND / OR)
-            $query = processConjugation(array_values($flatStreamArray), $joinString, $this->primaryEntity["solr_key_id"]);
+            $query = processConjugation(array_values($flatStreamArray), $joinString, $this->primaryEntity["solr_join_id"]);
             $queryArray = array("collection" => "join_stream", "query" => $query);
 
 
@@ -220,11 +220,11 @@ class QueryParser
                         $streamSourceString .= $argument_name . '="' . $argument_value . '",';
                 }
 
-                $streamSourceString = 'complement(' . $streamSourceString . ',q=*:*),' . $streamSourceString . 'q=' . $clauseArray["query"]["q"] . ')' . ',on="' . $this->entitySpecs[0]["solr_key_id"] . '")';
+                $streamSourceString = 'complement(' . $streamSourceString . ',q=*:*),' . $streamSourceString . 'q=' . $clauseArray["query"]["q"] . ')' . ',on="' . $this->entitySpecs[0]["solr_join_id"] . '")';
             } else {
                 $queryParts = explode(',', $clauseArray["query"]);
 
-                $streamSourceString = 'complement(' . implode(",", array_slice($queryParts, 0, count($queryParts) - 1)) . ",q=*:*)," . $clauseArray["query"] . ',on="' . $this->entitySpecs[0]["solr_key_id"] . '")';
+                $streamSourceString = 'complement(' . implode(",", array_slice($queryParts, 0, count($queryParts) - 1)) . ",q=*:*)," . $clauseArray["query"] . ',on="' . $this->entitySpecs[0]["solr_join_id"] . '")';
 
             }
 
@@ -443,9 +443,9 @@ class QueryParser
             if ($datatype == 'string') {
                 $val = replaceMinusSign($val);
                 if ($operator == '_begins') {
-                    $returnString = "$dbField : *$val";
+                    $returnString = "$dbField : $val*";
                 } elseif ($operator == '_contains') {
-                    $returnString = "$dbField : *$val * ";
+                    $returnString = "$dbField : *$val* ";
                 }
 
 
@@ -487,7 +487,6 @@ class QueryParser
                 throw new ErrorException("The operation '$operator' is not valid on '$apiField'' . ");
             }
 
-            if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
             if ($operator == '_text_phrase') {
                 $returnString = "$dbField : \"$val\"";
             } elseif ($operator == '_text_any') {
