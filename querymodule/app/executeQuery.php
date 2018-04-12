@@ -38,7 +38,7 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
 
 
     // Check if the query results are cached
-    $queryResultCountFromCache = $dbQuery->checkQueryDef($queryDefId);
+    $queryResultCountFromCache = $dbQuery->checkQueryDef();
         // Initialize SOLR Connections and variables
     $solrQuery = new PVSolrQuery($entitySpecs, $fieldSpecs);
     if ($queryResultCountFromCache < 1) {

@@ -7,10 +7,11 @@ function validateDate($date, $format = 'Y-m-d\TH:i:s\Z')
     return $d && $d->format($format) == $date;
 }
 
+
 /**
  * This function will convert an array of rows of columns of data into an array of primary entities, with each element
  * containing the primary entity fields and arrays of secondary entities (as needed).
- * @param array $dbResults
+
  * @param array $selectFieldSpecs
  * @return array
  */
@@ -23,33 +24,45 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
     // a hundred lines of code, but some readability is lost. For debugging in PHPStorm, which doesn't show
     // dynamic variables in its debugger window, you need to create them as watch variables to see the values.
     // For example, ${$group['priorId']} gets resolved to $priorinventorId; ${$group['group_name']} to $inventors
-    $dbResults = $resultGroup["db_results"];
+
     $count_results = $resultGroup["count_results"];
     $return_array = array();
 
     $main_group = $entitySpecs[0]["group_name"];
-    foreach (array_unique(array_keys($dbResults[$entitySpecs[0]["entity_name"]])) as $entityIdValue) {
-
+    // Loops through each key value of base entity to be returned
+    foreach (array_unique(array_keys($resultGroup["db_results"][$entitySpecs[0]["entity_name"]])) as $entityIdValue) {
         $currDocEntityArray = array();
         foreach ($entitySpecs as $entitySpec) {
             $isPrimaryEntity = false;
             if ($entitySpec["entity_name"] == $entitySpecs[0]["entity_name"]) {
                 $isPrimaryEntity = true;
             }
+            // Are fields from current entity requested?
             if (array_key_exists($entitySpec["entity_name"], $selectFieldSpecs)) {
-
-                if (array_key_exists($entityIdValue, $dbResults[$entitySpec["entity_name"]])) {
-
-
-                    $currentSolrDocs = $dbResults[$entitySpec["entity_name"]][$entityIdValue];
-
-                    foreach ($currentSolrDocs as $currentSolrDoc) {
+                // Does the current primary entity value exist in fetched result set
+                if (array_key_exists($entityIdValue, $resultGroup["db_results"][$entitySpec["entity_name"]])) {
+                    $currentEntityDistinctKey = $entitySpec["distinctCountId"];
+                    $entityKeys = array();
+                    $fullNullExists = false;
+                    $docCounter = 0;
+                    // Loop through sub entity document list for current primary entity key value
+                    foreach ($resultGroup["db_results"][$entitySpec["entity_name"]][$entityIdValue] as $currentSolrDoc) {
+                        $currentEntityDistinctKeyField = $entitySpec["group_name"] . "." . $currentEntityDistinctKey;
+                        if (property_exists($currentSolrDoc, $currentEntityDistinctKeyField)) {
+                            if (array_key_exists($currentSolrDoc->$currentEntityDistinctKeyField, $entityKeys)) {
+                                continue;
+                            }
+                        }
+                        $docCounter += 1;
+                        if ($docCounter % 1000 == 0) {
+                            $docCounter = $docCounter;
+                        }
+                        $allNulls = true;
                         $currentSubDocArray = array();
                         foreach (array_keys($selectFieldSpecs[$entitySpec["entity_name"]]) as $field) {
                             $field_name = $entitySpec["group_name"] . "." . $field;
                             if ($isPrimaryEntity) {
                                 $field_name = $field;
-                                $field_key = $field;
                             }
                             if ($field == $entitySpecs[0]["solr_key_id"]) {
                                 //$field_name = $field;
@@ -58,23 +71,27 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
                             }
                             try {
                                 $currentSubDocArray[$field] = $currentSolrDoc->$field_name;
+                                $allNulls = false;
                             } catch (ErrorException $e) {
                                 $currentSubDocArray[$field] = null;
                             }
                         }
                         if ($entitySpec["entity_name"] == $entitySpecs[0]["entity_name"]) {
-                            $currDocEntityArray = array_merge($currentSubDocArray, $currentSubDocArray);
+                            $currDocEntityArray = array_merge($currDocEntityArray, $currentSubDocArray);
                         } else {
-                            $currDocEntityArray[$entitySpec["group_name"]][] = $currentSubDocArray;
-
+                            if (!$allNulls || ($allNulls && !$fullNullExists)) {
+                                $currDocEntityArray[$entitySpec["group_name"]][] = $currentSubDocArray;
+                                if (property_exists($currentSolrDoc, $currentEntityDistinctKeyField)) {
+                                    $entityKeys[$currentSolrDoc->$currentEntityDistinctKeyField] = 1;
+                                }
+                                if ($allNulls) {
+                                    $fullNullExists = true;
+                                }
+                            }
                         }
-
                     }
-
                 }
-                //$currDocArray[] = $currDocEntityArray;
             }
-
         }
         if (count($currDocEntityArray) > 0)
             $return_array[$main_group][] = $currDocEntityArray;

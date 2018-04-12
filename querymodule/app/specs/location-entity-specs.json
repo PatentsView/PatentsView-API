@@ -173,7 +173,7 @@
     "entity_name": "foreign_prior",
     "group_name": "foreign_priority",
     "keyId": "",
-    "distinctCountId": "foreign_doc_number",
+    "distinctCountId": "forprior_docnumber",
     "join": "left outer join foreignpriority on foreignpriority.patent_id=patent.patent_id",
     "solr_collection": "location_foreign_priority_join",
     "solr_join_id": "patent_id_query"

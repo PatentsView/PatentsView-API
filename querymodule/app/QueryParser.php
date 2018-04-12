@@ -84,7 +84,7 @@ class QueryParser
      */
     public function parse(array $fieldSpecs, array $query, array $entitySpecs)
     {
-        // TO DO : Move initializatins to constructor
+        // TO DO : Move initializations to constructor
         $this->fieldSpecs = $fieldSpecs;
         $this->entitySpecs = $entitySpecs;
 
@@ -116,7 +116,6 @@ class QueryParser
 
         // A criterion should always be a single name-value pair
         reset($criterion);
-
 
         // The key can either be an operator greater
         // less etc, or a field ( in such case equality operator is assumed)
@@ -177,7 +176,7 @@ class QueryParser
             // Merge clauses if they share same collection
             foreach ($streamArray as $collection => $clauses) {
                 // Expressions which are already conjugated can't be merged
-                // since they will query multiple collections
+                // since they might query multiple collections
                 if ($collection == "join_stream") {
                     $flatStreamArray = array_merge($flatStreamArray, $clauses);
                     continue;
