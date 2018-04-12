@@ -313,54 +313,121 @@ class PVSolrQuery
                 $subEntityCounts = $options["include_subentity_total_counts"];
             }
         }
-
+        //To do : Rename this variable
+        $return_array = array();
+        $main_group = $this->entitySpecs[0]["group_name"];
         $entityValuesToFetch = $db->retrieveEntityIdForSolr($queryDefId, $start, $rows);
         if (count($entityValuesToFetch) < 1) {
             $dbResults = array("db_results" => array($this->entitySpecs[0]["entity_name"] => array()), "count_results" => array("total_" . $this->entitySpecs[0]["entity_name"] . "_count" => 0));
         } else {
-            $entitiesLeft = count($entityValuesToFetch);
             $queryCounts = array();
-            $queryResults = array();
+
             $entitiesToFetch = array_keys($selectFieldSpecs);
             if (!in_array($this->entitySpecs[0]["entity_name"], $entitiesToFetch)) {
                 array_push($entitiesToFetch, $this->entitySpecs[0]["entity_name"]);
             }
 
-            do {
-                $entityValueString = "( " . (implode(" ", array_slice($entityValuesToFetch, count($entityValuesToFetch) - $entitiesLeft, 1024))) . " ) ";
-                $main_group = $this->entitySpecs[0]["group_name"];
+            foreach ($entityValuesToFetch as $entityIdValue) {
+                $entityValueString = "( " . $entityIdValue . " ) ";
+                $currDocEntityArray = array();
+                foreach ($this->entitySpecs as $entitySpec) {
+                    if (!in_array($entitySpec["entity_name"], $entitiesToFetch)) {
+                        continue;
+                    }
+                    $isPrimaryEntity = false;
+                    if ($entitySpec["entity_name"] == $this->entitySpecs[0]["entity_name"]) {
+                        $isPrimaryEntity = true;
+                    }
+                    $entity = $entitySpec["entity_name"];
+                    $currentEntityDistinctKey = $entitySpec["distinctCountId"];
+                    $entityKeys = array();
+                    $fullNullExists = false;
+                    $docCounter = 0;
 
-                foreach ($entitiesToFetch as $entity) {
-                    $numFound = 0;
+
                     $numFetched = 0;
                     $solrStart = 0;
-                    $solrRows = 10000;
-                    $current_array = array_fill_keys($entityValuesToFetch, array());
+                    $solrRows = 1000;
                     do {
                         $currentEntityFieldList = array_key_exists($entity, $selectFieldSpecs) ? $selectFieldSpecs [$entity] : array($this->fieldSpecs[$this->entitySpecs[0]["solr_key_id"]]);
                         $solr_response = $this->fetchEntityQuery($entity, $this->entitySpecs[0]["solr_key_id"] . ":" . $entityValueString, $solrStart, $solrRows, $currentEntityFieldList);
                         $numFound = $solr_response["numFound"];
 
-                        foreach ($solr_response["docs"] as $solrDoc) {
+                        foreach ($solr_response["docs"] as $currentSolrDoc) {
                             $keyName = $this->entitySpecs[0]["solr_key_id"];
-                            $current_array[$solrDoc->$keyName][] = $solrDoc;
+                            $currentEntityDistinctKeyField = $entitySpec["group_name"] . "." . $currentEntityDistinctKey;
+                            if (property_exists($currentSolrDoc, $currentEntityDistinctKeyField)) {
+                                if (array_key_exists($currentSolrDoc->$currentEntityDistinctKeyField, $entityKeys)) {
+                                    continue;
+                                }
+                            }
+                            $docCounter += 1;
+                            if ($docCounter % 1000 == 0) {
+                                $docCounter = $docCounter;
+                            }
+                            $allNulls = true;
+                            $currentSubDocArray = array();
+                            if (array_key_exists($entitySpec["entity_name"], $selectFieldSpecs)) {
+                                foreach (array_keys($selectFieldSpecs[$entitySpec["entity_name"]]) as $field) {
+                                    $field_name = $entitySpec["group_name"] . "." . $field;
+                                    if ($isPrimaryEntity) {
+                                        $field_name = $field;
+                                    }
+                                    if ($field == $this->entitySpecs[0]["solr_key_id"]) {
+                                        //$field_name = $field;
+                                        //if ($entitySpec["entity_name"] != $entitySpecs[0]["entity_name"])
+                                        continue;
+                                    }
+                                    try {
+                                        $currentSubDocArray[$field] = $currentSolrDoc->$field_name;
+                                        $allNulls = false;
+                                    } catch (ErrorException $e) {
+                                        $currentSubDocArray[$field] = null;
+                                    }
+                                }
+                                if ($entitySpec["entity_name"] == $this->entitySpecs[0]["entity_name"]) {
+                                    $currDocEntityArray = array_merge($currDocEntityArray, $currentSubDocArray);
+                                } else {
+                                    if (!$allNulls || ($allNulls && !$fullNullExists)) {
+                                        $currDocEntityArray[$entitySpec["group_name"]][] = $currentSubDocArray;
+                                        if (property_exists($currentSolrDoc, $currentEntityDistinctKeyField)) {
+                                            $entityKeys[$currentSolrDoc->$currentEntityDistinctKeyField] = 1;
+                                        }
+                                        if ($allNulls) {
+                                            $fullNullExists = true;
+                                        }
+                                    }
+                                }
+                            }
+
+
                         }
                         if ($subEntityCounts || $entity == $this->entitySpecs[0]["entity_name"]) {
                             $total_count = $this->getEntityCounts($entity, $queryDefId, $db);
                             $queryCounts["total_" . $entity . "_count"] = $total_count;
                         }
 
-                        $queryResults[$entity] = $current_array;
-                        $numFetched += 10000;
 
-                        $solrStart += 10000;
+                        $numFetched += $solrRows;
+
+                        $solrStart += $solrRows;
                     } while ($numFetched < $numFound);
                 }
-                $entitiesLeft -= 1024;
-            } while ($entitiesLeft >= 0);
-            $dbResults = array("db_results" => $queryResults, "count_results" => $queryCounts);
+                if (count($currDocEntityArray) > 0)
+                    $return_array[$main_group][] = $currDocEntityArray;
+            }
+            $doc_count = 0;
+            if (array_key_exists($main_group, $return_array)) {
+                $doc_count = count($return_array[$main_group]);
+            }
+            $return_array["count"] = $doc_count;
+            foreach (array_keys($queryCounts) as $count_key) {
+                $return_array[$count_key] = $queryCounts[$count_key];
+            }
+
+
         }
-        return $dbResults;
+        return $return_array;
 
     }
 
