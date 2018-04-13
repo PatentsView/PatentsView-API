@@ -138,9 +138,7 @@ class QueryParser
             $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_join_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_join_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
-        }
-
-        // If the operator is for strings, then the right hand value will be a simple pair: { operator : { field : value } }
+        } // If the operator is for strings, then the right hand value will be a simple pair: { operator : { field : value } }
         elseif (isset($this->STRING_OPERATORS[$operatorOrField])) {
             $clauseArray = $this->processStringPair($operatorOrField, $rightHandValue);
 
@@ -149,9 +147,7 @@ class QueryParser
 
             $queryArray["query"] = $streamArray;
             $queryArray["collection"] = $clauseArray['c'];
-        }
-
-        // If the operator is a join, then the right hand value will be a list of criteria: { operator : [ criterion, ... ] }
+        } // If the operator is a join, then the right hand value will be a list of criteria: { operator : [ criterion, ... ] }
         elseif (isset($this->JOIN_OPERATORS[$operatorOrField])) {
             $joinString = $this->JOIN_OPERATORS[$operatorOrField];
             $streamArray = array();
@@ -198,14 +194,13 @@ class QueryParser
             $queryArray = array("collection" => "join_stream", "query" => $query);
 
 
-        }
-        // If the operator is a negation, then the right hand value will be a criterion: { operator : { criterion } }
+        } // If the operator is a negation, then the right hand value will be a criterion: { operator : { criterion } }
 
         elseif (isset($this->NEGATION_OPERATORS[$operatorOrField])) {
             // To Do : Find why SOLR negation operator does not work with stream expression
             $notString = $this->NEGATION_OPERATORS[$operatorOrField];
             $clauseArray = $this->processQueryCriterion($rightHandValue);
-            // not can be applied on both direct fiels & conjugations
+            // not can be applied on both direct fields & conjugations
             // so we have to handle both cases
             $collection = $clauseArray["collection"];
             // Case 1: Field
@@ -237,7 +232,6 @@ class QueryParser
             $clauseArray = $this->processTextSearch($operatorOrField, $rightHandValue);
 
             $streamArray = array("q" => $clauseArray["q"], "fl" => $clauseArray["e"]["solr_join_id"] . "," . $this->entitySpecs[0]["solr_key_id"], "sort" => $clauseArray["e"]["solr_join_id"] . ' asc', "qt" => "/export", "df" => $clauseArray["df"]);
-
 
 
             $queryArray["query"] = $streamArray;
@@ -315,7 +309,7 @@ class QueryParser
                 if ($val == trim($val) && strpos($val, ' ') !== false) {
                     $val = '"' . $val . '"';
                 }
-                $val= replaceMinusSign($val);
+                $val = replaceMinusSign($val);
                 $returnString = "$dbField $operatorString $val";
 
             } else {
@@ -440,12 +434,28 @@ class QueryParser
             $val = current($criterion);
             $datatype = $this->fieldSpecs[$apiField]['datatype'];
             if ($datatype == 'string') {
-                $val = replaceMinusSign($val);
-                if ($operator == '_begins') {
-                    $returnString = "$dbField : $val*";
-                } elseif ($operator == '_contains') {
-                    $returnString = "$dbField : *$val* ";
+                if (is_array($val)) {
+                    foreach ($val as &$singleVal) {
+                        $singleVal = replaceMinusSign($singleVal);
+                        $returnString="(";
+                        if ($operator == '_begins') {
+                            $returnString.= " $dbField : $singleVal* ";
+                        } elseif ($operator == '_contains') {
+                            $returnString.= " $dbField : *$singleVal* ";
+                        }
+                        $returnString.=")";
+
+                    }
+                } else {
+
+                    $val = replaceMinusSign($val);
+                    if ($operator == '_begins') {
+                        $returnString = "$dbField : $val*";
+                    } elseif ($operator == '_contains') {
+                        $returnString = "$dbField : *$val* ";
+                    }
                 }
+
 
 
             } else {
@@ -566,12 +576,11 @@ class QueryParser
                     }
                     $returnString = "$dbField : (" . implode(" OR ", $dateVals) . ")";
                 } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
-                    foreach ($val as &$singleVal){
+                    foreach ($val as &$singleVal) {
                         $singleVal = replaceMinusSign($singleVal);
                     }
 
                     $returnString = "$dbField : (" . implode(" OR ", $val) . ")";
-
 
 
                 } else {
@@ -648,8 +657,8 @@ function parseFieldList(array $entitySpecs, array $fieldSpecs, array $fieldsPara
 
 function replaceMinusSign($queryValue)
 {
-    if (substr($queryValue, 0, 1) === "-"){
-        $queryValue = "\\".$queryValue;
+    if (substr($queryValue, 0, 1) === "-") {
+        $queryValue = "\\" . $queryValue;
     }
     return $queryValue;
 }
