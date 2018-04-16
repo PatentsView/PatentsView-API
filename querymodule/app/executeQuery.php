@@ -50,6 +50,8 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
     }
     // Use cached entity IDs to fetch requested fields from SOLR
     $dbResults = $solrQuery->fetchQuery($selectFieldSpecs, $streamingXpression, $queryDefId, $dbQuery, $optionsParam, $sortFieldSpecs);
+
+    //Convert the database results into nested json format
     $results = convertDBResultsToNestedStructure($entitySpecs, $fieldSpecs, $dbResults, $selectFieldSpecs);
     return $results;
 
