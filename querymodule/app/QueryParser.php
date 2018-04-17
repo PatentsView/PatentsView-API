@@ -89,7 +89,7 @@ class QueryParser
         $this->entitySpecs = $entitySpecs;
 
         $this->streamingXpression = '';
-        $this->primaryEntity = $this->primaryEntity;
+        $this->primaryEntity = $this->entitySpecs[0];
 
         // There should only be one pair in this array
         // TO DO: Verify if this check is already implemented in check*Parameters methods
@@ -274,13 +274,16 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
-        $dbFieldInfo = $this->getFieldEntityMapping($apiField);
-        $dbField = $dbFieldInfo["dbField"];
-        $solrCollection = $dbFieldInfo["solr_collection"];
-        if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+        $currentFieldSpecs=$this->fieldSpecs[$apiField];
+        // Get entity related information for current field
+        $fieldEntityInfo = $this->getFieldEntityMapping($apiField);
+        $solrCollection = $fieldEntityInfo["solr_collection"];
+
+        $dbField = $currentFieldSpecs["solr_column_name"];
+        if (strtolower($currentFieldSpecs['query']) === 'y') {
             $val = current($criterion);
 
-            $datatype = $this->fieldSpecs[$apiField]['datatype'];
+            $datatype = $currentFieldSpecs['datatype'];
             //if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
             $operatorString = $this->COMPARISON_OPERATORS[$operator];
             if ($datatype == 'float') {
@@ -323,7 +326,7 @@ class QueryParser
         }
 
 
-        return array("q" => $returnString, "c" => $solrCollection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
+        return array("q" => $returnString, "c" => $solrCollection, "e" => $fieldEntityInfo["entity"], "s" => $fieldEntityInfo["secondaryUsage"], "df" => $dbField);
 
     }
 
@@ -363,15 +366,18 @@ class QueryParser
         $returnString = null;
 
         $apiField = key($criterion);
-        $dbFieldInfo = $this->getFieldEntityMapping($apiField);
-        $dbField = $dbFieldInfo["dbField"];
-        $solrCollection = $dbFieldInfo["solr_collection"];
+        $currentFieldSpecs=$this->fieldSpecs[$apiField];
+        // Get entity related information for current field
+        $fieldEntityInfo = $this->getFieldEntityMapping($apiField);
+        $solrCollection = $fieldEntityInfo["solr_collection"];
+
+        $dbField = $currentFieldSpecs["solr_column_name"];
 
 
-        if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+        if (strtolower($currentFieldSpecs['query']) === 'y') {
             $val = current($criterion);
 
-            $datatype = $this->fieldSpecs[$apiField]['datatype'];
+            $datatype = $currentFieldSpecs['datatype'];
             $operatorString = $this->RANGE_OPERATORS[$operator];
 
             if ($datatype == 'float') {
@@ -409,7 +415,7 @@ class QueryParser
             throw new ErrorException($msg);
         }
 
-        return array("q" => $returnString, "c" => $solrCollection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
+        return array("q" => $returnString, "c" => $solrCollection, "e" => $fieldEntityInfo["entity"], "s" => $fieldEntityInfo["secondaryUsage"], "df" => $dbField);
 
     }
 
@@ -425,14 +431,17 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
-        $dbFieldInfo = $this->getFieldEntityMapping($apiField);
-        $dbField = $dbFieldInfo["dbField"];
-        $solrCollection = $dbFieldInfo["solr_collection"];
+        $currentFieldSpecs=$this->fieldSpecs[$apiField];
+        // Get entity related information for current field
+        $fieldEntityInfo = $this->getFieldEntityMapping($apiField);
+        $solrCollection = $fieldEntityInfo["solr_collection"];
+
+        $dbField = $currentFieldSpecs["solr_column_name"];
 
 
-        if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+        if (strtolower($currentFieldSpecs['query']) === 'y') {
             $val = current($criterion);
-            $datatype = $this->fieldSpecs[$apiField]['datatype'];
+            $datatype = $currentFieldSpecs['datatype'];
             if ($datatype == 'string') {
                 if (is_array($val)) {
                     foreach ($val as &$singleVal) {
@@ -467,7 +476,7 @@ class QueryParser
             throw new ErrorException($msg);
         }
 
-        return array("q" => $returnString, "c" => $solrCollection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
+        return array("q" => $returnString, "c" => $solrCollection, "e" => $fieldEntityInfo["entity"], "s" => $fieldEntityInfo["secondaryUsage"], "df" => $dbField);
     }
 
     /**
@@ -482,15 +491,19 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
-        $dbFieldInfo = $this->getFieldEntityMapping($apiField);
-        $dbField = $dbFieldInfo["dbField"];
-        $solrCollection = $dbFieldInfo["solr_collection"];
+        $currentFieldSpecs=$this->fieldSpecs[$apiField];
+        // Get entity related information for current field
+        $fieldEntityInfo = $this->getFieldEntityMapping($apiField);
+        $solrCollection = $fieldEntityInfo["solr_collection"];
 
-        if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+        $dbField = $currentFieldSpecs["solr_column_name"];
+
+
+        if (strtolower($currentFieldSpecs['query']) === 'y') {
             $val = current($criterion);
 
 
-            if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
+            if ($currentFieldSpecs['datatype'] != 'fulltext') {
                 ErrorHandler::getHandler()->sendError(400, "The operation '$operator' is not valid on '$apiField''.");
                 throw new ErrorException("The operation '$operator' is not valid on '$apiField'' . ");
             }
@@ -513,7 +526,7 @@ class QueryParser
             }
 
         }
-        return array("q" => $returnString, "c" => $solrCollection, "e" => $dbFieldInfo["entity"], "s" => $dbFieldInfo["secondaryUsage"], "df" => $dbField);
+        return array("q" => $returnString, "c" => $solrCollection, "e" => $fieldEntityInfo["entity"], "s" => $fieldEntityInfo["secondaryUsage"], "df" => $dbField);
 
 
     }
