@@ -109,34 +109,34 @@ require_once dirname(__FILE__) . '/../AddEmailDatabase.php';
 //);
 //
 //
-//$app->get(
-//    '/assignees/query',
-//    function () use ($app) {
-//        global $ASSIGNEE_ENTITY_SPECS;
-//        global $ASSIGNEE_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
-//
-//        $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $ASSIGNEE_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//
-//$app->post(
-//    '/assignees/query',
-//    function () use ($app) {
-//        global $ASSIGNEE_ENTITY_SPECS;
-//        global $ASSIGNEE_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
-//
-//        $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $ASSIGNEE_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
+$app->get(
+    '/assignees/query',
+    function () use ($app) {
+        global $ASSIGNEE_ENTITY_SPECS;
+        global $ASSIGNEE_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($app);
+
+        $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results, $ASSIGNEE_ENTITY_SPECS);
+        $app->response->setBody($results);
+    }
+);
+
+
+$app->post(
+    '/assignees/query',
+    function () use ($app) {
+        global $ASSIGNEE_ENTITY_SPECS;
+        global $ASSIGNEE_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($app);
+
+        $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        $results = FormatResults($formatParam, $results, $ASSIGNEE_ENTITY_SPECS);
+        $app->response->setBody($results);
+    }
+);
 //
 //
 //$app->get(
