@@ -285,6 +285,9 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
         if (!is_array($value)) {
             if ($this->rightKey && !array_key_exists($value, $this->entityIDs)) {
                 $this->nextSequence += 1;
+                if ($this->nextSequence > $config->getQueryResultLimit()) {
+                    throw new MaxEntitiesLoadedException("Entities loaded exceeds max limit");
+                }
                 $this->dataArray[] = $this->queryDefId;
                 $this->dataArray[] = $this->nextSequence;
                 $this->dataArray[] = $value;
@@ -296,9 +299,7 @@ class DatabaseQuery implements \JsonStreamingParser\Listener
                     $time_elapsed = microtime(true) - $this->start_time;
                     $this->dataArray = array();
                     $this->question_marks = array();
-                    if ($this->nextSequence > $config->getQueryResultLimit()) {
-                        throw new MaxEntitiesLoadedException("Entities loaded exceeds max limit");
-                    }
+
                 }
 
             }

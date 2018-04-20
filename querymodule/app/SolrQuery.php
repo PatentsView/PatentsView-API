@@ -90,7 +90,8 @@ class PVSolrQuery
         //$stream = fopen($currentResponseFile, 'r');
         try {
 
-            $parser = new \JsonStreamingParser\Parser($resource, $db);
+            //$parser = new \JsonStreamingParser\Parser($resource, $db);
+            $parser = new \JsonStreamingParser\Parser($resource, $db,"\n",  false, 10485760);
             $parser->parse();
 
         } catch (MaxEntitiesLoadedException $e) {
