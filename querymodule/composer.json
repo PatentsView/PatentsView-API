@@ -1,6 +1,10 @@
 {
     "require": {
         "salsify/json-streaming-parser": "^6.0",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "slim/slim": "^3.0",
+        "slim/logger": "^0.1.0",
+        "apache/log4php": "^2.3",
+        "violet/streaming-json-encoder": "^1.1"
     }
 }
