@@ -1,11 +1,11 @@
 <?php
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 // Overrides default limit 0f 256 MB since we process lots of data
 // TO DO: Experiment & find optimal value
-ini_set('memory_limit', '3G');
+ini_set('memory_limit', '1G');
 require_once dirname(__FILE__) . '/../executeQuery.php';
 require_once dirname(__FILE__) . '/../ErrorHandler.php';
 
@@ -62,8 +62,15 @@ require_once dirname(__FILE__) . '/../AddEmailDatabase.php';
 //        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
 //
 //        $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
-//        $app->response->setBody($results);
+//                if($formatParam == "xml"){
+//
+//            return $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
+//        }
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//
+//       
 //    }
 //);
 //
@@ -77,209 +84,275 @@ require_once dirname(__FILE__) . '/../AddEmailDatabase.php';
 //        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
 //
 //        $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//$app->get(
-//    '/inventors/query',
-//    function (Request $req, Response $res, $args=[]) {
-//        global $INVENTOR_ENTITY_SPECS;
-//        global $INVENTOR_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
-//
-//        $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $INVENTOR_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//
-//$app->post(
-//    '/inventors/query',
-//    function (Request $req, Response $res, $args=[]) {
-//        global $INVENTOR_ENTITY_SPECS;
-//        global $INVENTOR_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
-//
-//        $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $INVENTOR_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//
-$app->get(
-    '/assignees/query',
-    function (Request $req, Response $res, $args = []) {
-        global $ASSIGNEE_ENTITY_SPECS;
-        global $ASSIGNEE_FIELD_SPECS;
-
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
-
-        $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results, $ASSIGNEE_ENTITY_SPECS);
-        $app->response->setBody($results);
-    }
-);
-
-
-$app->post(
-    '/assignees/query',
-    function (Request $req, Response $res, $args = []) {
-        global $ASSIGNEE_ENTITY_SPECS;
-        global $ASSIGNEE_FIELD_SPECS;
-
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
-
-        $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results, $ASSIGNEE_ENTITY_SPECS);
-        $app->response->setBody($results);
-    }
-);
-//
-//
-//$app->get(
-//    '/cpc_subsections/query',
-//    function (Request $req, Response $res, $args=[]) {
-//        global $CPC_ENTITY_SPECS;
-//        global $CPC_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
-//
-//        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $CPC_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//
-//$app->post(
-//    '/cpc_subsections/query',
-//    function (Request $req, Response $res, $args=[]) {
-//        global $CPC_ENTITY_SPECS;
-//        global $CPC_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
-//
-//        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $CPC_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//
-//$app->get(
-//    '/cpc_groups/query',
-//    function (Request $req, Response $res, $args=[]) {
-//        global $CPC_GROUP_ENTITY_SPECS;
-//        global $CPC_GROUP_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
-//
-//        $results = executeQuery($CPC_GROUP_ENTITY_SPECS, $CPC_GROUP_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $CPC_GROUP_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//
-//$app->post(
-//    '/cpc_groups/query',
-//    function (Request $req, Response $res, $args=[]) {
-//        global $CPC_GROUP_ENTITY_SPECS;
-//        global $CPC_GROUP_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
-//
-//        $results = executeQuery($CPC_GROUP_ENTITY_SPECS, $CPC_GROUP_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $CPC_GROUP_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//
-//
-//
-//$app->get(
-//    '/uspc_mainclasses/query',
-//    function (Request $req, Response $res, $args=[]) {
-//        global $USPC_ENTITY_SPECS;
-//        global $USPC_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
-//
-//        $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $USPC_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//
-//$app->post(
-//    '/uspc_mainclasses/query',
-//    function (Request $req, Response $res, $args=[]) {
-//        global $USPC_ENTITY_SPECS;
-//        global $USPC_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
-//
-//        $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $USPC_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//
-//$app->get(
-//    '/nber_subcategories/query',
-//    function (Request $req, Response $res, $args=[]) {
-//        global $NBER_ENTITY_SPECS;
-//        global $NBER_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
-//
-//        $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $NBER_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-//
-//
-//$app->post(
-//    '/nber_subcategories/query',
-//    function (Request $req, Response $res, $args=[]) {
-//        global $NBER_ENTITY_SPECS;
-//        global $NBER_FIELD_SPECS;
-//
-//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
-//
-//        $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $NBER_ENTITY_SPECS);
-//        $app->response->setBody($results);
-//    }
-//);
-
-
-$app->get(
-    '/locations/query',
-    function (ServerRequestInterface $req, ResponseInterface $res, $args = []) {
-        global $LOCATION_ENTITY_SPECS;
-        global $LOCATION_FIELD_SPECS;
-
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
-
-        $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-//        $results = FormatResults($formatParam, $results, $LOCATION_ENTITY_SPECS);
-
-
-//        while (!$results->eof()) {
-//            print_r( $results->read(1024 * 8));
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $PATENT_ENTITY_SPECS);
 //        }
-        return $res->withJson($results, 200 );
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//       
+//    }
+//);
+//
+//$app->get(
+//    '/inventors/query',
+//    function (Request $req, Response $res, $args=[]) {
+//        global $INVENTOR_ENTITY_SPECS;
+//        global $INVENTOR_FIELD_SPECS;
+//
+//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
+//
+//        $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $INVENTOR_ENTITY_SPECS);
+//        }
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//       
+//    }
+//);
+//
+//
+//$app->post(
+//    '/inventors/query',
+//    function (Request $req, Response $res, $args=[]) {
+//        global $INVENTOR_ENTITY_SPECS;
+//        global $INVENTOR_FIELD_SPECS;
+//
+//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+//
+//        $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $INVENTOR_ENTITY_SPECS);
+//        }
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//       
+//    }
+//);
+//
+//
+$app->get(
+    '/assignees/query',
+    function (Request $req, Response $res, $args = []) {
+        global $ASSIGNEE_ENTITY_SPECS;
+        global $ASSIGNEE_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
+
+        $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+                if($formatParam == "xml"){
+            return $results = FormatResults($formatParam, $results, $ASSIGNEE_ENTITY_SPECS);
+        }
+        else{
+            return $res->withJson($results, 200 );
+        }
+       
+    }
+);
+
+
+$app->post(
+    '/assignees/query',
+    function (Request $req, Response $res, $args = []) {
+        global $ASSIGNEE_ENTITY_SPECS;
+        global $ASSIGNEE_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+
+        $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+                if($formatParam == "xml"){
+            return $results = FormatResults($formatParam, $results, $ASSIGNEE_ENTITY_SPECS);
+        }
+        else{
+            return $res->withJson($results, 200 );
+        }
+       
+    }
+);
+//
+//
+//$app->get(
+//    '/cpc_subsections/query',
+//    function (Request $req, Response $res, $args=[]) {
+//        global $CPC_ENTITY_SPECS;
+//        global $CPC_FIELD_SPECS;
+//
+//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
+//
+//        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $CPC_ENTITY_SPECS);
+//        }
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//       
+//    }
+//);
+//
+//
+//$app->post(
+//    '/cpc_subsections/query',
+//    function (Request $req, Response $res, $args=[]) {
+//        global $CPC_ENTITY_SPECS;
+//        global $CPC_FIELD_SPECS;
+//
+//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+//
+//        $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $CPC_ENTITY_SPECS);
+//        }
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//       
+//    }
+//);
+//
+//
+//$app->get(
+//    '/cpc_groups/query',
+//    function (Request $req, Response $res, $args=[]) {
+//        global $CPC_GROUP_ENTITY_SPECS;
+//        global $CPC_GROUP_FIELD_SPECS;
+//
+//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
+//
+//        $results = executeQuery($CPC_GROUP_ENTITY_SPECS, $CPC_GROUP_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $CPC_GROUP_ENTITY_SPECS);
+//        }
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//       
+//    }
+//);
+//
+//
+//$app->post(
+//    '/cpc_groups/query',
+//    function (Request $req, Response $res, $args=[]) {
+//        global $CPC_GROUP_ENTITY_SPECS;
+//        global $CPC_GROUP_FIELD_SPECS;
+//
+//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+//
+//        $results = executeQuery($CPC_GROUP_ENTITY_SPECS, $CPC_GROUP_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $CPC_GROUP_ENTITY_SPECS);
+//        }
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//       
+//    }
+//);
+//
+//
+//
+//
+//$app->get(
+//    '/uspc_mainclasses/query',
+//    function (Request $req, Response $res, $args=[]) {
+//        global $USPC_ENTITY_SPECS;
+//        global $USPC_FIELD_SPECS;
+//
+//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
+//
+//        $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $USPC_ENTITY_SPECS);
+//        }
+//        else{
+//    return $res->withJson($results, 200 );
+//}
+//       
+//    }
+//);
+//
+//
+//$app->post(
+//    '/uspc_mainclasses/query',
+//    function (Request $req, Response $res, $args=[]) {
+//        global $USPC_ENTITY_SPECS;
+//        global $USPC_FIELD_SPECS;
+//
+//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+//
+//        $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $USPC_ENTITY_SPECS);
+//        }
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//       
+//    }
+//);
+//
+//
+//$app->get(
+//    '/nber_subcategories/query',
+//    function (Request $req, Response $res, $args=[]) {
+//        global $NBER_ENTITY_SPECS;
+//        global $NBER_FIELD_SPECS;
+//
+//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
+//
+//        $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $NBER_ENTITY_SPECS);
+//        }
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//       
+//    }
+//);
+//
+//
+//$app->post(
+//    '/nber_subcategories/query',
+//    function (Request $req, Response $res, $args=[]) {
+//        global $NBER_ENTITY_SPECS;
+//        global $NBER_FIELD_SPECS;
+//
+//        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+//
+//        $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+//                if($formatParam == "xml"){
+//            return $results = FormatResults($formatParam, $results, $NBER_ENTITY_SPECS);
+//        }
+//        else{
+//            return $res->withJson($results, 200 );
+//        }
+//       
+//    }
+//);
+
+
+$app->get(
+    '/locations/query',
+    function (Request $req, Response $res, $args = []) {
+        global $LOCATION_ENTITY_SPECS;
+        global $LOCATION_FIELD_SPECS;
+
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckGetParameters($req);
+
+        $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+        if($formatParam == "xml"){
+            return $results = FormatResults($formatParam, $results, $LOCATION_ENTITY_SPECS);
+        }
+        else{
+            return $res->withJson($results, 200 );
+        }
+
+
     }
 );
 
@@ -293,8 +366,13 @@ $app->post(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
 
         $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
-        $results = FormatResults($formatParam, $results, $LOCATION_ENTITY_SPECS);
-        $app->response->setBody($results);
+
+        if($formatParam == "xml"){
+            return $results = FormatResults($formatParam, $results, $LOCATION_ENTITY_SPECS);
+        }
+        else{
+            return $res->withJson($results, 200 );
+        }
     }
 );
 
@@ -314,7 +392,7 @@ $app->get(
  * Processes GET parameters
  * 'q' parameter is mandatory. s, o, f and format parameters are  optional
  */
-function CheckGetParameters(ServerRequestInterface $req)
+function CheckGetParameters(Request $req)
 {
 // Make sure the 'q' parameter exists.
     if ($req->getQueryParam('q') == null) {
