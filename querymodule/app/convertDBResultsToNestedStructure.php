@@ -7,11 +7,15 @@ function validateDate($date, $format = 'Y-m-d\TH:i:s\Z')
     return $d && $d->format($format) == $date;
 }
 
+function formatDate($date, $format = 'Y-m-d')
+{
+    $d = DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $date);
+    return $d->format($format);
+}
 
 /**
  * This function will convert an array of rows of columns of data into an array of primary entities, with each element
  * containing the primary entity fields and arrays of secondary entities (as needed).
-
  * @param array $selectFieldSpecs
  * @return array
  */
@@ -70,8 +74,17 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $fieldSpecs
                                 continue;
                             }
                             try {
-                                $currentSubDocArray[$field] = $currentSolrDoc->$field_name;
-                                $allNulls = false;
+                                if (property_exists($currentSolrDoc, $field_name)) {
+                                    $valueToStore = $currentSolrDoc->$field_name;
+                                    if (validateDate($currentSolrDoc->$field_name)) {
+                                        $valueToStore = formatDate($currentSolrDoc->$field_name);
+                                    }
+                                    $currentSubDocArray[$field] = $valueToStore;
+                                    $allNulls = false;
+                                } else {
+                                    $currentSubDocArray[$field] = null;
+                                }
+
                             } catch (ErrorException $e) {
                                 $currentSubDocArray[$field] = null;
                             }
