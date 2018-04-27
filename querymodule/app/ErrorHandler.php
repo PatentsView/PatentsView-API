@@ -1,5 +1,6 @@
 <?php
-require_once dirname(__FILE__) . '/../thirdparty/apache-log4php-2.3.0/Logger.php';
+
+
 
 class ErrorHandler {
 

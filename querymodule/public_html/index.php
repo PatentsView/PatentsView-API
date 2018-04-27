@@ -1,36 +1,40 @@
 <?php
 ini_set('max_execution_time', 300);
 // Step 1: Require the Slim Framework
-require_once dirname(__FILE__) . '/../thirdparty/Slim/Slim/Slim.php';
+//require_once dirname(__FILE__) . '/../thirdparty/Slim/Slim/Slim.php';
+
+// config.php provides global configuration class instance (db details, solr details etc)
 require_once dirname(__FILE__) . '/../app/config.php';
 
-\Slim\Slim::registerAutoloader();
-
-
+// Loads thirdparty libraries used (see composer.json)
+require_once dirname(__FILE__) . '/../vendor/autoload.php';
 $config = Config::getInstance();
 
+$appConfig = [
+    'settings' => [
+        'displayErrorDetails' => false,
+
+        'logger' => [
+            'name' => 'slim-app',
+            'level' => 'debug',
+            'path' => 'php://stderr',
+        ],
+    ],
+];
+
+if (Config::MODE == 'development'){
+    $appConfig = [
+        'settings' => [
+            'displayErrorDetails' => true,
+        ],
+    ];
+
+}
 // Step 2: Instantiate a Slim application
-$app = new \Slim\Slim(array(
-    'mode' => $config::MODE
-));
+$app = new \Slim\App($appConfig);
 
-$app->contentType('application/json; charset=utf-8');
 
-// Only invoked if mode is "production"
-$app->configureMode('production', function () use ($app) {
-    $app->config(array(
-        'log.enable' => true,
-        'debug' => false
-    ));
-});
 
-// Only invoked if mode is "development"
-$app->configureMode('development', function () use ($app) {
-    $app->config(array(
-        'log.enable' => false,
-        'debug' => true
-    ));
-});
 
 // Step 3: Define the Slim application routes
 
