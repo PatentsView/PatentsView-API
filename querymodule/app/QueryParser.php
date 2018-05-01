@@ -599,7 +599,7 @@ class QueryParser
                         $singleVal = replaceMinusSign($singleVal);
                     }
 
-                    $xpressionString = "$dbField : (" . implode(" OR ", $val) . ")";
+                    $xpressionString = "$dbField : (\"" . implode("\" OR \"", $val) . "\")";
 
 
                 } else {

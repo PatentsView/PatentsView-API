@@ -378,7 +378,7 @@ $app->post(
 
 $app->get(
     '/',
-    function (ServerRequestInterface $req, ResponseInterface $res, $args = []) {
+    function (Request $req, Response $res, $args = []) {
 
         return $res->withStatus(303)->withHeader('Location', '/doc.html');
     }
