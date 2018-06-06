@@ -33,8 +33,10 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
     // Run the query against the DB
     $dbResults = $dbQuery->queryDatabase($entitySpecs, $fieldSpecs, $whereClause, $qp->getFieldsUsed(),
         $entitySpecificWhereClauses, $qp->getOnlyAndsWereUsed(), $selectFieldSpecs, $sortParam, $optionsParam);
+
     $count_results = array();
     foreach ($dbQuery->getTotalCounts() as $entityName => $count)
+
         $count_results['total_' . $entityName . '_count'] = $count;
     unset($dbQuery);
 //    file_put_contents('php://stderr', print_r($dbResults, TRUE));
@@ -43,7 +45,9 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
     // PHP structures will be nested (only one-level) PHP arrays.
     $results = convertDBResultsToNestedStructure($entitySpecs, $dbResults, $selectFieldSpecs);
 
+
     foreach ($count_results as $entityName => $count)
+
         $results[$entityName] = $count;
     return $results;
 }
