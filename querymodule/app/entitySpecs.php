@@ -96,7 +96,7 @@ $PATENT_FIELD_SPECS=array
     'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
     'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
+    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_description_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
         
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'y'),
     'app_date' => array('entity_name'=>'application', 'column_name' => 'application.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'y'),
@@ -317,7 +317,7 @@ $INVENTOR_FIELD_SPECS=array
     'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
     'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
+    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_description_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
 
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
@@ -546,7 +546,7 @@ $ASSIGNEE_FIELD_SPECS=array
     'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
     'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
+    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_description_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'app_date' => array('entity_name'=>'application', 'column_name' => 'application.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
@@ -757,7 +757,7 @@ $CPC_GROUP_FIELD_SPECS=array
     'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
     'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
+    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_description_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
 
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
@@ -957,7 +957,7 @@ $CPC_FIELD_SPECS=array
     'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
     'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
+    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_description_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
 
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
@@ -1158,7 +1158,7 @@ $USPC_FIELD_SPECS=array
     'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
     'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
+    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_description_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
 
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
@@ -1361,7 +1361,7 @@ $NBER_FIELD_SPECS=array
     'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
     'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
+    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_description_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
 
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'app_date' => array('entity_name'=>'application', 'column_name' => 'application.date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
@@ -1512,8 +1512,11 @@ $LOCATION_ENTITY_SPECS=array(
     // more efficient since we can then only do that series of joins once, although it likely makes queries that only
     // need data from the location table slower.
     array('entity_name'=>'location', 'group_name'=>'locations', 'keyId'=>'location_key_id', 'distinctCountId'=>'location_key_id','default_fields'=>array('location_id','location_city','location_state','location_country'), 'join'=>'location left join patent_inventor using(location_id) left join patent using(patent_id)'),
+
     array('entity_name'=>'patent', 'group_name'=>'patents', 'keyId'=>'patent_id', 'distinctCountId'=>'patent_id','join'=>''),
+
     array('entity_name'=>'inventor', 'group_name'=>'inventors', 'keyId'=>'inventor_key_id', 'distinctCountId'=>'inventor_key_id','join'=>'left join inventor using(inventor_id) left outer join location_inventor on location.location_id=location_inventor.location_id and inventor.inventor_id=location_inventor.inventor_id'),
+
 	array('entity_name'=>'rawinventor', 'group_name'=>'rawinventors', 'keyId'=>'rawinventor_key_id', 'distinctCountId'=>'rawinventor_key_id','join'=>'left outer join inventor_rawinventor on inventor_rawinventor.patent_id = patent.patent_id'),
     array('entity_name'=>'assignee', 'group_name'=>'assignees', 'keyId'=>'assignee_key_id', 'distinctCountId'=>'assignee_key_id','join'=>'left join patent_assignee on location.location_id=patent_assignee.location_id left join assignee using(assignee_id) left outer join location_assignee on location.location_id=location_assignee.location_id and assignee.assignee_id=location_assignee.assignee_id'),
     array('entity_name'=>'application', 'group_name'=>'applications', 'keyId'=>'app_id', 'distinctCountId'=>'app_id','join'=>'left outer join application using(patent_id)'),
@@ -1567,7 +1570,7 @@ $LOCATION_FIELD_SPECS=array
     'pct_371_date' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.371_date', 'datatype' => 'date', 'query' => 'y', 'sort' => 'suppl'),
     'pct_kind' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.kind', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
     'pct_docnumber' => array('entity_name'=>'pct_dat', 'column_name' => 'pctdata.doc_number', 'datatype' => 'string', 'query' => 'y', 'sort' => 'suppl'),
-    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_desc_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
+    'detail_desc_length' => array('entity_name'=>'patent', 'column_name' => 'patent.detail_description_length', 'datatype' => 'int', 'query' => 'y', 'sort' => 'suppl'),
     
 
     'app_country' => array('entity_name'=>'application', 'column_name' => 'application.country', 'datatype' => 'string', 'query' => 'y', 'sort' => 'y'),
