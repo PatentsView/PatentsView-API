@@ -105,6 +105,11 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
+        if(! array_key_exists($apiField, $this->fieldSpecs)){
+            $msg = "Invalid field specified:: $apiField";
+            ErrorHandler::getHandler()->sendError(400, $msg);
+            throw new ErrorException($msg);
+        }
         if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
             if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
                 $val = current($criterion);
@@ -167,6 +172,11 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
+        if(! array_key_exists($apiField, $this->fieldSpecs)){
+            $msg = "Invalid field specified:: $apiField";
+            ErrorHandler::getHandler()->sendError(400, $msg);
+            throw new ErrorException($msg);
+        }
         if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
             if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
                 $val = current($criterion);
@@ -214,6 +224,11 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
+        if(! array_key_exists($apiField, $this->fieldSpecs)){
+            $msg = "Invalid field specified:: $apiField";
+            ErrorHandler::getHandler()->sendError(400, $msg);
+            throw new ErrorException($msg);
+        }
         if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
             if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
                 $val = current($criterion);
@@ -276,6 +291,11 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
+        if(! array_key_exists($apiField, $this->fieldSpecs)){
+            $msg = "Invalid field specified:: $apiField";
+            ErrorHandler::getHandler()->sendError(400, $msg);
+            throw new ErrorException($msg);
+        }
         if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
             if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
                 $val = current($criterion);
