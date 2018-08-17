@@ -4,7 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+
     "content-hash": "980f5953ba96290d88c980815d297c40",
+
     "packages": [
         {
             "name": "apache/log4php",
@@ -68,6 +70,7 @@
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
+
             "name": "nikic/fast-route",
             "version": "v1.3.0",
             "source": {
@@ -336,6 +339,7 @@
     ],
     "packages-dev": [
         {
+
             "name": "doctrine/instantiator",
             "version": "1.0.5",
             "source": {
@@ -435,6 +439,7 @@
             "time": "2017-10-19T19:58:43+00:00"
         },
         {
+
             "name": "phpdocumentor/reflection-common",
             "version": "1.0.1",
             "source": {
@@ -1034,6 +1039,7 @@
             "time": "2017-06-30T09:13:00+00:00"
         },
         {
+
             "name": "sebastian/code-unit-reverse-lookup",
             "version": "1.0.1",
             "source": {
@@ -1547,6 +1553,7 @@
             "time": "2016-10-03T07:35:21+00:00"
         },
         {
+
             "name": "symfony/polyfill-ctype",
             "version": "v1.9.0",
             "source": {
@@ -1606,6 +1613,7 @@
         },
         {
             "name": "symfony/yaml",
+
             "version": "v3.4.15",
             "source": {
                 "type": "git",
@@ -1616,6 +1624,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/yaml/zipball/c2f4812ead9f847cb69e90917ca7502e6892d6b8",
                 "reference": "c2f4812ead9f847cb69e90917ca7502e6892d6b8",
+
                 "shasum": ""
             },
             "require": {
@@ -1661,7 +1670,9 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
+
             "time": "2018-08-10T07:34:36+00:00"
+
         },
         {
             "name": "webmozart/assert",
@@ -1714,6 +1725,7 @@
             "time": "2018-01-29T19:49:41+00:00"
         }
     ],
+
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
