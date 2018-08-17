@@ -1,7 +1,5 @@
 <?php
 
-
-
 class ErrorHandler {
 
     // Pattern for this singleton from here: http://www.phptherightway.com/pages/Design-Patterns.html
@@ -51,8 +49,8 @@ class ErrorHandler {
     {
         static $logger = null;
         if ($logger === null) {
-            Logger::configure(dirname(__FILE__) . '/logger_config.xml');
-            $logger = Logger::getLogger('myLogger');
+            Logger::configure(dirname(__FILE__) . '/../resources/logger-config.xml');
+            $logger = Logger::getRootLogger();
         }
         return $logger;
     }

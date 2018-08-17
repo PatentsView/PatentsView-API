@@ -2,5 +2,7 @@
     "require": {
         "slim/slim": "^3.0",
         "apache/log4php": "^2.3"
+        "phpunit/phpunit": "^5.7",
+
     }
 }
