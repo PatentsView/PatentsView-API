@@ -18,7 +18,7 @@ try {
     $config = Config::getInstance();
 } catch (\Exceptions\ConfigException $configException) {
     ErrorHandler::getHandler()->sendError(500, "Server Error","This is a server failure, trying different query is unlikely to work. Administrators have been notified");
-throw $configException;
+    throw $configException;
 }
 
 $appConfig = [
