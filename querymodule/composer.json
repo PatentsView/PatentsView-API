@@ -1,0 +1,7 @@
+{
+    "require": {
+        "phpunit/phpunit": "^5.7",
+      "apache/log4php": "2.3.0",
+        "slim/slim": "~2.0"
+    }
+}

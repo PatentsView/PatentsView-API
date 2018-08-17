@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__) . '/../thirdparty/apache-log4php-2.3.0/Logger.php';
+
 
 class ErrorHandler {
 
@@ -50,8 +50,8 @@ class ErrorHandler {
     {
         static $logger = null;
         if ($logger === null) {
-            Logger::configure(dirname(__FILE__) . '/logger_config.xml');
-            $logger = Logger::getLogger('myLogger');
+            Logger::configure(dirname(__FILE__) . '/../resources/logger-config.xml');
+            $logger = Logger::getRootLogger();
         }
         return $logger;
     }
