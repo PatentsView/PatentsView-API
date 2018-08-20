@@ -1,0 +1,127 @@
+[
+  {
+    "default_fields": [
+      "assignee_id",
+      "assignee_first_name",
+      "assignee_last_name",
+      "assignee_organization"
+    ],
+    "distinctCountId": "assignee_key_id",
+    "entity_name": "assignee",
+    "group_name": "assignees",
+    "join": " solr_assignee_table",
+    "keyId": "assignee_key_id"
+  },
+  {
+    "distinctCountId": "location_key_id",
+    "entity_name": "location",
+    "group_name": "locations",
+    "join": " left outer JOIN solr_assignee_location_join on solr_assignee_table.assignee_id=solr_assignee_location_join.assignee_id",
+    "keyId": "location_key_id"
+  },
+  {
+    "distinctCountId": "patent_id",
+    "entity_name": "patent",
+    "group_name": "patents",
+    "join": "left outer JOIN solr_assignee_patent_join on solr_assignee_table.patent_id=solr_assignee_patent_join.patent_id",
+    "keyId": "patent_id"
+  },
+  {
+    "distinctCountId": "inventor_key_id",
+    "entity_name": "inventor",
+    "group_name": "inventors",
+    "join": "left outer join solr_assignee_inventor_join on solr_assignee_table.patent_id=solr_assignee_inventor_join.patent_id",
+    "keyId": "inventor_key_id"
+  },
+  {
+    "distinctCountId": "rawinventor_key_id",
+    "entity_name": "rawinventor",
+    "group_name": "rawinventors",
+    "join": "left outer join solr_assignee_rawinventor_join on solr_assignee_rawinventor_join.patent_id = solr_assignee_table.patent_id",
+    "keyId": "rawinventor_key_id"
+  },
+  {
+    "distinctCountId": "app_id",
+    "entity_name": "application",
+    "group_name": "applications",
+    "join": "left outer join solr_assignee_application_join on solr_assignee_table.patent_id=solr_assignee_application_join.patent_id",
+    "keyId": "app_id"
+  },
+  {
+    "distinctCountId": "ipc_class",
+    "entity_name": "ipc",
+    "group_name": "IPCs",
+    "join": "left outer join solr_assignee_ipcr_join on solr_assignee_table.patent_id=solr_assignee_ipcr_join.patent_id",
+    "keyId": ""
+  },
+  {
+    "distinctCountId": "uspc_mainclass_id",
+    "entity_name": "uspc",
+    "group_name": "uspcs",
+    "join": "left outer join solr_assignee_uspc_join on solr_assignee_table.patent_id = solr_assignee_uspc_join.patent_id",
+    "keyId": ""
+  },
+  {
+    "distinctCountId": "cpc_group_id",
+    "entity_name": "cpc",
+    "group_name": "cpcs",
+    "join": "left outer join solr_assignee_cpc_join ON solr_assignee_table.patent_id = solr_assignee_cpc_join.patent_id",
+    "keyId": ""
+  },
+  {
+    "distinctCountId": "nber_subcategory_id",
+    "entity_name": "nber",
+    "group_name": "nbers",
+    "join": "left outer join solr_assignee_nber_join on solr_assignee_table.patent_id=solr_assignee_nber_join.patent_id",
+    "keyId": ""
+  },
+  {
+    "distinctCountId": "year_id",
+    "entity_name": "year",
+    "group_name": "years",
+    "join": "left outer JOIN solr_assignee_year_join as patent_year on solr_assignee_table.patent_id=patent_year.patent_id",
+    "keyId": ""
+  },
+  {
+    "distinctCountId": "wipo_field_id",
+    "entity_name": "wipo",
+    "group_name": "wipos",
+    "join": "left outer join solr_assignee_wipo_join on solr_assignee_table.patent_id=solr_assignee_wipo_join.patent_id left outer join wipo_field on wipo.field_id=wipo_field.id",
+    "keyId": ""
+  },
+  {
+    "distinctCountId": "govint_patent_id",
+    "entity_name": "government_interest",
+    "group_name": "gov_interests",
+    "join": "left outer join solr_assignee_government_interest_join on solr_assignee_table.patent_id=government_interest.patent_id",
+    "keyId": ""
+  },
+  {
+    "distinctCountId": "lawyer_id",
+    "entity_name": "lawyer",
+    "group_name": "lawyers",
+    "join": "left outer join solr_assignee_lawyer_join ON solr_assignee_table.patent_id=solr_assignee_lawyer_join.patent_id",
+    "keyId": ""
+  },
+  {
+    "distinctCountId": "examiner_id",
+    "entity_name": "examiner",
+    "group_name": "examiners",
+    "join": "left outer join solr_assignee_examiner_join on solr_assignee_examiner_join.patent_id=solr_assignee_table.patent_id",
+    "keyId": ""
+  },
+  {
+    "distinctCountId": "foreign_doc_number",
+    "entity_name": "foreign_prior",
+    "group_name": "foreign_priority",
+    "join": "left outer join solr_foreign_priority_join on solr_foreign_priority_join.patent_id=solr_assignee_table.patent_id",
+    "keyId": ""
+  },
+  {
+    "distinctCountId": "pct_id",
+    "entity_name": "pct_dat",
+    "group_name": "pct_data",
+    "join": "left outer join solr_pct_dat_join on solr_pct_dat_join.patent_id=solr_assignee_table.patent_id",
+    "keyId": ""
+  }
+]
