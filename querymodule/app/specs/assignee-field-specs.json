@@ -28,112 +28,112 @@
     "sort": "suppl"
   },
   "assignee_first_name": {
-    "column_name": "solr_assignee_assignee_join.assignee_first_name",
+    "column_name": "solr_assignee_table.name_first",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_first_seen_date": {
-    "column_name": "solr_assignee_assignee_join.assignee_first_seen_date",
+    "column_name": "solr_assignee_table.first_seen_date",
     "datatype": "date",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_id": {
-    "column_name": "solr_assignee_assignee_join.assignee_id",
+    "column_name": "solr_assignee_table.persistent_assignee_id",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_key_id": {
-    "column_name": "solr_assignee_assignee_join.assignee_key_id",
+    "column_name": "solr_assignee_table.assignee_id",
     "datatype": "int",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_last_name": {
-    "column_name": "solr_assignee_assignee_join.assignee_last_name",
+    "column_name": "solr_assignee_table.name_last",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_last_seen_date": {
-    "column_name": "solr_assignee_assignee_join.assignee_last_seen_date",
+    "column_name": "solr_assignee_table.last_seen_date",
     "datatype": "date",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_lastknown_city": {
-    "column_name": "solr_assignee_assignee_join.assignee_lastknown_city",
+    "column_name": "solr_assignee_table.lastknown_city",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_lastknown_country": {
-    "column_name": "solr_assignee_assignee_join.assignee_lastknown_country",
+    "column_name": "solr_assignee_table.lastknown_country",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_lastknown_latitude": {
-    "column_name": "solr_assignee_assignee_join.assignee_lastknown_latitude",
+    "column_name": "solr_assignee_table.lastknown_latitude",
     "datatype": "float",
     "entity_name": "assignee",
     "query": "n",
     "sort": "y"
   },
   "assignee_lastknown_location_id": {
-    "column_name": "solr_assignee_assignee_join.assignee_lastknown_location_id",
+    "column_name": "solr_assignee_table.lastknown_location_id",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_lastknown_longitude": {
-    "column_name": "solr_assignee_assignee_join.assignee_lastknown_longitude",
+    "column_name": "solr_assignee_table.lastknown_longitude",
     "datatype": "float",
     "entity_name": "assignee",
     "query": "n",
     "sort": "y"
   },
   "assignee_lastknown_state": {
-    "column_name": "solr_assignee_assignee_join.assignee_lastknown_state",
+    "column_name": "solr_assignee_table.lastknown_state",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_organization": {
-    "column_name": "solr_assignee_assignee_join.assignee_organization",
+    "column_name": "solr_assignee_table.organization",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_total_num_inventors": {
-    "column_name": "solr_assignee_assignee_join.assignee_total_num_inventors",
+    "column_name": "solr_assignee_table.num_inventors",
     "datatype": "int",
     "entity_name": "assignee",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_total_num_patents": {
-    "column_name": "solr_assignee_assignee_join.assignee_total_num_patents",
+    "column_name": "solr_assignee_table.num_patents",
     "datatype": "int",
     "entity_name": "assignee",
     "query": "y",
     "sort": "y"
   },
   "assignee_type": {
-    "column_name": "solr_assignee_assignee_join.assignee_type",
+    "column_name": "solr_assignee_table.type",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
@@ -546,105 +546,105 @@
     "sort": "suppl"
   },
   "ipc_action_date": {
-    "column_name": "solr_assignee_ipcr_join.ipc_action_date",
+    "column_name": "solr_assignee_ipc_join.ipc_action_date",
     "datatype": "date",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_class": {
-    "column_name": "solr_assignee_ipcr_join.ipc_class",
+    "column_name": "solr_assignee_ipc_join.ipc_class",
     "datatype": "string",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_classification_data_source": {
-    "column_name": "solr_assignee_ipcr_join.ipc_classification_data_source",
+    "column_name": "solr_assignee_ipc_join.ipc_classification_data_source",
     "datatype": "string",
     "entity_name": "ipc",
     "query": "n",
     "sort": "suppl"
   },
   "ipc_classification_value": {
-    "column_name": "solr_assignee_ipcr_join.ipc_classification_value",
+    "column_name": "solr_assignee_ipc_join.ipc_classification_value",
     "datatype": "string",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_first_seen_date": {
-    "column_name": "solr_assignee_ipcr_join.ipc_first_seen_date",
+    "column_name": "solr_assignee_ipc_join.ipc_first_seen_date",
     "datatype": "date",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_last_seen_date": {
-    "column_name": "solr_assignee_ipcr_join.ipc_last_seen_date",
+    "column_name": "solr_assignee_ipc_join.ipc_last_seen_date",
     "datatype": "date",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_main_group": {
-    "column_name": "solr_assignee_ipcr_join.ipc_main_group",
+    "column_name": "solr_assignee_ipc_join.ipc_main_group",
     "datatype": "string",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_section": {
-    "column_name": "solr_assignee_ipcr_join.ipc_section",
+    "column_name": "solr_assignee_ipc_join.ipc_section",
     "datatype": "string",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_sequence": {
-    "column_name": "solr_assignee_ipcr_join.ipc_sequence",
+    "column_name": "solr_assignee_ipc_join.ipc_sequence",
     "datatype": "int",
     "entity_name": "ipc",
     "query": "n",
     "sort": "suppl"
   },
   "ipc_subclass": {
-    "column_name": "solr_assignee_ipcr_join.ipc_subclass",
+    "column_name": "solr_assignee_ipc_join.ipc_subclass",
     "datatype": "string",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_subgroup": {
-    "column_name": "solr_assignee_ipcr_join.ipc_subgroup",
+    "column_name": "solr_assignee_ipc_join.ipc_subgroup",
     "datatype": "string",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_symbol_position": {
-    "column_name": "solr_assignee_ipcr_join.ipc_symbol_position",
+    "column_name": "solr_assignee_ipc_join.ipc_symbol_position",
     "datatype": "string",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_total_num_assignees": {
-    "column_name": "solr_assignee_ipcr_join.ipc_total_num_assignees",
+    "column_name": "solr_assignee_ipc_join.ipc_total_num_assignees",
     "datatype": "int",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_total_num_inventors": {
-    "column_name": "solr_assignee_ipcr_join.ipc_total_num_inventors",
+    "column_name": "solr_assignee_ipc_join.ipc_total_num_inventors",
     "datatype": "int",
     "entity_name": "ipc",
     "query": "y",
     "sort": "suppl"
   },
   "ipc_version_indicator": {
-    "column_name": "solr_assignee_ipcr_join.ipc_version_indicator",
+    "column_name": "solr_assignee_ipc_join.ipc_version_indicator",
     "datatype": "date",
     "entity_name": "ipc",
     "query": "n",
