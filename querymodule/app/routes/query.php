@@ -287,7 +287,7 @@ function CheckGetParameters($app)
     }
 
     // Convert the query param to json, return error if empty or not valid
-    $queryParam = json_decode($app->request->get('q'), true);
+    $queryParam = json_decode(urldecode($app->request->get('q')), true);
 
     if ($queryParam == null) {
         ErrorHandler::getHandler()->sendError(400, "'q' parameter: not valid json.", $app->request->get());
