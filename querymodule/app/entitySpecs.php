@@ -1,13 +1,13 @@
 <?php
 require_once dirname(__FILE__) . '/ErrorHandler.php';
 
-function getDBField(array $fieldSpecs, $apiFieldName)
+function getDBField(array $fieldSpecs, $apiFieldName, $columnFor="column_name")
 {
     if (!array_key_exists($apiFieldName, $fieldSpecs)) {
         ErrorHandler::getHandler()->sendError(400, "Field name is invalid: $apiFieldName.",
             "Field name not in FIELD_SPECS: $apiFieldName.");
     }
-    return $fieldSpecs[$apiFieldName]['column_name'];
+    return $fieldSpecs[$apiFieldName][$columnFor];
 }
 
 /*
