@@ -32,7 +32,7 @@
     "field_column_name": "application.type"
   },
   "assignee_first_name": {
-    "column_name": "solr_assignee_table.name_first",
+    "column_name": "assignee.name_first",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
@@ -40,7 +40,7 @@
     "field_column_name": "assignee.name_first"
   },
   "assignee_first_seen_date": {
-    "column_name": "solr_assignee_table.first_seen_date",
+    "column_name": "assignee.first_seen_date",
     "datatype": "date",
     "entity_name": "assignee",
     "query": "y",
@@ -48,7 +48,7 @@
     "field_column_name": "assignee.first_seen_date"
   },
   "assignee_id": {
-    "column_name": "solr_assignee_table.persistent_assignee_id",
+    "column_name": "assignee.persistent_assignee_id",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
@@ -56,7 +56,7 @@
     "field_column_name": "assignee.persistent_assignee_id"
   },
   "assignee_key_id": {
-    "column_name": "solr_assignee_table.assignee_id",
+    "column_name": "assignee.assignee_id",
     "datatype": "int",
     "entity_name": "assignee",
     "query": "y",
@@ -64,7 +64,7 @@
     "field_column_name": "assignee.assignee_id"
   },
   "assignee_last_name": {
-    "column_name": "solr_assignee_table.name_last",
+    "column_name": "assignee.name_last",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
@@ -72,7 +72,7 @@
     "field_column_name": "assignee.name_last"
   },
   "assignee_last_seen_date": {
-    "column_name": "solr_assignee_table.last_seen_date",
+    "column_name": "assignee.last_seen_date",
     "datatype": "date",
     "entity_name": "assignee",
     "query": "y",
@@ -80,7 +80,7 @@
     "field_column_name": "assignee.last_seen_date"
   },
   "assignee_lastknown_city": {
-    "column_name": "solr_assignee_table.lastknown_city",
+    "column_name": "assignee.lastknown_city",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
@@ -88,7 +88,7 @@
     "field_column_name": "assignee.lastknown_city"
   },
   "assignee_lastknown_country": {
-    "column_name": "solr_assignee_table.lastknown_country",
+    "column_name": "assignee.lastknown_country",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
@@ -96,7 +96,7 @@
     "field_column_name": "assignee.lastknown_country"
   },
   "assignee_lastknown_latitude": {
-    "column_name": "solr_assignee_table.lastknown_latitude",
+    "column_name": "assignee.lastknown_latitude",
     "datatype": "float",
     "entity_name": "assignee",
     "query": "n",
@@ -104,7 +104,7 @@
     "field_column_name": "assignee.lastknown_latitude"
   },
   "assignee_lastknown_location_id": {
-    "column_name": "solr_assignee_table.lastknown_location_id",
+    "column_name": "assignee.lastknown_location_id",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
@@ -112,7 +112,7 @@
     "field_column_name": "assignee.lastknown_persistent_location_id"
   },
   "assignee_lastknown_longitude": {
-    "column_name": "solr_assignee_table.lastknown_longitude",
+    "column_name": "assignee.lastknown_longitude",
     "datatype": "float",
     "entity_name": "assignee",
     "query": "n",
@@ -120,7 +120,7 @@
     "field_column_name": "assignee.lastknown_longitude"
   },
   "assignee_lastknown_state": {
-    "column_name": "solr_assignee_table.lastknown_state",
+    "column_name": "assignee.lastknown_state",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
@@ -128,7 +128,7 @@
     "field_column_name": "assignee.lastknown_state"
   },
   "assignee_organization": {
-    "column_name": "solr_assignee_table.organization",
+    "column_name": "assignee.organization",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
@@ -136,7 +136,7 @@
     "field_column_name": "assignee.organization"
   },
   "assignee_total_num_inventors": {
-    "column_name": "solr_assignee_table.num_inventors",
+    "column_name": "assignee.num_inventors",
     "datatype": "int",
     "entity_name": "assignee",
     "query": "y",
@@ -144,7 +144,7 @@
     "field_column_name": "assignee.num_inventors"
   },
   "assignee_total_num_patents": {
-    "column_name": "solr_assignee_table.num_patents",
+    "column_name": "assignee.num_patents",
     "datatype": "int",
     "entity_name": "assignee",
     "query": "y",
@@ -152,7 +152,7 @@
     "field_column_name": "assignee.num_patents"
   },
   "assignee_type": {
-    "column_name": "solr_assignee_table.type",
+    "column_name": "assignee.type",
     "datatype": "string",
     "entity_name": "assignee",
     "query": "y",
@@ -160,7 +160,7 @@
     "field_column_name": "assignee.type"
   },
   "cpc_category": {
-    "column_name": "solr_assignee_cpc_join.cpc_category",
+    "column_name": "cpc_entity.cpc_category",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -168,7 +168,7 @@
     "field_column_name": "cpc_current_copy.category"
   },
   "cpc_first_seen_date": {
-    "column_name": "solr_assignee_cpc_join.cpc_first_seen_date",
+    "column_name": "cpc_entity.cpc_first_seen_date",
     "datatype": "date",
     "entity_name": "cpc",
     "query": "y",
@@ -176,7 +176,7 @@
     "field_column_name": "cpc_group.first_seen_date"
   },
   "cpc_group_id": {
-    "column_name": "solr_assignee_cpc_join.cpc_group_id",
+    "column_name": "cpc_entity.cpc_group_id",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -184,7 +184,7 @@
     "field_column_name": "cpc_group.id"
   },
   "cpc_group_title": {
-    "column_name": "solr_assignee_cpc_join.cpc_group_title",
+    "column_name": "cpc_entity.cpc_group_title",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -192,7 +192,7 @@
     "field_column_name": "cpc_group.title"
   },
   "cpc_last_seen_date": {
-    "column_name": "solr_assignee_cpc_join.cpc_last_seen_date",
+    "column_name": "cpc_entity.cpc_last_seen_date",
     "datatype": "date",
     "entity_name": "cpc",
     "query": "y",
@@ -200,7 +200,7 @@
     "field_column_name": "cpc_group.last_seen_date"
   },
   "cpc_num_patents_for_assignee": {
-    "column_name": "solr_assignee_cpc_join.cpc_num_patents_for_assignee",
+    "column_name": "cpc_entity.cpc_num_patents_for_assignee",
     "datatype": "int",
     "entity_name": "cpc",
     "query": "y",
@@ -208,7 +208,7 @@
     "field_column_name": "assignee_cpc_group.num_patents"
   },
   "cpc_section_id": {
-    "column_name": "solr_assignee_cpc_join.cpc_section_id",
+    "column_name": "cpc_entity.cpc_section_id",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -216,7 +216,7 @@
     "field_column_name": "cpc_current_group_copy.section_id"
   },
   "cpc_sequence": {
-    "column_name": "solr_assignee_cpc_join.cpc_sequence",
+    "column_name": "cpc_entity.cpc_sequence",
     "datatype": "int",
     "entity_name": "cpc",
     "query": "y",
@@ -224,7 +224,7 @@
     "field_column_name": "cpc_current_copy.sequence"
   },
   "cpc_subgroup_id": {
-    "column_name": "solr_assignee_cpc_join.cpc_subgroup_id",
+    "column_name": "cpc_entity.cpc_subgroup_id",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -232,7 +232,7 @@
     "field_column_name": "cpc_current_copy.subgroup_id"
   },
   "cpc_subgroup_title": {
-    "column_name": "solr_assignee_cpc_join.cpc_subgroup_title",
+    "column_name": "cpc_entity.cpc_subgroup_title",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -240,7 +240,7 @@
     "field_column_name": "cpc_subgroup.title"
   },
   "cpc_subsection_id": {
-    "column_name": "solr_assignee_cpc_join.cpc_subsection_id",
+    "column_name": "cpc_entity.cpc_subsection_id",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -248,7 +248,7 @@
     "field_column_name": "cpc_current_copy.subsection_id"
   },
   "cpc_subsection_title": {
-    "column_name": "solr_assignee_cpc_join.cpc_subsection_title",
+    "column_name": "cpc_entity.cpc_subsection_title",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -256,7 +256,7 @@
     "field_column_name": "cpc_subsection.title"
   },
   "cpc_total_num_assignees": {
-    "column_name": "solr_assignee_cpc_join.cpc_total_num_assignees",
+    "column_name": "cpc_entity.cpc_total_num_assignees",
     "datatype": "int",
     "entity_name": "cpc",
     "query": "y",
@@ -264,7 +264,7 @@
     "field_column_name": "cpc_group.num_assignees"
   },
   "cpc_total_num_inventors": {
-    "column_name": "solr_assignee_cpc_join.cpc_total_num_inventors",
+    "column_name": "cpc_entity.cpc_total_num_inventors",
     "datatype": "int",
     "entity_name": "cpc",
     "query": "y",
@@ -272,7 +272,7 @@
     "field_column_name": "cpc_group.num_inventors"
   },
   "cpc_total_num_patents": {
-    "column_name": "solr_assignee_cpc_join.cpc_total_num_patents",
+    "column_name": "cpc_entity.cpc_total_num_patents",
     "datatype": "int",
     "entity_name": "cpc",
     "query": "y",
@@ -288,7 +288,7 @@
     "field_column_name": "patent.detail_description_length"
   },
   "examiner_first_name": {
-    "column_name": "solr_assignee_examiner_join.examiner_first_name",
+    "column_name": "examiner_entity.examiner.name_first",
     "datatype": "string",
     "entity_name": "examiner",
     "query": "y",
@@ -296,7 +296,7 @@
     "field_column_name": "examiner.name_first"
   },
   "examiner_group": {
-    "column_name": "solr_assignee_examiner_join.examiner_group",
+    "column_name": "examiner_entity.examiner.group",
     "datatype": "string",
     "entity_name": "examiner",
     "query": "y",
@@ -304,7 +304,7 @@
     "field_column_name": "examiner.group"
   },
   "examiner_id": {
-    "column_name": "solr_assignee_examiner_join.examiner_id",
+    "column_name": "examiner_entity.examiner.persistent_examiner_id",
     "datatype": "string",
     "entity_name": "examiner",
     "query": "y",
@@ -312,7 +312,7 @@
     "field_column_name": "examiner.persistent_examiner_id"
   },
   "examiner_key_id": {
-    "column_name": "solr_assignee_examiner_join.examiner_key_id",
+    "column_name": "examiner_entity.examiner.examiner_id",
     "datatype": "int",
     "entity_name": "examiner",
     "query": "y",
@@ -320,7 +320,7 @@
     "field_column_name": "examiner.examiner_id"
   },
   "examiner_last_name": {
-    "column_name": "solr_assignee_examiner_join.examiner_last_name",
+    "column_name": "examiner_entity.examiner.name_last",
     "datatype": "string",
     "entity_name": "examiner",
     "query": "y",
@@ -328,7 +328,7 @@
     "field_column_name": "examiner.name_last"
   },
   "examiner_role": {
-    "column_name": "solr_assignee_examiner_join.examiner_role",
+    "column_name": "examiner_entity.patent_examiner.role",
     "datatype": "string",
     "entity_name": "examiner",
     "query": "y",
@@ -432,7 +432,7 @@
     "field_column_name": "government_interest.gi_statement"
   },
   "inventor_city": {
-    "column_name": "solr_assignee_inventor_join.inventor_city",
+    "column_name": "inventor_entity.inventor_city",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -440,7 +440,7 @@
     "field_column_name": "locationI.city"
   },
   "inventor_country": {
-    "column_name": "solr_assignee_inventor_join.inventor_country",
+    "column_name": "inventor_entity.inventor_country",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -448,7 +448,7 @@
     "field_column_name": "locationI.country"
   },
   "inventor_county": {
-    "column_name": "solr_assignee_inventor_join.inventor_county",
+    "column_name": "inventor_entity.inventor_county",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -456,7 +456,7 @@
     "field_column_name": "locationI.county"
   },
   "inventor_county_fips": {
-    "column_name": "solr_assignee_inventor_join.inventor_county_fips",
+    "column_name": "inventor_entity.inventor_county_fips",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -464,7 +464,7 @@
     "field_column_name": "locationI.county_fips"
   },
   "inventor_first_name": {
-    "column_name": "solr_assignee_inventor_join.inventor_first_name",
+    "column_name": "inventor_entity.inventor_first_name",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -472,7 +472,7 @@
     "field_column_name": "inventor.name_first"
   },
   "inventor_first_seen_date": {
-    "column_name": "solr_assignee_inventor_join.inventor_first_seen_date",
+    "column_name": "inventor_entity.inventor_first_seen_date",
     "datatype": "date",
     "entity_name": "inventor",
     "query": "y",
@@ -480,7 +480,7 @@
     "field_column_name": "inventor.first_seen_date"
   },
   "inventor_id": {
-    "column_name": "solr_assignee_inventor_join.inventor_id",
+    "column_name": "inventor_entity.inventor_id",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -488,7 +488,7 @@
     "field_column_name": "inventor.persistent_inventor_id"
   },
   "inventor_key_id": {
-    "column_name": "solr_assignee_inventor_join.inventor_key_id",
+    "column_name": "inventor_entity.inventor_key_id",
     "datatype": "int",
     "entity_name": "inventor",
     "query": "y",
@@ -496,7 +496,7 @@
     "field_column_name": "inventor.inventor_id"
   },
   "inventor_last_name": {
-    "column_name": "solr_assignee_inventor_join.inventor_last_name",
+    "column_name": "inventor_entity.inventor_last_name",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -504,7 +504,7 @@
     "field_column_name": "inventor.name_last"
   },
   "inventor_last_seen_date": {
-    "column_name": "solr_assignee_inventor_join.inventor_last_seen_date",
+    "column_name": "inventor_entity.inventor_last_seen_date",
     "datatype": "date",
     "entity_name": "inventor",
     "query": "y",
@@ -512,7 +512,7 @@
     "field_column_name": "inventor.last_seen_date"
   },
   "inventor_lastknown_city": {
-    "column_name": "solr_assignee_inventor_join.inventor_lastknown_city",
+    "column_name": "inventor_entity.inventor_lastknown_city",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -520,7 +520,7 @@
     "field_column_name": "inventor.lastknown_city"
   },
   "inventor_lastknown_country": {
-    "column_name": "solr_assignee_inventor_join.inventor_lastknown_country",
+    "column_name": "inventor_entity.inventor_lastknown_country",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -528,7 +528,7 @@
     "field_column_name": "inventor.lastknown_country"
   },
   "inventor_lastknown_latitude": {
-    "column_name": "solr_assignee_inventor_join.inventor_lastknown_latitude",
+    "column_name": "inventor_entity.inventor_lastknown_latitude",
     "datatype": "float",
     "entity_name": "inventor",
     "query": "n",
@@ -536,7 +536,7 @@
     "field_column_name": "inventor.lastknown_latitude"
   },
   "inventor_lastknown_location_id": {
-    "column_name": "solr_assignee_inventor_join.inventor_lastknown_location_id",
+    "column_name": "inventor_entity.inventor_lastknown_location_id",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -544,7 +544,7 @@
     "field_column_name": "inventor.lastknown_persistent_location_id"
   },
   "inventor_lastknown_longitude": {
-    "column_name": "solr_assignee_inventor_join.inventor_lastknown_longitude",
+    "column_name": "inventor_entity.inventor_lastknown_longitude",
     "datatype": "float",
     "entity_name": "inventor",
     "query": "n",
@@ -552,7 +552,7 @@
     "field_column_name": "inventor.lastknown_longitude"
   },
   "inventor_lastknown_state": {
-    "column_name": "solr_assignee_inventor_join.inventor_lastknown_state",
+    "column_name": "inventor_entity.inventor_lastknown_state",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -560,7 +560,7 @@
     "field_column_name": "inventor.lastknown_state"
   },
   "inventor_latitude": {
-    "column_name": "solr_assignee_inventor_join.inventor_latitude",
+    "column_name": "inventor_entity.inventor_latitude",
     "datatype": "float",
     "entity_name": "inventor",
     "query": "n",
@@ -568,7 +568,7 @@
     "field_column_name": "locationI.latitude"
   },
   "inventor_location_id": {
-    "column_name": "solr_assignee_inventor_join.inventor_location_id",
+    "column_name": "inventor_entity.inventor_location_id",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -576,7 +576,7 @@
     "field_column_name": "locationI.persistent_location_id"
   },
   "inventor_longitude": {
-    "column_name": "solr_assignee_inventor_join.inventor_longitude",
+    "column_name": "inventor_entity.inventor_longitude",
     "datatype": "float",
     "entity_name": "inventor",
     "query": "n",
@@ -584,7 +584,7 @@
     "field_column_name": "locationI.longitude"
   },
   "inventor_num_patents_for_assignee": {
-    "column_name": "solr_assignee_inventor_join.inventor_num_patents_for_assignee",
+    "column_name": "inventor_entity.inventor_num_patents_for_assignee",
     "datatype": "int",
     "entity_name": "inventor",
     "query": "y",
@@ -592,7 +592,7 @@
     "field_column_name": "assignee_inventor.num_patents"
   },
   "inventor_state": {
-    "column_name": "solr_assignee_inventor_join.inventor_state",
+    "column_name": "inventor_entity.inventor_state",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -600,7 +600,7 @@
     "field_column_name": "locationI.state"
   },
   "inventor_state_fips": {
-    "column_name": "solr_assignee_inventor_join.inventor_state_fips",
+    "column_name": "inventor_entity.inventor_state_fips",
     "datatype": "string",
     "entity_name": "inventor",
     "query": "y",
@@ -608,7 +608,7 @@
     "field_column_name": "locationI.state_fips"
   },
   "inventor_total_num_assignees": {
-    "column_name": "solr_assignee_inventor_join.inventor_total_num_assignees",
+    "column_name": "inventor_entity.inventor_total_num_assignees",
     "datatype": "int",
     "entity_name": "inventor",
     "query": "y",
@@ -616,7 +616,7 @@
     "field_column_name": "inventor.num_assignees"
   },
   "inventor_total_num_patents": {
-    "column_name": "solr_assignee_inventor_join.inventor_total_num_patents",
+    "column_name": "inventor_entity.inventor_total_num_patents",
     "datatype": "int",
     "entity_name": "inventor",
     "query": "y",
@@ -744,7 +744,7 @@
     "field_column_name": "ipcr.ipc_version_indicator"
   },
   "lawyer_first_name": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_first_name",
+    "column_name": "lawyer_entity.lawyer.name_first",
     "datatype": "string",
     "entity_name": "lawyer",
     "query": "y",
@@ -752,7 +752,7 @@
     "field_column_name": "lawyer.name_first"
   },
   "lawyer_first_seen_date": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_first_seen_date",
+    "column_name": "lawyer_entity.lawyer.first_seen_date",
     "datatype": "date",
     "entity_name": "lawyer",
     "query": "y",
@@ -760,7 +760,7 @@
     "field_column_name": "lawyer.first_seen_date"
   },
   "lawyer_id": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_id",
+    "column_name": "lawyer_entity.lawyer.persistent_lawyer_id",
     "datatype": "string",
     "entity_name": "lawyer",
     "query": "y",
@@ -768,7 +768,7 @@
     "field_column_name": "lawyer.persistent_lawyer_id"
   },
   "lawyer_key_id": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_key_id",
+    "column_name": "lawyer_entity.lawyer.lawyer_id",
     "datatype": "int",
     "entity_name": "lawyer",
     "query": "y",
@@ -776,7 +776,7 @@
     "field_column_name": "lawyer.lawyer_id"
   },
   "lawyer_last_name": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_last_name",
+    "column_name": "lawyer_entity.lawyer.name_last",
     "datatype": "string",
     "entity_name": "lawyer",
     "query": "y",
@@ -784,7 +784,7 @@
     "field_column_name": "lawyer.name_last"
   },
   "lawyer_last_seen_date": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_last_seen_date",
+    "column_name": "lawyer_entity.lawyer.last_seen_date",
     "datatype": "date",
     "entity_name": "lawyer",
     "query": "y",
@@ -792,7 +792,7 @@
     "field_column_name": "lawyer.last_seen_date"
   },
   "lawyer_organization": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_organization",
+    "column_name": "lawyer_entity.lawyer.organization",
     "datatype": "string",
     "entity_name": "lawyer",
     "query": "y",
@@ -800,7 +800,7 @@
     "field_column_name": "lawyer.organization"
   },
   "lawyer_sequence": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_sequence",
+    "column_name": "lawyer_entity.patent_lawyer.sequence",
     "datatype": "int",
     "entity_name": "lawyer",
     "query": "y",
@@ -808,7 +808,7 @@
     "field_column_name": "patent_lawyer.sequence"
   },
   "lawyer_total_num_assignees": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_total_num_assignees",
+    "column_name": "lawyer_entity.lawyer.num_assignees",
     "datatype": "int",
     "entity_name": "lawyer",
     "query": "y",
@@ -816,7 +816,7 @@
     "field_column_name": "lawyer.num_assignees"
   },
   "lawyer_total_num_inventors": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_total_num_inventors",
+    "column_name": "lawyer_entity.lawyer.num_inventors",
     "datatype": "int",
     "entity_name": "lawyer",
     "query": "y",
@@ -824,7 +824,7 @@
     "field_column_name": "lawyer.num_inventors"
   },
   "lawyer_total_num_patents": {
-    "column_name": "solr_assignee_lawyer_join.lawyer_total_num_patents",
+    "column_name": "lawyer_entity.lawyer.num_patents",
     "datatype": "int",
     "entity_name": "lawyer",
     "query": "y",
@@ -912,7 +912,7 @@
     "field_column_name": "locationA.state_fips"
   },
   "nber_category_id": {
-    "column_name": "solr_assignee_nber_join.nber_category_id",
+    "column_name": "nber_entity.nber_copy.category_id",
     "datatype": "string",
     "entity_name": "nber",
     "query": "y",
@@ -920,7 +920,7 @@
     "field_column_name": "nber_copy.category_id"
   },
   "nber_category_title": {
-    "column_name": "solr_assignee_nber_join.nber_category_title",
+    "column_name": "nber_entity.nber_category.title",
     "datatype": "string",
     "entity_name": "nber",
     "query": "y",
@@ -928,7 +928,7 @@
     "field_column_name": "nber_category.title"
   },
   "nber_first_seen_date": {
-    "column_name": "solr_assignee_nber_join.nber_first_seen_date",
+    "column_name": "nber_entity.nber_subcategory.first_seen_date",
     "datatype": "date",
     "entity_name": "nber",
     "query": "y",
@@ -936,7 +936,7 @@
     "field_column_name": "nber_subcategory.first_seen_date"
   },
   "nber_last_seen_date": {
-    "column_name": "solr_assignee_nber_join.nber_last_seen_date",
+    "column_name": "nber_entity.nber_subcategory.last_seen_date",
     "datatype": "date",
     "entity_name": "nber",
     "query": "y",
@@ -944,7 +944,7 @@
     "field_column_name": "nber_subcategory.last_seen_date"
   },
   "nber_num_patents_for_assignee": {
-    "column_name": "solr_assignee_nber_join.nber_num_patents_for_assignee",
+    "column_name": "nber_entity.assignee_nber_subcategory.num_patents",
     "datatype": "int",
     "entity_name": "nber",
     "query": "y",
@@ -952,7 +952,7 @@
     "field_column_name": "assignee_nber_subcategory.num_patents"
   },
   "nber_subcategory_id": {
-    "column_name": "solr_assignee_nber_join.nber_subcategory_id",
+    "column_name": "nber_entity.nber_copy.subcategory_id",
     "datatype": "string",
     "entity_name": "nber",
     "query": "y",
@@ -960,7 +960,7 @@
     "field_column_name": "nber_copy.subcategory_id"
   },
   "nber_subcategory_title": {
-    "column_name": "solr_assignee_nber_join.nber_subcategory_title",
+    "column_name": "nber_entity.nber_subcategory.title",
     "datatype": "string",
     "entity_name": "nber",
     "query": "y",
@@ -968,7 +968,7 @@
     "field_column_name": "nber_subcategory.title"
   },
   "nber_total_num_assignees": {
-    "column_name": "solr_assignee_nber_join.nber_total_num_assignees",
+    "column_name": "nber_entity.nber_subcategory.num_assignees",
     "datatype": "int",
     "entity_name": "nber",
     "query": "y",
@@ -976,7 +976,7 @@
     "field_column_name": "nber_subcategory.num_assignees"
   },
   "nber_total_num_inventors": {
-    "column_name": "solr_assignee_nber_join.nber_total_num_inventors",
+    "column_name": "nber_entity.nber_subcategory.num_inventors",
     "datatype": "int",
     "entity_name": "nber",
     "query": "y",
@@ -984,7 +984,7 @@
     "field_column_name": "nber_subcategory.num_inventors"
   },
   "nber_total_num_patents": {
-    "column_name": "solr_assignee_nber_join.nber_total_num_patents",
+    "column_name": "nber_entity.nber_subcategory.num_patents",
     "datatype": "int",
     "entity_name": "nber",
     "query": "y",
@@ -1272,7 +1272,7 @@
     "field_column_name": "inventor_rawinventor.name_last"
   },
   "uspc_first_seen_date": {
-    "column_name": "solr_assignee_uspc_join.uspc_first_seen_date",
+    "column_name": "uspc_entity.uspc_first_seen_date",
     "datatype": "date",
     "entity_name": "uspc",
     "query": "y",
@@ -1280,7 +1280,7 @@
     "field_column_name": "uspc_mainclass.first_seen_date"
   },
   "uspc_last_seen_date": {
-    "column_name": "solr_assignee_uspc_join.uspc_last_seen_date",
+    "column_name": "uspc_entity.uspc_last_seen_date",
     "datatype": "date",
     "entity_name": "uspc",
     "query": "y",
@@ -1288,7 +1288,7 @@
     "field_column_name": "uspc_mainclass.last_seen_date"
   },
   "uspc_mainclass_id": {
-    "column_name": "solr_assignee_uspc_join.uspc_mainclass_id",
+    "column_name": "uspc_entity.uspc_mainclass_id",
     "datatype": "string",
     "entity_name": "uspc",
     "query": "y",
@@ -1296,7 +1296,7 @@
     "field_column_name": "uspc_mainclass.id"
   },
   "uspc_mainclass_title": {
-    "column_name": "solr_assignee_uspc_join.uspc_mainclass_title",
+    "column_name": "uspc_entity.uspc_mainclass_title",
     "datatype": "string",
     "entity_name": "uspc",
     "query": "y",
@@ -1304,7 +1304,7 @@
     "field_column_name": "uspc_mainclass.title"
   },
   "uspc_num_patents_for_assignee": {
-    "column_name": "solr_assignee_uspc_join.uspc_num_patents_for_assignee",
+    "column_name": "uspc_entity.uspc_num_patents_for_assignee",
     "datatype": "int",
     "entity_name": "uspc",
     "query": "n",
@@ -1312,7 +1312,7 @@
     "field_column_name": "assignee_uspc_mainclass.num_patents"
   },
   "uspc_sequence": {
-    "column_name": "solr_assignee_uspc_join.uspc_sequence",
+    "column_name": "uspc_entity.uspc_sequence",
     "datatype": "int",
     "entity_name": "uspc",
     "query": "y",
@@ -1320,7 +1320,7 @@
     "field_column_name": "uspc_current_copy.sequence"
   },
   "uspc_subclass_id": {
-    "column_name": "solr_assignee_uspc_join.uspc_subclass_id",
+    "column_name": "uspc_entity.uspc_subclass_id",
     "datatype": "string",
     "entity_name": "uspc",
     "query": "y",
@@ -1328,7 +1328,7 @@
     "field_column_name": "uspc_current_copy.subclass_id"
   },
   "uspc_subclass_title": {
-    "column_name": "solr_assignee_uspc_join.uspc_subclass_title",
+    "column_name": "uspc_entity.uspc_subclass_title",
     "datatype": "string",
     "entity_name": "uspc",
     "query": "y",
@@ -1336,7 +1336,7 @@
     "field_column_name": "uspc_subclass.title"
   },
   "uspc_total_num_assignees": {
-    "column_name": "solr_assignee_uspc_join.uspc_total_num_assignees",
+    "column_name": "uspc_entity.uspc_total_num_assignees",
     "datatype": "int",
     "entity_name": "uspc",
     "query": "y",
@@ -1344,7 +1344,7 @@
     "field_column_name": "uspc_mainclass.num_assignees"
   },
   "uspc_total_num_inventors": {
-    "column_name": "solr_assignee_uspc_join.uspc_total_num_inventors",
+    "column_name": "uspc_entity.uspc_total_num_inventors",
     "datatype": "int",
     "entity_name": "uspc",
     "query": "y",
@@ -1352,7 +1352,7 @@
     "field_column_name": "uspc_mainclass.num_inventors"
   },
   "uspc_total_num_patents": {
-    "column_name": "solr_assignee_uspc_join.uspc_total_num_patents",
+    "column_name": "uspc_entity.uspc_total_num_patents",
     "datatype": "int",
     "entity_name": "uspc",
     "query": "y",
@@ -1360,7 +1360,7 @@
     "field_column_name": "uspc_mainclass.num_patents"
   },
   "wipo_field_id": {
-    "column_name": "solr_assignee_wipo_join.wipo_field_id",
+    "column_name": "wipo_entity.wipo.field_id",
     "datatype": "int",
     "entity_name": "wipo",
     "query": "y",
@@ -1368,7 +1368,7 @@
     "field_column_name": "wipo.field_id"
   },
   "wipo_field_title": {
-    "column_name": "solr_assignee_wipo_join.wipo_field_title",
+    "column_name": "wipo_entity.wipo_field.field_title",
     "datatype": "string",
     "entity_name": "wipo",
     "query": "y",
@@ -1376,7 +1376,7 @@
     "field_column_name": "wipo_field.field_title"
   },
   "wipo_sector_title": {
-    "column_name": "solr_assignee_wipo_join.wipo_sector_title",
+    "column_name": "wipo_entity.wipo_field.sector_title",
     "datatype": "string",
     "entity_name": "wipo",
     "query": "y",
@@ -1384,7 +1384,7 @@
     "field_column_name": "wipo_field.sector_title"
   },
   "wipo_sequence": {
-    "column_name": "solr_assignee_wipo_join.wipo_sequence",
+    "column_name": "wipo_entity.wipo.sequence",
     "datatype": "int",
     "entity_name": "wipo",
     "query": "y",

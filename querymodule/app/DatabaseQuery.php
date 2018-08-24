@@ -174,8 +174,8 @@ class DatabaseQuery
         // Get the primary entities
         $results = array();
         $selectStringForEntity = $this->buildSelectStringForEntity($this->entitySpecs[0]);
-        $fromEntity = $this->entitySpecs[0]['field_join'] .
-            ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "field_column_name") . '= qr.EntityId';
+        $fromEntity = $this->entitySpecs[0]['join'] .
+            ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "column_name") . '= qr.EntityId';
         $whereEntity = "qr.QueryDefId=$queryDefId";
         if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
             $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1) * $perPage) + 1) . ') and (qr.Sequence<=' . $page * $perPage . '))';
@@ -196,19 +196,19 @@ class DatabaseQuery
         }
         $groupsCheckTotalCount = array_unique($groupsCheckTotalCount);
 
-        $fromSubEntity = $this->buildFrom($allFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed,"field_join");
-        $fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "field_column_name") . '= qr.EntityId';
+        $fromSubEntity = $this->buildFrom($allFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed,"join");
+        $fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "column_name") . '= qr.EntityId';
 
 
         // Loop through the subentities and get them.
         foreach (array_slice($this->entitySpecs, 1) as $entitySpec) {
             $tempSelect = $this->buildSelectStringForEntity($entitySpec);
             if ($tempSelect != '') { // If there aren't any fields to get back, then skip the group.
-                $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'],"field_column_name") . ' as ' . $this->entitySpecs[0]['keyId'];
+                $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'],"column_name") . ' as ' . $this->entitySpecs[0]['keyId'];
                 $selectStringForEntity .= ", $tempSelect";
-                $fromEntity = $this->entitySpecs[0]['field_join'] .
-                    ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "field_column_name") . '= qr.EntityId';
-                $fromEntity .= ' ' . $entitySpec['field_join'];
+                $fromEntity = $this->entitySpecs[0]['join'] .
+                    ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "column_name") . '= qr.EntityId';
+                $fromEntity .= ' ' . $entitySpec['join'];
                 $whereEntity = "qr.QueryDefId=$queryDefId";
                 if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1) * $perPage) + 1) . ') and (qr.Sequence<=' . $page * $perPage . '))';
@@ -232,7 +232,7 @@ class DatabaseQuery
                         $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
                         $fromEntity = $fromSubEntity;
                         if (!in_array($entitySpec['entity_name'], $groupsCheckTotalCount)) {
-                            $fromEntity .= ' ' . $entitySpec['field_join'];
+                            $fromEntity .= ' ' . $entitySpec['join'];
                         }
                         $whereEntity = "qr.QueryDefId=$queryDefId";
                         $whereEntity .= ' and ' . $whereClause;
@@ -397,7 +397,7 @@ class DatabaseQuery
             if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
                 if ($selectString != '')
                     $selectString .= ', ';
-                $selectString .= getDBField($this->fieldSpecs, $apiField,"field_column_name") . " as $apiField";
+                $selectString .= getDBField($this->fieldSpecs, $apiField,"column_name") . " as $apiField";
             }
         }
         return $selectString;
