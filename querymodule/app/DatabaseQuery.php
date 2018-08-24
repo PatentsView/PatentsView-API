@@ -498,7 +498,7 @@ class DatabaseQuery
 
 
         }
-        
+
         unlink($tmp_dir . $insertHash . '.txt');
         //$st = $this->db->prepare($sqlQuery);
         //$results = $st->execute();
