@@ -22,6 +22,7 @@
   {
     "entity_name": "patent",
     "group_name": "patents",
+
     "keyId": "patent_id",
     "distinctCountId": "patent_id",
     "join": "left outer JOIN patent on patent_assignee.patent_id=patent.patent_id"
@@ -36,6 +37,7 @@
   {
     "entity_name": "rawinventor",
     "group_name": "rawinventors",
+
     "keyId": "rawinventor_key_id",
     "distinctCountId": "rawinventor_key_id",
     "join": "left outer join inventor_rawinventor on inventor_rawinventor.patent_id = patent_assignee.patent_id"
@@ -43,6 +45,7 @@
   {
     "entity_name": "application",
     "group_name": "applications",
+
     "keyId": "app_id",
     "distinctCountId": "app_id",
     "join": "left outer join application on patent_assignee.patent_id=application.patent_id"
@@ -50,6 +53,7 @@
   {
     "entity_name": "ipc",
     "group_name": "IPCs",
+
     "keyId": "",
     "distinctCountId": "ipc_class",
     "join": "left outer join ipcr on patent_assignee.patent_id=ipcr.patent_id"
@@ -113,6 +117,7 @@
   {
     "entity_name": "foreign_prior",
     "group_name": "foreign_priority",
+
     "keyId": "",
     "distinctCountId": "foreign_doc_number",
     "join": "left outer join foreignpriority on foreignpriority.patent_id=patent_assignee.patent_id"
@@ -120,6 +125,7 @@
   {
     "entity_name": "pct_dat",
     "group_name": "pct_data",
+
     "keyId": "",
     "distinctCountId": "pct_id",
     "join": "left outer join pctdata on pctdata.patent_id=patent_assignee.patent_id"
