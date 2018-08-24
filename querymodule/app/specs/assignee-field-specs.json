@@ -72,24 +72,39 @@
   "forprior_date": {
     "entity_name": "foreign_prior",
     "column_name": "foreignpriority.date",
+=======
+  "app_date": {
+    "column_name": "application.date",
+>>>>>>> Partial solr tables
     "datatype": "date",
     "query": "y",
     "sort": "suppl"
   },
+<<<<<<< HEAD
   "forprior_kind": {
     "entity_name": "foreign_prior",
     "column_name": "foreignpriority.kind",
+=======
+  "app_id": {
+    "column_name": "application.application_id",
+>>>>>>> Partial solr tables
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
+<<<<<<< HEAD
   "forprior_docnumber": {
     "entity_name": "foreign_prior",
     "column_name": "foreignpriority.foreign_doc_number",
+=======
+  "app_number": {
+    "column_name": "application.number",
+>>>>>>> Partial solr tables
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
+<<<<<<< HEAD
   "forprior_sequence": {
     "entity_name": "foreign_prior",
     "column_name": "foreignpriority.sequence",
@@ -100,6 +115,10 @@
   "inventor_county": {
     "entity_name": "inventor",
     "column_name": "locationI.county",
+=======
+  "app_type": {
+    "column_name": "application.type",
+>>>>>>> Partial solr tables
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
