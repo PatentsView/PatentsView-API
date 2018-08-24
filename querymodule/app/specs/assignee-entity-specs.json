@@ -25,7 +25,7 @@
     "distinctCountId": "patent_id",
     "entity_name": "patent",
     "group_name": "patents",
-    "join": "left outer JOIN solr_assignee_patent_join on solr_assignee_table.patent_id=solr_assignee_patent_join.patent_id",
+    "join": " left outer JOIN patent on patent_assignee.patent_id=patent.patent_id",
     "keyId": "patent_id",
     "field_join": "left outer JOIN patent on patent_assignee.patent_id=patent.patent_id"
   },
@@ -41,7 +41,7 @@
     "distinctCountId": "rawinventor_key_id",
     "entity_name": "rawinventor",
     "group_name": "rawinventors",
-    "join": "left outer join solr_assignee_rawinventor_join on solr_assignee_rawinventor_join.patent_id = solr_assignee_table.patent_id",
+    "join": " left outer join inventor_rawinventor on inventor_rawinventor.patent_id = patent_assignee.patent_id",
     "keyId": "rawinventor_key_id",
     "field_join": "left outer join inventor_rawinventor on inventor_rawinventor.patent_id = patent_assignee.patent_id"
   },
@@ -49,15 +49,15 @@
     "distinctCountId": "app_id",
     "entity_name": "application",
     "group_name": "applications",
-    "join": "left outer join solr_assignee_application_join on solr_assignee_table.patent_id=solr_assignee_application_join.patent_id",
+    "join": "left outer join application on patent_assignee.patent_id=application.patent_id",
     "keyId": "app_id",
-    "field_join": "left outer join solr_assignee_application_join on patent_assignee.patent_id=solr_assignee_application_join.patent_id"
+    "field_join": "left outer join application on patent_assignee.patent_id=application.patent_id"
   },
   {
     "distinctCountId": "ipc_class",
     "entity_name": "ipc",
     "group_name": "IPCs",
-    "join": "left outer join solr_assignee_ipc_join on solr_assignee_table.patent_id=solr_assignee_ipc_join.patent_id",
+    "join": " left outer join ipcr on patent_assignee.patent_id=ipcr.patent_id",
     "keyId": "",
     "field_join": "left outer join ipcr on patent_assignee.patent_id=ipcr.patent_id"
   },
@@ -67,7 +67,7 @@
     "group_name": "uspcs",
     "join": "left outer join solr_assignee_uspc_join on solr_assignee_table.patent_id = solr_assignee_uspc_join.patent_id",
     "keyId": "",
-    "field_join": "left outer join solr_assignee_uspc_join on patent_assignee.patent_id = solr_assignee_uspc_join.patent_id"
+    "field_join": "left outer join uspc_current_mainclass_copy on patent_assignee.patent_id=uspc_current_mainclass_copy.patent_id left outer join uspc_current_copy on uspc_current_mainclass_copy.patent_id=uspc_current_copy.patent_id and uspc_current_mainclass_copy.mainclass_id=uspc_current_copy.mainclass_id left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id left outer join uspc_subclass on uspc_current_copy.subclass_id=uspc_subclass.id left outer join assignee_uspc_mainclass on assignee.assignee_id=assignee_uspc_mainclass.assignee_id and uspc_current_mainclass_copy.mainclass_id=assignee_uspc_mainclass.mainclass_id"
   },
   {
     "distinctCountId": "cpc_group_id",
@@ -129,7 +129,7 @@
     "distinctCountId": "foreign_doc_number",
     "entity_name": "foreign_prior",
     "group_name": "foreign_priority",
-    "join": "left outer join solr_assignee_foreign_priority_join on solr_assignee_foreign_priority_join.patent_id=solr_assignee_table.patent_id",
+    "join": "left outer join foreignpriority on foreignpriority.patent_id=patent_assignee.patent_id",
     "keyId": "",
     "field_join": "left outer join foreignpriority on foreignpriority.patent_id=patent_assignee.patent_id"
   },
@@ -137,7 +137,7 @@
     "distinctCountId": "pct_id",
     "entity_name": "pct_dat",
     "group_name": "pct_data",
-    "join": "left outer join solr_assignee_pct_dat_join on solr_assignee_pct_dat_join.patent_id=solr_assignee_table.patent_id",
+    "join": "left outer join pctdata on pctdata.patent_id=patent_assignee.patent_id",
     "keyId": "",
     "field_join": "left outer join pctdata on pctdata.patent_id=patent_assignee.patent_id"
   }
