@@ -129,7 +129,7 @@
     "distinctCountId": "foreign_doc_number",
     "entity_name": "foreign_prior",
     "group_name": "foreign_priority",
-    "join": "left outer join foreignpriority on foreignpriority.patent_id=solr_assignee_table.patent_id",
+    "join": "left outer join foreignpriority on foreignpriority.patent_id=patent_assignee.patent_id",
     "keyId": "",
     "field_join": "left outer join foreignpriority on foreignpriority.patent_id=patent_assignee.patent_id"
   },
@@ -137,7 +137,7 @@
     "distinctCountId": "pct_id",
     "entity_name": "pct_dat",
     "group_name": "pct_data",
-    "join": "left outer join pctdata on pctdata.patent_id=solr_assignee_table.patent_id",
+    "join": "left outer join pctdata on pctdata.patent_id=patent_assignee.patent_id",
     "keyId": "",
     "field_join": "left outer join pctdata on pctdata.patent_id=patent_assignee.patent_id"
   }
