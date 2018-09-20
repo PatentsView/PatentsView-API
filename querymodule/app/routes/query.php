@@ -20,7 +20,7 @@ require_once dirname(__FILE__) . '/../AddEmailDatabase.php';
 $app->post(
     '/addemail',
     function (Request $req, Response $res, $args = []) {
-        $body = $req->getBody();;
+        $body = $req->getBody();
         $bodyJSON = json_decode($body, true);
         if ($bodyJSON['email'] == null) {
             $res->withStatus()->response->status(400, "No email provided");
@@ -61,7 +61,7 @@ $app->post(
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req->getBody());
 
         $results = executeQuery($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
 
@@ -98,7 +98,7 @@ $app->post(
         global $INVENTOR_ENTITY_SPECS;
         global $INVENTOR_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req->getBody());
 
         $results = executeQuery($INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
 
@@ -136,7 +136,7 @@ $app->post(
         global $ASSIGNEE_ENTITY_SPECS;
         global $ASSIGNEE_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req->getBody());
 
         $results = executeQuery($ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
 
@@ -174,7 +174,7 @@ $app->post(
         global $CPC_ENTITY_SPECS;
         global $CPC_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req->getBody());
 
         $results = executeQuery($CPC_ENTITY_SPECS, $CPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
 
@@ -212,7 +212,7 @@ $app->post(
         global $CPC_GROUP_ENTITY_SPECS;
         global $CPC_GROUP_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req->getBody());
 
         $results = executeQuery($CPC_GROUP_ENTITY_SPECS, $CPC_GROUP_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
         $results = FormatResults($formatParam, $results, $CPC_GROUP_ENTITY_SPECS);
@@ -250,7 +250,7 @@ $app->post(
         global $USPC_ENTITY_SPECS;
         global $USPC_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req->getBody());
 
         $results = executeQuery($USPC_ENTITY_SPECS, $USPC_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
 
@@ -288,7 +288,7 @@ $app->post(
         global $NBER_ENTITY_SPECS;
         global $NBER_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req->getBody());
 
         $results = executeQuery($NBER_ENTITY_SPECS, $NBER_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
 
@@ -326,7 +326,7 @@ $app->post(
         global $LOCATION_ENTITY_SPECS;
         global $LOCATION_FIELD_SPECS;
 
-        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req);
+        list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req->getBody());
 
         $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
 

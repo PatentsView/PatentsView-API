@@ -12,13 +12,7 @@ require_once dirname(__FILE__) . '/../app/Exceptions/APIError.php';
 $logger = Logger::getLogger("base");
 
 
-try {
-    $config = Config::getInstance();
-} catch (\Exceptions\ConfigException $configException) {
-    ErrorHandler::getHandler()->sendError(500, "Server Error", "This is a server failure, trying different query is unlikely to work. Administrators have been notified");
-    throw $configException;
-}
-
+$config = Config::getInstance();
 
 $appConfig = [
     'settings' => [
