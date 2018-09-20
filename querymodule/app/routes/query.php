@@ -20,9 +20,7 @@ require_once dirname(__FILE__) . '/../AddEmailDatabase.php';
 $app->post(
     '/addemail',
     function (Request $req, Response $res, $args = []) {
-
         $body = $req->getBody();
-
         $bodyJSON = json_decode($body, true);
         if ($bodyJSON['email'] == null) {
             $res->withStatus()->response->status(400, "No email provided");
