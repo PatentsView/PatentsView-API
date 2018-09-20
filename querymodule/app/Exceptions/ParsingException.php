@@ -20,8 +20,7 @@ class ParsingException extends APIException
         "PINV6" => "Invalid field type %s or operator %s found for %s.",
         "PINV7" => "The operation %s is not valid on %s.",
         "PINV8" => "Invalid field specified: %s ");
-
-
+    
     public function __construct($code = "", array $custom_message = array(), Throwable $previous = null)
     {
         $this->code_mapping=array("PINV1" => 400, "PINV2" => 400, "PINV3" => 400, "PINV4" => 400, "PINV5" => 400, "PINV6" => 400, "PINV7" => 400, "PINV8" => 400);

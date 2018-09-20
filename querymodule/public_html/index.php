@@ -13,6 +13,7 @@ require_once dirname(__FILE__) . '/../app/Exceptions/APIError.php';
 $logger = Logger::getLogger("base");
 
 
+
 try {
     $config = Config::getInstance();
 } catch (\Exceptions\ConfigException $configException) {
@@ -21,6 +22,7 @@ try {
 
     throw $configException;
 }
+
 
 $appConfig = [
     'settings' => [
