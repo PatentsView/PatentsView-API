@@ -7,11 +7,11 @@
  */
 
 namespace Exceptions;
-
+require_once(dirname(__FILE__) . "/APIException.php");
 
 use Throwable;
 
-class ConfigException extends \Exception
+class ConfigException extends APIException
 {
     private $ini_path;
     private $config_object;
