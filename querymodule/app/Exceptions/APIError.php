@@ -26,5 +26,4 @@ final class APIError extends Error
         return $response->withHeader("X-Status-Reason", $exception->getMessage())->withJson(array("status" => "error", "payload" => array("error" => $exception->getMessage(), "code" => $customCode)), $status);
     }
 
-
 }
