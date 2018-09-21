@@ -126,10 +126,16 @@ class QueryParser
                             throw new \Exceptions\ParsingException("PINV3", array($val));
                         }
                         $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
+<<<<<<< HEAD
                     } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
                         $val = str_replace("'", "''", $val);
                         $returnString = "($dbField $operatorString '$val')";
                     } else {
+=======
+                    } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
+                        $returnString = "($dbField $operatorString '$val')";
+                    else {
+>>>>>>> Added new test for parser
                         throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
                     }
                 } else {
@@ -160,7 +166,10 @@ class QueryParser
                             if (is_array($val)) {
                                 $returnString = "(";
                                 for ($i = 0; $i < count($val); $i++) {
+<<<<<<< HEAD
                                     $val[$i] = str_replace("'", "''", $val[$i]);
+=======
+>>>>>>> Added new test for parser
                                     $returnString .= "$dbField like '$val[$i]%'";
                                     if ($i < count($val) - 1) {
                                         $returnString .= " OR ";
@@ -168,14 +177,20 @@ class QueryParser
                                 }
                                 $returnString .= ")";
                             } else {
+<<<<<<< HEAD
                                 $val = str_replace("'", "''", $val);
+=======
+>>>>>>> Added new test for parser
                                 $returnString = "($dbField like '$val%')";
                             }
                         elseif ($operator == '_contains')
                             if (is_array($val)) {
                                 $returnString = "(";
                                 for ($i = 0; $i < count($val); $i++) {
+<<<<<<< HEAD
                                     $val[$i] = str_replace("'", "''", $val[$i]);
+=======
+>>>>>>> Added new test for parser
                                     $returnString .= "$dbField like '%$val[$i]%'";
                                     if ($i < count($val) - 1) {
                                         $returnString .= " OR ";
@@ -183,7 +198,10 @@ class QueryParser
                                 }
                                 $returnString .= ")";
                             } else {
+<<<<<<< HEAD
                                 $val = str_replace("'", "''", $val);
+=======
+>>>>>>> Added new test for parser
                                 $returnString = "($dbField like '%$val%')";
                             }
                     } else {
@@ -223,8 +241,13 @@ class QueryParser
                         $val = '+' . $val;
                         $val = str_replace(' ', ' +', $val);
                         $returnString = "match ($dbField) against ('$val' in boolean mode)";
+<<<<<<< HEAD
                     } else
                         throw new \Exceptions\ParsingException("PINV5", array($apiField));
+=======
+                    }
+                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
+>>>>>>> Added new test for parser
                 }
             }
         } else {
