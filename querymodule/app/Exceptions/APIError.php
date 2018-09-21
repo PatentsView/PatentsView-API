@@ -17,7 +17,6 @@ final class APIError extends Error
 {
     public function __invoke(Request $request, Response $response, APIException $exception)
     {
-
         $status = $exception->getCode() ?: 500;
         $logger = \ErrorHandler::getHandler()->getLogger();
         $ip=$request->getServerParam('REMOTE_ADDR');
