@@ -103,36 +103,40 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
-                $dbField = getDBField($this->fieldSpecs, $apiField);
-                $datatype = $this->fieldSpecs[$apiField]['datatype'];
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                $operatorString = $this->COMPARISON_OPERATORS[$operator];
-                if ($datatype == 'float') {
-                    if (!is_float($val)) {
-                        throw new \Exceptions\ParsingException("PINV2", array($val));
+        if (array_key_exists($apiField, $this->fieldSpecs)) {
+            if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
+                if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                    $val = current($criterion);
+                    $dbField = getDBField($this->fieldSpecs, $apiField);
+                    $datatype = $this->fieldSpecs[$apiField]['datatype'];
+                    if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                    $operatorString = $this->COMPARISON_OPERATORS[$operator];
+                    if ($datatype == 'float') {
+                        if (!is_float($val)) {
+                            throw new \Exceptions\ParsingException("PINV2", array($val));
+                        }
+                        $returnString = "($dbField $operatorString $val)";
+                    } elseif ($datatype == 'int') {
+                        if (!is_numeric($val)) {
+                            throw new \Exceptions\ParsingException("PINV1", array($val));
+                        }
+                        $returnString = "($dbField $operatorString $val)";
+                    } elseif ($datatype == 'date') {
+                        if (!strtotime($val)) {
+                            throw new \Exceptions\ParsingException("PINV3", array($val));
+                        }
+                        $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
+                    } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
+                        $returnString = "($dbField $operatorString '$val')";
+                    else {
+                        throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
                     }
-                    $returnString = "($dbField $operatorString $val)";
-                } elseif ($datatype == 'int') {
-                    if (!is_numeric($val)) {
-                        throw new \Exceptions\ParsingException("PINV1", array($val));
-                    }
-                    $returnString = "($dbField $operatorString $val)";
-                } elseif ($datatype == 'date') {
-                    if (!strtotime($val)) {
-                        throw new \Exceptions\ParsingException("PINV3", array($val));
-                    }
-                    $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
-                } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
-                    $returnString = "($dbField $operatorString '$val')";
-                else {
-                    throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
+                } else {
+                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
                 }
-            } else {
-                throw new \Exceptions\ParsingException("PINV5", array($apiField));
             }
+        } else {
+            throw new \Exceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
 
@@ -143,45 +147,49 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
-                $dbField = getDBField($this->fieldSpecs, $apiField);
-                $datatype = $this->fieldSpecs[$apiField]['datatype'];
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                if ($datatype == 'string') {
-                    if ($operator == '_begins')
-                        if (is_array($val)) {
-                            $returnString = "(";
-                            for ($i = 0; $i < count($val); $i++) {
-                                $returnString .= "$dbField like '$val[$i]%'";
-                                if ($i < count($val) - 1) {
-                                    $returnString .= " OR ";
+        if (array_key_exists($apiField, $this->fieldSpecs)) {
+            if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
+                if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                    $val = current($criterion);
+                    $dbField = getDBField($this->fieldSpecs, $apiField);
+                    $datatype = $this->fieldSpecs[$apiField]['datatype'];
+                    if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                    if ($datatype == 'string') {
+                        if ($operator == '_begins')
+                            if (is_array($val)) {
+                                $returnString = "(";
+                                for ($i = 0; $i < count($val); $i++) {
+                                    $returnString .= "$dbField like '$val[$i]%'";
+                                    if ($i < count($val) - 1) {
+                                        $returnString .= " OR ";
+                                    }
                                 }
+                                $returnString .= ")";
+                            } else {
+                                $returnString = "($dbField like '$val%')";
                             }
-                            $returnString .= ")";
-                        } else {
-                            $returnString = "($dbField like '$val%')";
-                        }
-                    elseif ($operator == '_contains')
-                        if (is_array($val)) {
-                            $returnString = "(";
-                            for ($i = 0; $i < count($val); $i++) {
-                                $returnString .= "$dbField like '%$val[$i]%'";
-                                if ($i < count($val) - 1) {
-                                    $returnString .= " OR ";
+                        elseif ($operator == '_contains')
+                            if (is_array($val)) {
+                                $returnString = "(";
+                                for ($i = 0; $i < count($val); $i++) {
+                                    $returnString .= "$dbField like '%$val[$i]%'";
+                                    if ($i < count($val) - 1) {
+                                        $returnString .= " OR ";
+                                    }
                                 }
+                                $returnString .= ")";
+                            } else {
+                                $returnString = "($dbField like '%$val%')";
                             }
-                            $returnString .= ")";
-                        } else {
-                            $returnString = "($dbField like '%$val%')";
-                        }
+                    } else {
+                        throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
+                    }
                 } else {
-                    throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
+                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
                 }
-            } else {
-                throw new \Exceptions\ParsingException("PINV5", array($apiField));
             }
+        } else {
+            throw new \Exceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
     }
@@ -191,28 +199,31 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
-                $dbField = getDBField($this->fieldSpecs, $apiField);
+        if (array_key_exists($apiField, $this->fieldSpecs)) {
+            if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
+                if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                    $val = current($criterion);
+                    $dbField = getDBField($this->fieldSpecs, $apiField);
 
-                if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
-                    throw new \Exceptions\ParsingException("PINV7", array($operator, $apiField));
-                }
+                    if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
+                        throw new \Exceptions\ParsingException("PINV7", array($operator, $apiField));
+                    }
 
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                if ($operator == '_text_phrase') {
-                    $returnString = "match ($dbField) against ('\"$val\"' in boolean mode)";
-                } elseif ($operator == '_text_any') {
-                    $returnString = "match ($dbField) against ('$val' in boolean mode)";
-                } elseif ($operator == '_text_all') {
-                    $val = '+' . $val;
-                    $val = str_replace(' ', ' +', $val);
-                    $returnString = "match ($dbField) against ('$val' in boolean mode)";
+                    if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                    if ($operator == '_text_phrase') {
+                        $returnString = "match ($dbField) against ('\"$val\"' in boolean mode)";
+                    } elseif ($operator == '_text_any') {
+                        $returnString = "match ($dbField) against ('$val' in boolean mode)";
+                    } elseif ($operator == '_text_all') {
+                        $val = '+' . $val;
+                        $val = str_replace(' ', ' +', $val);
+                        $returnString = "match ($dbField) against ('$val' in boolean mode)";
+                    }
+                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
                 }
-            } else {
-                throw new \Exceptions\ParsingException("PINV5", array($apiField));
             }
+        } else {
+            throw new \Exceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
     }
@@ -268,12 +279,11 @@ class QueryParser
                     throw new \Exceptions\ParsingException("PINV5", array($apiField));
                 }
             }
-        }else{
+        } else {
             throw new \Exceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
     }
-
 }
 
 function parseFieldList(array $fieldSpecs, array $fieldsParam = null)
@@ -281,12 +291,11 @@ function parseFieldList(array $fieldSpecs, array $fieldsParam = null)
     $returnFieldSpecs = array();
 
     for ($i = 0; $i < count($fieldsParam); $i++) {
-        try {
+        if (array_key_exists($fieldsParam[$i], $fieldSpecs)) {
             $returnFieldSpecs[$fieldsParam[$i]] = $fieldSpecs[$fieldsParam[$i]];
-        } catch (Exception $e) {
+        } else {
             throw new \Exceptions\ParsingException("PINV8", array($fieldsParam[$i]));
         }
     }
-
     return $returnFieldSpecs;
 }
