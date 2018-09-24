@@ -1,7 +1,8 @@
 <?php
 require_once dirname(__FILE__) . '/../app/DatabaseQuery.php';
-require_once dirname(__FILE__) . '/../app/execute_query.php';
+require_once dirname(__FILE__) . '/../app/executeQuery.php';
 require_once dirname(__FILE__) . '/../app/entitySpecs.php';
+require_once(dirname(__FILE__) . "/../app/Exceptions/QueryException.php");
 
 class queryDatabase_Test extends PHPUnit_Framework_TestCase
 {
@@ -47,7 +48,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
             'assignee_last_name' => $PATENT_FIELD_SPECS['assignee_last_name']
         );
         $dbQuery = new DatabaseQuery();
-        $options = array('per_page'=>10000);
+        $options = array('per_page' => 10000);
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldsSpecs, null, $options);
         $this->assertGreaterThan(6000, count($results['patents']));
     }
@@ -67,14 +68,14 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
             'assignee_last_name' => $PATENT_FIELD_SPECS['assignee_last_name']
         );
         $dbQuery = new DatabaseQuery();
-        $options = array('page'=>1, 'per_page'=>25);
+        $options = array('page' => 1, 'per_page' => 25);
         $resultsFirst = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldsSpecs, null, $options);
-        $options = array('page'=>11, 'per_page'=>25);
+        $options = array('page' => 11, 'per_page' => 25);
         $resultsSecond = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldsSpecs, null, $options);
-        $options = array('page'=>6, 'per_page'=>50);
+        $options = array('page' => 6, 'per_page' => 50);
         $resultsThird = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldsSpecs, null, $options);
-        $this->assertNotEquals($resultsFirst['patents'][0],$resultsSecond['patents'][0]);
-        $this->assertEquals($resultsSecond['patents'][0],$resultsThird['patents'][0]);
+        $this->assertNotEquals($resultsFirst['patents'][0], $resultsSecond['patents'][0]);
+        $this->assertEquals($resultsSecond['patents'][0], $resultsThird['patents'][0]);
         $patentIds = array();
         foreach ($resultsSecond['patents'] as $row) $patentIds[$row['patent_id']] = 1;
         $this->assertEquals(25, count($patentIds));
@@ -89,7 +90,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         global $PATENT_FIELD_SPECS;
         $whereClause = "patent.number like '840790%'";
         $whereFieldsUsed = array('patent_id');
-        $sort = array(array('patent_title'=>'asc'));
+        $sort = array(array('patent_title' => 'asc'));
         $selectFieldsSpecs = array(
             'patent_id' => $PATENT_FIELD_SPECS['patent_id'],
             'patent_type' => $PATENT_FIELD_SPECS['patent_type'],
@@ -107,13 +108,14 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException ErrorException
-     */   public function testQueryDatabaseWithInvalidSorting()
+     */
+    public function testQueryDatabaseWithInvalidSorting()
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $whereClause = "patent.patent_number like '820260%'";
         $whereFieldsUsed = array('patent_id');
-        $sort = array(array('inventor_id'=>'asc'));
+        $sort = array(array('inventor_id' => 'asc'));
         $selectFieldsSpecs = array(
             'patent_id' => $PATENT_FIELD_SPECS['patent_id'],
             'patent_type' => $PATENT_FIELD_SPECS['patent_type'],
@@ -123,10 +125,21 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
             'assignee_last_name' => $PATENT_FIELD_SPECS['assignee_last_name']
         );
         $dbQuery = new DatabaseQuery();
-        $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldsSpecs, $sort);
+
+        $exception = null;
+        try {
+            $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldsSpecs, $sort);
+        } catch (\Exceptions\QueryException $e) {
+            $exception = $e->getCustomCode();
+        } catch (Exception $e) {
+            print_r($e->getMessage());
+        }
+        $this->assertEquals("QR2", $exception);
+
+
     }
 
-    public  function testQueryDatabaseAllFields()
+    public function testQueryDatabaseAllFields()
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
@@ -136,30 +149,28 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, null, array(), array(), true, $selectFieldSpecs, null);
         $memUsed = memory_get_usage();
         if (count($results['patents']) < 25) {
-            $this->assertEquals($dbQuery->getTotalFound(), count($results['patents']));
-        }
-        else {
+            $this->assertEquals($dbQuery->getTotalCounts(), count($results['patents']));
+        } else {
             $this->assertEquals(25, count($results['patents']));
-            $this->assertGreaterThanOrEqual(25, $dbQuery->getTotalFound());
+            $this->assertGreaterThanOrEqual(25, $dbQuery->getTotalCounts());
         }
     }
 
-    public  function testQueryDatabaseAllFieldsMaxPageSize()
+    public function testQueryDatabaseAllFieldsMaxPageSize()
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
         $selectFieldSpecs = $PATENT_FIELD_SPECS;
-        $options = array('page'=>1, 'per_page'=>10000);
+        $options = array('page' => 1, 'per_page' => 10000);
         $dbQuery = new DatabaseQuery();
         $memUsed = memory_get_usage();
         $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, null, array(), array(), true, $selectFieldSpecs, null, $options);
         $memUsed = memory_get_usage();
         if (count($results['patents']) < 10000) {
-            $this->assertEquals($dbQuery->getTotalFound(), count($results['patents']));
-        }
-        else {
+            $this->assertEquals($dbQuery->getTotalCounts(), count($results['patents']));
+        } else {
             $this->assertEquals(10000, count($results['patents']));
-            $this->assertGreaterThanOrEqual(10000, $dbQuery->getTotalFound());
+            $this->assertGreaterThanOrEqual(10000, $dbQuery->getTotalCounts());
         }
     }
 
@@ -169,7 +180,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         global $INVENTOR_FIELD_SPECS;
         $whereClause = "patent.date >= '2007-01-04'";
         $whereFieldsUsed = array('patent_date');
-        $sort = array(array('inventor_last_name'=>'desc'));
+        $sort = array(array('inventor_last_name' => 'desc'));
         $selectFieldsSpecs = array(
             'patent_number' => $INVENTOR_FIELD_SPECS['patent_number'],
             'patent_date' => $INVENTOR_FIELD_SPECS['patent_date'],
@@ -190,7 +201,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         global $INVENTOR_FIELD_SPECS;
         $whereClause = "inventor.name_last like 'You%'";
         $whereFieldsUsed = array('inventor_last_name');
-        $sort = array(array('inventor_first_name'=>'desc'));
+        $sort = array(array('inventor_first_name' => 'desc'));
         $selectFieldsSpecs = array(
             'patent_number' => $INVENTOR_FIELD_SPECS['patent_number'],
             'patent_title' => $INVENTOR_FIELD_SPECS['patent_title'],

@@ -2,9 +2,12 @@
 ini_set('max_execution_time', 400);
 // Step 1: Require the Slim Framework
 
+// config.php provides global configuration class instance (db details, solr details etc)
 require_once dirname(__FILE__) . '/../app/config.php';
 require __DIR__ . '/../vendor/autoload.php';
 require_once dirname(__FILE__) . '/../app/ErrorHandler.php';
+require_once dirname(__FILE__) . '/../app/Exceptions/APIError.php';
+
 
 $logger = Logger::getLogger("base");
 
@@ -16,28 +19,32 @@ try {
 throw $configException;
 }
 
+$appConfig = [
+    'settings' => [
+        'displayErrorDetails' => false,
+
+        'logger' => [
+            'name' => 'slim-app',
+            'level' => 'debug',
+            'path' => 'php://stderr',
+        ],
+    ],
+];
+
+if (Config::MODE == 'development') {
+    $appConfig = [
+        'settings' => [
+            'displayErrorDetails' => true,
+        ],
+    ];
+
+}
 // Step 2: Instantiate a Slim application
-$app = new \Slim\Slim(array(
-    'mode' => $config::MODE
-));
-
-$app->contentType('application/json; charset=utf-8');
-
-// Only invoked if mode is "production"
-$app->configureMode('production', function () use ($app) {
-    $app->config(array(
-        'log.enable' => true,
-        'debug' => false
-    ));
-});
-
-// Only invoked if mode is "development"
-$app->configureMode('development', function () use ($app) {
-    $app->config(array(
-        'log.enable' => false,
-        'debug' => true
-    ));
-});
+$app = new \Slim\App($appConfig);
+$c = $app->getContainer();
+$c['errorHandler'] = function ($c) {
+    return new Slim\Handlers\APIError();
+};
 
 // Step 3: Define the Slim application routes
 

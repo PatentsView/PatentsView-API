@@ -3,6 +3,7 @@ require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
 
+require_once(dirname(__FILE__) . "/Exceptions/QueryException.php");
 
 class DatabaseQuery
 {
@@ -58,9 +59,11 @@ class DatabaseQuery
             }
 
             if (array_key_exists('per_page', $options))
-                if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1))
-                    $this->errorHandler->sendError(400, "Per_page must be a positive number not to exceed " . $config->getMaxPageSize() . ".", $options);
-                else
+                if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1)) {
+                    $this->errorHandler->getLogger()->debug("Page size too big");
+                    throw new \Exceptions\QueryException("QR1", array($config->getMaxPageSize()));
+
+                } else
                     $perPage = $options['per_page'];
 
             if (array_key_exists('matched_subentities_only', $options) && strtolower($options['matched_subentities_only']) != "false") {
@@ -78,9 +81,8 @@ class DatabaseQuery
             if (array_key_exists('sort_by_subentity_counts', $options) && array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
                 $this->sort_by_subentity_counts = strtolower($options['sort_by_subentity_counts']);
             } elseif (array_key_exists('sort_by_subentity_counts', $options) && !array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
-                $this->errorHandler->sendError(500, "Sorting field is not in the output field list.", "Sorting field " . $options['sort_by_subentity_counts'] . " is not in the output field list.");
-                throw new $e;
-            } else {
+                $this->errorHandler->getLogger()->debug(vsprintf("Sorting field %s is not in the output field list.", array($options['sort_by_subentity_counts'])));
+                throw new \Exceptions\QueryException("QR2", array($options['sort_by_subentity_counts']));
             }
         }
         $this->selectFieldSpecs = $selectFieldSpecs;
@@ -114,49 +116,49 @@ class DatabaseQuery
         $county = 0;
         $maxTries = 3;
         do {
-            try {
-                // If the query results for this where clause don't already exist, then we need to run the
-                // query and cache the primary entity IDs.
+            // If the query results for this where clause don't already exist, then we need to run the
+            // query and cache the primary entity IDs.
 
-                $results = $this->runQuery('QueryDefID, QueryString', $this->supportDatabase . '.QueryDef', "QueryDefID=$queryDefId", null);
-                //TODO Need to handle a hash collision
-
-                if (count($results) == 0) {
-                    // Add an entry for the query
-
-                    $this->startTransaction();
-                    $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
-                    $this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
-
-                    // Get all the primary entity IDs and insert into the cached results table
-                    #Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
-                    $insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
-                    $selectPrimaryEntityIdsString =
-                        "$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
-                    if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause $whereGroup "; else $whereInsert = "";
-                    if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
-                    $fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
-                    $this->fromSubEntity = $fromInsert;
-                    $this->runInsertSelect($insertStatement,
-                        $selectPrimaryEntityIdsString,
-                        '(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
-                        $fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
-                        null,
-                        null, $dbSettings);
-                    $this->commitTransaction();
-                    break;
+            $results = $this->runQuery('QueryDefID, QueryString', $this->supportDatabase . '.QueryDef', "QueryDefID=$queryDefId", null);
+            //TODO Need to handle a hash collision
+            if ($results === false) {
+                try {
+                    $this->rollbackTransaction();
+                } catch (PDOException $e) {
+                    $this->errorHandler->getLogger()->debug($e->getMessage());
                 }
-            } catch (Exception $e) {
-
-                $this->rollbackTransaction();
                 $county++;
                 if ($county == $maxTries) {
-                    $this->errorHandler->sendError(500, "Insert select execution failed.", $e);
-                    throw new $e;
-                    break;
+                    $this->errorHandler->getLogger()->debug("Error during cache Load");
+                    throw new \Exceptions\QueryException("QDI1", array());
                 }
                 usleep(500000);
                 continue;
+            }
+            if (count($results) == 0) {
+                // Add an entry for the query
+
+                $this->startTransaction();
+                $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
+                $this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
+
+                // Get all the primary entity IDs and insert into the cached results table
+                #Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
+                $insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
+                $selectPrimaryEntityIdsString =
+                    "$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
+                if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause $whereGroup "; else $whereInsert = "";
+                if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
+                $fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
+                $this->fromSubEntity = $fromInsert;
+                $this->runInsertSelect($insertStatement,
+                    $selectPrimaryEntityIdsString,
+                    '(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
+                    $fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
+                    null,
+                    null, $dbSettings);
+                $this->commitTransaction();
+                break;
             }
             break;
 
@@ -167,7 +169,9 @@ class DatabaseQuery
         $fromEntity = $this->supportDatabase . '.QueryResults qr';
         $whereEntity = "qr.QueryDefId=$queryDefId";
         $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
+        if (!$countResults) {
 
+        }
         $this->entityTotalCounts[$entitySpecs[0]['entity_name']] = intval($countResults[0]['total_found']);
 
 
@@ -227,122 +231,36 @@ class DatabaseQuery
                 unset($entityResults);
 
                 if ($this->include_subentity_total_counts) {
-                    try {
-                        // Count of all subentities for all primary entities.
-                        $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
-                        $fromEntity = $fromSubEntity;
-                        if (!in_array($entitySpec['entity_name'], $groupsCheckTotalCount)) {
-                            $fromEntity .= ' ' . $entitySpec['join'];
-                        }
-                        $whereEntity = "qr.QueryDefId=$queryDefId";
-                        $whereEntity .= ' and ' . $whereClause;
-                        $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
-                        $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
-                    } catch (Exception $e) {
+                    // Count of all subentities for all primary entities.
+                    $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
+                    $fromEntity = $fromSubEntity;
+                    if (!in_array($entitySpec['entity_name'], $groupsCheckTotalCount)) {
+                        $fromEntity .= ' ' . $entitySpec['join'];
+                    }
+                    $whereEntity = "qr.QueryDefId=$queryDefId";
+                    $whereEntity .= ' and ' . $whereClause;
+                    $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
+                    if ($countResults === false) {
                         $this->errorHandler->getLogger()->debug($e);
                     }
+                    $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
+
                 }
             }
         }
-
         return $results;
     }
 
-
-    private function runQuery($select, $from, $where, $order)
+    private function setupGroupVars()
     {
 
-        $this->connectToDB();
-
-        if (strlen($where) > 0) $where = "WHERE $where ";
-        if (strlen($order) > 0) $order = "ORDER BY $order";
-        $sqlQuery = "SELECT $select FROM $from $where $order";
-        $this->errorHandler->getLogger()->debug($sqlQuery);
-
-        try {
-            $st = $this->db->query("$sqlQuery", PDO::FETCH_ASSOC);
-            $results = $st->fetchAll();
-            $st->closeCursor();
-        } catch (Exception $e) {
-            $this->errorHandler->sendError(500, "Query execution failed.", $e);
-            throw new $e;
+        $this->entityGroupVars = $this->entitySpecs;
+        foreach ($this->entityGroupVars as &$group) {
+            $name = $group['entity_name'];
+            $group['hasId'] = "alreadyHas{$name}Id";
+            $group['hasFields'] = "has{$name}Fields";
         }
-        //file_put_contents('php://stderr', print_r(count($results), TRUE));
-        //file_put_contents('php://stderr', print_r("\n", TRUE));
-        return $results;
-    }
-
-    private function runInsertSelect($insert, $select, $from, $where, $order, $dbSettings)
-    {
-        global $config;
-        $this->connectToDB();
-
-        if (strlen($where) > 0) $where = "WHERE $where ";
-        if (strlen($order) > 0) $order = "ORDER BY $order";
-        $tmp_dir=$config->getTempPath();
-        $insertHash = substr(md5(uniqid(mt_rand(), true)), 0, 10);
-
-        $selectSt = "SELECT $select FROM $from $where $order";
-        $selectSt = preg_replace('/"/', '\"', $selectSt);
-        $cmd = 'mysql -B -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['database']) . ' -e "' . $selectSt . '" > ' . escapeshellarg($tmp_dir . $insertHash . '.txt');
-        shell_exec($cmd);
-        $cmd2 = 'mysql -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'".$tmp_dir. $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
-
-        try {
-            if (filesize($tmp_dir . $insertHash . ".txt") !== 0) {
-                $outfile = fopen($tmp_dir . $insertHash . ".txt", 'r');
-                $outstr = fread($outfile, filesize($tmp_dir . $insertHash . ".txt"));
-                $outstr = preg_replace('/\s+\n/', "\n", $outstr);
-                $outstr = preg_replace('/\n$/', '', $outstr);
-
-                fclose($outfile);
-                unlink($tmp_dir . $insertHash . '.txt');
-                $outfile = fopen($tmp_dir . $insertHash . ".txt", 'w');
-                fwrite($outfile, $outstr);
-                fclose($outfile);
-            }
-            $results = shell_exec($cmd2);
-            unlink($tmp_dir . $insertHash . '.txt');
-            //$st = $this->db->prepare($sqlQuery);
-            //$results = $st->execute();
-            //$st->closeCursor();
-        } catch (Exception $e) {
-            $this->errorHandler->sendError(500, "Insert select execution failed.", $e);
-            throw new $e;
-        }
-
-        return $results;
-    }
-
-    private function runInsert($insert, $params)
-    {
-        $this->connectToDB();
-
-        $sqlStatement = "INSERT INTO $insert";
-        $this->errorHandler->getLogger()->debug($sqlStatement);
-        $this->errorHandler->getLogger()->debug($params);
-
-        $counto = 0;
-        $maxTriesy = 3;
-        do {
-            try {
-                $st = $this->db->prepare($sqlStatement);
-                $results = $st->execute($params);
-                $st->closeCursor();
-                break;
-            } catch (Exception $e) {
-                if ($counto == $maxTriesy) {
-                    $this->errorHandler->sendError(500, "Insert execution failed.", $e);
-                    throw new $e;
-                    break;
-                }
-                usleep(1000000);
-                continue;
-            }
-            break;
-        } while ($counto < $maxTriesy);
-
-        return $results;
+        unset($group);
     }
 
     private function initializeGroupVars()
@@ -362,7 +280,6 @@ class DatabaseQuery
         }
     }
 
-
     private function determineSelectFields()
     {
         foreach ($this->entityGroupVars as $group) {
@@ -376,44 +293,30 @@ class DatabaseQuery
         }
     }
 
-
-    private function buildSelectString()
+    private function buildFrom(array $whereFieldsUsed, array $selectFieldSpecs, array $sortFields)
     {
-        $selectString = '';
+        // Smerge all the fields into one array
+        $allFieldsUsed = array_merge($whereFieldsUsed, array_keys($selectFieldSpecs), $sortFields);
+        $allFieldsUsed = array_unique($allFieldsUsed);
+        $fromString = '';
+        $joins = array();
 
-        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
-            if ($selectString != '')
-                $selectString .= ', ';
-            $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
+        // We need to go through the entities in order so the joins are done in the same order as they appear
+        // in the entity specs.
+        foreach ($this->entityGroupVars as $group)
+            foreach ($allFieldsUsed as $apiField)
+                if ($group['entity_name'] == $this->fieldSpecs[$apiField]['entity_name'])
+                    if (!in_array($group['join'], $joins))
+                        $joins[] = $group['join'];
+
+
+        foreach ($joins as $join) {
+            $fromString .= ' ' . $join . ' ';
+
         }
 
-        return $selectString;
+        return $fromString;
     }
-
-    private function buildSelectStringForEntity($entitySpec)
-    {
-        $selectString = '';
-        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
-            if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
-                if ($selectString != '')
-                    $selectString .= ', ';
-                $selectString .= getDBField($this->fieldSpecs, $apiField,"column_name") . " as $apiField";
-            }
-        }
-        return $selectString;
-    }
-
-    private function buildSelectStringForEntityReturnApiField($entitySpec)
-    {
-        $selectString = Array();
-        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
-            if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
-                $selectString[] = $apiField;
-            }
-        }
-        return $selectString;
-    }
-
 
     private function buildSortString($sortParam)
     {
@@ -424,13 +327,12 @@ class DatabaseQuery
                     try {
                         $fieldSpec = $this->fieldSpecs[$apiField];
                     } catch (ErrorException $e) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid field for sorting: $apiField");
-                        throw $e;
+
+                        throw new \Exceptions\QueryException("QR3", array($apiField));
                     }
                     if (strtolower($fieldSpec['sort']) == 'y') {
                         if (($direction != 'asc') and ($direction != 'desc')) {
-                            ErrorHandler::getHandler()->sendError(400, "Not a valid direction for sorting: $direction");
-                            throw new ErrorException("Not a valid direction for sorting: $direction");
+                            throw new \Exceptions\QueryException("QR4", array($direction));
                         } else {
                             if ($orderString != '')
                                 $orderString .= ', ';
@@ -439,8 +341,7 @@ class DatabaseQuery
                         }
                     } elseif (strtolower($fieldSpec['sort']) == 'suppl') {
                         if (($direction != 'asc') and ($direction != 'desc')) {
-                            ErrorHandler::getHandler()->sendError(400, "Not a valid direction for sorting: $direction");
-                            throw new ErrorException("Not a valid direction for sorting: $direction");
+                            throw new \Exceptions\QueryException("QR4", array($direction));
                         } else {
                             if ($orderString != '')
                                 $orderString .= ', ';
@@ -459,9 +360,7 @@ class DatabaseQuery
                             }
                         }
                     } else {
-                        $msg = "Not a valid field for sorting: $apiField";
-                        ErrorHandler::getHandler()->sendError(400, $msg);
-                        throw new ErrorException($msg);
+                        throw new \Exceptions\QueryException("QR3", array($apiField));
                     }
                 }
             }
@@ -473,39 +372,27 @@ class DatabaseQuery
         return $orderString;
     }
 
-    private function buildFrom(array $whereFieldsUsed, array $selectFieldSpecs, array $sortFields,$join_key="join")
-    {
-        // Smerge all the fields into one array
-        $allFieldsUsed = array_merge($whereFieldsUsed, array_keys($selectFieldSpecs), $sortFields);
-        $allFieldsUsed = array_unique($allFieldsUsed);
-        $fromString = '';
-        $joins = array();
-
-        // We need to go through the entities in order so the joins are done in the same order as they appear
-        // in the entity specs.
-        foreach ($this->entityGroupVars as $group)
-            foreach ($allFieldsUsed as $apiField)
-                if ($group['entity_name'] == $this->fieldSpecs[$apiField]['entity_name'])
-                    if (!in_array($group[$join_key], $joins))
-                        $joins[] = $group[$join_key];
-
-        foreach ($joins as $join) {
-            $fromString .= ' ' . $join . ' ';
-        }
-
-        return $fromString;
-    }
-
-    private function setupGroupVars()
+    private function runQuery($select, $from, $where, $order)
     {
 
-        $this->entityGroupVars = $this->entitySpecs;
-        foreach ($this->entityGroupVars as &$group) {
-            $name = $group['entity_name'];
-            $group['hasId'] = "alreadyHas{$name}Id";
-            $group['hasFields'] = "has{$name}Fields";
+        $this->connectToDB();
+
+        if (strlen($where) > 0) $where = "WHERE $where ";
+        if (strlen($order) > 0) $order = "ORDER BY $order";
+        $sqlQuery = "SELECT $select FROM $from $where $order";
+        $this->errorHandler->getLogger()->debug($sqlQuery);
+
+        try {
+            $st = $this->db->query("$sqlQuery", PDO::FETCH_ASSOC);
+            $results = $st->fetchAll();
+            $st->closeCursor();
+        } catch (PDOException $e) {
+            $this->errorHandler->getLogger()->debug($e->getMessage());
+            return false;
         }
-        unset($group);
+        //file_put_contents('php://stderr', print_r(count($results), TRUE));
+        //file_put_contents('php://stderr', print_r("\n", TRUE));
+        return $results;
     }
 
     private function connectToDB()
@@ -518,13 +405,17 @@ class DatabaseQuery
                 $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             } catch (PDOException $e) {
-
-                $this->errorHandler->sendError(500, "Failed to connect to database: $dbSettings[database].", $e);
-                throw new $e;
+                $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
+                throw new \Exceptions\QueryException("QDC1", array());
             }
 
         }
 
+    }
+
+    private function rollbackTransaction()
+    {
+        $this->db->rollback();
     }
 
     private function startTransaction()
@@ -532,14 +423,130 @@ class DatabaseQuery
         $this->db->beginTransaction();
     }
 
+    private function runInsert($insert, $params)
+    {
+        $this->connectToDB();
+
+        $sqlStatement = "INSERT INTO $insert";
+        $this->errorHandler->getLogger()->debug($sqlStatement);
+        $this->errorHandler->getLogger()->debug($params);
+
+        $counto = 0;
+        $maxTriesy = 3;
+        do {
+            try {
+                $st = $this->db->prepare($sqlStatement);
+                $results = $st->execute($params);
+                $st->closeCursor();
+                break;
+            } catch (PDOException $e) {
+                if ($counto == $maxTriesy) {
+                    $this->errorHandler->getLogger()->debug("Error during cache row creation");
+                    throw new \Exceptions\QueryException("QDI2", array());
+                }
+                usleep(1000000);
+                continue;
+            }
+            break;
+        } while ($counto < $maxTriesy);
+
+        return $results;
+    }
+
+    private function runInsertSelect($insert, $select, $from, $where, $order, $dbSettings)
+    {
+        global $config;
+        $this->connectToDB();
+
+        if (strlen($where) > 0) $where = "WHERE $where ";
+        if (strlen($order) > 0) $order = "ORDER BY $order";
+        $tmp_dir = $config->getTempPath();
+        $insertHash = substr(md5(uniqid(mt_rand(), true)), 0, 10);
+
+        $selectSt = "SELECT $select FROM $from $where $order";
+        $selectSt = preg_replace('/"/', '\"', $selectSt);
+        $cmd = 'mysql -B -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['database']) . ' -e "' . $selectSt . '" > ' . escapeshellarg($tmp_dir . $insertHash . '.txt');
+        $export_command_status = -1;
+        $export_output = array();
+        exec($cmd, $export_output, $export_command_status);
+        if ($export_command_status != 0) {
+            $this->errorHandler->getLogger()->debug("Failure in exporting to text file." . implode("\n", $export_output));
+            throw new \Exceptions\QueryException("QDIS1", array());
+        }
+        $cmd2 = 'mysql -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
+
+        if (filesize($tmp_dir . $insertHash . ".txt") !== 0) {
+            $outfile = fopen($tmp_dir . $insertHash . ".txt", 'r');
+            $outstr = fread($outfile, filesize($tmp_dir . $insertHash . ".txt"));
+            $outstr = preg_replace('/\s+\n/', "\n", $outstr);
+            $outstr = preg_replace('/\n$/', '', $outstr);
+
+            fclose($outfile);
+            unlink($tmp_dir . $insertHash . '.txt');
+            $outfile = fopen($tmp_dir . $insertHash . ".txt", 'w');
+            fwrite($outfile, $outstr);
+            fclose($outfile);
+        }
+
+        $import_command_status = -1;
+        $import_output = array();
+        exec($cmd2, $import_output, $import_command_status);
+        if ($import_command_status != 0) {
+            $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . implode("\n", $import_output));
+            throw new \Exceptions\QueryException("QDIS3", array());
+
+
+        }
+        
+        unlink($tmp_dir . $insertHash . '.txt');
+        //$st = $this->db->prepare($sqlQuery);
+        //$results = $st->execute();
+        //$st->closeCursor();
+
+
+        return $results;
+    }
+
     private function commitTransaction()
     {
         $this->db->commit();
     }
 
-    private function rollbackTransaction()
+    private function buildSelectStringForEntity($entitySpec)
     {
-        $this->db->rollback();
+        $selectString = '';
+        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
+            if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
+                if ($selectString != '')
+                    $selectString .= ', ';
+                $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
+            }
+        }
+        return $selectString;
+    }
+
+    private function buildSelectStringForEntityReturnApiField($entitySpec)
+    {
+        $selectString = Array();
+        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
+            if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
+                $selectString[] = $apiField;
+            }
+        }
+        return $selectString;
+    }
+
+    private function buildSelectString()
+    {
+        $selectString = '';
+
+        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
+            if ($selectString != '')
+                $selectString .= ', ';
+            $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
+        }
+
+        return $selectString;
     }
 
 
