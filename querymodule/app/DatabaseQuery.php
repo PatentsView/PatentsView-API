@@ -502,6 +502,7 @@ class DatabaseQuery
         //$st = $this->db->prepare($sqlQuery);
         //$results = $st->execute();
         //$st->closeCursor();
+        //$st->closeCursor();
 
 
         return $import_command_status;
