@@ -25,4 +25,6 @@ final class APIError extends Error
         $logger->error("$status\t$customCode\t$ip\t$query");
         return $response->withHeader("X-Status-Reason", $exception->getMessage())->withJson(array("error" => $exception->getMessage()), $status);
     }
+
+
 }

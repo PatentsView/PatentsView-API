@@ -59,9 +59,11 @@ class DatabaseQuery
             }
 
             if (array_key_exists('per_page', $options))
-                if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1))
+                if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1)) {
+                    $this->errorHandler->getLogger()->debug("Page size too big");
                     throw new \Exceptions\QueryException("QR1", array($config->getMaxPageSize()));
-                else
+
+                } else
                     $perPage = $options['per_page'];
 
             if (array_key_exists('matched_subentities_only', $options) && strtolower($options['matched_subentities_only']) != "false") {
@@ -79,6 +81,7 @@ class DatabaseQuery
             if (array_key_exists('sort_by_subentity_counts', $options) && array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
                 $this->sort_by_subentity_counts = strtolower($options['sort_by_subentity_counts']);
             } elseif (array_key_exists('sort_by_subentity_counts', $options) && !array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
+                $this->errorHandler->getLogger()->debug(vsprintf("Sorting field %s is not in the output field list.", array($options['sort_by_subentity_counts'])));
                 throw new \Exceptions\QueryException("QR2", array($options['sort_by_subentity_counts']));
             }
         }
@@ -122,10 +125,11 @@ class DatabaseQuery
                 try {
                     $this->rollbackTransaction();
                 } catch (PDOException $e) {
-                    $this->errorHandler->getLogger()->error($e->getMessage());
+                    $this->errorHandler->getLogger()->debug($e->getMessage());
                 }
                 $county++;
                 if ($county == $maxTries) {
+                    $this->errorHandler->getLogger()->debug("Error during cache Load");
                     throw new \Exceptions\QueryException("QDI1", array());
                 }
                 usleep(500000);
@@ -142,7 +146,7 @@ class DatabaseQuery
                 #Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
                 $insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
                 $selectPrimaryEntityIdsString =
-                    "$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as` " . $this->entityGroupVars[0]['keyId'];
+                    "$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
                 if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause $whereGroup "; else $whereInsert = "";
                 if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
                 $fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
@@ -165,7 +169,9 @@ class DatabaseQuery
         $fromEntity = $this->supportDatabase . '.QueryResults qr';
         $whereEntity = "qr.QueryDefId=$queryDefId";
         $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
+        if (!$countResults) {
 
+        }
         $this->entityTotalCounts[$entitySpecs[0]['entity_name']] = intval($countResults[0]['total_found']);
 
 
@@ -225,24 +231,23 @@ class DatabaseQuery
                 unset($entityResults);
 
                 if ($this->include_subentity_total_counts) {
-                    try {
-                        // Count of all subentities for all primary entities.
-                        $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
-                        $fromEntity = $fromSubEntity;
-                        if (!in_array($entitySpec['entity_name'], $groupsCheckTotalCount)) {
-                            $fromEntity .= ' ' . $entitySpec['join'];
-                        }
-                        $whereEntity = "qr.QueryDefId=$queryDefId";
-                        $whereEntity .= ' and ' . $whereClause;
-                        $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
-                        $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
-                    } catch (Exception $e) {
+                    // Count of all subentities for all primary entities.
+                    $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
+                    $fromEntity = $fromSubEntity;
+                    if (!in_array($entitySpec['entity_name'], $groupsCheckTotalCount)) {
+                        $fromEntity .= ' ' . $entitySpec['join'];
+                    }
+                    $whereEntity = "qr.QueryDefId=$queryDefId";
+                    $whereEntity .= ' and ' . $whereClause;
+                    $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
+                    if ($countResults === false) {
                         $this->errorHandler->getLogger()->debug($e);
                     }
+                    $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
+
                 }
             }
         }
-
         return $results;
     }
 
@@ -320,13 +325,12 @@ class DatabaseQuery
                     try {
                         $fieldSpec = $this->fieldSpecs[$apiField];
                     } catch (ErrorException $e) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid field for sorting: $apiField");
-                        throw $e;
+
+                        throw new \Exceptions\QueryException("QR3", array($apiField));
                     }
                     if (strtolower($fieldSpec['sort']) == 'y') {
                         if (($direction != 'asc') and ($direction != 'desc')) {
-                            ErrorHandler::getHandler()->sendError(400, "Not a valid direction for sorting: $direction");
-                            throw new ErrorException("Not a valid direction for sorting: $direction");
+                            throw new \Exceptions\QueryException("QR4", array($direction));
                         } else {
                             if ($orderString != '')
                                 $orderString .= ', ';
@@ -335,8 +339,7 @@ class DatabaseQuery
                         }
                     } elseif (strtolower($fieldSpec['sort']) == 'suppl') {
                         if (($direction != 'asc') and ($direction != 'desc')) {
-                            ErrorHandler::getHandler()->sendError(400, "Not a valid direction for sorting: $direction");
-                            throw new ErrorException("Not a valid direction for sorting: $direction");
+                            throw new \Exceptions\QueryException("QR4", array($direction));
                         } else {
                             if ($orderString != '')
                                 $orderString .= ', ';
@@ -355,9 +358,7 @@ class DatabaseQuery
                             }
                         }
                     } else {
-                        $msg = "Not a valid field for sorting: $apiField";
-                        ErrorHandler::getHandler()->sendError(400, $msg);
-                        throw new ErrorException($msg);
+                        throw new \Exceptions\QueryException("QR3", array($apiField));
                     }
                 }
             }
@@ -384,6 +385,7 @@ class DatabaseQuery
             $results = $st->fetchAll();
             $st->closeCursor();
         } catch (PDOException $e) {
+            $this->errorHandler->getLogger()->debug($e->getMessage());
             return false;
         }
         //file_put_contents('php://stderr', print_r(count($results), TRUE));
@@ -401,8 +403,8 @@ class DatabaseQuery
                 $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             } catch (PDOException $e) {
-                $this->errorHandler->sendError(500, "Failed to connect to database: $dbSettings[database].", $e);
-                throw new $e;
+                $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
+                throw new \Exceptions\QueryException("QDC1", array());
             }
 
         }
@@ -437,6 +439,7 @@ class DatabaseQuery
                 break;
             } catch (PDOException $e) {
                 if ($counto == $maxTriesy) {
+                    $this->errorHandler->getLogger()->debug("Error during cache row creation");
                     throw new \Exceptions\QueryException("QDI2", array());
                 }
                 usleep(1000000);
@@ -486,8 +489,8 @@ class DatabaseQuery
             //$results = $st->execute();
             //$st->closeCursor();
         } catch (Exception $e) {
-            $this->errorHandler->sendError(500, "Insert select execution failed.", $e);
-            throw new $e;
+            $this->errorHandler->getLogger()->debug("Error during cache load");
+            throw new \Exceptions\QueryException("QDIS1", array());
         }
 
         return $results;
