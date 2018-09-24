@@ -464,34 +464,43 @@ class DatabaseQuery
         $selectSt = "SELECT $select FROM $from $where $order";
         $selectSt = preg_replace('/"/', '\"', $selectSt);
         $cmd = 'mysql -B -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['database']) . ' -e "' . $selectSt . '" > ' . escapeshellarg($tmp_dir . $insertHash . '.txt');
-        $command_status = shell_exec($cmd);
-        if (!$command_status) {
-
+        $export_command_status = -1;
+        $export_output = array();
+        exec($cmd, $export_output, $export_command_status);
+        if ($export_command_status != 0) {
+            $this->errorHandler->getLogger()->debug("Failure in exporting to text file." . implode("\n", $export_output));
+            throw new \Exceptions\QueryException("QDIS1", array());
         }
         $cmd2 = 'mysql -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
 
-        try {
-            if (filesize($tmp_dir . $insertHash . ".txt") !== 0) {
-                $outfile = fopen($tmp_dir . $insertHash . ".txt", 'r');
-                $outstr = fread($outfile, filesize($tmp_dir . $insertHash . ".txt"));
-                $outstr = preg_replace('/\s+\n/', "\n", $outstr);
-                $outstr = preg_replace('/\n$/', '', $outstr);
+        if (filesize($tmp_dir . $insertHash . ".txt") !== 0) {
+            $outfile = fopen($tmp_dir . $insertHash . ".txt", 'r');
+            $outstr = fread($outfile, filesize($tmp_dir . $insertHash . ".txt"));
+            $outstr = preg_replace('/\s+\n/', "\n", $outstr);
+            $outstr = preg_replace('/\n$/', '', $outstr);
 
-                fclose($outfile);
-                unlink($tmp_dir . $insertHash . '.txt');
-                $outfile = fopen($tmp_dir . $insertHash . ".txt", 'w');
-                fwrite($outfile, $outstr);
-                fclose($outfile);
-            }
-            $results = shell_exec($cmd2);
+            fclose($outfile);
             unlink($tmp_dir . $insertHash . '.txt');
-            //$st = $this->db->prepare($sqlQuery);
-            //$results = $st->execute();
-            //$st->closeCursor();
-        } catch (Exception $e) {
-            $this->errorHandler->getLogger()->debug("Error during cache load");
-            throw new \Exceptions\QueryException("QDIS1", array());
+            $outfile = fopen($tmp_dir . $insertHash . ".txt", 'w');
+            fwrite($outfile, $outstr);
+            fclose($outfile);
         }
+
+        $import_command_status = -1;
+        $import_output = array();
+        exec($cmd2, $import_output, $import_command_status);
+        if ($import_command_status != 0) {
+            $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . implode("\n", $import_output));
+            throw new \Exceptions\QueryException("QDIS3", array());
+
+
+        }
+        
+        unlink($tmp_dir . $insertHash . '.txt');
+        //$st = $this->db->prepare($sqlQuery);
+        //$results = $st->execute();
+        //$st->closeCursor();
+
 
         return $results;
     }

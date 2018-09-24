@@ -9,6 +9,7 @@
 namespace Exceptions;
 
 require_once(dirname(__FILE__) . "/APIException.php");
+
 class QueryException extends APIException
 {
     protected $message = array(
@@ -20,12 +21,14 @@ class QueryException extends APIException
         "QDI2" => "Query Internal Error",
         "QDS1" => "Query Internal Error",
         "QDIS1" => "Query Internal Error",
-        "QDC1" => "Query Internal Error",);
+        "QDC1" => "Query Internal Error",
+        "QDIS2" => "Query Internal Error",
+        "QDIS3" => "Query Internal Error");
 
 
     public function __construct($code = "", array $custom_message = array(), Throwable $previous = null)
     {
-        $this->code_mapping = array("QR1" => 400, "QR2" => 400, "QR3" => 400, "QR4" => 400, "QD1" => 500, "QDS1" => 500, "QDIS1" => 500, "QDC1" => 500);
+        $this->code_mapping = array("QR1" => 400, "QR2" => 400, "QR3" => 400, "QR4" => 400, "QD1" => 500, "QDS1" => 500, "QDIS1" => 500, "QDC1" => 500, "QDS2" => 500, "QDS3" => 500);
         $message = vsprintf($this->message[$code], $custom_message);
         \ErrorHandler::getHandler()->getLogger()->debug($message);
         parent::__construct($message, $code, $previous);
