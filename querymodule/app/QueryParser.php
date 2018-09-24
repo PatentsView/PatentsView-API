@@ -220,7 +220,7 @@ class QueryParser
                         $val = '+' . $val;
                         $val = str_replace(' ', ' +', $val);
                         $returnString = "match ($dbField) against ('$val' in boolean mode)";
-                    }
+                    }else
                     throw new \Exceptions\ParsingException("PINV5", array($apiField));
                 }
             }
