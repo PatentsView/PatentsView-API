@@ -29,14 +29,14 @@
     "group_name": "assignees",
     "keyId": "assignee_key_id",
     "distinctCountId": "assignee_key_id",
-    "join": "left outer join assignee_entity on cpc_current_group_copy.patent_id=assignee_entity.patent_id left outer join assignee_cpc_group on cpc_current_group_copy.group_id=assignee_cpc_group.group_id and assignee_entity.assignee_key_id=assignee_cpc_group.assignee_id"
+    "join": "left outer join patent_assignee on cpc_current_group_copy.patent_id=patent_assignee.patent_id left outer JOIN assignee on patent_assignee.assignee_id=assignee.assignee_id left outer join location as locationA on patent_assignee.location_id=locationA.location_id left outer join assignee_cpc_group on cpc_current_group_copy.group_id=assignee_cpc_group.group_id and assignee.assignee_id=assignee_cpc_group.assignee_id"
   },
   {
     "entity_name": "inventor",
     "group_name": "inventors",
     "keyId": "inventor_key_id",
     "distinctCountId": "inventor_key_id",
-    "join": "left outer join inventor_entity on cpc_current_group_copy.patent_id=inventor_entity.patent_id left outer join inventor_cpc_group on cpc_current_group_copy.group_id=inventor_cpc_group.group_id and inventor_entity.inventor_id=inventor_cpc_group.inventor_id"
+    "join": "left outer join patent_inventor on cpc_current_group_copy.patent_id=patent_inventor.patent_id left outer join inventor ON patent_inventor.inventor_id=inventor.inventor_id left outer join location as locationI on patent_inventor.location_id=locationI.location_id left outer join inventor_cpc_group on cpc_current_group_copy.group_id=inventor_cpc_group.group_id and inventor.inventor_id=inventor_cpc_group.inventor_id"
   },
   {
     "entity_name": "rawinventor",
@@ -64,14 +64,14 @@
     "group_name": "uspcs",
     "keyId": "",
     "distinctCountId": "uspc_mainclass_id",
-    "join": "left outer join uspc_entity on cpc_current_group_copy.patent_id=uspc_entity.patent_id"
+    "join": "left outer join uspc_current_mainclass_copy on cpc_current_group_copy.patent_id=uspc_current_mainclass_copy.patent_id left outer join uspc_current_copy on uspc_current_mainclass_copy.patent_id=uspc_current_copy.patent_id and uspc_current_mainclass_copy.mainclass_id=uspc_current_copy.mainclass_id left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id left outer join uspc_subclass on uspc_current_copy.subclass_id=uspc_subclass.id"
   },
   {
     "entity_name": "nber",
     "group_name": "nbers",
     "keyId": "",
     "distinctCountId": "nber_subcategory_id",
-    "join": "left outer join nber_entity on cpc_current_group_copy.patent_id=nber_entity.patent_id"
+    "join": "left outer join nber_copy on cpc_current_group_copy.patent_id=nber_copy.patent_id left outer join nber_category on nber_copy.category_id=nber_category.id left outer join nber_subcategory on nber_copy.subcategory_id=nber_subcategory.id"
   },
   {
     "entity_name": "year",
@@ -85,7 +85,7 @@
     "group_name": "wipos",
     "keyId": "",
     "distinctCountId": "wipo_field_id",
-    "join": "left outer join wipo_entity on cpc_current_group_copy.patent_id=wipo_entity.patent_id"
+    "join": "left outer join wipo on cpc_current_group_copy.patent_id=wipo.patent_id left outer join wipo_field on wipo.field_id=wipo_field.id"
   },
   {
     "entity_name": "government_interest",
@@ -99,14 +99,14 @@
     "group_name": "lawyers",
     "keyId": "",
     "distinctCountId": "lawyer_id",
-    "join": "left outer join lawyer_entity ON lawyer_entity.patent_id=cpc_current_group_copy.patent_id"
+    "join": "left outer join patent_lawyer ON patent_lawyer.patent_id=cpc_current_group_copy.patent_id left outer join lawyer on lawyer.lawyer_id=patent_lawyer.lawyer_id"
   },
   {
     "entity_name": "examiner",
     "group_name": "examiners",
     "keyId": "",
     "distinctCountId": "examiner_id",
-    "join": "left outer join examiner_entity on examiner_entity.patent_id=cpc_current_group_copy.patent_id"
+    "join": "left outer join patent_examiner on patent_examiner.patent_id=cpc_current_group_copy.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id"
   },
   {
     "entity_name": "foreign_prior",

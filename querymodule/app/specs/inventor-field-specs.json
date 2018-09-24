@@ -1,63 +1,63 @@
 {
   "assignee_county": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_county",
+    "column_name": "locationA.county",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_county_fips": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_county_fips",
+    "column_name": "locationA.county_fips",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_state_fips": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_state_fips",
+    "column_name": "locationA.state_fips",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "examiner_first_name": {
     "entity_name": "examiner",
-    "column_name": "examiner_entity.examiner_first_name",
+    "column_name": "examiner.name_first",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "examiner_id": {
     "entity_name": "examiner",
-    "column_name": "examiner_entity.examiner_id",
+    "column_name": "examiner.persistent_examiner_id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "examiner_key_id": {
     "entity_name": "examiner",
-    "column_name": "examiner_entity.examiner_key_id",
+    "column_name": "examiner.examiner_id",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "examiner_last_name": {
     "entity_name": "examiner",
-    "column_name": "examiner_entity.examiner_last_name",
+    "column_name": "examiner.name_last",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "examiner_role": {
     "entity_name": "examiner",
-    "column_name": "examiner_entity.examiner_role",
+    "column_name": "patent_examiner.role",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "examiner_group": {
     "entity_name": "examiner",
-    "column_name": "examiner_entity.examiner_group",
+    "column_name": "examiner.group",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
@@ -120,77 +120,77 @@
   },
   "lawyer_first_name": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_first_name",
+    "column_name": "lawyer.name_first",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "lawyer_first_seen_date": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_first_seen_date",
+    "column_name": "lawyer.first_seen_date",
     "datatype": "date",
     "query": "y",
     "sort": "suppl"
   },
   "lawyer_id": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_id",
+    "column_name": "lawyer.persistent_lawyer_id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "lawyer_key_id": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_key_id",
+    "column_name": "lawyer.lawyer_id",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "lawyer_last_name": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_last_name",
+    "column_name": "lawyer.name_last",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "lawyer_last_seen_date": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_last_seen_date",
+    "column_name": "lawyer.last_seen_date",
     "datatype": "date",
     "query": "y",
     "sort": "suppl"
   },
   "lawyer_organization": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_organization",
+    "column_name": "lawyer.organization",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "lawyer_sequence": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_sequence",
+    "column_name": "patent_lawyer.sequence",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "lawyer_total_num_patents": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_total_num_patents",
+    "column_name": "lawyer.num_patents",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "lawyer_total_num_assignees": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_total_num_assignees",
+    "column_name": "lawyer.num_assignees",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "lawyer_total_num_inventors": {
     "entity_name": "lawyer",
-    "column_name": "lawyer_entity.lawyer_total_num_inventors",
+    "column_name": "lawyer.num_inventors",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
@@ -281,119 +281,119 @@
   },
   "assignee_city": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_city",
+    "column_name": "locationA.city",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_country": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_country",
+    "column_name": "locationA.country",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_first_name": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_first_name",
+    "column_name": "assignee.name_first",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_first_seen_date": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_first_seen_date",
+    "column_name": "assignee.first_seen_date",
     "datatype": "date",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_id": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_id",
+    "column_name": "assignee.persistent_assignee_id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_key_id": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_key_id",
+    "column_name": "assignee.assignee_id",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_lastknown_city": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_lastknown_city",
+    "column_name": "assignee.lastknown_city",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_lastknown_country": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_lastknown_country",
+    "column_name": "assignee.lastknown_country",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_lastknown_latitude": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_lastknown_latitude",
+    "column_name": "assignee.lastknown_latitude",
     "datatype": "float",
     "query": "n",
     "sort": "suppl"
   },
   "assignee_lastknown_location_id": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_lastknown_location_id",
+    "column_name": "assignee.lastknown_persistent_location_id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_lastknown_longitude": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_lastknown_longitude",
+    "column_name": "assignee.lastknown_longitude",
     "datatype": "float",
     "query": "n",
     "sort": "suppl"
   },
   "assignee_lastknown_state": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_lastknown_state",
+    "column_name": "assignee.lastknown_state",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_last_name": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_last_name",
+    "column_name": "assignee.name_last",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_last_seen_date": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_last_seen_date",
+    "column_name": "assignee.last_seen_date",
     "datatype": "date",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_latitude": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_latitude",
+    "column_name": "locationA.latitude",
     "datatype": "float",
     "query": "n",
     "sort": "suppl"
   },
   "assignee_location_id": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_location_id",
+    "column_name": "locationA.persistent_location_id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_longitude": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_longitude",
+    "column_name": "locationA.longitude",
     "datatype": "float",
     "query": "n",
     "sort": "suppl"
@@ -407,70 +407,70 @@
   },
   "assignee_organization": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_organization",
+    "column_name": "assignee.organization",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_state": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_state",
+    "column_name": "locationA.state",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_total_num_patents": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_total_num_patents",
+    "column_name": "assignee.num_patents",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_total_num_inventors": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_total_num_inventors",
+    "column_name": "assignee.num_inventors",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "assignee_type": {
     "entity_name": "assignee",
-    "column_name": "assignee_entity.assignee_type",
+    "column_name": "assignee.type",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_category": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_category",
+    "column_name": "cpc_current_copy.category",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_first_seen_date": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_first_seen_date",
+    "column_name": "cpc_group.first_seen_date",
     "datatype": "date",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_group_id": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_group_id",
+    "column_name": "cpc_group.id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_group_title": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_group_title",
+    "column_name": "cpc_group.title",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_last_seen_date": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_last_seen_date",
+    "column_name": "cpc_group.last_seen_date",
     "datatype": "date",
     "query": "y",
     "sort": "suppl"
@@ -484,63 +484,63 @@
   },
   "cpc_section_id": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_section_id",
+    "column_name": "cpc_current_group_copy.section_id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_subgroup_id": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_subgroup_id",
+    "column_name": "cpc_current_copy.subgroup_id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_subgroup_title": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_subgroup_title",
+    "column_name": "cpc_subgroup.title",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_subsection_id": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_subsection_id",
+    "column_name": "cpc_current_copy.subsection_id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_subsection_title": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_subsection_title",
+    "column_name": "cpc_subsection.title",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_total_num_assignees": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_total_num_assignees",
+    "column_name": "cpc_group.num_assignees",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_total_num_inventors": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_total_num_inventors",
+    "column_name": "cpc_group.num_inventors",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_total_num_patents": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_total_num_patents",
+    "column_name": "cpc_group.num_patents",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "cpc_sequence": {
     "entity_name": "cpc",
-    "column_name": "cpc_entity.cpc_sequence",
+    "column_name": "cpc_current_copy.sequence",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
@@ -995,28 +995,28 @@
   },
   "nber_category_id": {
     "entity_name": "nber",
-    "column_name": "nber_entity.nber_category_id",
+    "column_name": "nber_copy.category_id",
     "datatype": "string",
     "query": "y",
     "sort": "y"
   },
   "nber_category_title": {
     "entity_name": "nber",
-    "column_name": "nber_entity.nber_category_title",
+    "column_name": "nber_category.title",
     "datatype": "string",
     "query": "y",
     "sort": "y"
   },
   "nber_first_seen_date": {
     "entity_name": "nber",
-    "column_name": "nber_entity.first_seen_date",
+    "column_name": "nber_subcategory.first_seen_date",
     "datatype": "date",
     "query": "y",
     "sort": "y"
   },
   "nber_last_seen_date": {
     "entity_name": "nber",
-    "column_name": "nber_entity.last_seen_date",
+    "column_name": "nber_subcategory.last_seen_date",
     "datatype": "date",
     "query": "y",
     "sort": "y"
@@ -1030,35 +1030,35 @@
   },
   "nber_subcategory_id": {
     "entity_name": "nber",
-    "column_name": "nber_entity.nber_subcategory_id",
+    "column_name": "nber_copy.subcategory_id",
     "datatype": "string",
     "query": "y",
     "sort": "y"
   },
   "nber_subcategory_title": {
     "entity_name": "nber",
-    "column_name": "nber_entity.nber_subcategory_title",
+    "column_name": "nber_subcategory.title",
     "datatype": "string",
     "query": "y",
     "sort": "y"
   },
   "nber_total_num_assignees": {
     "entity_name": "nber",
-    "column_name": "nber_entity.num_assignees",
+    "column_name": "nber_subcategory.num_assignees",
     "datatype": "int",
     "query": "y",
     "sort": "y"
   },
   "nber_total_num_inventors": {
     "entity_name": "nber",
-    "column_name": "nber_entity.num_inventors",
+    "column_name": "nber_subcategory.num_inventors",
     "datatype": "int",
     "query": "y",
     "sort": "y"
   },
   "nber_total_num_patents": {
     "entity_name": "nber",
-    "column_name": "nber_entity.num_patents",
+    "column_name": "nber_subcategory.num_patents",
     "datatype": "int",
     "query": "y",
     "sort": "y"
@@ -1268,28 +1268,28 @@
   },
   "uspc_first_seen_date": {
     "entity_name": "uspc",
-    "column_name": "uspc_entity.uspc_first_seen_date",
+    "column_name": "uspc_mainclass.first_seen_date",
     "datatype": "date",
     "query": "y",
     "sort": "suppl"
   },
   "uspc_last_seen_date": {
     "entity_name": "uspc",
-    "column_name": "uspc_entity.uspc_last_seen_date",
+    "column_name": "uspc_mainclass.last_seen_date",
     "datatype": "date",
     "query": "y",
     "sort": "suppl"
   },
   "uspc_mainclass_id": {
     "entity_name": "uspc",
-    "column_name": "uspc_entity.uspc_mainclass_id",
+    "column_name": "uspc_mainclass.id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "uspc_mainclass_title": {
     "entity_name": "uspc",
-    "column_name": "uspc_entity.uspc_mainclass_title",
+    "column_name": "uspc_mainclass.title",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
@@ -1303,42 +1303,42 @@
   },
   "uspc_sequence": {
     "entity_name": "uspc",
-    "column_name": "uspc_entity.uspc_sequence",
+    "column_name": "uspc_current_copy.sequence",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "uspc_subclass_id": {
     "entity_name": "uspc",
-    "column_name": "uspc_entity.uspc_subclass_id",
+    "column_name": "uspc_current_copy.subclass_id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "uspc_subclass_title": {
     "entity_name": "uspc",
-    "column_name": "uspc_entity.uspc_subclass_title",
+    "column_name": "uspc_subclass.title",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "uspc_total_num_assignees": {
     "entity_name": "uspc",
-    "column_name": "uspc_entity.uspc_total_num_assignees",
+    "column_name": "uspc_mainclass.num_assignees",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "uspc_total_num_inventors": {
     "entity_name": "uspc",
-    "column_name": "uspc_entity.uspc_total_num_inventors",
+    "column_name": "uspc_mainclass.num_inventors",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "uspc_total_num_patents": {
     "entity_name": "uspc",
-    "column_name": "uspc_entity.uspc_total_num_patents",
+    "column_name": "uspc_mainclass.num_patents",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
@@ -1359,28 +1359,28 @@
   },
   "wipo_field_id": {
     "entity_name": "wipo",
-    "column_name": "wipo_entity.wipo_field_id",
+    "column_name": "wipo.field_id",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
   },
   "wipo_field_title": {
     "entity_name": "wipo",
-    "column_name": "wipo_entity.wipo_field_title",
+    "column_name": "wipo_field.field_title",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "wipo_sector_title": {
     "entity_name": "wipo",
-    "column_name": "wipo_entity.wipo_sector_title",
+    "column_name": "wipo_field.sector_title",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
   },
   "wipo_sequence": {
     "entity_name": "wipo",
-    "column_name": "wipo_entity.wipo_sequence",
+    "column_name": "wipo.sequence",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"
