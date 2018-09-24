@@ -3,6 +3,7 @@ require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
 
+require_once(dirname(__FILE__) . "/Exceptions/QueryException.php");
 
 class DatabaseQuery
 {
