@@ -45,6 +45,11 @@ $ASSIGNEE_FIELD_SPECS = json_decode($assignee_field_json, true);
 =======
 >>>>>>> Swithched to json format
 
+$assignee_entity_json = file_get_contents(dirname(__FILE__) . '/specs/assignee-entity-specs.json');
+$ASSIGNEE_ENTITY_SPECS = json_decode($assignee_entity_json, true);
+$assignee_field_json = file_get_contents(dirname(__FILE__) . '/specs/assignee-field-specs.json');
+$ASSIGNEE_FIELD_SPECS = json_decode($assignee_field_json, true);
+
 $cpcgroup_entity_json = file_get_contents(dirname(__FILE__) . '/specs/cpc-group-entity-specs.json');
 $CPC_GROUP_ENTITY_SPECS = json_decode($cpcgroup_entity_json, true);
 $cpcgroup_field_json = file_get_contents(dirname(__FILE__) . '/specs/cpc-group-field-specs.json');
