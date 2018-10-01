@@ -121,7 +121,7 @@
     "distinctCountId": "examiner_id",
     "entity_name": "examiner",
     "group_name": "examiners",
-    "join": "left outer join examiner_entity on patent_examiner.patent_id=examiner_entity.patent_id",
+    "join": "left outer join examiner_entity on examiner_entity.patent_id=patent_assignee.patent_id",
     "keyId": "",
     "field_join": "left outer join patent_examiner on patent_examiner.patent_id=patent_assignee.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id"
   },

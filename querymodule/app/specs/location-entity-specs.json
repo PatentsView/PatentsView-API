@@ -80,21 +80,21 @@
     "group_name": "uspcs",
     "keyId": "",
     "distinctCountId": "uspc_mainclass_id",
-    "join": "left outer join uspc_current_mainclass_copy using(patent_id) left outer join uspc_current_copy using (patent_id, mainclass_id) left outer join location_uspc_mainclass on location.location_id=location_uspc_mainclass.location_id and uspc_current_mainclass_copy.mainclass_id=location_uspc_mainclass.mainclass_id left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id left outer join uspc_subclass on uspc_current_copy.subclass_id=uspc_subclass.id"
+    "join": "left outer join uspc_entity on uspc_entity.patent_id=patent_inventor.patent_id left outer join location_uspc_mainclass on location.location_id=location_uspc_mainclass.location_id and uspc_entity.uspc_mainclass_id=location_uspc_mainclass.mainclass_id"
   },
   {
     "entity_name": "cpc",
     "group_name": "cpcs",
     "keyId": "",
     "distinctCountId": "cpc_group_id",
-    "join": "left outer join cpc_current_group_copy using(patent_id) left outer join cpc_group on cpc_current_group_copy.group_id=cpc_group.id left outer join cpc_current_copy using (patent_id, group_id) left outer join cpc_subsection on cpc_current_copy.subsection_id=cpc_subsection.id left outer join cpc_subgroup on cpc_current_copy.subgroup_id=cpc_subgroup.id left outer join location_cpc_group on location.location_id=location_cpc_group.location_id and cpc_group.id=location_cpc_group.group_id "
+    "join": "left outer join cpc_entity on cpc_entity.patent_id=patent_inventor.patent_id left outer join location_cpc_group on location.location_id=location_cpc_group.location_id and cpc_entity.cpc_group_id=location_cpc_group.group_id "
   },
   {
     "entity_name": "nber",
     "group_name": "nbers",
     "keyId": "",
     "distinctCountId": "nber_subcategory_id",
-    "join": "left outer join nber_copy using(patent_id) left outer join location_nber_subcategory on location.location_id=location_nber_subcategory.location_id and nber_copy.subcategory_id=location_nber_subcategory.subcategory_id left outer join nber_subcategory on nber_copy.subcategory_id=nber_subcategory.id left outer join nber_category on nber_copy.category_id=nber_category.id"
+    "join": "left outer join nber_entity on nber_entity.patent_id=patent_inventor.patent_id left outer join location_nber_subcategory on location.location_id=location_nber_subcategory.location_id and nber_entity.nber_subcategory_id=location_nber_subcategory.subcategory_id"
   },
   {
     "entity_name": "year",
@@ -108,7 +108,7 @@
     "group_name": "wipos",
     "keyId": "",
     "distinctCountId": "wipo_field_id",
-    "join": "left outer join wipo on patent.patent_id=wipo.patent_id left outer join wipo_field on wipo.field_id=wipo_field.id"
+    "join": "left outer join wipo_entity on patent.patent_id=wipo_entity.patent_id"
   },
   {
     "entity_name": "government_interest",
@@ -122,14 +122,14 @@
     "group_name": "lawyers",
     "keyId": "",
     "distinctCountId": "lawyer_id",
-    "join": "left outer join patent_lawyer ON patent_lawyer.patent_id=patent.patent_id left outer join lawyer on lawyer.lawyer_id=patent_lawyer.lawyer_id"
+    "join": "left outer join lawyer_entity ON lawyer_entity.patent_id=patent.patent_id"
   },
   {
     "entity_name": "examiner",
     "group_name": "examiners",
     "keyId": "",
     "distinctCountId": "examiner_id",
-    "join": "left outer join patent_examiner on patent_examiner.patent_id=patent.patent_id left outer join examiner on examiner.examiner_id=patent_examiner.examiner_id"
+    "join": "left outer join examiner_entity on examiner_entity.patent_id=patent.patent_id"
   },
   {
     "entity_name": "foreign_prior",
