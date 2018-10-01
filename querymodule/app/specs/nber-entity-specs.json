@@ -1,0 +1,118 @@
+[
+  {
+    "entity_name": "nber_subcategory",
+    "group_name": "nber_subcategories",
+    "keyId": "nber_subcategory_id",
+    "distinctCountId": "nber_subcategory_id",
+    "default_fields": [
+      "nber_subcategory_id",
+      "nber_subcategory_title"
+    ],
+    "join": "nber_subcategory left outer join nber_copy on nber_subcategory.id=nber_copy.subcategory_id left outer join nber_category on nber_copy.category_id=nber_category.id"
+  },
+  {
+    "entity_name": "patent",
+    "group_name": "patents",
+    "keyId": "patent_id",
+    "distinctCountId": "patent_id",
+    "join": "left outer JOIN patent on nber_copy.patent_id=patent.patent_id"
+  },
+  {
+    "entity_name": "assignee",
+    "group_name": "assignees",
+    "keyId": "assignee_key_id",
+    "distinctCountId": "assignee_key_id",
+    "join": "left outer join assignee_entity on nber_copy.patent_id=assignee_entity.patent_id left outer join assignee_nber_subcategory on assignee_entity.assignee_id=assignee_nber_subcategory.assignee_id and nber_copy.subcategory_id=assignee_nber_subcategory.subcategory_id"
+  },
+  {
+    "entity_name": "inventor",
+    "group_name": "inventors",
+    "keyId": "inventor_key_id",
+    "distinctCountId": "inventor_key_id",
+    "join": "left outer join inventor_entity on nber_copy.patent_id=inventor_entity.patent_id left outer join inventor_nber_subcategory on inventor_entity.inventor_id=inventor_nber_subcategory.inventor_id and nber_copy.subcategory_id=inventor_nber_subcategory.subcategory_id"
+  },
+  {
+    "entity_name": "rawinventor",
+    "group_name": "rawinventors",
+    "keyId": "rawinventor_key_id",
+    "distinctCountId": "rawinventor_key_id",
+    "join": "left outer join inventor_rawinventor on nber_copy.patent_id=inventor_rawinventor.patent_id"
+  },
+  {
+    "entity_name": "application",
+    "group_name": "applications",
+    "keyId": "app_id",
+    "distinctCountId": "app_id",
+    "join": "left outer join application on nber_copy.patent_id=application.patent_id"
+  },
+  {
+    "entity_name": "ipc",
+    "group_name": "IPCs",
+    "keyId": "",
+    "distinctCountId": "ipc_class",
+    "join": "left outer join ipcr on nber_copy.patent_id=ipcr.patent_id"
+  },
+  {
+    "entity_name": "cpc",
+    "group_name": "cpcs",
+    "keyId": "",
+    "distinctCountId": "cpc_group_id",
+    "join": "left outer join cpc_entity on nber_copy.patent_id=cpc_entity.patent_id"
+  },
+  {
+    "entity_name": "uspc",
+    "group_name": "uspcs",
+    "keyId": "",
+    "distinctCountId": "uspc_mainclass_id",
+    "join": "left outer join uspc_entity on nber_copy.patent_id=uspc_entity.patent_id"
+  },
+  {
+    "entity_name": "year",
+    "group_name": "years",
+    "keyId": "",
+    "distinctCountId": "year_id",
+    "join": "left outer JOIN patent as patent_year on nber_copy.patent_id=patent_year.patent_id left outer join nber_subcategory_patent_year on patent_year.year=nber_subcategory_patent_year.patent_year and nber_copy.subcategory_id=nber_subcategory_patent_year.subcategory_id"
+  },
+  {
+    "entity_name": "wipo",
+    "group_name": "wipos",
+    "keyId": "",
+    "distinctCountId": "wipo_field_id",
+    "join": "left outer join wipo_entity on nber_copy.patent_id=wipo_entity.patent_id"
+  },
+  {
+    "entity_name": "government_interest",
+    "group_name": "gov_interests",
+    "keyId": "",
+    "distinctCountId": "govint_patent_id",
+    "join": "left outer join government_interest on nber_copy.patent_id=government_interest.patent_id left outer join patent_govintorg on nber_copy.patent_id=patent_govintorg.patent_id left outer join patent_contractawardnumber on nber_copy.patent_id=patent_contractawardnumber.patent_id left outer join government_organization on patent_govintorg.organization_id=government_organization.organization_id"
+  },
+  {
+    "entity_name": "lawyer",
+    "group_name": "lawyers",
+    "keyId": "",
+    "distinctCountId": "lawyer_id",
+    "join": "left outer join lawyer_entity ON lawyer_entity.patent_id=nber_copy.patent_id"
+  },
+  {
+    "entity_name": "examiner",
+    "group_name": "examiners",
+    "keyId": "",
+    "distinctCountId": "examiner_id",
+    "join": "left outer join examiner_entity on examiner_entity.patent_id=nber_copy.patent_id"
+  },
+  {
+    "entity_name": "foreign_prior",
+    "group_name": "foreign_priority",
+    "keyId": "",
+    "distinctCountId": "foreign_doc_number",
+    "join": "left outer join foreignpriority on foreignpriority.patent_id=nber_copy.patent_id"
+  },
+  {
+    "entity_name": "pct_dat",
+    "group_name": "pct_data",
+    "keyId": "",
+    "distinctCountId": "pct_id",
+    "join": "left outer join pctdata on pctdata.patent_id=nber_copy.patent_id"
+  }
+]

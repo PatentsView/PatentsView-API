@@ -1,0 +1,125 @@
+[
+  {
+    "entity_name": "uspc_mainclass",
+    "group_name": "uspc_mainclasses",
+    "keyId": "uspc_mainclass_id",
+    "distinctCountId": "uspc_mainclass_id",
+    "default_fields": [
+      "uspc_mainclass_id",
+      "uspc_mainclass_title"
+    ],
+    "join": "uspc_current_mainclass_copy left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id"
+  },
+  {
+    "entity_name": "uspc_subclass",
+    "group_name": "uspc_subclasses",
+    "keyId": "uspc_subclass_id",
+    "distinctCountId": "uspc_subclass_id",
+    "join": "left outer join uspc_current_copy on uspc_current_mainclass_copy.patent_id=uspc_current_copy.patent_id and uspc_current_mainclass_copy.mainclass_id=uspc_current_copy.mainclass_id left outer join uspc_subclass on uspc_current_copy.subclass_id=uspc_subclass.id"
+  },
+  {
+    "entity_name": "patent",
+    "group_name": "patents",
+    "keyId": "patent_id",
+    "distinctCountId": "patent_id",
+    "join": "left outer JOIN patent on uspc_current_mainclass_copy.patent_id=patent.patent_id"
+  },
+  {
+    "entity_name": "assignee",
+    "group_name": "assignees",
+    "keyId": "assignee_key_id",
+    "distinctCountId": "assignee_key_id",
+    "join": "left outer join assignee_entity on uspc_current_mainclass_copy.patent_id=assignee_entity.patent_id left outer join assignee_uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=assignee_uspc_mainclass.mainclass_id and assignee_entity.assignee_id=assignee_uspc_mainclass.assignee_id"
+  },
+  {
+    "entity_name": "inventor",
+    "group_name": "inventors",
+    "keyId": "inventor_key_id",
+    "distinctCountId": "inventor_key_id",
+    "join": "left outer join inventor_entity on uspc_current_mainclass_copy.patent_id=inventor_entity.patent_id left outer join inventor_uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=inventor_uspc_mainclass.mainclass_id and inventor_entity.inventor_id=inventor_uspc_mainclass.inventor_id"
+  },
+  {
+    "entity_name": "rawinventor",
+    "group_name": "rawinventors",
+    "keyId": "rawinventor_key_id",
+    "distinctCountId": "rawinventor_key_id",
+    "join": "left outer join inventor_rawinventor on uspc_current_mainclass_copy.patent_id=inventor_rawinventor.patent_id"
+  },
+  {
+    "entity_name": "application",
+    "group_name": "applications",
+    "keyId": "app_id",
+    "distinctCountId": "app_id",
+    "join": "left outer join application on uspc_current_mainclass_copy.patent_id=application.patent_id"
+  },
+  {
+    "entity_name": "ipc",
+    "group_name": "IPCs",
+    "keyId": "",
+    "distinctCountId": "ipc_class",
+    "join": "left outer join ipcr on uspc_current_mainclass_copy.patent_id=ipcr.patent_id"
+  },
+  {
+    "entity_name": "cpc",
+    "group_name": "cpcs",
+    "keyId": "",
+    "distinctCountId": "cpc_group_id",
+    "join": "left outer join cpc_entity on uspc_current_mainclass_copy.patent_id=cpc_entity.patent_id"
+  },
+  {
+    "entity_name": "nber",
+    "group_name": "nbers",
+    "keyId": "",
+    "distinctCountId": "nber_subcategory_id",
+    "join": "left outer join nber_entity on uspc_current_mainclass_copy.patent_id=nber_entity.patent_id"
+  },
+  {
+    "entity_name": "year",
+    "group_name": "years",
+    "keyId": "",
+    "distinctCountId": "year_id",
+    "join": "left outer JOIN patent as patent_year on uspc_current_mainclass_copy.patent_id=patent_year.patent_id left outer join uspc_current_mainclass_patent_year on patent_year.year=uspc_current_mainclass_patent_year.patent_year and uspc_current_mainclass_copy.mainclass_id=uspc_current_mainclass_patent_year.mainclass_id"
+  },
+  {
+    "entity_name": "wipo",
+    "group_name": "wipos",
+    "keyId": "",
+    "distinctCountId": "wipo_field_id",
+    "join": "left outer join wipo_entity on uspc_current_mainclass_copy.patent_id=wipo_entity.patent_id"
+  },
+  {
+    "entity_name": "government_interest",
+    "group_name": "gov_interests",
+    "keyId": "",
+    "distinctCountId": "govint_patent_id",
+    "join": "left outer join government_interest on uspc_current_mainclass_copy.patent_id=government_interest.patent_id left outer join patent_govintorg on uspc_current_mainclass_copy.patent_id=patent_govintorg.patent_id left outer join patent_contractawardnumber on uspc_current_mainclass_copy.patent_id=patent_contractawardnumber.patent_id left outer join government_organization on patent_govintorg.organization_id=government_organization.organization_id"
+  },
+  {
+    "entity_name": "lawyer",
+    "group_name": "lawyers",
+    "keyId": "",
+    "distinctCountId": "lawyer_id",
+    "join": "left outer join lawyer_entity ON lawyer_entity.patent_id=uspc_current_mainclass_copy.patent_id"
+  },
+  {
+    "entity_name": "examiner",
+    "group_name": "examiners",
+    "keyId": "",
+    "distinctCountId": "examiner_id",
+    "join": "left outer join examiner_entity on examiner_entity.patent_id=uspc_current_mainclass_copy.patent_id"
+  },
+  {
+    "entity_name": "foreign_prior",
+    "group_name": "foreign_priority",
+    "keyId": "",
+    "distinctCountId": "foreign_doc_number",
+    "join": "left outer join foreignpriority on foreignpriority.patent_id=uspc_current_mainclass_copy.patent_id"
+  },
+  {
+    "entity_name": "pct_dat",
+    "group_name": "pct_data",
+    "keyId": "",
+    "distinctCountId": "pct_id",
+    "join": "left outer join pctdata on pctdata.patent_id=uspc_current_mainclass_copy.patent_id"
+  }
+]

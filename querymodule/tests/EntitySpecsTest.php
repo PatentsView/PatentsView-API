@@ -124,16 +124,6 @@ class EntitySpecsTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @dataProvider provideFieldRefSpec
-     */
-    public function testFieldList($referenceFieldList, $fieldSpecs)
-    {
-        foreach ($referenceFieldList["fields"] as $apiField) {
-            $this->assertArrayHasKey($apiField, $fieldSpecs);
-        }
-    }
-
     public
     function provideEntitySpec()
     {
@@ -148,28 +138,5 @@ class EntitySpecsTest extends PHPUnit_Framework_TestCase
         global $PATENT_ENTITY_SPECS, $ASSIGNEE_ENTITY_SPECS, $INVENTOR_ENTITY_SPECS, $LOCATION_ENTITY_SPECS, $USPC_ENTITY_SPECS, $CPC_ENTITY_SPECS, $NBER_ENTITY_SPECS, $CPC_GROUP_ENTITY_SPECS, $PATENT_FIELD_SPECS, $ASSIGNEE_FIELD_SPECS, $INVENTOR_FIELD_SPECS, $LOCATION_FIELD_SPECS, $USPC_FIELD_SPECS, $CPC_FIELD_SPECS, $NBER_FIELD_SPECS, $CPC_GROUP_FIELD_SPECS;
 
         return [[$PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS], [$ASSIGNEE_ENTITY_SPECS, $ASSIGNEE_FIELD_SPECS], [$INVENTOR_ENTITY_SPECS, $INVENTOR_FIELD_SPECS], [$LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS], [$USPC_ENTITY_SPECS, $USPC_FIELD_SPECS], [$CPC_ENTITY_SPECS, $CPC_FIELD_SPECS], [$NBER_ENTITY_SPECS, $NBER_FIELD_SPECS], [$CPC_GROUP_ENTITY_SPECS, $CPC_GROUP_FIELD_SPECS]];
-    }
-
-    public function provideFieldRefSpec()
-    {
-        global $ASSIGNEE_FIELD_SPECS;
-        $assignee_master_fields_content = file_get_contents(dirname(__FILE__) . '/testspec/assignee_master_field_list.json');
-        $assignee_master_fields_list = json_decode($assignee_master_fields_content, true);
-
-        global $PATENT_FIELD_SPECS;
-        $patent_master_fields_list = json_decode(file_get_contents(dirname(__FILE__) . '/testspec/patent_master_field_list.json'), true);
-
-        global $INVENTOR_FIELD_SPECS;
-        $inventor_master_fields_list = json_decode(file_get_contents(dirname(__FILE__) . '/testspec/inventor_master_field_list.json'), true);
-        global $CPC_FIELD_SPECS;
-        $cpc_master_fields_list = json_decode(file_get_contents(dirname(__FILE__) . '/testspec/cpc_master_field_list.json'), true);
-        global $NBER_FIELD_SPECS;
-        $nber_master_fields_list = json_decode(file_get_contents(dirname(__FILE__) . '/testspec/nber_master_field_list.json'), true);
-        global $LOCATION_FIELD_SPECS;
-        $location_master_fields_list = json_decode(file_get_contents(dirname(__FILE__) . '/testspec/location_master_field_list.json'), true);
-        global $USPC_FIELD_SPECS;
-        $uspc_master_fields_list = json_decode(file_get_contents(dirname(__FILE__) . '/testspec/uspc_master_field_list.json'), true);
-
-        return [[$assignee_master_fields_list, $ASSIGNEE_FIELD_SPECS], [$patent_master_fields_list, $PATENT_FIELD_SPECS], [$inventor_master_fields_list, $INVENTOR_FIELD_SPECS], [$cpc_master_fields_list, $CPC_FIELD_SPECS],  [$nber_master_fields_list, $NBER_FIELD_SPECS], [$location_master_fields_list, $LOCATION_FIELD_SPECS], [$uspc_master_fields_list, $USPC_FIELD_SPECS]];
     }
 }

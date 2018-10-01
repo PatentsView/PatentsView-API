@@ -505,7 +505,7 @@ class DatabaseQuery
         //$st->closeCursor();
 
 
-        return $results;
+        return $import_command_status;
     }
 
     private function commitTransaction()
