@@ -27,12 +27,15 @@ class DatabaseQuery
 
     private $supportDatabase = "";
 
+    private $page = 1;
+    private $perPage = 25;
+
     public function getTotalCounts()
     {
         return $this->entityTotalCounts;
     }
 
-    public function queryDatabase(array $entitySpecs, array $fieldSpecs, $whereClause, array $whereFieldsUsed, array $entitySpecificWhereClauses, $onlyAndsWereUsed, array $selectFieldSpecs, array $sortParam = null, array $options = null)
+    public function queryDatabase(array $entitySpecs, array $fieldSpecs, $whereClause, array $whereValues, array $whereFieldsUsed, array $entitySpecificWhereClauses, $onlyAndsWereUsed, array $selectFieldSpecs, array $sortParam = null, array $options = null)
     {
         global $config;
         $dbSettings = $config->getDbSettings();
@@ -40,8 +43,6 @@ class DatabaseQuery
 
         $memUsed = memory_get_usage();
         $this->errorHandler = ErrorHandler::getHandler();
-        $page = 1;
-        $perPage = 25;
         $this->sortFieldsUsed = array();
         $this->sortFieldsUsedSec = array();
         $this->entitySpecificWhereClauses = $entitySpecificWhereClauses;
@@ -52,126 +53,22 @@ class DatabaseQuery
         $this->whereFieldsUsed = $whereFieldsUsed;
 
 
-        if ($options != null) {
-
-            if (array_key_exists('page', $options)) {
-                $page = $options['page'];
-            }
-
-            if (array_key_exists('per_page', $options))
-                if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1)) {
-                    $this->errorHandler->getLogger()->debug("Page size too big");
-                    throw new \Exceptions\QueryException("QR1", array($config->getMaxPageSize()));
-
-                } else
-                    $perPage = $options['per_page'];
-
-            if (array_key_exists('matched_subentities_only', $options) && strtolower($options['matched_subentities_only']) != "false") {
-                $this->matchedSubentitiesOnly = strtolower($options['matched_subentities_only']);
-
-                # When the matched_subentities_only option is used, we need to check that all the criteria were 'and'ed together
-//                if ($this->matchedSubentitiesOnly && !$onlyAndsWereUsed)
-//                    $this->errorHandler->sendError(400, "When using the 'matched_subentities_only' option, the query criteria cannot contain any 'or's.", $options);
-            }
-
-            if (array_key_exists('include_subentity_total_counts', $options) && strtolower($options['include_subentity_total_counts']) != "false") {
-                $this->include_subentity_total_counts = strtolower($options['include_subentity_total_counts']);
-            }
-
-            if (array_key_exists('sort_by_subentity_counts', $options) && array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
-                $this->sort_by_subentity_counts = strtolower($options['sort_by_subentity_counts']);
-            } elseif (array_key_exists('sort_by_subentity_counts', $options) && !array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
-                $this->errorHandler->getLogger()->debug(vsprintf("Sorting field %s is not in the output field list.", array($options['sort_by_subentity_counts'])));
-                throw new \Exceptions\QueryException("QR2", array($options['sort_by_subentity_counts']));
-            }
-        }
         $this->selectFieldSpecs = $selectFieldSpecs;
         $this->initializeGroupVars();
         $this->determineSelectFields();
         $from = $this->buildFrom($whereFieldsUsed, $this->selectFieldSpecs, $this->sortFieldsUsed);
         $sortString = $this->buildSortString($sortParam);
         $countInsertSelect = "";
-        $whereGroup = "";
-        $secSortFields = explode(', ', $sortString);
-        if ($this->sort_by_subentity_counts) {
-            foreach ($secSortFields as $secSortField) {
-                preg_match('/' . getDBField($this->fieldSpecs, $this->sort_by_subentity_counts) . '/', $secSortField, $matches);
-                if ($matches) {
-                    $secSortArray = explode(' ', $secSortField);
-                    $sortString = preg_replace('/' . $secSortArray[0] . '/', 'count(distinct ' . $secSortArray[0] . ')', $sortString);
-                    $whereGroup = ' GROUP BY ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' ';
-                    $countInsertSelect = 'count(distinct ' . $secSortArray[0] . ')';
 
-                }
-            }
-        }
+        $this->setOptions($options, $selectFieldSpecs);
+        $queryDefId = $this->loadCache($whereClause, $whereValues, $whereFieldsUsed, $sortString);
 
-
-        // Get the QueryDefId for this where clause
-        $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString";
-        $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
-        $queryDefId = sprintf('%u', $whereHash);
-
-
-        $county = 0;
-        $maxTries = 3;
-        do {
-            // If the query results for this where clause don't already exist, then we need to run the
-            // query and cache the primary entity IDs.
-
-            $results = $this->runQuery('QueryDefID, QueryString', $this->supportDatabase . '.QueryDef', "QueryDefID=$queryDefId", null);
-            //TODO Need to handle a hash collision
-            if ($results === false) {
-                try {
-                    $this->rollbackTransaction();
-                } catch (PDOException $e) {
-                    $this->errorHandler->getLogger()->debug($e->getMessage());
-                }
-                $county++;
-                if ($county == $maxTries) {
-                    $this->errorHandler->getLogger()->debug("Error during cache Load");
-                    throw new \Exceptions\QueryException("QDI1", array());
-                }
-                usleep(500000);
-                continue;
-            }
-            if (count($results) == 0) {
-                // Add an entry for the query
-
-                $this->startTransaction();
-                $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
-                $this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
-
-                // Get all the primary entity IDs and insert into the cached results table
-                #Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
-                $insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
-                $selectPrimaryEntityIdsString =
-                    "$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
-                if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause $whereGroup "; else $whereInsert = "";
-                if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
-                $fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
-                $this->fromSubEntity = $fromInsert;
-                $this->runInsertSelect($insertStatement,
-                    $selectPrimaryEntityIdsString,
-                    '(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
-                    $fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
-                    null,
-                    null, $dbSettings);
-                $this->commitTransaction();
-                break;
-            }
-            break;
-
-        } while ($county < $maxTries);
 
         // First find out how many there are in the complete set.
         $selectStringForEntity = 'count(QueryDefId) as total_found';
         $fromEntity = $this->supportDatabase . '.QueryResults qr';
         $whereEntity = "qr.QueryDefId=$queryDefId";
         $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
-        if (!$countResults) {
-
-        }
         $this->entityTotalCounts[$entitySpecs[0]['entity_name']] = intval($countResults[0]['total_found']);
 
 
@@ -181,8 +78,8 @@ class DatabaseQuery
         $fromEntity = $this->entitySpecs[0]['join'] .
             ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "column_name") . '= qr.EntityId';
         $whereEntity = "qr.QueryDefId=$queryDefId";
-        if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
-            $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1) * $perPage) + 1) . ') and (qr.Sequence<=' . $page * $perPage . '))';
+        if ($this->perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
+            $whereEntity .= ' and ((qr.Sequence>=' . ((($this->page - 1) * $this->perPage) + 1) . ') and (qr.Sequence<=' . $this->page * $this->perPage . '))';
         $sortEntity = 'qr.sequence';
         $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortEntity);
         $results[$this->entitySpecs[0]['group_name']] = $entityResults;
@@ -200,7 +97,7 @@ class DatabaseQuery
         }
         $groupsCheckTotalCount = array_unique($groupsCheckTotalCount);
 
-        $fromSubEntity = $this->buildFrom($allFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed,"join");
+        $fromSubEntity = $this->buildFrom($allFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed, "join");
         $fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "column_name") . '= qr.EntityId';
 
 
@@ -208,14 +105,14 @@ class DatabaseQuery
         foreach (array_slice($this->entitySpecs, 1) as $entitySpec) {
             $tempSelect = $this->buildSelectStringForEntity($entitySpec);
             if ($tempSelect != '') { // If there aren't any fields to get back, then skip the group.
-                $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'],"column_name") . ' as ' . $this->entitySpecs[0]['keyId'];
+                $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "column_name") . ' as ' . $this->entitySpecs[0]['keyId'];
                 $selectStringForEntity .= ", $tempSelect";
                 $fromEntity = $this->entitySpecs[0]['join'] .
                     ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "column_name") . '= qr.EntityId';
                 $fromEntity .= ' ' . $entitySpec['join'];
                 $whereEntity = "qr.QueryDefId=$queryDefId";
-                if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
-                    $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1) * $perPage) + 1) . ') and (qr.Sequence<=' . $page * $perPage . '))';
+                if ($this->perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
+                    $whereEntity .= ' and ((qr.Sequence>=' . ((($this->page - 1) * $this->perPage) + 1) . ') and (qr.Sequence<=' . $this->page * $this->perPage . '))';
 
                 if ($this->matchedSubentitiesOnly) {
                     $whereEntity .= ' and ' . $whereClause;
@@ -240,9 +137,6 @@ class DatabaseQuery
                     $whereEntity = "qr.QueryDefId=$queryDefId";
                     $whereEntity .= ' and ' . $whereClause;
                     $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
-                    if ($countResults === false) {
-                        $this->errorHandler->getLogger()->debug($e);
-                    }
                     $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
 
                 }
@@ -372,6 +266,142 @@ class DatabaseQuery
         return $orderString;
     }
 
+    private function setOptions($options, $selectFieldSpecs)
+    {
+        global $config;
+        if ($options != null) {
+
+            if (array_key_exists('page', $options)) {
+                $this->page = $options['page'];
+            }
+
+            if (array_key_exists('per_page', $options))
+                if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1)) {
+                    $this->errorHandler->getLogger()->debug("Page size too big");
+                    throw new \Exceptions\QueryException("QR1", array($config->getMaxPageSize()));
+
+                } else
+                    $this->perPage = $options['per_page'];
+
+            if (array_key_exists('matched_subentities_only', $options) && strtolower($options['matched_subentities_only']) != "false") {
+                $this->matchedSubentitiesOnly = strtolower($options['matched_subentities_only']);
+
+                # When the matched_subentities_only option is used, we need to check that all the criteria were 'and'ed together
+//                if ($this->matchedSubentitiesOnly && !$onlyAndsWereUsed)
+//                    $this->errorHandler->sendError(400, "When using the 'matched_subentities_only' option, the query criteria cannot contain any 'or's.", $options);
+            }
+
+            if (array_key_exists('include_subentity_total_counts', $options) && strtolower($options['include_subentity_total_counts']) != "false") {
+                $this->include_subentity_total_counts = strtolower($options['include_subentity_total_counts']);
+            }
+
+            if (array_key_exists('sort_by_subentity_counts', $options) && array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
+                $this->sort_by_subentity_counts = strtolower($options['sort_by_subentity_counts']);
+            } elseif (array_key_exists('sort_by_subentity_counts', $options) && !array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
+                $this->errorHandler->getLogger()->debug(vsprintf("Sorting field %s is not in the output field list.", array($options['sort_by_subentity_counts'])));
+                throw new \Exceptions\QueryException("QR2", array($options['sort_by_subentity_counts']));
+            }
+        }
+    }
+
+    private function loadCache($whereClause, $whereValues, $whereFieldsUsed, $sortString)
+    {
+        global $config;
+        $dbSettings = $config->getDbSettings();
+
+
+        $whereGroup = "";
+        $countInsertSelect = "";
+        $secSortFields = explode(', ', $sortString);
+        if ($this->sort_by_subentity_counts) {
+            foreach ($secSortFields as $secSortField) {
+                preg_match('/' . getDBField($this->fieldSpecs, $this->sort_by_subentity_counts) . '/', $secSortField, $matches);
+                if ($matches) {
+                    $secSortArray = explode(' ', $secSortField);
+                    $sortString = preg_replace('/' . $secSortArray[0] . '/', 'count(distinct ' . $secSortArray[0] . ')', $sortString);
+                    $whereGroup = ' GROUP BY ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' ';
+                    $countInsertSelect = 'count(distinct ' . $secSortArray[0] . ')';
+
+                }
+            }
+        }
+
+
+        $searchStart = 0;
+        $counter = 0;
+        $stringToHash = $whereClause;
+        while (True) {
+            $position = strpos($stringToHash, "?", $searchStart);
+            if (!$position) {
+                break;
+            }
+            $replacement = $whereValues[$counter];
+            $until = substr($stringToHash, 0, $position);
+            $after = substr($stringToHash, $position + 1);
+            $stringToHash = $until . $replacement . $after;
+            $searchStart = $position + 1;
+            $counter += 1;
+        }
+        // Get the QueryDefId for this where clause
+        $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$stringToHash.$whereGroup::sort->$sortString";
+
+        $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
+        $queryDefId = sprintf('%u', $whereHash);
+
+        $county = 0;
+        $maxTries = 3;
+        do {
+            // If the query results for this where clause don't already exist, then we need to run the
+            // query and cache the primary entity IDs.
+
+            $results = $this->runQuery('QueryDefID, QueryString', $this->supportDatabase . '.QueryDef', "QueryDefID=$queryDefId", null);
+            //TODO Need to handle a hash collision
+            if ($results === false) {
+                try {
+                    $this->rollbackTransaction();
+                } catch (PDOException $e) {
+                    $this->errorHandler->getLogger()->debug($e->getMessage());
+                }
+                $county++;
+                if ($county == $maxTries) {
+                    $this->errorHandler->getLogger()->debug("Error during cache Load");
+                    throw new \Exceptions\QueryException("QDI1", array());
+                }
+                usleep(500000);
+                continue;
+            }
+            if (count($results) == 0) {
+                // Add an entry for the query
+
+                $this->startTransaction();
+                $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
+                $this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
+
+                // Get all the primary entity IDs and insert into the cached results table
+                #Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
+                $insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
+                $selectPrimaryEntityIdsString =
+                    "$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
+                if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause $whereGroup "; else $whereInsert = "";
+                if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
+                $fromInsert = $this->buildFrom($whereFieldsUsed, array($this->entitySpecs[0]['keyId'] => $this->fieldSpecs[$this->entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
+                $this->fromSubEntity = $fromInsert;
+                $this->runInsertSelect($insertStatement,
+                    $selectPrimaryEntityIdsString,
+                    '(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
+                    $fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
+                    null,
+                    $whereValues,
+                    null, $dbSettings);
+                $this->commitTransaction();
+                break;
+            }
+            break;
+
+        } while ($county < $maxTries);
+        return $queryDefId;
+    }
+
     private function runQuery($select, $from, $where, $order)
     {
 
@@ -380,6 +410,7 @@ class DatabaseQuery
         if (strlen($where) > 0) $where = "WHERE $where ";
         if (strlen($order) > 0) $order = "ORDER BY $order";
         $sqlQuery = "SELECT $select FROM $from $where $order";
+
         $this->errorHandler->getLogger()->debug($sqlQuery);
 
         try {
@@ -453,58 +484,25 @@ class DatabaseQuery
         return $results;
     }
 
-    private function runInsertSelect($insert, $select, $from, $where, $order, $dbSettings)
+    private function runInsertSelect($insert, $select, $from, $where, $whereValues, $order, $dbSettings)
     {
-        global $config;
         $this->connectToDB();
 
         if (strlen($where) > 0) $where = "WHERE $where ";
         if (strlen($order) > 0) $order = "ORDER BY $order";
-        $tmp_dir = $config->getTempPath();
-        $insertHash = substr(md5(uniqid(mt_rand(), true)), 0, 10);
 
         $selectSt = "SELECT $select FROM $from $where $order";
         $selectSt = preg_replace('/"/', '\"', $selectSt);
-        $cmd = 'mysql -B -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['database']) . ' -e "' . $selectSt . '" > ' . escapeshellarg($tmp_dir . $insertHash . '.txt');
-        $export_command_status = -1;
-        $export_output = array();
-        exec($cmd, $export_output, $export_command_status);
-        if ($export_command_status != 0) {
-            $this->errorHandler->getLogger()->debug("Failure in exporting to text file." . implode("\n", $export_output));
+        try {
+            $st = $this->db->prepare("INSERT INTO $insert $selectSt");
+            $st->execute($whereValues);
+        } catch (PDOException $e) {
+            $this->errorHandler->getLogger()->debug("Failure in loading cache with results. " . $e->getMessage());
+            $this->errorHandler->getLogger()->debug("INSERT INTO $insert $selectSt");
+            $this->errorHandler->getLogger()->debug(implode(",", $whereValues));
             throw new \Exceptions\QueryException("QDIS1", array());
         }
-        $cmd2 = 'mysql -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
-
-        if (filesize($tmp_dir . $insertHash . ".txt") !== 0) {
-            $outfile = fopen($tmp_dir . $insertHash . ".txt", 'r');
-            $outstr = fread($outfile, filesize($tmp_dir . $insertHash . ".txt"));
-            $outstr = preg_replace('/\s+\n/', "\n", $outstr);
-            $outstr = preg_replace('/\n$/', '', $outstr);
-
-            fclose($outfile);
-            unlink($tmp_dir . $insertHash . '.txt');
-            $outfile = fopen($tmp_dir . $insertHash . ".txt", 'w');
-            fwrite($outfile, $outstr);
-            fclose($outfile);
-        }
-
-        $import_command_status = -1;
-        $import_output = array();
-        exec($cmd2, $import_output, $import_command_status);
-        if ($import_command_status != 0) {
-            $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . implode("\n", $import_output));
-            throw new \Exceptions\QueryException("QDIS3", array());
-
-
-        }
-        
-        unlink($tmp_dir . $insertHash . '.txt');
-        //$st = $this->db->prepare($sqlQuery);
-        //$results = $st->execute();
-        //$st->closeCursor();
-
-
-        return $import_command_status;
+        return true;
     }
 
     private function commitTransaction()
@@ -533,19 +531,6 @@ class DatabaseQuery
                 $selectString[] = $apiField;
             }
         }
-        return $selectString;
-    }
-
-    private function buildSelectString()
-    {
-        $selectString = '';
-
-        foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
-            if ($selectString != '')
-                $selectString .= ', ';
-            $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
-        }
-
         return $selectString;
     }
 

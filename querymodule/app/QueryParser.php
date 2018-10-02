@@ -14,6 +14,7 @@ class QueryParser
 
     private $fieldsUsed;
     private $whereClause;
+    private $whereValues;
     private $entityName;
     private $onlyAndsWereUsed; #Used to keep track of whether the query criteria are only joined by ANDs.
 
@@ -38,6 +39,7 @@ class QueryParser
     {
         $this->fieldSpecs = $fieldSpecs;
         $this->whereClause = '';
+        $this->whereValues = array();
         $this->fieldsUsed = array();
         $this->entityName = $entityName;
         $this->onlyAndsWereUsed = true;
@@ -117,20 +119,25 @@ class QueryParser
                         if (!is_float($val)) {
                             throw new \Exceptions\ParsingException("PINV2", array($val));
                         }
-                        $returnString = "($dbField $operatorString $val)";
+                        $returnString = "($dbField $operatorString ?)";
+                        array_push($this->whereValues, $val);
                     } elseif ($datatype == 'int') {
                         if (!is_numeric($val)) {
                             throw new \Exceptions\ParsingException("PINV1", array($val));
                         }
-                        $returnString = "($dbField $operatorString $val)";
+                        $returnString = "($dbField $operatorString ?)";
+                        array_push($this->whereValues, $val);
                     } elseif ($datatype == 'date') {
                         if (!strtotime($val)) {
                             throw new \Exceptions\ParsingException("PINV3", array($val));
                         }
-                        $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
-                    } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
-                        $returnString = "($dbField $operatorString '$val')";
-                    else {
+                        $returnString = "($dbField $operatorString ?)";
+                        array_push($this->whereValues, date('Y-m-d', strtotime($val)));
+
+                    } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
+                        $returnString = "($dbField $operatorString ?)";
+                        array_push($this->whereValues, $val);
+                    } else {
                         throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
                     }
                 } else {
@@ -161,27 +168,31 @@ class QueryParser
                             if (is_array($val)) {
                                 $returnString = "(";
                                 for ($i = 0; $i < count($val); $i++) {
-                                    $returnString .= "$dbField like '$val[$i]%'";
+                                    $returnString .= "$dbField like ?";
+                                    array_push($this->whereValues, "$val[$i]%");
                                     if ($i < count($val) - 1) {
                                         $returnString .= " OR ";
                                     }
                                 }
                                 $returnString .= ")";
                             } else {
-                                $returnString = "($dbField like '$val%')";
+                                $returnString = "($dbField like ?)";
+                                array_push($this->whereValues, "$val%");
                             }
                         elseif ($operator == '_contains')
                             if (is_array($val)) {
                                 $returnString = "(";
                                 for ($i = 0; $i < count($val); $i++) {
-                                    $returnString .= "$dbField like '%$val[$i]%'";
+                                    $returnString .= "$dbField like ?";
+                                    array_push($this->whereValues, "%$val[$i]%");
                                     if ($i < count($val) - 1) {
                                         $returnString .= " OR ";
                                     }
                                 }
                                 $returnString .= ")";
                             } else {
-                                $returnString = "($dbField like '%$val%')";
+                                $returnString = "($dbField like ?)";
+                                array_push($this->whereValues, "%$val%");
                             }
                     } else {
                         throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
@@ -213,15 +224,18 @@ class QueryParser
 
                     if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
                     if ($operator == '_text_phrase') {
-                        $returnString = "match ($dbField) against ('\"$val\"' in boolean mode)";
+                        $returnString = "match ($dbField) against (? in boolean mode)";
+                        array_push($this->whereValues, "\"$val\"");
                     } elseif ($operator == '_text_any') {
-                        $returnString = "match ($dbField) against ('$val' in boolean mode)";
+                        $returnString = "match ($dbField) against (? in boolean mode)";
+                        array_push($this->whereValues, "$val");
                     } elseif ($operator == '_text_all') {
                         $val = '+' . $val;
                         $val = str_replace(' ', ' +', $val);
-                        $returnString = "match ($dbField) against ('$val' in boolean mode)";
-                    }else
-                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
+                        $returnString = "match ($dbField) against (? in boolean mode)";
+                        array_push($this->whereValues, "$val");
+                    } else
+                        throw new \Exceptions\ParsingException("PINV5", array($apiField));
                 }
             }
         } else {
@@ -252,15 +266,17 @@ class QueryParser
                                 if (!is_numeric($singleVal)) {
                                     throw new \Exceptions\ParsingException("PINV1", array($singleVal));
                                 }
-                            }
-                            $returnString = "($dbField in (" . implode(", ", $val) . "))";
+                            };
+                            $returnString = "($dbField in (" . implode(", ", array_fill(0, count($val), '?')) . "))";
+                            $this->whereValues = array_merge($this->whereValues, $val);
                         } elseif ($datatype == 'float') {
                             foreach ($val as $singleVal) {
                                 if (!is_float($singleVal)) {
                                     throw new \Exceptions\ParsingException("PINV2", array($singleVal));
                                 }
                             }
-                            $returnString = "($dbField in (" . implode(", ", $val) . "))";
+                            $returnString = "($dbField in (" . implode(", ", array_fill(0, count($val), '?')) . "))";
+                            $this->whereValues = array_merge($this->whereValues, $val);
                         } elseif ($datatype == 'date') {
                             $dateVals = array();
                             foreach ($val as $singleVal) {
@@ -270,10 +286,12 @@ class QueryParser
                                     throw new \Exceptions\ParsingException("PINV3", array($singleVal));
                                 }
                             }
-                            $returnString = "($dbField in ('" . implode("', '", $dateVals) . "'))";
-                        } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
-                            $returnString = "($dbField in ('" . implode("', '", $val) . "'))";
-                        else {
+                            $returnString = "($dbField in (" . implode(", ", array_fill(0, count($dateVals), '?')) . "))";
+                            $this->whereValues = array_merge($this->whereValues, $dateVals);
+                        } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
+                            $returnString = "($dbField in (" . implode(", ", array_fill(0, count($val), '?')) . "))";
+                            $this->whereValues = array_merge($this->whereValues, $val);
+                        } else {
                             throw new \Exceptions\ParsingException("PINV4", array($datatype, $apiField));
                         }
                     }
@@ -285,6 +303,11 @@ class QueryParser
             throw new \Exceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
+    }
+
+    public function getWhereValues()
+    {
+        return $this->whereValues;
     }
 }
 

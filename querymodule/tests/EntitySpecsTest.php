@@ -5,7 +5,7 @@
  * Date: 9/28/18
  * Time: 5:10 PM
  */
-putenv("CONFIG_PATH=//var/www/html/current");
+putenv("CONFIG_PATH=".dirname(__FILE__) . "/../../");
 require_once dirname(__FILE__) . '/../app/entitySpecs.php';
 require_once dirname(__FILE__) . '/../app/DatabaseQuery.php';
 require_once dirname(__FILE__) . '/../app/config.php';
@@ -69,7 +69,6 @@ class EntitySpecsTest extends PHPUnit_Framework_TestCase
 
     private function connectToDB()
     {
-
         $config = Config::getInstance();
         if ($this->db === null) {
             $dbSettings = $config->getDbSettings();

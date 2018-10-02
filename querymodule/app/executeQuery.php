@@ -30,8 +30,9 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam=n
 
     $dbQuery = new DatabaseQuery();
 
+
     // Run the query against the DB
-    $dbResults = $dbQuery->queryDatabase($entitySpecs, $fieldSpecs, $whereClause, $qp->getFieldsUsed(),
+    $dbResults = $dbQuery->queryDatabase($entitySpecs, $fieldSpecs, $whereClause,$qp->getWhereValues(), $qp->getFieldsUsed(),
         $entitySpecificWhereClauses, $qp->getOnlyAndsWereUsed(), $selectFieldSpecs, $sortParam, $optionsParam);
     $count_results=array();
     foreach ($dbQuery->getTotalCounts() as $entityName=>$count)
