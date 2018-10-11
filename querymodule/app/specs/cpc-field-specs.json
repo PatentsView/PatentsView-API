@@ -440,6 +440,13 @@
     "query": "y",
     "sort": "suppl"
   },
+  "cpc_num_patents_for_assignee": {
+    "entity_name": "assignee",
+    "column_name": "assignee_cpc_subsection.num_patents",
+    "datatype": "int",
+    "query": "y",
+    "sort": "suppl"
+  },
   "cpc_category": {
     "entity_name": "cpc_subgroup",
     "column_name": "cpc_current_copy.category",
