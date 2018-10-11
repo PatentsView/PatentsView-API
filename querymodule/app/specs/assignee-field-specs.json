@@ -31,6 +31,14 @@
     "sort": "suppl",
     "field_column_name": "application.type"
   },
+  "app_country": {
+    "column_name": "application.country",
+    "datatype": "string",
+    "entity_name": "application",
+    "query": "y",
+    "sort": "suppl",
+    "field_column_name": "application.type"
+  },
   "assignee_first_name": {
     "column_name": "assignee.name_first",
     "datatype": "string",
