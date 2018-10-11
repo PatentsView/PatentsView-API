@@ -472,7 +472,7 @@ class DatabaseQuery
             $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . $cmd);
             throw new \Exceptions\QueryException("QDIS1", array());
         }
-        $cmd2 = 'mysql -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
+        $cmd2 = 'mysql --local-infile=1 -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
 
         if (filesize($tmp_dir . $insertHash . ".txt") !== 0) {
             $outfile = fopen($tmp_dir . $insertHash . ".txt", 'r');
