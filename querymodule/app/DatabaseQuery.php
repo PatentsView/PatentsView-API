@@ -469,6 +469,7 @@ class DatabaseQuery
         exec($cmd, $export_output, $export_command_status);
         if ($export_command_status != 0) {
             $this->errorHandler->getLogger()->debug("Failure in exporting to text file." . implode("\n", $export_output));
+            $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . $cmd);
             throw new \Exceptions\QueryException("QDIS1", array());
         }
         $cmd2 = 'mysql -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
@@ -490,7 +491,9 @@ class DatabaseQuery
         $import_output = array();
         exec($cmd2, $import_output, $import_command_status);
         if ($import_command_status != 0) {
+
             $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . implode("\n", $import_output));
+            $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . $cmd2);
             throw new \Exceptions\QueryException("QDIS3", array());
 
 
