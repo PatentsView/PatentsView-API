@@ -9,7 +9,7 @@ require_once dirname(__FILE__) . '/entitySpecs.php';
  * @param array $selectFieldSpecs
  * @return array
  */
-function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults=null, array $selectFieldSpecs=null)
+function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults = null, array $selectFieldSpecs = null)
 {
     // This function relies heavily on the concept of grouped items. The results from the API is expected to be an array of
     // primary entities, and within each primary entity there may be an array of entities (inventors, assignees, classes, etc.).
@@ -39,7 +39,7 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults=
     ${$primaryEntityGroup['group_name']} = array();    // our top-level structure will be a list of primary entities
     ${$primaryEntityGroup['entity_name']} = array();     // dictionary of primary entity field/value pairs
 
-    foreach (array_slice($groupVars,1) as $group) {
+    foreach (array_slice($groupVars, 1) as $group) {
         ${$group['thisId']} = null;     // the id of an entity in this row
         ${$group['entity_name']} = array();    // dictionary of an entities field/value pairs
         ${$group['group_name']} = array();   // array of entities
@@ -103,5 +103,5 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults=
     }
 
 
-    return array($primaryEntityGroup['group_name'] => ${$primaryEntityGroup['group_name']}, 'count' => count(${$primaryEntityGroup['group_name']}));
+    return array("status" => "success", "payload" => array($primaryEntityGroup['group_name'] => ${$primaryEntityGroup['group_name']}, 'count' => count(${$primaryEntityGroup['group_name']})));
 }

@@ -19,11 +19,11 @@ final class APIError extends Error
     {
         $status = $exception->getCode() ?: 500;
         $logger = \ErrorHandler::getHandler()->getLogger();
-        $ip=$request->getServerParam('REMOTE_ADDR');
-        $customCode=$exception->getCustomCode();
-        $query=$request->getUri();
+        $ip = $request->getServerParam('REMOTE_ADDR');
+        $customCode = $exception->getCustomCode();
+        $query = $request->getUri();
         $logger->error("$status\t$customCode\t$ip\t$query");
-        return $response->withHeader("X-Status-Reason", $exception->getMessage())->withJson(array("error" => $exception->getMessage()), $status);
+        return $response->withHeader("X-Status-Reason", $exception->getMessage())->withJson(array("error" => $exception->getMessage(), "code" => $customCode), $status);
     }
 
 

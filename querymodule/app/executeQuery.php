@@ -44,6 +44,6 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam=n
     $results = convertDBResultsToNestedStructure($entitySpecs, $dbResults, $selectFieldSpecs);
 
     foreach ($count_results as $entityName=>$count)
-        $results[$entityName] = $count;
+        $results["payload"][$entityName] = $count;
     return $results;
 }
