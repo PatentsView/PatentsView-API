@@ -3,3 +3,4 @@ querymodule/public_html/web.config
 .idea
 *.log
 app.ini
+querymodule/vendor/

@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
-
+require_once(dirname(__FILE__) . "/Exceptions/ParsingException.php");
 
 class QueryParser
 {
@@ -60,8 +60,7 @@ class QueryParser
         // If the operator is a comparison, then the right hand value will be a simple pair: { operator : { field : value } }
         if (isset($this->COMPARISON_OPERATORS[$operatorOrField])) {
             $returnString .= $this->processSimplePair($operatorOrField, $rightHandValue);
-        }
-        // If the operator is for strings, then the right hand value will be a simple pair: { operator : { field : value } }
+        } // If the operator is for strings, then the right hand value will be a simple pair: { operator : { field : value } }
         elseif (isset($this->STRING_OPERATORS[$operatorOrField])) {
             $returnString .= $this->processStringPair($operatorOrField, $rightHandValue);
         } // If the operator is a join, then the right hand value will be a list of criteria: { operator : [ criterion, ... ] }
@@ -82,7 +81,7 @@ class QueryParser
                     $this->onlyAndsWereUsed = false;
             }
             if ($addedSomething)
-                $returnString .= '('.$subReturnString.')';
+                $returnString .= '(' . $subReturnString . ')';
         } // If the operator is a negation, then the right hand value will be a criterion: { operator : { criterion } }
         elseif (isset($this->NEGATION_OPERATORS[$operatorOrField])) {
             $notString = $this->NEGATION_OPERATORS[$operatorOrField];
@@ -99,121 +98,45 @@ class QueryParser
         return $returnString;
     }
 
-
-    private function processPair($operator, $criterion)
-    {
-        reset($criterion);
-        $returnString = null;
-        $apiField = key($criterion);
-        if(! array_key_exists($apiField, $this->fieldSpecs)){
-            $msg = "Invalid field specified:: $apiField";
-            ErrorHandler::getHandler()->sendError(400, $msg);
-            throw new ErrorException($msg);
-        }
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
-                $dbField = getDBField($this->fieldSpecs, $apiField);
-                $datatype = $this->fieldSpecs[$apiField]['datatype'];
-                // If of the type: { field : value }
-                if (!is_array($val)) {
-                    $returnString = $this->processSimplePair($operator, $criterion);
-                } // Else of the type { field : [value,...] }
-                else {
-                    if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                    if ($datatype == 'int') {
-                        foreach ($val as $singleVal) {
-                            if (!is_numeric($singleVal)) {
-                                ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $singleVal.");
-                                throw new ErrorException("Invalid date provided: $singleVal.");
-                            }
-                        }
-                        $returnString = "($dbField in (" . implode(", ", $val) . "))";
-                    } elseif ($datatype == 'float') {
-                        foreach ($val as $singleVal) {
-                            if (!is_float($singleVal)) {
-                                ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $singleVal.");
-                                throw new ErrorException("Invalid date provided: $singleVal.");
-                            }
-                        }
-                        $returnString = "($dbField in (" . implode(", ", $val) . "))";
-                    } elseif ($datatype == 'date') {
-                        $dateVals = array();
-                        foreach ($val as $singleVal) {
-                            if (strtotime($singleVal))
-                                $dateVals[] = date('Y-m-d', strtotime($singleVal));
-                            else {
-                                ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $singleVal.");
-                                throw new ErrorException("Invalid date provided: $singleVal.");
-                            }
-                        }
-                        $returnString = "($dbField in ('" . implode("', '", $dateVals) . "'))";
-                    } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
-                        $returnString = "($dbField in ('" . implode("', '", $val) . "'))";
-                    else {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' found for '$apiField'.");
-                        throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
-                    }
-                }
-            }
-            else {
-                $msg = "Not a valid field for querying: $apiField";
-                ErrorHandler::getHandler()->sendError(400, $msg);
-                throw new ErrorException($msg);
-            }
-        }
-
-        return $returnString;
-    }
-
-
     private function processSimplePair($operator, $criterion)
     {
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
-        if(! array_key_exists($apiField, $this->fieldSpecs)){
-            $msg = "Invalid field specified:: $apiField";
-            ErrorHandler::getHandler()->sendError(400, $msg);
-            throw new ErrorException($msg);
-        }
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
-                $dbField = getDBField($this->fieldSpecs, $apiField);
-                $datatype = $this->fieldSpecs[$apiField]['datatype'];
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                $operatorString = $this->COMPARISON_OPERATORS[$operator];
-                if ($datatype == 'float') {
-                    if (!is_float($val)) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid float value provided: $val.");
-                        throw new ErrorException("Invalid integer value provided: $val.");
+        if (array_key_exists($apiField, $this->fieldSpecs)) {
+            if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
+                if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                    $val = current($criterion);
+                    $dbField = getDBField($this->fieldSpecs, $apiField);
+                    $datatype = $this->fieldSpecs[$apiField]['datatype'];
+                    if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                    $operatorString = $this->COMPARISON_OPERATORS[$operator];
+                    if ($datatype == 'float') {
+                        if (!is_float($val)) {
+                            throw new \Exceptions\ParsingException("PINV2", array($val));
+                        }
+                        $returnString = "($dbField $operatorString $val)";
+                    } elseif ($datatype == 'int') {
+                        if (!is_numeric($val)) {
+                            throw new \Exceptions\ParsingException("PINV1", array($val));
+                        }
+                        $returnString = "($dbField $operatorString $val)";
+                    } elseif ($datatype == 'date') {
+                        if (!strtotime($val)) {
+                            throw new \Exceptions\ParsingException("PINV3", array($val));
+                        }
+                        $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
+                    } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
+                        $returnString = "($dbField $operatorString '$val')";
+                    else {
+                        throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
                     }
-                    $returnString = "($dbField $operatorString $val)";
-                } elseif ($datatype == 'int') {
-                    if (!is_numeric($val)) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid integer value provided: $val.");
-                        throw new ErrorException("Invalid integer value provided: $val.");
-                    }
-                    $returnString = "($dbField $operatorString $val)";
-                } elseif ($datatype == 'date') {
-                    if (!strtotime($val)) {
-                        ErrorHandler::getHandler()->sendError(400, "Invalid date provided: $val.");
-                        throw new ErrorException("Invalid date provided: $val.");
-                    }
-                    $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
-                } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
-                    $returnString = "($dbField $operatorString '$val')";
-                else {
-                    ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
-                    throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
+                } else {
+                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
                 }
             }
-            else {
-                $msg = "Not a valid field for querying: $apiField";
-                ErrorHandler::getHandler()->sendError(400, $msg);
-                throw new ErrorException($msg);
-            }
+        } else {
+            throw new \Exceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
 
@@ -224,64 +147,49 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
-        if(! array_key_exists($apiField, $this->fieldSpecs)){
-            $msg = "Invalid field specified:: $apiField";
-            ErrorHandler::getHandler()->sendError(400, $msg);
-            throw new ErrorException($msg);
-        }
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
-                $dbField = getDBField($this->fieldSpecs, $apiField);
-                $datatype = $this->fieldSpecs[$apiField]['datatype'];
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                if ($datatype == 'string') {
-                    if ($operator == '_begins')
-                        if(is_array($val))
-                        {
-                            $returnString = "(";
-                            for($i = 0; $i < count($val); $i++)
-                            {
-                                $returnString .= "$dbField like '$val[$i]%'";
-                                if($i < count($val)-1)
-                                {
-                                    $returnString .= " OR ";
+        if (array_key_exists($apiField, $this->fieldSpecs)) {
+            if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
+                if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                    $val = current($criterion);
+                    $dbField = getDBField($this->fieldSpecs, $apiField);
+                    $datatype = $this->fieldSpecs[$apiField]['datatype'];
+                    if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                    if ($datatype == 'string') {
+                        if ($operator == '_begins')
+                            if (is_array($val)) {
+                                $returnString = "(";
+                                for ($i = 0; $i < count($val); $i++) {
+                                    $returnString .= "$dbField like '$val[$i]%'";
+                                    if ($i < count($val) - 1) {
+                                        $returnString .= " OR ";
+                                    }
                                 }
+                                $returnString .= ")";
+                            } else {
+                                $returnString = "($dbField like '$val%')";
                             }
-                            $returnString .= ")";
-                        }
-                        else
-                        {
-                            $returnString = "($dbField like '$val%')";
-                        }
-                    elseif ($operator == '_contains')
-                        if(is_array($val))
-                        {
-                            $returnString = "(";
-                            for($i = 0; $i < count($val); $i++)
-                            {
-                                $returnString .= "$dbField like '%$val[$i]%'";
-                                if($i < count($val)-1)
-                                {
-                                    $returnString .= " OR ";
+                        elseif ($operator == '_contains')
+                            if (is_array($val)) {
+                                $returnString = "(";
+                                for ($i = 0; $i < count($val); $i++) {
+                                    $returnString .= "$dbField like '%$val[$i]%'";
+                                    if ($i < count($val) - 1) {
+                                        $returnString .= " OR ";
+                                    }
                                 }
+                                $returnString .= ")";
+                            } else {
+                                $returnString = "($dbField like '%$val%')";
                             }
-                            $returnString .= ")";
-                        }
-                        else
-                        {
-                            $returnString = "($dbField like '%$val%')";
-                        }
+                    } else {
+                        throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
+                    }
                 } else {
-                    ErrorHandler::getHandler()->sendError(400, "Invalid field type '$datatype' or operator '$operator' found for '$apiField'.");
-                    throw new ErrorException("Invalid field type '$datatype' found for '$apiField'.");
+                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
                 }
             }
-            else {
-                $msg = "Not a valid field for querying: $apiField";
-                ErrorHandler::getHandler()->sendError(400, $msg);
-                throw new ErrorException($msg);
-            }
+        } else {
+            throw new \Exceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
     }
@@ -291,55 +199,103 @@ class QueryParser
         reset($criterion);
         $returnString = null;
         $apiField = key($criterion);
-        if(! array_key_exists($apiField, $this->fieldSpecs)){
-            $msg = "Invalid field specified:: $apiField";
-            ErrorHandler::getHandler()->sendError(400, $msg);
-            throw new ErrorException($msg);
-        }
-        if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
-            if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
-                $val = current($criterion);
-                $dbField = getDBField($this->fieldSpecs, $apiField);
+        if (array_key_exists($apiField, $this->fieldSpecs)) {
+            if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
+                if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                    $val = current($criterion);
+                    $dbField = getDBField($this->fieldSpecs, $apiField);
 
-                if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
-                    ErrorHandler::getHandler()->sendError(400, "The operation '$operator' is not valid on '$apiField''.");
-                    throw new ErrorException("The operation '$operator' is not valid on '$apiField''.");
-                }
+                    if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
+                        throw new \Exceptions\ParsingException("PINV7", array($operator, $apiField));
+                    }
 
-                if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
-                if ($operator == '_text_phrase') {
-                    $returnString = "match ($dbField) against ('\"$val\"' in boolean mode)";
-                } elseif ($operator == '_text_any') {
-                    $returnString = "match ($dbField) against ('$val' in boolean mode)";
-                } elseif ($operator == '_text_all') {
-                    $val = '+' . $val;
-                    $val = str_replace(' ', ' +', $val);
-                    $returnString = "match ($dbField) against ('$val' in boolean mode)";
+                    if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                    if ($operator == '_text_phrase') {
+                        $returnString = "match ($dbField) against ('\"$val\"' in boolean mode)";
+                    } elseif ($operator == '_text_any') {
+                        $returnString = "match ($dbField) against ('$val' in boolean mode)";
+                    } elseif ($operator == '_text_all') {
+                        $val = '+' . $val;
+                        $val = str_replace(' ', ' +', $val);
+                        $returnString = "match ($dbField) against ('$val' in boolean mode)";
+                    }
+                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
                 }
             }
-            else {
-                $msg = "Not a valid field for querying: $apiField";
-                ErrorHandler::getHandler()->sendError(400, $msg);
-                throw new ErrorException($msg);
-            }
+        } else {
+            throw new \Exceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
     }
 
+    private function processPair($operator, $criterion)
+    {
+        reset($criterion);
+        $returnString = null;
+        $apiField = key($criterion);
+        if (array_key_exists($apiField, $this->fieldSpecs)) {
+            if (($this->entityName == 'all') || ($this->fieldSpecs[$apiField]['entity_name'] == $this->entityName)) {
+                if (strtolower($this->fieldSpecs[$apiField]['query']) === 'y') {
+                    $val = current($criterion);
+                    $dbField = getDBField($this->fieldSpecs, $apiField);
+                    $datatype = $this->fieldSpecs[$apiField]['datatype'];
+                    // If of the type: { field : value }
+                    if (!is_array($val)) {
+                        $returnString = $this->processSimplePair($operator, $criterion);
+                    } // Else of the type { field : [value,...] }
+                    else {
+                        if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
+                        if ($datatype == 'int') {
+                            foreach ($val as $singleVal) {
+                                if (!is_numeric($singleVal)) {
+                                    throw new \Exceptions\ParsingException("PINV1", array($singleVal));
+                                }
+                            }
+                            $returnString = "($dbField in (" . implode(", ", $val) . "))";
+                        } elseif ($datatype == 'float') {
+                            foreach ($val as $singleVal) {
+                                if (!is_float($singleVal)) {
+                                    throw new \Exceptions\ParsingException("PINV2", array($singleVal));
+                                }
+                            }
+                            $returnString = "($dbField in (" . implode(", ", $val) . "))";
+                        } elseif ($datatype == 'date') {
+                            $dateVals = array();
+                            foreach ($val as $singleVal) {
+                                if (strtotime($singleVal))
+                                    $dateVals[] = date('Y-m-d', strtotime($singleVal));
+                                else {
+                                    throw new \Exceptions\ParsingException("PINV3", array($singleVal));
+                                }
+                            }
+                            $returnString = "($dbField in ('" . implode("', '", $dateVals) . "'))";
+                        } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
+                            $returnString = "($dbField in ('" . implode("', '", $val) . "'))";
+                        else {
+                            throw new \Exceptions\ParsingException("PINV4", array($datatype, $apiField));
+                        }
+                    }
+                } else {
+                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
+                }
+            }
+        } else {
+            throw new \Exceptions\ParsingException("PINV8", array($apiField));
+        }
+        return $returnString;
+    }
 }
 
-function parseFieldList(array $fieldSpecs, array $fieldsParam=null)
+function parseFieldList(array $fieldSpecs, array $fieldsParam = null)
 {
     $returnFieldSpecs = array();
 
     for ($i = 0; $i < count($fieldsParam); $i++) {
-        try {
+        if (array_key_exists($fieldsParam[$i], $fieldSpecs)) {
             $returnFieldSpecs[$fieldsParam[$i]] = $fieldSpecs[$fieldsParam[$i]];
-        }
-        catch (Exception $e) {
-            ErrorHandler::getHandler()->sendError(400, 'Invalid field specified: ' . $fieldsParam[$i], $e);
+        } else {
+            throw new \Exceptions\ParsingException("PINV8", array($fieldsParam[$i]));
         }
     }
-
     return $returnFieldSpecs;
 }
