@@ -112,143 +112,8 @@ class DatabaseQuery
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%u', $whereHash);
 
+        return array("queryDefId" => $queryDefId);
 
-        $county = 0;
-        $maxTries = 3;
-        do {
-            // If the query results for this where clause don't already exist, then we need to run the
-            // query and cache the primary entity IDs.
-
-            $results = $this->runQuery('QueryDefID, QueryString', $this->supportDatabase . '.QueryDef', "QueryDefID=$queryDefId", null);
-            //TODO Need to handle a hash collision
-            if ($results === false) {
-                try {
-                    $this->rollbackTransaction();
-                } catch (PDOException $e) {
-                    $this->errorHandler->getLogger()->debug($e->getMessage());
-                }
-                $county++;
-                if ($county == $maxTries) {
-                    $this->errorHandler->getLogger()->debug("Error during cache Load");
-                    throw new \Exceptions\QueryException("QDI1", array());
-                }
-                usleep(500000);
-                continue;
-            }
-            if (count($results) == 0) {
-                // Add an entry for the query
-
-                $this->startTransaction();
-                $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
-                $this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
-
-                // Get all the primary entity IDs and insert into the cached results table
-                #Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
-                $insertStatement = $this->supportDatabase . '.QueryResults (QueryDefId, Sequence, EntityId)';
-                $selectPrimaryEntityIdsString =
-                    "$queryDefId, @row_number:=@row_number+1 as sequence, XX.XXid as " . $this->entityGroupVars[0]['keyId'];
-                if (strlen($whereClause) > 0) $whereInsert = "WHERE $whereClause $whereGroup "; else $whereInsert = "";
-                if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
-                $fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
-                $this->fromSubEntity = $fromInsert;
-                $this->runInsertSelect($insertStatement,
-                    $selectPrimaryEntityIdsString,
-                    '(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
-                    $fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
-                    null,
-                    null, $dbSettings);
-                $this->commitTransaction();
-                break;
-            }
-            break;
-
-        } while ($county < $maxTries);
-
-        // First find out how many there are in the complete set.
-        $selectStringForEntity = 'count(QueryDefId) as total_found';
-        $fromEntity = $this->supportDatabase . '.QueryResults qr';
-        $whereEntity = "qr.QueryDefId=$queryDefId";
-        $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
-        if (!$countResults) {
-
-        }
-        $this->entityTotalCounts[$entitySpecs[0]['entity_name']] = intval($countResults[0]['total_found']);
-
-
-        // Get the primary entities
-        $results = array();
-        $selectStringForEntity = $this->buildSelectStringForEntity($this->entitySpecs[0]);
-        $fromEntity = $this->entitySpecs[0]['join'] .
-            ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
-        $whereEntity = "qr.QueryDefId=$queryDefId";
-        if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
-            $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1) * $perPage) + 1) . ') and (qr.Sequence<=' . $page * $perPage . '))';
-        $sortEntity = 'qr.sequence';
-        $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortEntity);
-        $results[$this->entitySpecs[0]['group_name']] = $entityResults;
-        unset($entityResults);
-
-        $allFieldsUsed = array_merge($whereFieldsUsed, array_keys(array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']])), $this->sortFieldsUsed);
-        foreach (array_slice($this->entitySpecs, 1) as $entitySpec) {
-            $tempSelect = $this->buildSelectStringForEntityReturnApiField($entitySpec);
-            $allFieldsUsed = array_merge($allFieldsUsed, $tempSelect);
-        }
-        $allFieldsUsed = array_unique($allFieldsUsed);
-        $groupsCheckTotalCount = array();
-        foreach ($allFieldsUsed as $fieldUsed) {
-            $groupsCheckTotalCount[] = $this->fieldSpecs[$fieldUsed]['entity_name'];
-        }
-        $groupsCheckTotalCount = array_unique($groupsCheckTotalCount);
-
-        $fromSubEntity = $this->buildFrom($allFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
-        $fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
-
-
-        // Loop through the subentities and get them.
-        foreach (array_slice($this->entitySpecs, 1) as $entitySpec) {
-            $tempSelect = $this->buildSelectStringForEntity($entitySpec);
-            if ($tempSelect != '') { // If there aren't any fields to get back, then skip the group.
-                $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . ' as ' . $this->entitySpecs[0]['keyId'];
-                $selectStringForEntity .= ", $tempSelect";
-                $fromEntity = $this->entitySpecs[0]['join'] .
-                    ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
-                $fromEntity .= ' ' . $entitySpec['join'];
-                $whereEntity = "qr.QueryDefId=$queryDefId";
-                if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
-                    $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1) * $perPage) + 1) . ') and (qr.Sequence<=' . $page * $perPage . '))';
-
-                if ($this->matchedSubentitiesOnly) {
-                    $whereEntity .= ' and ' . $whereClause;
-                    $fromEntity = $fromSubEntity;
-                }
-                if (array_key_exists($entitySpec['group_name'], $this->sortFieldsUsedSec)) {
-                    $sortStringSec = implode(',', $this->sortFieldsUsedSec[$entitySpec['group_name']]);
-                    $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, $sortStringSec);
-                } else {
-                    $entityResults = $this->runQuery("distinct $selectStringForEntity", $fromEntity, $whereEntity, null);
-                }
-                $results[$entitySpec['group_name']] = $entityResults;
-                unset($entityResults);
-
-                if ($this->include_subentity_total_counts) {
-                    // Count of all subentities for all primary entities.
-                    $selectStringForEntity = 'count(distinct ' . getDBField($this->fieldSpecs, $entitySpec['distinctCountId']) . ') as subentity_count';
-                    $fromEntity = $fromSubEntity;
-                    if (!in_array($entitySpec['entity_name'], $groupsCheckTotalCount)) {
-                        $fromEntity .= ' ' . $entitySpec['join'];
-                    }
-                    $whereEntity = "qr.QueryDefId=$queryDefId";
-                    $whereEntity .= ' and ' . $whereClause;
-                    $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
-                    if ($countResults === false) {
-                        $this->errorHandler->getLogger()->debug($e);
-                    }
-                    $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
-
-                }
-            }
-        }
-        return $results;
     }
 
     private function setupGroupVars()
@@ -498,7 +363,7 @@ class DatabaseQuery
 
 
         }
-        
+
         unlink($tmp_dir . $insertHash . '.txt');
         //$st = $this->db->prepare($sqlQuery);
         //$results = $st->execute();
