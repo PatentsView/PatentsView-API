@@ -126,9 +126,10 @@ class QueryParser
                             throw new \Exceptions\ParsingException("PINV3", array($val));
                         }
                         $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
-                    } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
+                    } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
+                        $val = str_replace("'", "''", $val);
                         $returnString = "($dbField $operatorString '$val')";
-                    else {
+                    } else {
                         throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
                     }
                 } else {
@@ -159,6 +160,7 @@ class QueryParser
                             if (is_array($val)) {
                                 $returnString = "(";
                                 for ($i = 0; $i < count($val); $i++) {
+                                    $val[$i] = str_replace("'", "''", $val[$i]);
                                     $returnString .= "$dbField like '$val[$i]%'";
                                     if ($i < count($val) - 1) {
                                         $returnString .= " OR ";
@@ -166,6 +168,7 @@ class QueryParser
                                 }
                                 $returnString .= ")";
                             } else {
+                                $val = str_replace("'", "''", $val);
                                 $returnString = "($dbField like '$val%')";
                             }
                         elseif ($operator == '_contains')
@@ -218,8 +221,8 @@ class QueryParser
                         $val = '+' . $val;
                         $val = str_replace(' ', ' +', $val);
                         $returnString = "match ($dbField) against ('$val' in boolean mode)";
-                    }else
-                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
+                    } else
+                        throw new \Exceptions\ParsingException("PINV5", array($apiField));
                 }
             }
         } else {
@@ -269,8 +272,10 @@ class QueryParser
                                 }
                             }
                             $returnString = "($dbField in ('" . implode("', '", $dateVals) . "'))";
-                        } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
+                        } elseif (($datatype == 'string') or ($datatype == 'fulltext')){
+                            $val = str_replace("'", "''", $val);
                             $returnString = "($dbField in ('" . implode("', '", $val) . "'))";
+                        }
                         else {
                             throw new \Exceptions\ParsingException("PINV4", array($datatype, $apiField));
                         }
