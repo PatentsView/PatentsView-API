@@ -175,6 +175,7 @@ class QueryParser
                             if (is_array($val)) {
                                 $returnString = "(";
                                 for ($i = 0; $i < count($val); $i++) {
+                                    $val[$i] = str_replace("'", "''", $val[$i]);
                                     $returnString .= "$dbField like '%$val[$i]%'";
                                     if ($i < count($val) - 1) {
                                         $returnString .= " OR ";
@@ -182,6 +183,7 @@ class QueryParser
                                 }
                                 $returnString .= ")";
                             } else {
+                                $val = str_replace("'", "''", $val);
                                 $returnString = "($dbField like '%$val%')";
                             }
                     } else {
