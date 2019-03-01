@@ -177,9 +177,11 @@ class DatabaseQuery
 
         // Get the primary entities
         $results = array();
-        $selectStringForEntity = $this->buildSelectStringForEntity($this->entitySpecs[0]);
+        $selectStringForEntityConfig = $this->buildSelectStringForEntity($this->entitySpecs[0]);
+        $selectStringForEntity = $selectStringForEntityConfig["select"];
+        $additionalJoinsForEntity = $selectStringForEntityConfig["additional_join"];
         $fromEntity = $this->entitySpecs[0]['join'] .
-            ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
+            ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId' . $additionalJoinsForEntity;
         $whereEntity = "qr.QueryDefId=$queryDefId";
         if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
             $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1) * $perPage) + 1) . ') and (qr.Sequence<=' . $page * $perPage . '))';
@@ -189,9 +191,12 @@ class DatabaseQuery
         unset($entityResults);
 
         $allFieldsUsed = array_merge($whereFieldsUsed, array_keys(array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']])), $this->sortFieldsUsed);
+        $additionalJoins = array();
         foreach (array_slice($this->entitySpecs, 1) as $entitySpec) {
-            $tempSelect = $this->buildSelectStringForEntityReturnApiField($entitySpec);
+            $tempSelectConfig = $this->buildSelectStringForEntityReturnApiField($entitySpec);
+            $tempSelect = $tempSelectConfig["select"];
             $allFieldsUsed = array_merge($allFieldsUsed, $tempSelect);
+            $additionalJoins = array_merge($additionalJoins, $tempSelectConfig["additional_joins"]);
         }
         $allFieldsUsed = array_unique($allFieldsUsed);
         $groupsCheckTotalCount = array();
@@ -206,13 +211,15 @@ class DatabaseQuery
 
         // Loop through the subentities and get them.
         foreach (array_slice($this->entitySpecs, 1) as $entitySpec) {
-            $tempSelect = $this->buildSelectStringForEntity($entitySpec);
+            $tempSelectConfig = $this->buildSelectStringForEntity($entitySpec);
+            $tempSelect = $tempSelectConfig["select"];
+            $additionalJoins = $tempSelectConfig["additional_joins"];
             if ($tempSelect != '') { // If there aren't any fields to get back, then skip the group.
                 $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . ' as ' . $this->entitySpecs[0]['keyId'];
                 $selectStringForEntity .= ", $tempSelect";
                 $fromEntity = $this->entitySpecs[0]['join'] .
                     ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
-                $fromEntity .= ' ' . $entitySpec['join'];
+                $fromEntity .= ' ' . $entitySpec['join'] . ' ' . $additionalJoins;
                 $whereEntity = "qr.QueryDefId=$queryDefId";
                 if ($perPage < $this->entityTotalCounts[$entitySpecs[0]['entity_name']])
                     $whereEntity .= ' and ((qr.Sequence>=' . ((($page - 1) * $perPage) + 1) . ') and (qr.Sequence<=' . $page * $perPage . '))';
@@ -303,12 +310,21 @@ class DatabaseQuery
 
         // We need to go through the entities in order so the joins are done in the same order as they appear
         // in the entity specs.
-        foreach ($this->entityGroupVars as $group)
-            foreach ($allFieldsUsed as $apiField)
-                if ($group['entity_name'] == $this->fieldSpecs[$apiField]['entity_name'])
-                    if (!in_array($group['join'], $joins))
+        foreach ($this->entityGroupVars as $group) {
+            foreach ($allFieldsUsed as $apiField) {
+                if ($group['entity_name'] == $this->fieldSpecs[$apiField]['entity_name']) {
+                    if (!in_array($group['join'], $joins)) {
                         $joins[] = $group['join'];
-
+                    }
+                    if (array_key_exists("additional_join", $this->fieldSpecs[$apiField])) {
+                        if (!in_array($this->fieldSpecs[$apiField]['additional_join'], $joins)) {
+                            $joins[] = $this->fieldSpecs[$apiField]['additional_join'];
+                        }
+                    }
+                }
+            }
+        }
+        $joins = array_unique($joins);
         foreach ($joins as $join) {
             $fromString .= ' ' . $join . ' ';
         }
@@ -498,7 +514,7 @@ class DatabaseQuery
 
 
         }
-        
+
         unlink($tmp_dir . $insertHash . '.txt');
         //$st = $this->db->prepare($sqlQuery);
         //$results = $st->execute();
@@ -516,25 +532,34 @@ class DatabaseQuery
     private function buildSelectStringForEntity($entitySpec)
     {
         $selectString = '';
+        $additional_joins = array();
         foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
             if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
                 if ($selectString != '')
                     $selectString .= ', ';
                 $selectString .= getDBField($this->fieldSpecs, $apiField) . " as $apiField";
+                if (array_key_exists("additional_join", $fieldInfo)) {
+                    $additional_joins[] = $fieldInfo["additional_join"];
+                }
+
             }
         }
-        return $selectString;
+        return array("select" => $selectString, "additional_joins" => implode(" ", array_unique($additional_joins)));
     }
 
     private function buildSelectStringForEntityReturnApiField($entitySpec)
     {
         $selectString = Array();
+        $additional_joins = Array();
         foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
             if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
                 $selectString[] = $apiField;
+                if (array_key_exists("additional_join", $fieldInfo)) {
+                    $additional_joins[] = $fieldInfo["additional_join"];
+                }
             }
         }
-        return $selectString;
+        return array("select" => $selectString, "additional_join" => $additional_joins);
     }
 
     private function buildSelectString()
