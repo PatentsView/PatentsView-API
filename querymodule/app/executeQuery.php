@@ -45,5 +45,5 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
 
     foreach ($count_results as $entityName => $count)
         $results[$entityName] = $count;
-    return array("status" => "success", "payload" => $results);
+    return $results;
 }
