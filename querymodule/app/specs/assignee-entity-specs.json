@@ -59,14 +59,14 @@
     "group_name": "uspcs",
     "keyId": "",
     "distinctCountId": "uspc_mainclass_id",
-    "join": "left outer join uspc_current_mainclass_copy on patent_assignee.patent_id=uspc_current_mainclass_copy.patent_id left outer join uspc_current_copy on uspc_current_mainclass_copy.patent_id=uspc_current_copy.patent_id and uspc_current_mainclass_copy.mainclass_id=uspc_current_copy.mainclass_id left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id left outer join uspc_subclass on uspc_current_copy.subclass_id=uspc_subclass.id left outer join assignee_uspc_mainclass on assignee.assignee_id=assignee_uspc_mainclass.assignee_id and uspc_current_mainclass_copy.mainclass_id=assignee_uspc_mainclass.mainclass_id"
+    "join": "left outer join uspc_current_mainclass_copy on patent_assignee.patent_id=uspc_current_mainclass_copy.patent_id left outer join uspc_current_copy on uspc_current_mainclass_copy.patent_id=uspc_current_copy.patent_id and uspc_current_mainclass_copy.mainclass_id=uspc_current_copy.mainclass_id"
   },
   {
     "entity_name": "cpc",
     "group_name": "cpcs",
     "keyId": "",
     "distinctCountId": "cpc_group_id",
-    "join": "left outer join cpc_current_group_copy on patent_assignee.patent_id=cpc_current_group_copy.patent_id left outer join cpc_group on cpc_current_group_copy.group_id=cpc_group.id left outer join cpc_current_copy on cpc_current_group_copy.patent_id=cpc_current_copy.patent_id and cpc_group.id=cpc_current_copy.group_id  left outer join cpc_subsection on cpc_current_copy.subsection_id=cpc_subsection.id left outer join cpc_subgroup on cpc_current_copy.subgroup_id=cpc_subgroup.id left outer join assignee_cpc_group on assignee.assignee_id=assignee_cpc_group.assignee_id and cpc_current_group_copy.group_id=assignee_cpc_group.group_id"
+    "join": "left outer join cpc_current_copy on patent_assignee.patent_id=cpc_current_copy.patent_id"
   },
   {
     "entity_name": "nber",

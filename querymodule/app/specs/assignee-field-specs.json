@@ -403,35 +403,40 @@
     "column_name": "cpc_group.first_seen_date",
     "datatype": "date",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join cpc_group on cpc_current_copy.group_id=cpc_group.id"
   },
   "cpc_group_id": {
     "entity_name": "cpc",
-    "column_name": "cpc_group.id",
+    "column_name": "cpc_current_copy.group_id",
     "datatype": "string",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join cpc_group on cpc_current_copy.group_id=cpc_group.id"
   },
   "cpc_group_title": {
     "entity_name": "cpc",
     "column_name": "cpc_group.title",
     "datatype": "string",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join cpc_group on cpc_current_copy.group_id=cpc_group.id"
   },
   "cpc_last_seen_date": {
     "entity_name": "cpc",
     "column_name": "cpc_group.last_seen_date",
     "datatype": "date",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join cpc_group on cpc_current_copy.group_id=cpc_group.id"
   },
   "cpc_section_id": {
     "entity_name": "cpc",
     "column_name": "cpc_current_group_copy.section_id",
     "datatype": "string",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join cpc_current_group_copy on cpc_current_copy.patent_id=cpc_current_group_copy.patent_id and cpc_current_copy.group_id=cpc_current_group_copy.group_id and  cpc_current_copy.section_id=cpc_current_group_copy.section_id"
   },
   "cpc_sequence": {
     "entity_name": "cpc",
@@ -452,7 +457,8 @@
     "column_name": "cpc_subgroup.title",
     "datatype": "string",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join cpc_group on cpc_current_copy.group_id=cpc_group.id"
   },
   "cpc_subsection_id": {
     "entity_name": "cpc",
@@ -466,35 +472,40 @@
     "column_name": "cpc_subsection.title",
     "datatype": "string",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join cpc_subsection on cpc_current_copy.subsection_id=cpc_subsection.id "
   },
   "cpc_total_num_assignees": {
     "entity_name": "cpc",
     "column_name": "cpc_group.num_assignees",
     "datatype": "int",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join cpc_group on cpc_current_copy.group_id=cpc_group.id"
   },
   "cpc_total_num_inventors": {
     "entity_name": "cpc",
     "column_name": "cpc_group.num_inventors",
     "datatype": "int",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join cpc_group on cpc_current_copy.group_id=cpc_group.id"
   },
   "cpc_total_num_patents": {
     "entity_name": "cpc",
     "column_name": "cpc_group.num_patents",
     "datatype": "int",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join cpc_group on cpc_current_copy.group_id=cpc_group.id"
   },
   "cpc_num_patents_for_assignee": {
     "entity_name": "cpc",
     "column_name": "assignee_cpc_group.num_patents",
     "datatype": "int",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join": "left outer join assignee_cpc_group on assignee.assignee_id=assignee_cpc_group.assignee_id and cpc_current_group_copy.group_id=assignee_cpc_group.group_id"
   },
   "govint_raw_statement": {
     "entity_name": "government_interest",
@@ -1132,18 +1143,20 @@
     "column_name": "uspc_mainclass.first_seen_date",
     "datatype": "date",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join":"left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id"
   },
   "uspc_last_seen_date": {
     "entity_name": "uspc",
     "column_name": "uspc_mainclass.last_seen_date",
     "datatype": "date",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join":"left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id"
   },
   "uspc_mainclass_id": {
     "entity_name": "uspc",
-    "column_name": "uspc_mainclass.id",
+    "column_name": "uspc_current_copy.mainclass_id",
     "datatype": "string",
     "query": "y",
     "sort": "suppl"
@@ -1153,7 +1166,8 @@
     "column_name": "uspc_mainclass.title",
     "datatype": "string",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join":"left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id"
   },
   "uspc_sequence": {
     "entity_name": "uspc",
@@ -1174,35 +1188,40 @@
     "column_name": "uspc_subclass.title",
     "datatype": "string",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join":"left outer join uspc_subclass on uspc_current_copy.subclass_id=uspc_subclass.id"
   },
   "uspc_total_num_assignees": {
     "entity_name": "uspc",
     "column_name": "uspc_mainclass.num_assignees",
     "datatype": "int",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join":"left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id"
   },
   "uspc_total_num_inventors": {
     "entity_name": "uspc",
     "column_name": "uspc_mainclass.num_inventors",
     "datatype": "int",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join":"left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id"
   },
   "uspc_total_num_patents": {
     "entity_name": "uspc",
     "column_name": "uspc_mainclass.num_patents",
     "datatype": "int",
     "query": "y",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join":"left outer join uspc_mainclass on uspc_current_mainclass_copy.mainclass_id=uspc_mainclass.id"
   },
   "uspc_num_patents_for_assignee": {
     "entity_name": "uspc",
     "column_name": "assignee_uspc_mainclass.num_patents",
     "datatype": "int",
     "query": "n",
-    "sort": "suppl"
+    "sort": "suppl",
+    "additional_join":"left outer join assignee_uspc_mainclass on assignee.assignee_id=assignee_uspc_mainclass.assignee_id and uspc_current_mainclass_copy.mainclass_id=assignee_uspc_mainclass.mainclass_id"
   },
   "year_id": {
     "entity_name": "year",
