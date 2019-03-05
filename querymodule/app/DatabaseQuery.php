@@ -19,6 +19,7 @@ class DatabaseQuery
     private $sortFieldsUsedSec;
 
     private $db = null;
+    private $mongoClient = null;
     private $errorHandler = null;
 
     private $matchedSubentitiesOnly = false;
@@ -110,8 +111,20 @@ class DatabaseQuery
         // Get the QueryDefId for this where clause
         $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
-        $queryDefId = sprintf('%u', $whereHash);
+        $queryDefId = sprintf('%s', $whereHash);
+        $this->connectToDB();
+        $mongoSettings = $config->getMongoSettings();
+        $cache_collection = $mongoSettings["mongo_collection"];
+        try {
+            $document = $this->mongoClient->{$cache_collection}->findOne(['_id' => $queryDefId]);
+        } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
+            $this->errorHandler->getLogger()->debug($e->getMessage());
+            throw new \Exceptions\QueryException("QDI1", array());
+        }
 
+        if ($document) {
+            return $document;
+        }
 
         $county = 0;
         $maxTries = 3;
@@ -164,7 +177,7 @@ class DatabaseQuery
 
         } while ($county < $maxTries);
 
-        // First find out how many there are in the complete set.
+// First find out how many there are in the complete set.
         $selectStringForEntity = 'count(QueryDefId) as total_found';
         $fromEntity = $this->supportDatabase . '.QueryResults qr';
         $whereEntity = "qr.QueryDefId=$queryDefId";
@@ -175,7 +188,7 @@ class DatabaseQuery
         $this->entityTotalCounts[$entitySpecs[0]['entity_name']] = intval($countResults[0]['total_found']);
 
 
-        // Get the primary entities
+// Get the primary entities
         $results = array();
         $selectStringForEntity = $this->buildSelectStringForEntity($this->entitySpecs[0]);
         $fromEntity = $this->entitySpecs[0]['join'] .
@@ -200,15 +213,15 @@ class DatabaseQuery
         }
         $groupsCheckTotalCount = array_unique($groupsCheckTotalCount);
 
-        $fromSubEntity = $this->buildFrom($allFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed,"join");
+        $fromSubEntity = $this->buildFrom($allFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed, "join");
         $fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "column_name") . '= qr.EntityId';
 
 
-        // Loop through the subentities and get them.
+// Loop through the subentities and get them.
         foreach (array_slice($this->entitySpecs, 1) as $entitySpec) {
             $tempSelect = $this->buildSelectStringForEntity($entitySpec);
             if ($tempSelect != '') { // If there aren't any fields to get back, then skip the group.
-                $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'],"column_name") . ' as ' . $this->entitySpecs[0]['keyId'];
+                $selectStringForEntity = getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "column_name") . ' as ' . $this->entitySpecs[0]['keyId'];
                 $selectStringForEntity .= ", $tempSelect";
                 $fromEntity = $this->entitySpecs[0]['join'] .
                     ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId'], "column_name") . '= qr.EntityId';
@@ -251,7 +264,8 @@ class DatabaseQuery
         return $results;
     }
 
-    private function setupGroupVars()
+    private
+    function setupGroupVars()
     {
 
         $this->entityGroupVars = $this->entitySpecs;
@@ -263,7 +277,8 @@ class DatabaseQuery
         unset($group);
     }
 
-    private function initializeGroupVars()
+    private
+    function initializeGroupVars()
     {
         foreach ($this->entityGroupVars as $group) {
             $this->{$group['hasId']} = false;
@@ -280,7 +295,8 @@ class DatabaseQuery
         }
     }
 
-    private function determineSelectFields()
+    private
+    function determineSelectFields()
     {
         foreach ($this->entityGroupVars as $group) {
             if ($group['entity_name'] == $this->entityGroupVars[0]['entity_name']) {
@@ -293,7 +309,8 @@ class DatabaseQuery
         }
     }
 
-    private function buildFrom(array $whereFieldsUsed, array $selectFieldSpecs, array $sortFields)
+    private
+    function buildFrom(array $whereFieldsUsed, array $selectFieldSpecs, array $sortFields)
     {
         // Smerge all the fields into one array
         $allFieldsUsed = array_merge($whereFieldsUsed, array_keys($selectFieldSpecs), $sortFields);
@@ -318,7 +335,8 @@ class DatabaseQuery
         return $fromString;
     }
 
-    private function buildSortString($sortParam)
+    private
+    function buildSortString($sortParam)
     {
         $orderString = '';
         if ($sortParam != null) {
@@ -372,7 +390,39 @@ class DatabaseQuery
         return $orderString;
     }
 
-    private function runQuery($select, $from, $where, $order)
+    private
+    function connectToDB()
+    {
+        global $config;
+        if ($this->db === null) {
+            $dbSettings = $config->getDbSettings();
+            try {
+                $this->db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password']);
+                $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            } catch (PDOException $e) {
+                $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
+                throw new \Exceptions\QueryException("QDC1", array());
+            }
+
+        }
+        if ($this->mongoClient === null) {
+            $mongoSettings = $config->getMongoSettings();
+            $mongoURI = sprintf("mongodb://%s:%s@%s:%d/%s", $mongoSettings["mongo_user"], $mongoSettings["mongo_password"], $mongoSettings["mongo_host"], $mongoSettings["mongo_port"], $mongoSettings["mongo_db"]);
+            try {
+                $mongoClient = new MongoDB\Client($mongoURI);
+                $this->mongoClient = $mongoClient->selectDatabase($mongoSettings["mongo_db"]);
+
+            } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
+                $this->errorHandler->getLogger()->debug("Failed to connect to database: $mongoSettings[database].");
+                throw new \Exceptions\QueryException("QDC1", array());
+            }
+
+        }
+    }
+
+    private
+    function runQuery($select, $from, $where, $order)
     {
 
         $this->connectToDB();
@@ -395,35 +445,20 @@ class DatabaseQuery
         return $results;
     }
 
-    private function connectToDB()
-    {
-        global $config;
-        if ($this->db === null) {
-            $dbSettings = $config->getDbSettings();
-            try {
-                $this->db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password']);
-                $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            } catch (PDOException $e) {
-                $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
-                throw new \Exceptions\QueryException("QDC1", array());
-            }
-
-        }
-
-    }
-
-    private function rollbackTransaction()
+    private
+    function rollbackTransaction()
     {
         $this->db->rollback();
     }
 
-    private function startTransaction()
+    private
+    function startTransaction()
     {
         $this->db->beginTransaction();
     }
 
-    private function runInsert($insert, $params)
+    private
+    function runInsert($insert, $params)
     {
         $this->connectToDB();
 
@@ -453,7 +488,8 @@ class DatabaseQuery
         return $results;
     }
 
-    private function runInsertSelect($insert, $select, $from, $where, $order, $dbSettings)
+    private
+    function runInsertSelect($insert, $select, $from, $where, $order, $dbSettings)
     {
         global $config;
         $this->connectToDB();
@@ -497,7 +533,7 @@ class DatabaseQuery
 
 
         }
-        
+
         unlink($tmp_dir . $insertHash . '.txt');
         //$st = $this->db->prepare($sqlQuery);
         //$results = $st->execute();
@@ -507,12 +543,14 @@ class DatabaseQuery
         return $import_command_status;
     }
 
-    private function commitTransaction()
+    private
+    function commitTransaction()
     {
         $this->db->commit();
     }
 
-    private function buildSelectStringForEntity($entitySpec)
+    private
+    function buildSelectStringForEntity($entitySpec)
     {
         $selectString = '';
         foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
@@ -525,7 +563,8 @@ class DatabaseQuery
         return $selectString;
     }
 
-    private function buildSelectStringForEntityReturnApiField($entitySpec)
+    private
+    function buildSelectStringForEntityReturnApiField($entitySpec)
     {
         $selectString = Array();
         foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
@@ -536,7 +575,8 @@ class DatabaseQuery
         return $selectString;
     }
 
-    private function buildSelectString()
+    private
+    function buildSelectString()
     {
         $selectString = '';
 
