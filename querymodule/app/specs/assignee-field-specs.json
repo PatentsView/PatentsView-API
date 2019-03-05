@@ -505,7 +505,7 @@
     "datatype": "int",
     "query": "y",
     "sort": "suppl",
-    "additional_join": "left outer join assignee_cpc_group on assignee.assignee_id=assignee_cpc_group.assignee_id and cpc_current_group_copy.group_id=assignee_cpc_group.group_id"
+    "additional_join": "left outer join assignee_cpc_group on assignee.assignee_id=assignee_cpc_group.assignee_id and cpc_current_group.group_id=assignee_cpc_group.group_id"
   },
   "govint_raw_statement": {
     "entity_name": "government_interest",
