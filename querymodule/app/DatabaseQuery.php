@@ -559,7 +559,7 @@ class DatabaseQuery
                 }
             }
         }
-        return array("select" => $selectString, "additional_join" => $additional_joins);
+        return array("select" => $selectString, "additional_joins" => $additional_joins);
     }
 
     private function buildSelectString()
