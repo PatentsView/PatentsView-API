@@ -19,6 +19,7 @@ class DatabaseQuery
     private $sortFieldsUsedSec;
 
     private $db = null;
+    private $mongoClient = null;
     private $errorHandler = null;
 
     private $matchedSubentitiesOnly = false;
@@ -110,8 +111,20 @@ class DatabaseQuery
         // Get the QueryDefId for this where clause
         $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
-        $queryDefId = sprintf('%u', $whereHash);
+        $queryDefId = sprintf('%s', $whereHash);
+        $this->connectToDB();
+        $mongoSettings = $config->getMongoSettings();
+        $cache_collection = $mongoSettings["mongo_collection"];
+        try {
+            $document = $this->mongoClient->{$cache_collection}->findOne(['_id' => $queryDefId]);
+        } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
+            $this->errorHandler->getLogger()->debug($e->getMessage());
+            throw new \Exceptions\QueryException("QDI1", array());
+        }
 
+        if ($document) {
+            return $document;
+        }
 
         $county = 0;
         $maxTries = 3;
@@ -386,7 +399,39 @@ class DatabaseQuery
         return $orderString;
     }
 
-    private function runQuery($select, $from, $where, $order)
+    private
+    function connectToDB()
+    {
+        global $config;
+        if ($this->db === null) {
+            $dbSettings = $config->getDbSettings();
+            try {
+                $this->db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password']);
+                $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            } catch (PDOException $e) {
+                $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
+                throw new \Exceptions\QueryException("QDC1", array());
+            }
+
+        }
+        if ($this->mongoClient === null) {
+            $mongoSettings = $config->getMongoSettings();
+            $mongoURI = sprintf("mongodb://%s:%s@%s:%d/%s", $mongoSettings["mongo_user"], $mongoSettings["mongo_password"], $mongoSettings["mongo_host"], $mongoSettings["mongo_port"], $mongoSettings["mongo_db"]);
+            try {
+                $mongoClient = new MongoDB\Client($mongoURI);
+                $this->mongoClient = $mongoClient->selectDatabase($mongoSettings["mongo_db"]);
+
+            } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
+                $this->errorHandler->getLogger()->debug("Failed to connect to database: $mongoSettings[database].");
+                throw new \Exceptions\QueryException("QDC1", array());
+            }
+
+        }
+    }
+
+    private
+    function runQuery($select, $from, $where, $order)
     {
 
         $this->connectToDB();
@@ -409,25 +454,8 @@ class DatabaseQuery
         return $results;
     }
 
-    private function connectToDB()
-    {
-        global $config;
-        if ($this->db === null) {
-            $dbSettings = $config->getDbSettings();
-            try {
-                $this->db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password']);
-                $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            } catch (PDOException $e) {
-                $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
-                throw new \Exceptions\QueryException("QDC1", array());
-            }
-
-        }
-
-    }
-
-    private function rollbackTransaction()
+    private
+    function rollbackTransaction()
     {
         $this->db->rollback();
     }

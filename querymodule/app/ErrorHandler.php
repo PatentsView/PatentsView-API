@@ -1,5 +1,4 @@
 <?php
-
 class ErrorHandler {
 
     // Pattern for this singleton from here: http://www.phptherightway.com/pages/Design-Patterns.html
