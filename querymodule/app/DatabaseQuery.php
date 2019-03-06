@@ -191,7 +191,7 @@ class DatabaseQuery
         $results = array();
         $selectStringForEntityConfig = $this->buildSelectStringForEntity($this->entitySpecs[0]);
         $selectStringForEntity = $selectStringForEntityConfig["select"];
-        $additionalJoinsForEntity = $selectStringForEntityConfig["additional_join"];
+        $additionalJoinsForEntity = $selectStringForEntityConfig["additional_joins"];
         $fromEntity = $this->entitySpecs[0]['join'] .
             ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId' . $additionalJoinsForEntity;
         $whereEntity = "qr.QueryDefId=$queryDefId";
@@ -586,7 +586,7 @@ class DatabaseQuery
                 }
             }
         }
-        return array("select" => $selectString, "additional_join" => $additional_joins);
+        return array("select" => $selectString, "additional_joins" => $additional_joins);
     }
 
     private function buildSelectString()
