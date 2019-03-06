@@ -119,7 +119,6 @@ class DatabaseQuery
             $document = $this->mongoClient->{$cache_collection}->findOne(['_id' => $queryDefId]);
         } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
             $this->errorHandler->getLogger()->debug($e->getMessage());
-            throw new \Exceptions\QueryException("QDI1", array());
         }
 
         if ($document) {
