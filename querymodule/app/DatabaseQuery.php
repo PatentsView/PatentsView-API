@@ -115,7 +115,7 @@ class DatabaseQuery
         $this->connectToDB();
         $mongoSettings = $config->getMongoSettings();
         $cache_collection = $mongoSettings["mongo_collection"];
-        $document=null;
+        $document = null;
         try {
             $document = $this->mongoClient->{$cache_collection}->findOne(['_id' => $queryDefId]);
         } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
@@ -164,13 +164,13 @@ class DatabaseQuery
                 if (strlen($sortString) > 0) $sortInsert = "ORDER BY $sortString "; else $sortInsert = '';
                 $fromInsert = $this->buildFrom($whereFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
                 $this->fromSubEntity = $fromInsert;
-                $insert_status=$this->runInsertSelect($insertStatement,
+                $insert_status = $this->runInsertSelect($insertStatement,
                     $selectPrimaryEntityIdsString,
                     '(SELECT distinct ' . getDBField($this->fieldSpecs, $this->entityGroupVars[0]['keyId']) . ' as XXid FROM ' .
                     $fromInsert . ' ' . $whereInsert . $sortInsert . ' limit ' . $config->getQueryResultLimit() . ') XX, (select @row_number:=0) temprownum',
                     null,
                     null, $dbSettings);
-                if ($insert_status ==0){
+                if ($insert_status == 0) {
                     $this->runInsert($cacheInsertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
                 }
                 $this->commitTransaction();
@@ -466,36 +466,7 @@ class DatabaseQuery
     private function startTransaction()
     {
         $this->db->beginTransaction();
-    }
-
-    private function runInsert($insert, $params)
-    {
-        $this->connectToDB();
-
-        $sqlStatement = "INSERT INTO $insert";
-        $this->errorHandler->getLogger()->debug($sqlStatement);
-        $this->errorHandler->getLogger()->debug($params);
-
-        $counto = 0;
-        $maxTriesy = 3;
-        do {
-            try {
-                $st = $this->db->prepare($sqlStatement);
-                $results = $st->execute($params);
-                $st->closeCursor();
-                break;
-            } catch (PDOException $e) {
-                if ($counto == $maxTriesy) {
-                    $this->errorHandler->getLogger()->debug("Error during cache row creation");
-                    throw new \Exceptions\QueryException("QDI2", array());
-                }
-                usleep(1000000);
-                continue;
-            }
-            break;
-        } while ($counto < $maxTriesy);
-
-        return $results;
+        $this->db->exec("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
     }
 
     private function runInsertSelect($insert, $select, $from, $where, $order, $dbSettings)
@@ -553,6 +524,36 @@ class DatabaseQuery
 
 
         return $import_command_status;
+    }
+
+    private function runInsert($insert, $params)
+    {
+        $this->connectToDB();
+
+        $sqlStatement = "INSERT INTO $insert";
+        $this->errorHandler->getLogger()->debug($sqlStatement);
+        $this->errorHandler->getLogger()->debug($params);
+
+        $counto = 0;
+        $maxTriesy = 3;
+        do {
+            try {
+                $st = $this->db->prepare($sqlStatement);
+                $results = $st->execute($params);
+                $st->closeCursor();
+                break;
+            } catch (PDOException $e) {
+                if ($counto == $maxTriesy) {
+                    $this->errorHandler->getLogger()->debug("Error during cache row creation");
+                    throw new \Exceptions\QueryException("QDI2", array());
+                }
+                usleep(1000000);
+                continue;
+            }
+            break;
+        } while ($counto < $maxTriesy);
+
+        return $results;
     }
 
     private function commitTransaction()
