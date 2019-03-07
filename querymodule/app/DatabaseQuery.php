@@ -465,9 +465,11 @@ class DatabaseQuery
 
     private function startTransaction()
     {
-        $this->db->beginTransaction();
+
         try {
+
             $this->db->exec("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
+            $this->db->beginTransaction();
         } catch (PDOException $e) {
             $this->errorHandler->getLogger()->debug("Failure in starting transaction" . $e->getMessage());
             throw new \Exceptions\QueryException("QDIS1", array());
