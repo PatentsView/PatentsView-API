@@ -152,7 +152,7 @@ class DatabaseQuery
                 // Add an entry for the query
 
                 $this->startTransaction();
-                $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
+                $cacheInsertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
 
                 // Get all the primary entity IDs and insert into the cached results table
                 #Todo: Optimization issue: when there is no where clause perhaps we should disallow it, otherwise it can be really slow depending on the primary entity. For patents on the full DB it takes over 7m - stopped waiting.
@@ -170,7 +170,7 @@ class DatabaseQuery
                     null,
                     null, $dbSettings);
                 if ($insert_status ==0){
-                    $this->runInsert($insertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
+                    $this->runInsert($cacheInsertStatement, array(':queryDefId' => $queryDefId, ':whereClause' => $stringToHash));
                 }
                 $this->commitTransaction();
                 break;
