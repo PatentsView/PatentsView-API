@@ -136,11 +136,7 @@ class DatabaseQuery
             $results = $this->runQuery('QueryDefID, QueryString', $this->supportDatabase . '.QueryDef', "QueryDefID=$queryDefId", null);
             //TODO Need to handle a hash collision
             if ($results === false) {
-                try {
-                    $this->rollbackTransaction();
-                } catch (PDOException $e) {
-                    $this->errorHandler->getLogger()->debug($e->getMessage());
-                }
+                $this->rollbackTransaction();
                 $county++;
                 if ($county == $maxTries) {
                     $this->errorHandler->getLogger()->debug("Error during cache Load");
@@ -414,6 +410,7 @@ class DatabaseQuery
 
             } catch (PDOException $e) {
                 $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
+                $this->rollbackTransaction();
                 throw new \Exceptions\QueryException("QDC1", array());
             }
 
@@ -434,6 +431,16 @@ class DatabaseQuery
     }
 
     private
+    function rollbackTransaction()
+    {
+        try {
+            $this->db->rollback();
+        } catch (PDOException $e) {
+            $this->errorHandler->getLogger()->debug("Failure in rollback transaction" . $e->getMessage());
+        }
+    }
+
+    private
     function runQuery($select, $from, $where, $order)
     {
 
@@ -450,17 +457,12 @@ class DatabaseQuery
             $st->closeCursor();
         } catch (PDOException $e) {
             $this->errorHandler->getLogger()->debug($e->getMessage());
+            $this->rollbackTransaction();
             return false;
         }
         //file_put_contents('php://stderr', print_r(count($results), TRUE));
         //file_put_contents('php://stderr', print_r("\n", TRUE));
         return $results;
-    }
-
-    private
-    function rollbackTransaction()
-    {
-        $this->db->rollback();
     }
 
     private function startTransaction()
@@ -472,6 +474,7 @@ class DatabaseQuery
             $this->db->beginTransaction();
         } catch (PDOException $e) {
             $this->errorHandler->getLogger()->debug("Failure in starting transaction" . $e->getMessage());
+            $this->rollbackTransaction();
             throw new \Exceptions\QueryException("QDIS1", array());
         }
     }
@@ -552,6 +555,7 @@ class DatabaseQuery
             } catch (PDOException $e) {
                 if ($counto == $maxTriesy) {
                     $this->errorHandler->getLogger()->debug("Error during cache row creation");
+                    $this->rollbackTransaction();
                     throw new \Exceptions\QueryException("QDI2", array());
                 }
                 usleep(1000000);
