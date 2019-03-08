@@ -106,9 +106,13 @@ class DatabaseQuery
             }
         }
 
-
+        $selectFields = array();
+        foreach ($selectFieldSpecs as $selectFieldSpec) {
+            $selectFields[] = getDBField($this->fieldSpecs, $selectFieldSpec);
+        }
+        $selectString = implode(", ", $selectFields);
         // Get the QueryDefId for this where clause
-        $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString";
+        $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString::select->$selectString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%s', $stringToHash);
 
