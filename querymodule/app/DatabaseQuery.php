@@ -110,7 +110,7 @@ class DatabaseQuery
         // Get the QueryDefId for this where clause
         $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
-        $queryDefId = sprintf('%u', $whereHash);
+        $queryDefId = sprintf('%s', $stringToHash);
 
         return array("queryDefId" => $queryDefId);
 
