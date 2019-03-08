@@ -115,8 +115,11 @@ class DatabaseQuery
         $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString::select->$selectString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%s', $stringToHash);
-
-        return array("queryDefId" => $queryDefId);
+        $groupEntityMapping = array();
+        foreach ($entitySpecs as $entitySpec) {
+            $groupEntityMapping[$entitySpec["group_name"]] = $entitySpec["entity_name"];
+        }
+        return array("queryDefId" => $queryDefId, "group_mapping" => $groupEntityMapping);
 
     }
 
