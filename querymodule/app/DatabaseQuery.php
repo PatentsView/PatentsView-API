@@ -107,7 +107,13 @@ class DatabaseQuery
             }
         }
 
-
+        $selectFields = array();
+        foreach ($selectFieldSpecs as $selectFieldSpec) {
+            $selectFields[] = getDBField($this->fieldSpecs, $selectFieldSpec);
+        }
+        $selectString = implode(", ", $selectFields);
+        // Get the QueryDefId for this where clause
+        $query_string = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString::select->$selectString";
         // Get the QueryDefId for this where clause
         $stringToHash = "key->" . $this->entitySpecs[0]['keyId'] . "::query->$whereClause.$whereGroup::sort->$sortString";
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
@@ -117,7 +123,7 @@ class DatabaseQuery
         $cache_collection = $mongoSettings["mongo_collection"];
         $document = null;
         try {
-            $document = $this->mongoClient->{$cache_collection}->findOne(['query_string' => $stringToHash]);
+            $document = $this->mongoClient->{$cache_collection}->findOne(['query_string' => $query_string]);
         } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
             $this->errorHandler->getLogger()->debug($e->getMessage());
         }
