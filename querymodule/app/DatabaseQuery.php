@@ -109,7 +109,7 @@ class DatabaseQuery
 
         $selectFields = array();
         foreach ($selectFieldSpecs as $selectFieldSpec) {
-            $selectFields[] = getDBField($this->fieldSpecs, $selectFieldSpec);
+            $selectFields[] = $selectFieldSpec["column_name"];
         }
         $selectString = implode(", ", $selectFields);
         // Get the QueryDefId for this where clause
