@@ -117,7 +117,7 @@ class DatabaseQuery
         $cache_collection = $mongoSettings["mongo_collection"];
         $document = null;
         try {
-            $document = $this->mongoClient->{$cache_collection}->findOne(['_id' => $queryDefId]);
+            $document = $this->mongoClient->{$cache_collection}->findOne(['query_string' => $stringToHash]);
         } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
             $this->errorHandler->getLogger()->debug($e->getMessage());
         }
