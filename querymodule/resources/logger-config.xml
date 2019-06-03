@@ -1,0 +1,24 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="mailAppender" class="LoggerAppenderMail" threshold="error">
+        <layout class="LoggerLayoutSimple"/>
+        <param name="to" value="smadhavan@air.org"/>
+        <param name="from" value="logger@patentsview.org"/>
+    </appender>
+
+
+    <appender name="default" class="LoggerAppenderConsole" threshold="info">
+        <layout class="LoggerLayoutSimple"/>
+    </appender>
+
+    <appender name="logFile" class="LoggerAppenderDailyFile">
+        <layout class="LoggerLayoutSimple"/>
+        <param name="file" value="file-%s.log"/>
+        <param name="datePattern" value="Y-m-d"/>
+    </appender>
+
+    <root>
+        <appender_ref ref="default"/>
+        <appender_ref ref="mailAppender"/>
+        <appender_ref ref="logFile"/>
+    </root>
+</configuration>
