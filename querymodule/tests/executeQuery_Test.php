@@ -48,7 +48,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ErrorException
+     * @expectedException Exceptions\ParsingException
      */
     public function testInvalidQueryField()
     {
@@ -284,7 +284,8 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(9, count($results['assignees']));
         $this->assertEquals('Cunningham Lindsey U.S., Inc.', $results['assignees'][0]['assignee_organization']);
         $this->assertGreaterThanOrEqual(1, count($results['assignees'][0]['patents']));
-        $this->assertEquals('Kabushiki Kaisha TOPCON', $results['assignees'][2]['assignee_organization']);
+        $this->assertEquals(strtolower('Kabushiki Kaisha TOPCON'),strtolower( $results['assignees'][2]['assignee_organization']));
+
         $this->assertGreaterThanOrEqual(917, count($results['assignees'][2]['patents']));
     }
 
@@ -424,19 +425,19 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $LOCATION_ENTITY_SPECS;
         global $LOCATION_FIELD_SPECS;
-        $queryString = '{"location_id":"39.3762145|-77.154704"}';
+        $queryString = '{"location_id":"39.3762|-77.1547"}';
         $fieldList = array("location_id", "location_key_id", "location_city", "uspc_subclass_id", "assignee_last_name", "patent_number", "inventor_last_name");
         $fieldList = array("location_id", "location_key_id", "location_city", "inventor_last_name", "patent_number", "assignee_organization");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $decoded, $fieldList);
-        $this->assertEquals('Mount Airy', $results['locations'][0]['location_city']);
+        $this->assertEquals('Mt. Airy', $results['locations'][0]['location_city']);
     }
 
     public function testAllFieldsLocation()
     {
         global $LOCATION_ENTITY_SPECS;
         global $LOCATION_FIELD_SPECS;
-        $queryString = '{"location_id":"39.3762145|-77.154704"}';
+        $queryString = '{"location_id":"39.3762|-77.1547"}';
         $decoded = json_decode($queryString, true);
         $fieldList = array_keys($LOCATION_FIELD_SPECS);
         $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $decoded, $fieldList);
@@ -447,7 +448,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     {
         global $LOCATION_ENTITY_SPECS;
         global $LOCATION_FIELD_SPECS;
-        $queryString = '{"location_id":"39.3762145|-77.154704"}';
+        $queryString = '{"location_id":"39.3762|-77.1547"}';
         $fieldList = array("location_id","ipc_main_group","inventor_last_name","patent_number","uspc_mainclass_id","assignee_organization","cpc_subsection_id");
         $decoded = json_decode($queryString, true);
         $results = executeQuery($LOCATION_ENTITY_SPECS, $LOCATION_FIELD_SPECS, $decoded, $fieldList);

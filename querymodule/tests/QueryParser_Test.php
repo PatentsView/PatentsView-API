@@ -106,7 +106,7 @@ class parseQuery_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exceptions\ParsingException
      */
     public function testInvalidAPIField()
     {
