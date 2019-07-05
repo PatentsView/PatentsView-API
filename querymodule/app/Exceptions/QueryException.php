@@ -28,7 +28,7 @@ class QueryException extends APIException
 
     public function __construct($code = "", array $custom_message = array(), Throwable $previous = null)
     {
-        $this->code_mapping = array("QR1" => 400, "QR2" => 400, "QR3" => 400, "QR4" => 400, "QD1" => 500, "QDS1" => 500, "QDIS1" => 500, "QDC1" => 500, "QDS2" => 500, "QDS3" => 500);
+        $this->code_mapping = array("QR1" => 400, "QR2" => 400, "QR3" => 400, "QR4" => 400, "QDI1" => 500,"QDI2" => 500, "QDS1" => 500, "QDIS1" => 500, "QDC1" => 500, "QDS2" => 500, "QDS3" => 500);
         $message = vsprintf($this->message[$code], $custom_message);
         \ErrorHandler::getHandler()->getLogger()->debug($message);
         parent::__construct($message, $code, $previous);
