@@ -130,10 +130,7 @@ class QueryParser
                     } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
                         $val = str_replace("'", "''", $val);
                         $returnString = "($dbField $operatorString '$val')";
-                    } else {
-
-                    } elseif (($datatype == 'string') or ($datatype == 'fulltext'))
-                        $returnString = "($dbField $operatorString '$val')";
+                    }
                     else {
 
                         throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
