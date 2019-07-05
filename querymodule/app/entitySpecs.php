@@ -35,15 +35,6 @@ $INVENTOR_ENTITY_SPECS = json_decode($inventor_entity_json, true);
 $inventor_field_json = file_get_contents(dirname(__FILE__) . '/specs/inventor-field-specs.json');
 $INVENTOR_FIELD_SPECS = json_decode($inventor_field_json, true);
 
-<<<<<<< HEAD
-
-$assignee_entity_json = file_get_contents(dirname(__FILE__) . '/specs/assignee-entity-specs.json');
-$ASSIGNEE_ENTITY_SPECS = json_decode($assignee_entity_json, true);
-$assignee_field_json = file_get_contents(dirname(__FILE__) . '/specs/assignee-field-specs.json');
-$ASSIGNEE_FIELD_SPECS = json_decode($assignee_field_json, true);
-
-=======
->>>>>>> Swithched to json format
 
 $assignee_entity_json = file_get_contents(dirname(__FILE__) . '/specs/assignee-entity-specs.json');
 $ASSIGNEE_ENTITY_SPECS = json_decode($assignee_entity_json, true);
