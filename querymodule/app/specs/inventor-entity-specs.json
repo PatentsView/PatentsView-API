@@ -37,7 +37,7 @@
     "group_name": "assignees",
     "keyId": "assignee_key_id",
     "distinctCountId": "assignee_key_id",
-    "join": "left outer join assignee_entity on patent_inventor.patent_id=assignee_entity.patent_id left outer join assignee_inventor on patent_inventor.inventor_id=assignee_inventor.inventor_id and assignee_entity.assignee_id=assignee_inventor.assignee_id"
+    "join": "left outer join assignee_entity on patent_inventor.patent_id=assignee_entity.patent_id left outer join assignee_inventor on patent_inventor.inventor_id=assignee_inventor.inventor_id and assignee_entity.assignee_key_id=assignee_inventor.assignee_id"
   },
   {
     "entity_name": "application",

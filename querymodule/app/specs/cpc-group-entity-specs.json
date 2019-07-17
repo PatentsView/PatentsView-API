@@ -36,7 +36,7 @@
     "group_name": "inventors",
     "keyId": "inventor_key_id",
     "distinctCountId": "inventor_key_id",
-    "join": "left outer join inventor_entity on cpc_current_group_copy.patent_id=inventor_entity.patent_id left outer join inventor_cpc_group on cpc_current_group_copy.group_id=inventor_cpc_group.group_id and inventor_entity.inventor_id=inventor_cpc_group.inventor_id"
+    "join": "left outer join inventor_entity on cpc_current_group_copy.patent_id=inventor_entity.patent_id left outer join inventor_cpc_group on cpc_current_group_copy.group_id=inventor_cpc_group.group_id and inventor_entity.inventor_key_id=inventor_cpc_group.inventor_id"
   },
   {
     "entity_name": "rawinventor",

@@ -22,14 +22,14 @@
     "group_name": "assignees",
     "keyId": "assignee_key_id",
     "distinctCountId": "assignee_key_id",
-    "join": "left outer join assignee_entity on nber_copy.patent_id=assignee_entity.patent_id left outer join assignee_nber_subcategory on assignee_entity.assignee_id=assignee_nber_subcategory.assignee_id and nber_copy.subcategory_id=assignee_nber_subcategory.subcategory_id"
+    "join": "left outer join assignee_entity on nber_copy.patent_id=assignee_entity.patent_id left outer join assignee_nber_subcategory on assignee_entity.assignee_key_id=assignee_nber_subcategory.assignee_id and nber_copy.subcategory_id=assignee_nber_subcategory.subcategory_id"
   },
   {
     "entity_name": "inventor",
     "group_name": "inventors",
     "keyId": "inventor_key_id",
     "distinctCountId": "inventor_key_id",
-    "join": "left outer join inventor_entity on nber_copy.patent_id=inventor_entity.patent_id left outer join inventor_nber_subcategory on inventor_entity.inventor_id=inventor_nber_subcategory.inventor_id and nber_copy.subcategory_id=inventor_nber_subcategory.subcategory_id"
+    "join": "left outer join inventor_entity on nber_copy.patent_id=inventor_entity.patent_id left outer join inventor_nber_subcategory on inventor_entity.inventor_key_id=inventor_nber_subcategory.inventor_id and nber_copy.subcategory_id=inventor_nber_subcategory.subcategory_id"
   },
   {
     "entity_name": "rawinventor",
