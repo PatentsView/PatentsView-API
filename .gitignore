@@ -4,3 +4,4 @@ querymodule/public_html/web.config
 *.log
 app.ini
 querymodule/vendor/
+.htaccess
