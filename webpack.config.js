@@ -3,10 +3,10 @@ const path = require("path")
 const VueLoaderPlugin = require("vue-loader/lib/plugin")
 
 const config = {
-    entry: "./footer_src/index.js",
+    entry: "./header_footer_src/index.js",
     output: {
         path: path.resolve(__dirname, "querymodule/public_html/js"),
-        filename: "footer.js"
+        filename: "header_footer.js"
     },
     module: {
         rules: [
