@@ -70,7 +70,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="http://www.patentsview.org/query">
+                                        <a :href="baseUrl + '/query'">
                                             <h5>
                                                 <svg class="icon">
                                                     <use
@@ -85,7 +85,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="http://www.patentsview.org/download">
+                                        <a :href="baseUrl + '/download'">
                                             <h5>
                                                 <svg class="icon">
                                                     <use
@@ -100,7 +100,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="http://www.patentsview.org/community">
+                                        <a :href="baseUrl + '/community'">
                                             <h5>
                                                 <svg class="icon">
                                                     <use

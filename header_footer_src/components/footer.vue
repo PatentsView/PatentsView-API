@@ -73,13 +73,13 @@
                                     <a :href="baseUrl + '/api'">Api</a>
                                 </li>
                                 <li>
-                                    <a href="http://www.patentsview.org/query">Data Query</a>
+                                    <a :href="baseUrl + '/query'">Data Query</a>
                                 </li>
                                 <li>
-                                    <a href="http://www.patentsview.org/download">Data Download</a>
+                                    <a :href="baseUrl + '/download'">Data Download</a>
                                 </li>
                                 <li>
-                                    <a href="http://www.patentsview.org/community">Community</a>
+                                    <a :href="baseUrl + '/community'">Community</a>
                                 </li>
                             </ul>
                             <div class="update-date">
