@@ -1,6 +1,6 @@
 import Vue from "vue"
-import Header from "./header.vue"
-import Footer from "./footer"
+import Header from "./components/header.vue"
+import Footer from "./components/footer"
 
 const header = document.createElement("div")
 document.body.prepend(header)

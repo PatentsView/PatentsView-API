@@ -9,25 +9,25 @@
                             <ul>
                                 <li class="relationships">
                                     <a
-                                        href="http://www.patentsview.org/web/#viz/relationships"
+                                        :href="baseUrl + '/web/#viz/relationships'"
                                         title="Relationships"
                                     >Relationships</a>
                                 </li>
                                 <li class="locations-link">
                                     <a
-                                        href="http://www.patentsview.org/web/#viz/locations"
+                                        :href="baseUrl + '/web/#viz/locations'"
                                         title="Locations"
                                     >Locations</a>
                                 </li>
                                 <li class="comparisons">
                                     <a
-                                        href="http://www.patentsview.org/web/#viz/comparisons"
+                                        :href="baseUrl + '/web/#viz/comparisons'"
                                         title="Comparisons"
                                     >Comparisons</a>
                                 </li>
                                 <li class="list-search">
                                     <a
-                                        href="http://www.patentsview.org/web/#search&amp;simp=1"
+                                        :href="baseUrl + '/web/#search&amp;simp=1'"
                                         title="List Search"
                                     >List Search</a>
                                 </li>
@@ -36,13 +36,13 @@
                                 </li>
                                 <li class="methods">
                                     <a
-                                        href="http://www.patentsview.org/web/#"
+                                        :href="baseUrl + '/web/#'"
                                         title="Methods and Sources"
                                     >Methods and Sources</a>
                                 </li>
                                 <li class="glossary">
                                     <a
-                                        href="http://www.patentsview.org/api/glossary.html"
+                                        :href="baseUrl + '/api/glossary.html'"
                                         title="Glossary"
                                     >Glossary</a>
                                 </li>
@@ -70,7 +70,7 @@
                             <h4>Data Sources</h4>
                             <ul>
                                 <li>
-                                    <a href="http://www.patentsview.org/api">Api</a>
+                                    <a :href="baseUrl + '/api'">Api</a>
                                 </li>
                                 <li>
                                     <a href="http://www.patentsview.org/query">Data Query</a>
@@ -155,7 +155,7 @@
                                 <!-- /react-text -->
                                 <!-- react-text: 191 -->
                                 <!-- /react-text -->
-                                <a href="http://www.patentsview.org/">PatentsView</a>
+                                <a :href="baseUrl + '/'">PatentsView</a>
                                 <!-- react-text: 193 -->
                                 <!-- /react-text -->
                                 <!-- react-text: 194 -->
@@ -268,17 +268,27 @@
 </template>
 
 <script>
+import baseUrl from '../baseUrl'
+
 export default {
     data() {
         return {
+            baseUrl: '',
             modalIsShow: false,
             isAboutPane: true,
         }
+    },
+    mounted() {
+        this.baseUrl = baseUrl
     }
 }
 </script>
 
 <style scoped>
+footer li.about:hover {
+    cursor: pointer;
+}
+
 footer ul {
     list-style: none;
     line-height: 10px;

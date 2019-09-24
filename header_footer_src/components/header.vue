@@ -3,7 +3,7 @@
         <header>
             <div>
                 <h1>
-                    <a href="http://www.patentsview.org/web/" title="PatentsView - USPTO">
+                    <a :href="baseUrl + '/web/'" title="PatentsView - USPTO">
                         <img
                             alt="PatentsView Logo"
                             src="img/pv-header-logo.png"
@@ -14,39 +14,31 @@
                 <nav>
                     <ul>
                         <li>
-                            <a
-                                class="nav-label"
-                                href="http://www.patentsview.org/web/#viz/relationships"
-                            >
-                                <icon-base icon-name="network"><Network /></icon-base>
-                                Relationships
+                            <a class="nav-label" :href="baseUrl + '/web/#viz/relationships'">
+                                <icon-base icon-name="network">
+                                    <Network />
+                                </icon-base>Relationships
                             </a>
                         </li>
                         <li class>
-                            <a
-                                class="nav-label"
-                                href="http://www.patentsview.org/web/#viz/locations"
-                            >
-                                <icon-base icon-name="location"><Location /></icon-base>
-                                Locations
+                            <a class="nav-label" :href="baseUrl + '/web/#viz/locations'">
+                                <icon-base icon-name="location">
+                                    <Location />
+                                </icon-base>Locations
                             </a>
                         </li>
                         <li class>
-                            <a
-                                class="nav-label"
-                                href="http://www.patentsview.org/web/#viz/comparisons"
-                            >
-                                <icon-base icon-name="compare"><Compare /></icon-base>
-                                Comparisons
+                            <a class="nav-label" :href="baseUrl + '/web/#viz/comparisons'">
+                                <icon-base icon-name="compare">
+                                    <Compare />
+                                </icon-base>Comparisons
                             </a>
                         </li>
                         <li class>
-                            <a
-                                class="nav-label"
-                                href="http://www.patentsview.org/web/#search&amp;simp=1"
-                            >
-                                <icon-base icon-name="search"><Search /></icon-base>
-                                List Search
+                            <a class="nav-label" :href="baseUrl + '/web/#search&amp;simp=1'">
+                                <icon-base icon-name="search">
+                                    <Search />
+                                </icon-base>List Search
                             </a>
                         </li>
                         <li class="data-source-nav nav-dropdown">
@@ -63,7 +55,7 @@
                             >
                                 <ul>
                                     <li>
-                                        <a href="http://www.patentsview.org/api">
+                                        <a :href="baseUrl + '/api'">
                                             <h5>
                                                 <svg class="icon">
                                                     <use
@@ -133,11 +125,12 @@
 </template>
 
 <script>
+import baseUrl from '../baseUrl'
 import IconBase from './icons/IconBase.vue'
-import Network from './icons/network.vue'
-import Compare from './icons/compare.vue'
-import Location from './icons/location.vue'
-import Search from './icons/search.vue'
+import Network from './icons/svgs/network.vue'
+import Compare from './icons/svgs/compare.vue'
+import Location from './icons/svgs/location.vue'
+import Search from './icons/svgs/search.vue'
 
 export default {
     components: {
@@ -149,9 +142,13 @@ export default {
     },
     data() {
         return {
+            baseUrl: '',
             showDropdown: false,
             timeout: null
         }
+    },
+    mounted() {
+        this.baseUrl = baseUrl
     },
     methods: {
         checkEl(e) {
