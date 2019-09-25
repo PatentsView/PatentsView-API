@@ -243,7 +243,7 @@
                         <div class="footnotes">
                             <sup
                                 id="footnote1"
-                            >(1) In 2014, USDA’s Agricultural Research Service successfully piloted a study to demonstrate the feasibility of using PatentsView data to automatically describe the patenting activity of USDA-supported researchers. USDA administrative data from the National Institute of Food and Agriculture, the Agricultural Research Service, and the US Forest Service was linked with PatentsView data.</sup>
+                            >(1) In 2014, USDA&#8217;s Agricultural Research Service successfully piloted a study to demonstrate the feasibility of using PatentsView data to automatically describe the patenting activity of USDA-supported researchers. USDA administrative data from the National Institute of Food and Agriculture, the Agricultural Research Service, and the US Forest Service was linked with PatentsView data.</sup>
                         </div>
                     </div>
                     <div class="paneCopy" v-if="!isAboutPane">
@@ -285,6 +285,9 @@ export default {
 </script>
 
 <style scoped>
+.overlay sup {
+    line-height: 15px;
+}
 footer li.about:hover {
     cursor: pointer;
 }
