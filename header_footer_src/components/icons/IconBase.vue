@@ -2,7 +2,7 @@
   <svg xmlns="http://www.w3.org/2000/svg" 
     :width="width" 
     :height="height" 
-    viewBox="50 -30 400 400" 
+    :viewBox="viewBox" 
     :aria-labelledby="iconName" 
     role="presentation"
     :fill="color"
@@ -35,6 +35,10 @@ export default {
     stroke: {
       type: String,
       default: '#9cabb9'
+    },
+    viewBox: {
+      type: String,
+      default: "50 -30 400 400"
     }
   }
 }

@@ -6,7 +6,7 @@
                     <a :href="baseUrl + '/web/'" title="PatentsView - USPTO">
                         <img
                             alt="PatentsView Logo"
-                            src="img/pv-header-logo.png"
+                            :src="pv_logo"
                             style="width: 221px; margin-top: 6px;"
                         />
                     </a>
@@ -15,28 +15,28 @@
                     <ul>
                         <li>
                             <a class="nav-label" :href="baseUrl + '/web/#viz/relationships'">
-                                <icon-base icon-name="network">
+                                <icon-base icon-name="Network">
                                     <Network />
                                 </icon-base>Relationships
                             </a>
                         </li>
                         <li class>
                             <a class="nav-label" :href="baseUrl + '/web/#viz/locations'">
-                                <icon-base icon-name="location">
+                                <icon-base icon-name="Location">
                                     <Location />
                                 </icon-base>Locations
                             </a>
                         </li>
                         <li class>
                             <a class="nav-label" :href="baseUrl + '/web/#viz/comparisons'">
-                                <icon-base icon-name="compare">
+                                <icon-base icon-name="Compare">
                                     <Compare />
                                 </icon-base>Comparisons
                             </a>
                         </li>
                         <li class>
                             <a class="nav-label" :href="baseUrl + '/web/#search&amp;simp=1'">
-                                <icon-base icon-name="search">
+                                <icon-base icon-name="Search">
                                     <Search />
                                 </icon-base>List Search
                             </a>
@@ -57,14 +57,10 @@
                                     <li>
                                         <a :href="baseUrl + '/api'">
                                             <h5>
-                                                <svg class="icon">
-                                                    <use
-                                                        xlink:href="#icon/api_47d39ea87b4302ebf0abfa74927ad274"
-                                                    />
-                                                </svg>
-                                                <!-- react-text: 1267 -->
+                                                <icon-base icon-name="API" :width="dropdownSvgWidth" :height="dropdownSvgHeight" :view-box="dropdownSvgViewbox">
+                                                    <API />
+                                                </icon-base>
                                                 Api
-                                                <!-- /react-text -->
                                             </h5>
                                             <p>provides developers and researchers programmatic access to the underlying data</p>
                                         </a>
@@ -72,14 +68,11 @@
                                     <li>
                                         <a :href="baseUrl + '/query'">
                                             <h5>
-                                                <svg class="icon">
-                                                    <use
-                                                        xlink:href="#icon/data-query_37c1a1149f9b563b7eddb3ca9baf828e"
-                                                    />
-                                                </svg>
-                                                <!-- react-text: 1274 -->
+                                                <icon-base icon-name="Query" :width="dropdownSvgWidth" :height="dropdownSvgHeight" :view-box="dropdownSvgViewbox">
+                                                    <Query />
+                                                </icon-base>
                                                 Data Query
-                                                <!-- /react-text -->
+
                                             </h5>
                                             <p>provides a graphical interface for researchers to query the entire underlying database</p>
                                         </a>
@@ -87,14 +80,11 @@
                                     <li>
                                         <a :href="baseUrl + '/download'">
                                             <h5>
-                                                <svg class="icon">
-                                                    <use
-                                                        xlink:href="#icon/data-download_6c3d7ca2b8cf8c6ad5bda71b567422c3"
-                                                    />
-                                                </svg>
-                                                <!-- react-text: 1281 -->
+                                                <icon-base icon-name="Download" :width="dropdownSvgWidth" :height="dropdownSvgHeight" :view-box="dropdownSvgViewbox">
+                                                    <Download />
+                                                </icon-base>
                                                 Data Download
-                                                <!-- /react-text -->
+
                                             </h5>
                                             <p>provides downloadable tables as csv files covering the underlying database</p>
                                         </a>
@@ -102,14 +92,11 @@
                                     <li>
                                         <a :href="baseUrl + '/community'">
                                             <h5>
-                                                <svg class="icon">
-                                                    <use
-                                                        xlink:href="#icon/icon-active-community_d01a24aba0396407660aa6cf0c3c2f33"
-                                                    />
-                                                </svg>
-                                                <!-- react-text: 1288 -->
+                                                <icon-base icon-name="Community" :width="dropdownSvgWidth" :height="dropdownSvgHeight" :view-box="dropdownSvgViewbox">
+                                                    <Community />
+                                                </icon-base>
                                                 Community
-                                                <!-- /react-text -->
+
                                             </h5>
                                             <p>provides news, updates, and a forum for discussion</p>
                                         </a>
@@ -126,11 +113,16 @@
 
 <script>
 import baseUrl from '../baseUrl'
+import pv_logo from '../img/pv-header-logo.png'
 import IconBase from './icons/IconBase.vue'
 import Network from './icons/svgs/network.vue'
 import Compare from './icons/svgs/compare.vue'
 import Location from './icons/svgs/location.vue'
 import Search from './icons/svgs/search.vue'
+import API from './icons/svgs/api.vue'
+import Download from './icons/svgs/download.vue'
+import Query from './icons/svgs/query.vue'
+import Community from './icons/svgs/community.vue'
 
 export default {
     components: {
@@ -138,17 +130,26 @@ export default {
         Network,
         Compare,
         Location,
-        Search
+        Search,
+        API,
+        Download,
+        Query,
+        Community
     },
     data() {
         return {
             baseUrl: '',
+            pv_logo: '',
+            dropdownSvgWidth: 10,
+            dropdownSvgHeight: 10,
+            dropdownSvgViewbox: "0 0 32 32",
             showDropdown: false,
             timeout: null
         }
     },
     mounted() {
         this.baseUrl = baseUrl
+        this.pv_logo = pv_logo
     },
     methods: {
         checkEl(e) {
@@ -170,6 +171,10 @@ header nav ul {
     margin-bottom: 0;
 }
 
+header .header-dropdown svg {
+    left: -15px;
+    position: absolute;
+}
 header nav ul li a {
     color: #9cabb9;
 }

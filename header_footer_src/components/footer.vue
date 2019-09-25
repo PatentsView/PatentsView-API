@@ -127,7 +127,7 @@
                                 <img
                                     class="logo-img"
                                     alt="sponsored by the USPTO"
-                                    src="img/uspto.png"
+                                    :src="uspto_logo"
                                 />
                             </a>
                         </div>
@@ -168,7 +168,7 @@
                                 <img
                                     class="logo-img"
                                     alt="Creative Commons License"
-                                    src="img/creative-commons.png"
+                                    :src="cc_logo"
                                 />
                             </a>
                         </div>
@@ -269,17 +269,23 @@
 
 <script>
 import baseUrl from '../baseUrl'
+import uspto_logo from '../img/uspto.png'
+import cc_logo from '../img/creative-commons.png'
 
 export default {
     data() {
         return {
             baseUrl: '',
+            uspto_logo: '',
+            cc_logo: '',
             modalIsShow: false,
             isAboutPane: true,
         }
     },
     mounted() {
         this.baseUrl = baseUrl
+        this.uspto_logo = uspto_logo
+        this.cc_logo = cc_logo
     }
 }
 </script>
