@@ -556,7 +556,7 @@ header .nav-dropdown:hover:after {
     display: block;
     height: 5px;
     width: 5px;
-    top: 25px;
+    top: 27px;
     right: 3px;
     position: absolute;
     -webkit-transform: rotate(-45deg);
@@ -571,6 +571,7 @@ header .nav-dropdown .nav-label {
     font-size: 8px;
     font-size: 0.8rem;
     padding-left: 18px;
+    transform: translateY(3px);
 }
 header .nav-dropdown ul {
     z-index: 1000;
