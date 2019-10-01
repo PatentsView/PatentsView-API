@@ -1,0 +1,14 @@
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "targets": {
+                    "esmodules": false,
+                    "chrome": "58",
+                    "ie": "11"
+                }
+            }
+        ]
+    ]
+}

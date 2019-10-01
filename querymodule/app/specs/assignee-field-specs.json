@@ -239,7 +239,7 @@
   },
   "detail_desc_length": {
     "entity_name": "patent",
-    "column_name": "patent.detail_description_length",
+    "column_name": "patent.detail_desc_length",
     "datatype": "int",
     "query": "y",
     "sort": "suppl"

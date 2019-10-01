@@ -113,7 +113,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
     {
         global $PATENT_ENTITY_SPECS;
         global $PATENT_FIELD_SPECS;
-        $whereClause = "patent.patent_number like '820260%'";
+        $whereClause = "patent.number like '820260%'";
         $whereFieldsUsed = array('patent_id');
         $sort = array(array('inventor_id' => 'asc'));
         $selectFieldsSpecs = array(
