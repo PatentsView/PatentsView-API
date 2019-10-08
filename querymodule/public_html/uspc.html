@@ -135,12 +135,12 @@
 </div>
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]'>http://www.patentsview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]
+<p class="well code"><a href='https://www.patentssview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]'>https://www.patentssview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]
 </a></p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
 
-<p class="well code">http://www.patentsview.org/api/uspc_mainclasses/query
+<p class="well code">https://www.patentssview.org/api/uspc_mainclasses/query
 </p>
 
 <p>with the body containing:</p>
@@ -153,7 +153,7 @@
 <ul class="example-ul">
     <li>
     <p>Return inventor names for patents whose assignee organization contains the word "Census", whose grant date is between 2000 and 2010, and whose USPC mainclass title contains the word "Electricity".</p>
-    <p class="well code"><a href='http://www.patentsview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]'>http://www.patentsview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]</a></p>
+    <p class="well code"><a href='https://www.patentssview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]'>https://www.patentssview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]</a></p>
     </li>
 </ul>
 

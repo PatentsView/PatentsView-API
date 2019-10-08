@@ -133,12 +133,12 @@
 
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/assignees/query?q={"_begins":{"assignee_organization":"Race"}}&amp;f=["patent_number","patent_date","assignee_organization","assignee_id"]'>http://www.patentsview.org/api/assignees/query?q={"_begins":{"assignee_organization":"Race"}}&amp;f=["patent_number","patent_date","assignee_organization","assignee_id"]
+<p class="well code"><a href='https://www.patentssview.org/api/assignees/query?q={"_begins":{"assignee_organization":"Race"}}&amp;f=["patent_number","patent_date","assignee_organization","assignee_id"]'>https://www.patentssview.org/api/assignees/query?q={"_begins":{"assignee_organization":"Race"}}&amp;f=["patent_number","patent_date","assignee_organization","assignee_id"]
 </a></p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
 
-<p class="well code">http://www.patentsview.org/api/assignees/query
+<p class="well code">https://www.patentssview.org/api/assignees/query
 </p>
 
 <p>with the body containing:</p>
@@ -151,11 +151,11 @@
 <ul class="example-ul">
     <li>
         <p>Return the default fields for assignees on patents with a patent type of "utility", granted between 1999 and 2001, and whose title contains the word "Software".</p>
-        <p class="well code"><a href='http://www.patentsview.org/api/assignees/query?q={"_and":[{"patent_type":"utility"},{"_text_any":{"patent_title":"Software"}}, {"_gte":{"patent_date":"1999-01-01"}},{"_lte":{"patent_date":"2001-12-31"}}]}'>http://www.patentsview.org/api/assignees/query?q={"_and":[{"patent_type":"utility"},{"_text_any":{"patent_title":"Software"}}, {"_gte":{"patent_date":"1999-01-01"}},{"_lte":{"patent_date":"2001-12-31"}}]}</a></p> 
+        <p class="well code"><a href='https://www.patentssview.org/api/assignees/query?q={"_and":[{"patent_type":"utility"},{"_text_any":{"patent_title":"Software"}}, {"_gte":{"patent_date":"1999-01-01"}},{"_lte":{"patent_date":"2001-12-31"}}]}'>https://www.patentssview.org/api/assignees/query?q={"_and":[{"patent_type":"utility"},{"_text_any":{"patent_title":"Software"}}, {"_gte":{"patent_date":"1999-01-01"}},{"_lte":{"patent_date":"2001-12-31"}}]}</a></p> 
     </li>
     <li>
         <p>Return the assignee types of all patents in NBER subcategory 22.</p>
-        <p class="well code"><a href='http://www.patentsview.org/api/assignees/query?q={"_eq":{"nber_subcategory_id":"22"}}&f=["assignee_type"]'>http://www.patentsview.org/api/assignees/query?q={"nber_subcategory_id":"22"}&f=["assignee_type"]</a></p>
+        <p class="well code"><a href='https://www.patentssview.org/api/assignees/query?q={"_eq":{"nber_subcategory_id":"22"}}&f=["assignee_type"]'>https://www.patentssview.org/api/assignees/query?q={"nber_subcategory_id":"22"}&f=["assignee_type"]</a></p>
     </li>
 </ul>
 
