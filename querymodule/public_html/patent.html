@@ -7,7 +7,7 @@
     <title>PatentsView Query Module API</title>
  <link rel="icon" href="//patentsview.org/webtool/favicon.ico" type="image/x-icon" />   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="sass/font-awesome/font-awesome.min.css" />
@@ -130,12 +130,12 @@
 </div>
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code"><a href='https://www.patentssview.org/api/patents/query?q={"_gte":{"patent_date":"2007-01-04"}}&f=["patent_number","patent_date"]'>https://www.patentssview.org/api/patents/query?q={"_gte":{"patent_date":"2007-01-04"}}&f=["patent_number","patent_date"]
+<p class="well code"><a href='https://www.patentsview.org/api/patents/query?q={"_gte":{"patent_date":"2007-01-04"}}&f=["patent_number","patent_date"]'>https://www.patentsview.org/api/patents/query?q={"_gte":{"patent_date":"2007-01-04"}}&f=["patent_number","patent_date"]
 </a></p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
 
-<p class="well code">https://www.patentssview.org/api/patents/query
+<p class="well code">https://www.patentsview.org/api/patents/query
 </p>
 
 <p>with the body containing:</p>
@@ -148,15 +148,15 @@
 <ul class="example-ul">
     <li>
         <p>Return all patent numbers and titles after 2006 where the inventor's last name was "Jobs" and the assignee was based in the US.</p>
-        <p class="well code"><a href='https://www.patentssview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]'>https://www.patentssview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]</a></p>
+        <p class="well code"><a href='https://www.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]'>https://www.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]</a></p>
     </li>
     <li>
         <p>Return the patent number, processing time, and patent kind for patents granted after 2001 that have the word "international" in the abstract and have a foreign company or corporation assignee.</p>
-        <p class="well code"><a href='https://www.patentssview.org/api/patents/query?q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]'>https://www.patentssview.org/api/patents/query?q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]</a></p>
+        <p class="well code"><a href='https://www.patentsview.org/api/patents/query?q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]'>https://www.patentsview.org/api/patents/query?q={"_and": [{"_gte":{"patent_date":"2001-01-01"}},{"_text_any":{"patent_abstract":"international"}},{"_neq":{"assignee_lastknown_country":"US"}}]}&f=["patent_number","patent_processing_time","patent_kind"]</a></p>
     </li>
         <li>
         <p>Return location information at grant for all inventors mentioned on a given patent.</p>
-        <p class="well code"><a href='https://www.patentssview.org/api/patents/query?q={"patent_number":"8395459"}&f=["patent_number","inventor_id","inventor_location_id","inventor_city","inventor_state","inventor_country"]'>https://www.patentssview.org/api/patents/query?q={"patent_number":"8395459"}&f=["patent_number","inventor_id","inventor_location_id","inventor_city","inventor_state","inventor_country"]</a></p>
+        <p class="well code"><a href='https://www.patentsview.org/api/patents/query?q={"patent_number":"8395459"}&f=["patent_number","inventor_id","inventor_location_id","inventor_city","inventor_state","inventor_country"]'>https://www.patentsview.org/api/patents/query?q={"patent_number":"8395459"}&f=["patent_number","inventor_id","inventor_location_id","inventor_city","inventor_state","inventor_country"]</a></p>
     </li>
 
 </ul>

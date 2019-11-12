@@ -7,7 +7,7 @@
     <title>PatentsView Query Module API</title>
  <link rel="icon" href="//patentsview.org/webtool/favicon.ico" type="image/x-icon" />  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="sass/font-awesome/font-awesome.min.css" />
@@ -135,12 +135,12 @@
 </div>
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code"><a href='https://www.patentssview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]'>https://www.patentssview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]
+<p class="well code"><a href='https://www.patentsview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]'>https://www.patentsview.org/api/uspc_mainclasses/query?q={"uspc_mainclass_id":"292"}&amp;f=["uspc_mainclass_id","uspc_mainclass_title","uspc_total_num_patents"]
 </a></p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
 
-<p class="well code">https://www.patentssview.org/api/uspc_mainclasses/query
+<p class="well code">https://www.patentsview.org/api/uspc_mainclasses/query
 </p>
 
 <p>with the body containing:</p>
@@ -153,7 +153,7 @@
 <ul class="example-ul">
     <li>
     <p>Return inventor names for patents whose assignee organization contains the word "Census", whose grant date is between 2000 and 2010, and whose USPC mainclass title contains the word "Electricity".</p>
-    <p class="well code"><a href='https://www.patentssview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]'>https://www.patentssview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]</a></p>
+    <p class="well code"><a href='https://www.patentsview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]'>https://www.patentsview.org/api/uspc_mainclasses/query?q={"_and":[{"_contains":{"assignee_organization":"Census"}},{"_gte":{"patent_date":"2000-01-01"}},{"_lte":{"patent_date":"2010-12-31"}},{"_contains":{"uspc_mainclass_title":"Electricity"}}]}&f=["inventor_id","inventor_first_name","inventor_last_name"]</a></p>
     </li>
 </ul>
 
