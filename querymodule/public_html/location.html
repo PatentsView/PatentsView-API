@@ -7,9 +7,9 @@
     <title>PatentsView Query Module API</title>
    <link rel="icon" href="//patentsview.org/webtool/favicon.ico" type="image/x-icon" /> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
 
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="sass/font-awesome/font-awesome.min.css" />
     <link rel="stylesheet" href="sass/query.css" />
     <link rel="stylesheet" href="css/custom.css" />
@@ -135,12 +135,12 @@
 
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code"><a href='http://www.patentsview.org/api/locations/query?q={"location_city":"Mount Airy"}&amp;f=["location_id","location_state","location_total_num_patents"]'>http://www.patentsview.org/api/locations/query?q={"location_city":"Mount Airy"}&amp;f=["location_id","location_state","location_total_num_patents"]
+<p class="well code"><a href='https://www.patentsview.org/api/locations/query?q={"location_city":"Mount Airy"}&amp;f=["location_id","location_state","location_total_num_patents"]'>https://www.patentsview.org/api/locations/query?q={"location_city":"Mount Airy"}&amp;f=["location_id","location_state","location_total_num_patents"]
 </a></p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
 
-<p class="well code">http://www.patentsview.org/api/locations/query
+<p class="well code">https://www.patentsview.org/api/locations/query
 </p>
 
 <p>with the body containing:</p>
@@ -153,7 +153,7 @@
 <ul class="example-ul">
     <li>
     <p>Return the last known location of any assigness with patents which have at least one inventor with last name "Yamazaki", "Weder", or "Edison".</p>
-    <p class="well code"><a href='http://www.patentsview.org/api/locations/query?q={"inventor_last_name":["Yamazaki","Weder","Edison"]}&f=["assignee_lastknown_city","assignee_lastknown_state","assignee_lastknown_country"]'>http://www.patentsview.org/api/locations/query?q={"inventor_last_name":["Yamazaki","Weder","Edison"]}&f=["assignee_lastknown_city","assignee_lastknown_state","assignee_lastknown_country"]</a></p>
+    <p class="well code"><a href='https://www.patentsview.org/api/locations/query?q={"inventor_last_name":["Yamazaki","Weder","Edison"]}&f=["assignee_lastknown_city","assignee_lastknown_state","assignee_lastknown_country"]'>https://www.patentsview.org/api/locations/query?q={"inventor_last_name":["Yamazaki","Weder","Edison"]}&f=["assignee_lastknown_city","assignee_lastknown_state","assignee_lastknown_country"]</a></p>
     </li>
 </ul>
 
