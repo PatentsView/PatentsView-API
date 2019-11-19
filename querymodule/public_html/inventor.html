@@ -132,12 +132,12 @@
 </div>
 <p>An example of a complete API call using the GET verb is:</p>
 
-<p class="well code"><a href='https://www.patentssview.org/api/inventors/query?q={"inventor_last_name":"Young"}&f=["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]'>https://www.patentssview.org/api/inventors/query?q={"inventor_last_name":"Young"}&f=["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]
+<p class="well code"><a href='https://www.patentsview.org/api/inventors/query?q={"inventor_last_name":"Young"}&f=["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]'>https://www.patentsview.org/api/inventors/query?q={"inventor_last_name":"Young"}&f=["inventor_id","inventor_last_name","inventor_first_name","patent_number","patent_date"]
 </a></p>
 
 <p>An example of the equivalent API call using the POST verb is:</p>
 
-<p class="well code">https://www.patentssview.org/api/inventors/query
+<p class="well code">https://www.patentsview.org/api/inventors/query
 </p>
 
 <p>with the body containing:</p>
@@ -150,24 +150,24 @@
 <ul class="example-ul">
     <li>
         <p>Return the first name, last name, and associated patent title of all inventors who had patents granted between 2000 and 2006 where the patent title contains the word "bicycle".</p>
-        <p class="well code"><a href='https://www.patentssview.org/api/inventors/query?q={"_and":[{"_gte":{"patent_date":"2000-01-01"}},{"_lt":{"patent_date":"2007-01-01"}},{"_text_any":{"patent_title":"bicycle"}}]}&f=["inventor_first_name","inventor_last_name"]'>https://www.patentssview.org/api/inventors/query?q={"_and":[{"_gte":{"patent_date":"2000-01-01"}},{"_lt":{"patent_date":"2007-01-01"}},{"_text_any":{"patent_title":"bicycle"}}]}&f=["inventor_first_name","inventor_last_name"]</a></p>
+        <p class="well code"><a href='https://www.patentsview.org/api/inventors/query?q={"_and":[{"_gte":{"patent_date":"2000-01-01"}},{"_lt":{"patent_date":"2007-01-01"}},{"_text_any":{"patent_title":"bicycle"}}]}&f=["inventor_first_name","inventor_last_name"]'>https://www.patentsview.org/api/inventors/query?q={"_and":[{"_gte":{"patent_date":"2000-01-01"}},{"_lt":{"patent_date":"2007-01-01"}},{"_text_any":{"patent_title":"bicycle"}}]}&f=["inventor_first_name","inventor_last_name"]</a></p>
     </li>
     <li>
         <p>Knowing the raw inventor name on a patent, return the disambiguated inventor identity of that person to later search other patents by that given inventor. </p>
-        <p class="well code"><a href='https://www.patentssview.org/api/v5/inventors/query?q={"_and":[{"patent_number":"9260215"},{"rawinventor_last_name":"Jones"}]}&f=["inventor_id","inventor_last_name","inventor_first_name"]'>https://www.patentssview.org/api/v5/inventors/query?q={"_and":[{"patent_number":"9260215"},{"rawinventor_last_name":"Jones"}]}&f=["inventor_id","inventor_last_name","inventor_first_name"]</a></p>
-        <p class="well code"><a href='https://www.patentssview.org/api/v5/patents/query?q={"inventor_id":"7677158-2"}&f=["patent_number","patent_title"]'>https://www.patentssview.org/api/v5/patents/query?q={"inventor_id":"7677158-2"}&f=["patent_number","patent_title"]</a></p>
+        <p class="well code"><a href='https://www.patentsview.org/api/v5/inventors/query?q={"_and":[{"patent_number":"9260215"},{"rawinventor_last_name":"Jones"}]}&f=["inventor_id","inventor_last_name","inventor_first_name"]'>https://www.patentsview.org/api/v5/inventors/query?q={"_and":[{"patent_number":"9260215"},{"rawinventor_last_name":"Jones"}]}&f=["inventor_id","inventor_last_name","inventor_first_name"]</a></p>
+        <p class="well code"><a href='https://www.patentsview.org/api/v5/patents/query?q={"inventor_id":"7677158-2"}&f=["patent_number","patent_title"]'>https://www.patentsview.org/api/v5/patents/query?q={"inventor_id":"7677158-2"}&f=["patent_number","patent_title"]</a></p>
     </li>
     <li>
         <p>Return the last known location of inventors with patents in NBER subcategory 25.</p>
-        <p class="well code"><a href='https://www.patentssview.org/api/inventors/query?q={"nber_subcategory_id":25}&f=["inventor_lastknown_city","inventor_lastknown_state"]'>https://www.patentssview.org/api/inventors/query?q={"nber_subcategory_id":25}&f=["inventor_lastknown_city","inventor_lastknown_state"]</a></p>
+        <p class="well code"><a href='https://www.patentsview.org/api/inventors/query?q={"nber_subcategory_id":25}&f=["inventor_lastknown_city","inventor_lastknown_state"]'>https://www.patentsview.org/api/inventors/query?q={"nber_subcategory_id":25}&f=["inventor_lastknown_city","inventor_lastknown_state"]</a></p>
     </li>
     <li>
     <p>Return the organization names of assignees linked to inventors whose last known location was the city of Washington, D.C.</p>
-    <p class="well code"><a href='https://www.patentssview.org/api/inventors/query?q={"_and":[{"inventor_lastknown_city":"Washington"},{"inventor_lastknown_state":"DC"}]}&f=["assignee_organization"]'>https://www.patentssview.org/api/inventors/query?q={"_and":[{"inventor_lastknown_city":"Washington"},{"inventor_lastknown_state":"DC"}]}&f=["assignee_organization"]</a></p>
+    <p class="well code"><a href='https://www.patentsview.org/api/inventors/query?q={"_and":[{"inventor_lastknown_city":"Washington"},{"inventor_lastknown_state":"DC"}]}&f=["assignee_organization"]'>https://www.patentsview.org/api/inventors/query?q={"_and":[{"inventor_lastknown_city":"Washington"},{"inventor_lastknown_state":"DC"}]}&f=["assignee_organization"]</a></p>
     </li>
     <li>
     <p>Return patent numbers and titles with at least one inventor whose location at grant was Chicago, IL.</p>
-    <p class="well code"><a href='https://www.patentssview.org/api/inventors/query?q={"_and":[{"location_city":"Chicago"},{"location_state":"IL"}]}&f=["patent_number","patent_title"]'>https://www.patentssview.org/api/inventors/query?q={"_and":[{"location_city":"Chicago"},{"location_state":"IL"}]}&f=["patent_number","patent_title"]</a></p>
+    <p class="well code"><a href='https://www.patentsview.org/api/inventors/query?q={"_and":[{"location_city":"Chicago"},{"location_state":"IL"}]}&f=["patent_number","patent_title"]'>https://www.patentsview.org/api/inventors/query?q={"_and":[{"location_city":"Chicago"},{"location_state":"IL"}]}&f=["patent_number","patent_title"]</a></p>
     </li>
 
 </ul>
