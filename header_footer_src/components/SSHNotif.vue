@@ -35,13 +35,14 @@ export default {
         }
     },
     mounted() {
-        setInterval(() => {
+        const countDown = setInterval(() => {
             if (this.count > 0) {
                 this.count--
             } else {
                 this.closeBanner = true
+                window.clearInterval(countDown)
             }
-        }, 1000);
+        }, 1000)
     }
 }
 </script>
@@ -58,6 +59,7 @@ div {
     width: 100%;
     padding: 10px;
     z-index: 999;
+    min-height: 50px;
 }
 
 .banner a {
