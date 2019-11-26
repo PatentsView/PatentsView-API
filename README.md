@@ -2,8 +2,6 @@
 
 You can find instructions for setting up the server for hosting the API here: <https://github.com/CSSIP-AIR/PatentsView-API/wiki/API-Site-Setup-Instructions>
 
-## Header and Footer
+## Header and footer script
 
-Developed with Vue. Bundled with Webpack.
-
-At project root, run NPM sripts to develop or build.
+Built from https://github.com/American-Institutes-for-Research/pv-header-footer
