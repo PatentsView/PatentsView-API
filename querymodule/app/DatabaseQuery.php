@@ -61,7 +61,7 @@ class DatabaseQuery
             if (array_key_exists('per_page', $options))
                 if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1)) {
                     $this->errorHandler->getLogger()->debug("Page size too big");
-                    throw new \Exceptions\QueryException("QR1", array($config->getMaxPageSize()));
+                    throw new \PVExceptions\QueryException("QR1", array($config->getMaxPageSize()));
 
                 } else
                     $perPage = $options['per_page'];
@@ -82,7 +82,7 @@ class DatabaseQuery
                 $this->sort_by_subentity_counts = strtolower($options['sort_by_subentity_counts']);
             } elseif (array_key_exists('sort_by_subentity_counts', $options) && !array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
                 $this->errorHandler->getLogger()->debug(vsprintf("Sorting field %s is not in the output field list.", array($options['sort_by_subentity_counts'])));
-                throw new \Exceptions\QueryException("QR2", array($options['sort_by_subentity_counts']));
+                throw new \PVExceptions\QueryException("QR2", array($options['sort_by_subentity_counts']));
             }
         }
         $this->selectFieldSpecs = $selectFieldSpecs;
@@ -130,7 +130,7 @@ class DatabaseQuery
                 $county++;
                 if ($county == $maxTries) {
                     $this->errorHandler->getLogger()->debug("Error during cache Load");
-                    throw new \Exceptions\QueryException("QDI1", array());
+                    throw new \PVExceptions\QueryException("QDI1", array());
                 }
                 usleep(500000);
                 continue;
@@ -326,11 +326,11 @@ class DatabaseQuery
                         $fieldSpec = $this->fieldSpecs[$apiField];
                     } catch (ErrorException $e) {
 
-                        throw new \Exceptions\QueryException("QR3", array($apiField));
+                        throw new \PVExceptions\QueryException("QR3", array($apiField));
                     }
                     if (strtolower($fieldSpec['sort']) == 'y') {
                         if (($direction != 'asc') and ($direction != 'desc')) {
-                            throw new \Exceptions\QueryException("QR4", array($direction));
+                            throw new \PVExceptions\QueryException("QR4", array($direction));
                         } else {
                             if ($orderString != '')
                                 $orderString .= ', ';
@@ -339,7 +339,7 @@ class DatabaseQuery
                         }
                     } elseif (strtolower($fieldSpec['sort']) == 'suppl') {
                         if (($direction != 'asc') and ($direction != 'desc')) {
-                            throw new \Exceptions\QueryException("QR4", array($direction));
+                            throw new \PVExceptions\QueryException("QR4", array($direction));
                         } else {
                             if ($orderString != '')
                                 $orderString .= ', ';
@@ -358,7 +358,7 @@ class DatabaseQuery
                             }
                         }
                     } else {
-                        throw new \Exceptions\QueryException("QR3", array($apiField));
+                        throw new \PVExceptions\QueryException("QR3", array($apiField));
                     }
                 }
             }
@@ -404,7 +404,9 @@ class DatabaseQuery
 
             } catch (PDOException $e) {
                 $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
-                throw new \Exceptions\QueryException("QDC1", array());
+                $this->errorHandler->getLogger()->debug($e->getTraceAsString());
+                $this->errorHandler->getLogger()->debug($e->getMessage());
+                throw new \PVExceptions\QueryException("QDC1", array());
             }
 
         }
@@ -440,7 +442,7 @@ class DatabaseQuery
             } catch (PDOException $e) {
                 if ($counto == $maxTriesy) {
                     $this->errorHandler->getLogger()->debug("Error during cache row creation");
-                    throw new \Exceptions\QueryException("QDI2", array());
+                    throw new \PVExceptions\QueryException("QDI2", array());
                 }
                 usleep(1000000);
                 continue;
@@ -470,7 +472,8 @@ class DatabaseQuery
         if ($export_command_status != 0) {
             $this->errorHandler->getLogger()->debug("Failure in exporting to text file." . implode("\n", $export_output));
             $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . $cmd);
-            throw new \Exceptions\QueryException("QDIS1", array());
+
+            throw new \PVExceptions\QueryException("QDIS1", array());
         }
         $cmd2 = 'mysql --local-infile=1 -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
 
@@ -494,7 +497,7 @@ class DatabaseQuery
 
             $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . implode("\n", $import_output));
             $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . $cmd2);
-            throw new \Exceptions\QueryException("QDIS3", array());
+            throw new \PVExceptions\QueryException("QDIS3", array());
 
 
         }

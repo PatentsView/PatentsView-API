@@ -9,13 +9,13 @@
 namespace Slim\Handlers;
 require_once dirname(__FILE__) . '/../ErrorHandler.php';
 
-use Exceptions\APIException;
+use PVExceptions\APIException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class APIError extends Error
 {
-    public function __invoke(Request $request, Response $response, APIException $exception)
+    public function __invoke( $request, $response, $exception)
     {
         $status = $exception->getCode() ?: 500;
         $logger = \ErrorHandler::getHandler()->getLogger();

@@ -18,17 +18,17 @@ function CheckGetParameters(array $req)
 {
     // Make sure the 'q' parameter exists.
     if (!array_key_exists("q", $req) || $req['q'] == null) {
-        throw new \Exceptions\RequestException("RQ1");
+        throw new \PVExceptions\RequestException("RQ1");
     }
     // Convert the query param to json, return error if empty or not valid
     $queryParam = json_decode($req['q'], true);
 
     if ($queryParam == null) {
-        throw new \Exceptions\RequestException("RQ2");
+        throw new \PVExceptions\RequestException("RQ2");
     }
     // Ensure the query param only has one top-level object
     if (count($queryParam) != 1) {
-        throw new \Exceptions\RequestException("RQ3");
+        throw new \PVExceptions\RequestException("RQ3");
     }
 
     // Look for an "f" parameter; it may not exist.
@@ -36,7 +36,7 @@ function CheckGetParameters(array $req)
     if (array_key_exists("f", $req) && $req['f'] != null) {
         $fieldsParam = json_decode($req['f'], true);
         if ($fieldsParam == null) {
-            throw new \Exceptions\RequestException("RF2");
+            throw new \PVExceptions\RequestException("RF2");
         }
     }
 
@@ -45,7 +45,7 @@ function CheckGetParameters(array $req)
     if (array_key_exists("s", $req) && $req['s'] != null) {
         $sortParam = json_decode($req['s'], true);
         if ($sortParam == null) {
-            throw new \Exceptions\RequestException("RS2");
+            throw new \PVExceptions\RequestException("RS2");
         }
     }
 
@@ -54,7 +54,7 @@ function CheckGetParameters(array $req)
     if (array_key_exists("o", $req) && $req['o'] != null) {
         $optionsParam = json_decode($req['o'], true);
         if ($optionsParam == null) {
-            throw new \Exceptions\RequestException("RO2");
+            throw new \PVExceptions\RequestException("RO2");
         }
     }
 
@@ -68,7 +68,7 @@ function CheckGetParameters(array $req)
             $formatParam = 'xml';
 
         } else
-            throw new \Exceptions\RequestException("RFO4");
+            throw new \PVExceptions\RequestException("RFO4");
     }
 
     return array($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam);
@@ -80,19 +80,19 @@ function CheckPostParameters($requestBody)
     $body = $requestBody;
     $bodyJSON = json_decode($body, true);
     if ($bodyJSON['q'] == null) {
-        throw new \Exceptions\RequestException("POST1", $body);
+        throw new \PVExceptions\RequestException("POST1", $body);
 
     }
     //ErrorHandler::getHandler()->sendError(200, $bodyJSON);
     // Make sure the 'q' parameter exists.
     if ($bodyJSON['q'] == null) {
-        throw new \Exceptions\RequestException("RQ1");
+        throw new \PVExceptions\RequestException("RQ1");
     }
     // Convert the query param to json, return error if empty or not valid
     $queryParam = $bodyJSON['q'];
     // Ensure the query param only has one top-level object
     if (count($queryParam) != 1) {
-        throw new \Exceptions\RequestException("RQ3");
+        throw new \PVExceptions\RequestException("RQ3");
     }
 
     // Look for an "f" parameter; it may not exist.
@@ -120,7 +120,7 @@ function CheckPostParameters($requestBody)
             $formatParam = 'xml';
 
         } else
-            throw new \Exceptions\RequestException("RFO4");
+            throw new \PVExceptions\RequestException("RFO4");
     }
 
     return array($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam);

@@ -129,7 +129,7 @@ class queryDatabase_Test extends PHPUnit_Framework_TestCase
         $exception = null;
         try {
             $results = $dbQuery->queryDatabase($PATENT_ENTITY_SPECS, $PATENT_FIELD_SPECS, $whereClause, $whereFieldsUsed, array(), true, $selectFieldsSpecs, $sort);
-        } catch (\Exceptions\QueryException $e) {
+        } catch (\PVExceptions\QueryException $e) {
             $exception = $e->getCustomCode();
         } catch (Exception $e) {
             print_r($e->getMessage());

@@ -16,7 +16,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $var_check = null;
         try {
             $processed_array = CheckGetParameters($request);
-        } catch (\Exceptions\RequestException $e) {
+        } catch (\PVExceptions\RequestException $e) {
             $var_check = $e->getCustomCode();
         }
         $this->assertEquals("RQ1", $var_check);
@@ -26,7 +26,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $var_check = null;
         try {
             $processed_array = CheckGetParameters($request);
-        } catch (\Exceptions\RequestException $e) {
+        } catch (\PVExceptions\RequestException $e) {
             $var_check = $e->getCustomCode();
         }
         $this->assertEquals("RQ2", $var_check);
@@ -43,7 +43,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $var_check = null;
         try {
             $processed_array = CheckGetParameters($request);
-        } catch (\Exceptions\RequestException $e) {
+        } catch (\PVExceptions\RequestException $e) {
             $var_check = $e->getCustomCode();
         }
         $this->assertEquals("RQ3", $var_check);
@@ -58,7 +58,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $var_check = null;
         try {
             $processed_array = CheckGetParameters($request);
-        } catch (\Exceptions\RequestException $e) {
+        } catch (\PVExceptions\RequestException $e) {
             $var_check = $e->getCustomCode();
         }
         $this->assertEquals("RF2", $var_check);
@@ -77,7 +77,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $var_check = null;
         try {
             CheckGetParameters($request);
-        } catch (\Exceptions\RequestException $e) {
+        } catch (\PVExceptions\RequestException $e) {
             $var_check = $e->getCustomCode();
         }
         $this->assertEquals("RS2", $var_check);
@@ -96,7 +96,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $var_check = null;
         try {
             CheckGetParameters($request);
-        } catch (\Exceptions\RequestException $e) {
+        } catch (\PVExceptions\RequestException $e) {
             $var_check = $e->getCustomCode();
         }
         $this->assertEquals("RO2", $var_check);
@@ -115,7 +115,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $var_check = null;
         try {
             CheckGetParameters($request);
-        } catch (\Exceptions\RequestException $e) {
+        } catch (\PVExceptions\RequestException $e) {
             $var_check = $e->getCustomCode();
         }
         $this->assertEquals("RFO4", $var_check);

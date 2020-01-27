@@ -6,12 +6,12 @@
  * Time: 4:08 PM
  */
 
-namespace Exceptions;
+namespace PVExceptions;
 
-
+use \Exception as e;
 use Throwable;
 
-abstract class APIException extends \Exception
+abstract class APIException extends e
 {
     protected $code_mapping;
     public function __construct($message = "", $code = "", Throwable $previous = null)

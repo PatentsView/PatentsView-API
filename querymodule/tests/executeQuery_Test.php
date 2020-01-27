@@ -48,7 +48,7 @@ class executeQuery_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exceptions\ParsingException
+     * @expectedException PVExceptions\ParsingException
      */
     public function testInvalidQueryField()
     {

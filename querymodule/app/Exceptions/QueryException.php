@@ -6,7 +6,7 @@
  * Time: 4:53 PM
  */
 
-namespace Exceptions;
+namespace PVExceptions;
 
 require_once(dirname(__FILE__) . "/APIException.php");
 

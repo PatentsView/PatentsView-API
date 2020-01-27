@@ -113,34 +113,32 @@ class QueryParser
                     $operatorString = $this->COMPARISON_OPERATORS[$operator];
                     if ($datatype == 'float') {
                         if (!is_float($val)) {
-                            throw new \Exceptions\ParsingException("PINV2", array($val));
+                            throw new \PVExceptions\ParsingException("PINV2", array($val));
                         }
                         $returnString = "($dbField $operatorString $val)";
                     } elseif ($datatype == 'int') {
                         if (!is_numeric($val)) {
-                            throw new \Exceptions\ParsingException("PINV1", array($val));
+                            throw new \PVExceptions\ParsingException("PINV1", array($val));
                         }
                         $returnString = "($dbField $operatorString $val)";
                     } elseif ($datatype == 'date') {
                         if (!strtotime($val)) {
-                            throw new \Exceptions\ParsingException("PINV3", array($val));
+                            throw new \PVExceptions\ParsingException("PINV3", array($val));
                         }
                         $returnString = "($dbField $operatorString '" . date('Y-m-d', strtotime($val)) . "')";
 
                     } elseif (($datatype == 'string') or ($datatype == 'fulltext')) {
                         $val = str_replace("'", "''", $val);
                         $returnString = "($dbField $operatorString '$val')";
-                    }
-                    else {
-
-                        throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
+                    } else {
+                        throw new \PVExceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
                     }
                 } else {
-                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
+                    throw new \PVExceptions\ParsingException("PINV5", array($apiField));
                 }
             }
         } else {
-            throw new \Exceptions\ParsingException("PINV8", array($apiField));
+            throw new \PVExceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
 
@@ -190,14 +188,14 @@ class QueryParser
                                 $returnString = "($dbField like '%$val%')";
                             }
                     } else {
-                        throw new \Exceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
+                        throw new \PVExceptions\ParsingException("PINV6", array($datatype, $operator, $apiField));
                     }
                 } else {
-                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
+                    throw new \PVExceptions\ParsingException("PINV5", array($apiField));
                 }
             }
         } else {
-            throw new \Exceptions\ParsingException("PINV8", array($apiField));
+            throw new \PVExceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
     }
@@ -214,7 +212,7 @@ class QueryParser
                     $dbField = getDBField($this->fieldSpecs, $apiField);
 
                     if ($this->fieldSpecs[$apiField]['datatype'] != 'fulltext') {
-                        throw new \Exceptions\ParsingException("PINV7", array($operator, $apiField));
+                        throw new \PVExceptions\ParsingException("PINV7", array($operator, $apiField));
                     }
 
                     if (!in_array($apiField, $this->fieldsUsed)) $this->fieldsUsed[] = $apiField;
@@ -226,13 +224,12 @@ class QueryParser
                         $val = '+' . $val;
                         $val = str_replace(' ', ' +', $val);
                         $returnString = "match ($dbField) against ('$val' in boolean mode)";
-
                     } else
-                        throw new \Exceptions\ParsingException("PINV5", array($apiField));
+                        throw new \PVExceptions\ParsingException("PINV5", array($apiField));
                 }
             }
         } else {
-            throw new \Exceptions\ParsingException("PINV8", array($apiField));
+            throw new \PVExceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
     }
@@ -257,14 +254,14 @@ class QueryParser
                         if ($datatype == 'int') {
                             foreach ($val as $singleVal) {
                                 if (!is_numeric($singleVal)) {
-                                    throw new \Exceptions\ParsingException("PINV1", array($singleVal));
+                                    throw new \PVExceptions\ParsingException("PINV1", array($singleVal));
                                 }
                             }
                             $returnString = "($dbField in (" . implode(", ", $val) . "))";
                         } elseif ($datatype == 'float') {
                             foreach ($val as $singleVal) {
                                 if (!is_float($singleVal)) {
-                                    throw new \Exceptions\ParsingException("PINV2", array($singleVal));
+                                    throw new \PVExceptions\ParsingException("PINV2", array($singleVal));
                                 }
                             }
                             $returnString = "($dbField in (" . implode(", ", $val) . "))";
@@ -274,7 +271,7 @@ class QueryParser
                                 if (strtotime($singleVal))
                                     $dateVals[] = date('Y-m-d', strtotime($singleVal));
                                 else {
-                                    throw new \Exceptions\ParsingException("PINV3", array($singleVal));
+                                    throw new \PVExceptions\ParsingException("PINV3", array($singleVal));
                                 }
                             }
                             $returnString = "($dbField in ('" . implode("', '", $dateVals) . "'))";
@@ -283,15 +280,15 @@ class QueryParser
                             $returnString = "($dbField in ('" . implode("', '", $val) . "'))";
                         }
                         else {
-                            throw new \Exceptions\ParsingException("PINV4", array($datatype, $apiField));
+                            throw new \PVExceptions\ParsingException("PINV4", array($datatype, $apiField));
                         }
                     }
                 } else {
-                    throw new \Exceptions\ParsingException("PINV5", array($apiField));
+                    throw new \PVExceptions\ParsingException("PINV5", array($apiField));
                 }
             }
         } else {
-            throw new \Exceptions\ParsingException("PINV8", array($apiField));
+            throw new \PVExceptions\ParsingException("PINV8", array($apiField));
         }
         return $returnString;
     }
@@ -305,7 +302,7 @@ function parseFieldList(array $fieldSpecs, array $fieldsParam = null)
         if (array_key_exists($fieldsParam[$i], $fieldSpecs)) {
             $returnFieldSpecs[$fieldsParam[$i]] = $fieldSpecs[$fieldsParam[$i]];
         } else {
-            throw new \Exceptions\ParsingException("PINV8", array($fieldsParam[$i]));
+            throw new \PVExceptions\ParsingException("PINV8", array($fieldsParam[$i]));
         }
     }
     return $returnFieldSpecs;
