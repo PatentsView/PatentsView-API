@@ -3,7 +3,7 @@ require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
 
-require_once(dirname(__FILE__) . "/Exceptions/QueryException.php");
+require_once(dirname(__FILE__) . "/PVExceptions/QueryException.php");
 
 class DatabaseQuery
 {
@@ -399,11 +399,14 @@ class DatabaseQuery
         if ($this->db === null) {
             $dbSettings = $config->getDbSettings();
             try {
-                $this->db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password']);
+                $this->db = new PDO("mysql:host=$dbSettings[host];port=$dbSettings[port];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password']);
                 $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             } catch (PDOException $e) {
                 $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
+                $this->errorHandler->getLogger()->debug($e->getMessage());
+                $this->errorHandler->getLogger()->debug($e->getCode());
+                $this->errorHandler->getLogger()->debug("mysql:host=$dbSettings[host];port=dbname=$dbSettings[port];$dbSettings[database];charset=utf8");
                 throw new \Exceptions\QueryException("QDC1", array());
             }
 
@@ -463,7 +466,7 @@ class DatabaseQuery
 
         $selectSt = "SELECT $select FROM $from $where $order";
         $selectSt = preg_replace('/"/', '\"', $selectSt);
-        $cmd = 'mysql -B -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['database']) . ' -e "' . $selectSt . '" > ' . escapeshellarg($tmp_dir . $insertHash . '.txt');
+        $cmd = 'mysql -B -h' . escapeshellarg($dbSettings['host']) .' -P ' . escapeshellarg($dbSettings['port']). ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['database']) . ' -e "' . $selectSt . '" > ' . escapeshellarg($tmp_dir . $insertHash . '.txt');
         $export_command_status = -1;
         $export_output = array();
         exec($cmd, $export_output, $export_command_status);
@@ -472,7 +475,7 @@ class DatabaseQuery
             $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . $cmd);
             throw new \Exceptions\QueryException("QDIS1", array());
         }
-        $cmd2 = 'mysql --local-infile=1 -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
+        $cmd2 = 'mysql --local-infile=1 -h' . escapeshellarg($dbSettings['host']).' -P ' . escapeshellarg($dbSettings['port']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
 
         if (filesize($tmp_dir . $insertHash . ".txt") !== 0) {
             $outfile = fopen($tmp_dir . $insertHash . ".txt", 'r');

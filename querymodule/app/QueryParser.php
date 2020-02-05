@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
-require_once(dirname(__FILE__) . "/Exceptions/ParsingException.php");
+require_once(dirname(__FILE__) . "/PVExceptions/ParsingException.php");
 
 class QueryParser
 {

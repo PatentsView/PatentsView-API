@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class APIError extends Error
 {
-    public function __invoke(Request $request, Response $response, APIException $exception)
+    public function __invoke($request, $response,  $exception)
     {
         $status = $exception->getCode() ?: 500;
         $logger = \ErrorHandler::getHandler()->getLogger();

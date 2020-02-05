@@ -7,7 +7,7 @@ ini_set('max_execution_time', 400);
 require_once dirname(__FILE__) . '/../app/config.php';
 require __DIR__ . '/../vendor/autoload.php';
 require_once dirname(__FILE__) . '/../app/ErrorHandler.php';
-require_once dirname(__FILE__) . '/../app/Exceptions/APIError.php';
+require_once dirname(__FILE__) . '/../app/PVExceptions/APIError.php';
 
 
 $logger = Logger::getLogger("base");

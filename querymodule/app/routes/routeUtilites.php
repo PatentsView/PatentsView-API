@@ -5,7 +5,7 @@
  * Date: 9/20/18
  * Time: 2:07 PM
  */
-require_once(dirname(__FILE__) . "/../Exceptions/RequestException.php");
+require_once(dirname(__FILE__) . "/../PVExceptions/RequestException.php");
 
 /**
  * @param $app  Slim App - contains means for accessing request parameters

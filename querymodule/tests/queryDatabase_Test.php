@@ -2,7 +2,7 @@
 require_once dirname(__FILE__) . '/../app/DatabaseQuery.php';
 require_once dirname(__FILE__) . '/../app/executeQuery.php';
 require_once dirname(__FILE__) . '/../app/entitySpecs.php';
-require_once(dirname(__FILE__) . "/../app/Exceptions/QueryException.php");
+require_once(dirname(__FILE__) . "/../app/PVExceptions/QueryException.php");
 
 class queryDatabase_Test extends PHPUnit_Framework_TestCase
 {
