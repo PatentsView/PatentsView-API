@@ -45,7 +45,7 @@
     "group_name": "applications",
     "keyId": "app_id",
     "distinctCountId": "app_id",
-    "join": "left outer join application using(patent_id)"
+    "join": "left outer join application on application.patent_id=patent_inventor.patent_id"
   },
   {
     "entity_name": "ipc",

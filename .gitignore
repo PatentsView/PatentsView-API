@@ -5,4 +5,4 @@ querymodule/public_html/web.config
 app.ini
 querymodule/vendor/
 .htaccess
-node_modules
+.vscode
