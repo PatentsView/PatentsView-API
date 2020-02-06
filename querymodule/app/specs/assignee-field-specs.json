@@ -168,7 +168,7 @@
     "field_column_name": "assignee.type"
   },
   "cpc_category": {
-    "column_name": "cpc_entity.cpc_category",
+    "column_name": "cpc_current_copy.category",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -176,7 +176,7 @@
     "field_column_name": "cpc_current_copy.category"
   },
   "cpc_first_seen_date": {
-    "column_name": "cpc_entity.cpc_first_seen_date",
+    "column_name": "cpc_group.first_seen_date",
     "datatype": "date",
     "entity_name": "cpc",
     "query": "y",
@@ -184,7 +184,7 @@
     "field_column_name": "cpc_group.first_seen_date"
   },
   "cpc_group_id": {
-    "column_name": "cpc_entity.cpc_group_id",
+    "column_name": "cpc_group.id",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -192,7 +192,7 @@
     "field_column_name": "cpc_group.id"
   },
   "cpc_group_title": {
-    "column_name": "cpc_entity.cpc_group_title",
+    "column_name": "cpc_group.title",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -200,7 +200,7 @@
     "field_column_name": "cpc_group.title"
   },
   "cpc_last_seen_date": {
-    "column_name": "cpc_entity.cpc_last_seen_date",
+    "column_name": "cpc_group.last_seen_date",
     "datatype": "date",
     "entity_name": "cpc",
     "query": "y",
@@ -216,7 +216,7 @@
     "field_column_name": "assignee_cpc_group.num_patents"
   },
   "cpc_section_id": {
-    "column_name": "cpc_entity.cpc_section_id",
+    "column_name": "cpc_current_group_copy.section_id",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -224,7 +224,7 @@
     "field_column_name": "cpc_current_group_copy.section_id"
   },
   "cpc_sequence": {
-    "column_name": "cpc_entity.cpc_sequence",
+    "column_name": "cpc_current_copy.sequence",
     "datatype": "int",
     "entity_name": "cpc",
     "query": "y",
@@ -232,7 +232,7 @@
     "field_column_name": "cpc_current_copy.sequence"
   },
   "cpc_subgroup_id": {
-    "column_name": "cpc_entity.cpc_subgroup_id",
+    "column_name": "cpc_current_copy.subgroup_id",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -240,7 +240,7 @@
     "field_column_name": "cpc_current_copy.subgroup_id"
   },
   "cpc_subgroup_title": {
-    "column_name": "cpc_entity.cpc_subgroup_title",
+    "column_name": "cpc_subgroup.title",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -248,7 +248,7 @@
     "field_column_name": "cpc_subgroup.title"
   },
   "cpc_subsection_id": {
-    "column_name": "cpc_entity.cpc_subsection_id",
+    "column_name": "cpc_current_copy.subsection_id",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -256,7 +256,7 @@
     "field_column_name": "cpc_current_copy.subsection_id"
   },
   "cpc_subsection_title": {
-    "column_name": "cpc_entity.cpc_subsection_title",
+    "column_name": "cpc_subsection.title",
     "datatype": "string",
     "entity_name": "cpc",
     "query": "y",
@@ -264,7 +264,7 @@
     "field_column_name": "cpc_subsection.title"
   },
   "cpc_total_num_assignees": {
-    "column_name": "cpc_entity.cpc_total_num_assignees",
+    "column_name": "cpc_group.num_assignees",
     "datatype": "int",
     "entity_name": "cpc",
     "query": "y",
@@ -272,7 +272,7 @@
     "field_column_name": "cpc_group.num_assignees"
   },
   "cpc_total_num_inventors": {
-    "column_name": "cpc_entity.cpc_total_num_inventors",
+    "column_name": "cpc_group.num_inventors",
     "datatype": "int",
     "entity_name": "cpc",
     "query": "y",
@@ -280,7 +280,7 @@
     "field_column_name": "cpc_group.num_inventors"
   },
   "cpc_total_num_patents": {
-    "column_name": "cpc_entity.cpc_total_num_patents",
+    "column_name": "cpc_group.num_patents",
     "datatype": "int",
     "entity_name": "cpc",
     "query": "y",
