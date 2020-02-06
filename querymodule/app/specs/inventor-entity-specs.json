@@ -72,7 +72,7 @@
     "group_name": "cpcs",
     "keyId": "",
     "distinctCountId": "cpc_group_id",
-    "join": "left outer join cpc_entity on patent_inventor.patent_id=cpc_entity.patent_id left outer join inventor_cpc_group on inventor.inventor_id=inventor_cpc_group.inventor_id and cpc_entity.cpc_group_id=inventor_cpc_group.group_id"
+    "join": "left outer join cpc_entity_type_2 as cpc_entity on patent_inventor.patent_id=cpc_entity.patent_id left outer join inventor_cpc_group on inventor.inventor_id=inventor_cpc_group.inventor_id and cpc_entity.cpc_group_id=inventor_cpc_group.group_id"
   },
   {
     "entity_name": "nber",

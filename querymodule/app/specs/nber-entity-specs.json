@@ -57,7 +57,7 @@
     "group_name": "cpcs",
     "keyId": "",
     "distinctCountId": "cpc_group_id",
-    "join": "left outer join cpc_entity on nber_copy.patent_id=cpc_entity.patent_id"
+    "join": "left outer join cpc_entity_type_2 as cpc_entity on nber_copy.patent_id=cpc_entity.patent_id"
   },
   {
     "entity_name": "uspc",
