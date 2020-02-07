@@ -1149,7 +1149,7 @@
   },
   "patent_num_cited_by_us_patents_for_location": {
     "entity_name": "patent",
-    "column_name": "(select count(distinct uspatentcitationX.citing_patent_id) from uspatentcitation as uspatentcitationX left outer join patent_inventor as patent_inventorX on uspatentcitationX.cited_patent_id=patent_inventorX.patent_id left outer join patent_inventor as patent_inventorX2 on uspatentcitationX.citing_patent_id=patent_inventorX2.patent_id WHERE patent_inventorX2.location_id=patent_inventor.location_id and uspatentcitationX.cited_patent_id=patent_inventor.patent_id)",
+    "column_name": "(SELECT Count(DISTINCT uspatentcitationX.citing_patent_id) FROM uspatentcitation AS uspatentcitationX JOIN patent_location AS patent_locationX ON uspatentcitationX.citing_patent_id = patent_locationX.patent_id where  patent_locationX.location_id = patent_location.location_id)",
     "datatype": "int",
     "query": "n",
     "sort": "suppl"
