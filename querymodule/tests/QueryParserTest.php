@@ -17,7 +17,7 @@ class QueryParserTest extends PHPUnit_Framework_TestCase
         $exception = null;
         try {
             $pq->parse($PATENT_FIELD_SPECS, json_decode('{"XYZ":"value"}', true), 'all');
-        } catch (\Exceptions\ParsingException $e) {
+        } catch (\PVExceptions\ParsingException $e) {
             $exception = $e->getCustomCode();
         }
         $this->assertEquals("PINV8", $exception);
@@ -29,7 +29,7 @@ class QueryParserTest extends PHPUnit_Framework_TestCase
         $exception = null;
         try {
             $pq->parse($PATENT_FIELD_SPECS, json_decode('{"forprior_sequence":"value"}', true), 'all');
-        } catch (\Exceptions\ParsingException $e) {
+        } catch (\PVExceptions\ParsingException $e) {
             $exception = $e->getCustomCode();
         }
         $this->assertEquals("PINV5", $exception);
@@ -42,7 +42,7 @@ class QueryParserTest extends PHPUnit_Framework_TestCase
         $exception = null;
         try {
             $pq->parse($PATENT_FIELD_SPECS, json_decode('{"_text_all":{"detail_desc_length":"value"}}', true), 'all');
-        } catch (\Exceptions\ParsingException $e) {
+        } catch (\PVExceptions\ParsingException $e) {
             $exception = $e->getCustomCode();
         }
         $this->assertEquals("PINV7", $exception);
@@ -55,7 +55,7 @@ class QueryParserTest extends PHPUnit_Framework_TestCase
         $exception = null;
         try {
             $pq->parse($PATENT_FIELD_SPECS, json_decode('{"detail_desc_length":"value"}', true), 'all');
-        } catch (\Exceptions\ParsingException $e) {
+        } catch (\PVExceptions\ParsingException $e) {
             $exception = $e->getCustomCode();
         }
         $this->assertEquals("PINV1", $exception);
@@ -63,7 +63,7 @@ class QueryParserTest extends PHPUnit_Framework_TestCase
         $exception = null;
         try {
             $pq->parse($USPC_FIELD_SPECS, json_decode('{"assignee_lastknown_latitude":"String"}', true), 'all');
-        } catch (\Exceptions\ParsingException $e) {
+        } catch (\PVExceptions\ParsingException $e) {
             $exception = $e->getCustomCode();
         }
         $this->assertEquals("PINV2", $exception);
@@ -71,7 +71,7 @@ class QueryParserTest extends PHPUnit_Framework_TestCase
         $exception = null;
         try {
             $pq->parse($PATENT_FIELD_SPECS, json_decode('{"patent_date":"value"}', true), 'all');
-        } catch (\Exceptions\ParsingException $e) {
+        } catch (\PVExceptions\ParsingException $e) {
             $exception = $e->getCustomCode();
         }
         $this->assertEquals("PINV3", $exception);

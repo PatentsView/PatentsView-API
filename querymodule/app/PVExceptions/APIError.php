@@ -9,7 +9,7 @@
 namespace Slim\Handlers;
 require_once dirname(__FILE__) . '/../ErrorHandler.php';
 
-use Exceptions\APIException;
+use PVExceptions\APIException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
