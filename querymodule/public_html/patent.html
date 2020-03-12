@@ -148,7 +148,7 @@
 <ul class="example-ul">
     <li>
         <p>Return all patent numbers and titles after 2006 where the inventor's last name was "Jobs" and the assignee was based in the US.</p>
-        <p class="well code"><a href='https://www.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]'>https://www.patentsview.org/api/patents/query?q={"_and":[{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number"]</a></p>
+        <p class="well code"><a href='https://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2006-01-01"}},{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number", "patent_title"]'>https://www.patentsview.org/api/patents/query?q={"_and":[{"_gte":{"patent_date":"2006-01-01"}},{"inventor_last_name":"Jobs"},{"assignee_lastknown_country":"US"}]}&f=["patent_number", "patent_title"]</a></p>
     </li>
     <li>
         <p>Return the patent number, processing time, and patent kind for patents granted after 2001 that have the word "international" in the abstract and have a foreign company or corporation assignee.</p>
