@@ -56,7 +56,21 @@
             ga("create", "UA-107120029-1", "auto")
             ga("send", "pageview", { /*sequence*/ metric1: 0 })
         </script>
-    </head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-3509031-17"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-3509031-17");
+    </script>
+</head>
     <body role="document">
         <div class="sub-nav">
             <div class="container">
