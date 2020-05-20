@@ -1,107 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PatentsView Query Modle API</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"
+    />
+    <link
+      href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/custom.css" />
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-3509031-17"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-3509031-17");
+    </script>
 </head>
-<body role="document">
+  <body role="document">
     <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="logo"><a href="doc.html" title="PatentsView - USPTO"><img alt="PatentsView Logo" src="img/logo.png" /></a></li>
-                </ul>
-            </div>
+      <div class="container">
+        <div class="navbar-header"></div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="logo">
+              <a href="doc.html" title="PatentsView - USPTO"
+                ><img alt="PatentsView Logo" src="img/logo.png"
+              /></a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <div class="container" role="main">
-        <div class="col-md-3">
-            <ul class="list-group" id="contents">
-                <li class="list-group-item {% block introduction_section_class %}{% endblock %}">
-                    <p class="section-name"><a href="doc.html">Introduction</a></p>
-                    <ul class="section-list">
-                        <li><a href="doc.html#overview">PatentsView Overview</a></li>
-                        <li><a href="doc.html#database_schema">Database Schema</a></li>
-                        <li><a href="doc.html#inventor_disambiguation">Inventor Disambiguation</a></li>
-                        <li><a href="doc.html#patent_classes_and_technologies">Patent Classes and Technologies</a></li>
-                        <li><a href="doc.html#glossary">Glossary of Key Terms</a></li>
-                        <li><a href="doc.html#copyright_notice">Copyright Notice</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item {% block query_language_section_class %}{% endblock %}">
-                    <p class="section-name"><a href="query_language.html">Query Language</a></p>
-                    <ul class="section-list">
-                        <li><a href="query_language.html#query_string_format">Query String Format</a></li>
-                        <li><a href="query_language.html#field_list_format">Field List Format</a></li>
-                        <li><a href="query_language.html#options_parameter">Options Parameter</a></li>
-                        <li><a href="query_language.html#sort_parameter">Sort Parameter</a></li>
-                        <li><a href="query_language.html#results_format">Results Format</a></li>
-                        <li><a href="query_language.html#response_status_codes">Response Status Codes</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item {% block patent_section_class %}{% endblock %}">
-                    <p class="section-name"><a href="patent.html">Patents Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="patent.html#field_list">Patent Field List</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item {% block inventor_section_class %}{% endblock %}">
-                    <p class="section-name"><a href="inventor.html">Inventors Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="inventor.html#field_list">Inventor Field List</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item {% block assignee_section_class %}{% endblock %}">
-                    <p class="section-name"><a href="assignee.html">Assignees Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="assignee.html#field_list">Assignee Field List</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item {% block location_section_class %}{% endblock %}">
-                    <p class="section-name"><a href="location.html">Locations Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="location.html#field_list">Location Field List</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item {% block cpc_subsection_section_class %}{% endblock %}">
-                    <p class="section-name"><a href="cpc_subsection.html">CPC Subsections Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="cpc_subsection.html#field_list">CPC Subsection Field List</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item {% block uspc_section_class %}{% endblock %}">
-                    <p class="section-name"><a href="uspc.html">USPC Mainclasses Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="uspc.html#field_list">USPC Mainclass Field List</a></li>
-                    </ul>
-                </li>
-                <li class="list-group-item {% block nber_subcat_section_class %}{% endblock %}">
-                    <p class="section-name"><a href="nber_subcat.html">NBER Subcategories Query</a></p>
-                    <ul class="section-list">
-                        <li><a href="nber_subcat.html#field_list">NBER Subcategory Field List</a></li>
-                    </ul>
-                </li>
+      <div class="col-md-3">
+        <ul class="list-group" id="contents">
+          <li
+            class="list-group-item {% block introduction_section_class %}{% endblock %}"
+          >
+            <p class="section-name"><a href="doc.html">Introduction</a></p>
+            <ul class="section-list">
+              <li><a href="doc.html#overview">PatentsView Overview</a></li>
+              <li><a href="doc.html#database_schema">Database Schema</a></li>
+              <li>
+                <a href="doc.html#inventor_disambiguation"
+                  >Inventor Disambiguation</a
+                >
+              </li>
+              <li>
+                <a href="doc.html#patent_classes_and_technologies"
+                  >Patent Classes and Technologies</a
+                >
+              </li>
+              <li><a href="doc.html#glossary">Glossary of Key Terms</a></li>
+              <li><a href="doc.html#copyright_notice">Copyright Notice</a></li>
             </ul>
+          </li>
+          <li
+            class="list-group-item {% block query_language_section_class %}{% endblock %}"
+          >
+            <p class="section-name">
+              <a href="query_language.html">Query Language</a>
+            </p>
+            <ul class="section-list">
+              <li>
+                <a href="query_language.html#query_string_format"
+                  >Query String Format</a
+                >
+              </li>
+              <li>
+                <a href="query_language.html#field_list_format"
+                  >Field List Format</a
+                >
+              </li>
+              <li>
+                <a href="query_language.html#options_parameter"
+                  >Options Parameter</a
+                >
+              </li>
+              <li>
+                <a href="query_language.html#sort_parameter">Sort Parameter</a>
+              </li>
+              <li>
+                <a href="query_language.html#results_format">Results Format</a>
+              </li>
+              <li>
+                <a href="query_language.html#response_status_codes"
+                  >Response Status Codes</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li
+            class="list-group-item {% block patent_section_class %}{% endblock %}"
+          >
+            <p class="section-name"><a href="patent.html">Patents Query</a></p>
+            <ul class="section-list">
+              <li><a href="patent.html#field_list">Patent Field List</a></li>
+            </ul>
+          </li>
+          <li
+            class="list-group-item {% block inventor_section_class %}{% endblock %}"
+          >
+            <p class="section-name">
+              <a href="inventor.html">Inventors Query</a>
+            </p>
+            <ul class="section-list">
+              <li>
+                <a href="inventor.html#field_list">Inventor Field List</a>
+              </li>
+            </ul>
+          </li>
+          <li
+            class="list-group-item {% block assignee_section_class %}{% endblock %}"
+          >
+            <p class="section-name">
+              <a href="assignee.html">Assignees Query</a>
+            </p>
+            <ul class="section-list">
+              <li>
+                <a href="assignee.html#field_list">Assignee Field List</a>
+              </li>
+            </ul>
+          </li>
+          <li
+            class="list-group-item {% block location_section_class %}{% endblock %}"
+          >
+            <p class="section-name">
+              <a href="location.html">Locations Query</a>
+            </p>
+            <ul class="section-list">
+              <li>
+                <a href="location.html#field_list">Location Field List</a>
+              </li>
+            </ul>
+          </li>
+          <li
+            class="list-group-item {% block cpc_subsection_section_class %}{% endblock %}"
+          >
+            <p class="section-name">
+              <a href="cpc_subsection.html">CPC Subsections Query</a>
+            </p>
+            <ul class="section-list">
+              <li>
+                <a href="cpc_subsection.html#field_list"
+                  >CPC Subsection Field List</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li
+            class="list-group-item {% block uspc_section_class %}{% endblock %}"
+          >
+            <p class="section-name">
+              <a href="uspc.html">USPC Mainclasses Query</a>
+            </p>
+            <ul class="section-list">
+              <li>
+                <a href="uspc.html#field_list">USPC Mainclass Field List</a>
+              </li>
+            </ul>
+          </li>
+          <li
+            class="list-group-item {% block nber_subcat_section_class %}{% endblock %}"
+          >
+            <p class="section-name">
+              <a href="nber_subcat.html">NBER Subcategories Query</a>
+            </p>
+            <ul class="section-list">
+              <li>
+                <a href="nber_subcat.html#field_list"
+                  >NBER Subcategory Field List</a
+                >
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-9">
+        <div id="documentation">
+          {% block body %}{% endblock %}
         </div>
-        <div class="col-md-9">
-            <div id="documentation">
-                {% block body %}{% endblock %}
-            </div>
-        </div>
+      </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
     {% block page_script %}{% endblock %}
-</body>
+  </body>
 </html>
