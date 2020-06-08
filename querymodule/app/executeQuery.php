@@ -33,7 +33,7 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
     // Run the query against the DB
     $dbResults = $dbQuery->queryDatabase($entitySpecs, $fieldSpecs, $whereClause, $qp->getFieldsUsed(),
         $entitySpecificWhereClauses, $qp->getOnlyAndsWereUsed(), $selectFieldSpecs, $sortParam, $optionsParam);
-    if (array_key_exists("_id", $dbResults)) {
+    if (array_key_exists("query_string", $dbResults)) {
         $results = $dbResults;
     } else {
         $count_results = array();
