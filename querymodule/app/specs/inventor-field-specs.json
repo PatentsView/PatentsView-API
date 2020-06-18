@@ -899,7 +899,7 @@
     "entity_name": "ipc",
     "column_name": "ipcr.sequence",
     "datatype": "int",
-    "query": "n",
+    "query": "y",
     "sort": "suppl"
   },
   "ipc_subclass": {
