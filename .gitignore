@@ -6,3 +6,7 @@ app.ini
 querymodule/vendor/
 .htaccess
 .vscode
+profiler/
+querymodule/public_html/xhprof/
+experiments/
+**/.ipynb_checkpoints/
