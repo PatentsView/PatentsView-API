@@ -1,4 +1,3 @@
-querymodule/vendor/
 .vscode
 profiler/
 querymodule/public_html/xhprof/
