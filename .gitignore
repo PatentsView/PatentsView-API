@@ -10,3 +10,10 @@ profiler/
 querymodule/public_html/xhprof/
 experiments/
 **/.ipynb_checkpoints/
+build_artifacts/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+querymodule/public_html/
