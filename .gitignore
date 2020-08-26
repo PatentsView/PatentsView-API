@@ -16,3 +16,6 @@ build_artifacts/
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+.ebextensions/*
+.elasticbeanstalk/*
+.platform/*
