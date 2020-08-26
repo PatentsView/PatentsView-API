@@ -14,8 +14,18 @@ require_once dirname(__FILE__) . '/../entitySpecs.php';
 // TO Do : Find out need for this file & its function
 require_once dirname(__FILE__) . '/../AddEmailDatabase.php';
 
-// query/q=<query in json format>[&f=<field in json format>][&o=<options in json format>]
-
+//query/q=<query in json format>[&f=<field in json format>][&o=<options in json format>]
+// $app->get(
+//   '/',
+//   function () use ($app) {
+//       $app->contentType('application/html; charset=utf-8');
+//       //$app->response->redirect('doc.html', 303);
+//       $app->response->redirect('unavailable.html', 303);
+//   }
+// );
+// $app->get('/:method', function($method) use ($app) {
+//     $app->response->status(503);
+// })->conditions(array('method' => '.+'));
 //Add to capture the email info
 $app->post(
     '/addemail',
