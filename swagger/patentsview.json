@@ -1,0 +1,2399 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is my attempt at a reverse engineered Swagger 2.0 definition for the PatentsView API. Note that the X-Status-Reason response header is not being displayed.  I have opened an issue with the api provider to try to resolve this.",
+        "version": "1.0",
+        "title": "Patentsview API",
+        "termsOfService": "https://www.patentsview.org/api/faqs.html#what-api",
+        "contact": {
+            "name": "contact@patentsview.org"
+        },
+        "license": {
+            "name": "\"CC0 1.0 Universal Public Domain Dedication\",",
+            "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+        }
+    },
+    "host": "api.patentsview.org",
+    "schemes": ["https"],
+    "tags": [{
+        "name": "get_endpoints",
+        "description": "published endpoints that accept get requests"
+    }, {
+        "name": "post_endpoints",
+        "description": "published endpoints that accept post requests"
+    }],
+    "paths": {
+        "/assignees/query": {
+            "get": {
+                "tags": [
+                    "get_endpoints"
+                ],
+                "summary": "Issue a query to assignees endpoint, and get a json object or xml back.",
+                "description": "Issue a query to assignees endpoint, and get a json object or xml back.",
+                "operationId": "assigneesGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "$ref": "#/parameters/q"
+                    },
+                    {
+                        "$ref": "#/parameters/f"
+                    },
+                    {
+                        "$ref": "#/parameters/o"
+                    },
+                    {
+                        "$ref": "#/parameters/s"
+                    },
+                    {
+                        "$ref": "#/parameters/format"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/assigneesResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["post_endpoints"],
+                "summary": "Post a query object to the assignees endpoint",
+                "description": "Issue a query to patentsview.",
+                "operationId": "assigneesPOST",
+                "consumes": ["application/json"],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "in": "body",
+                    "name": "CreatePostRequest",
+                    "description": "Query to be issued",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/CreatePostRequest"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/assigneesResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            }
+        },
+        "/cpc_subsections/query": {
+            "get": {
+                "tags": [
+                    "get_endpoints"
+                ],
+                "summary": "Issue a query to cpc endpoint, and get a json object or xml back.",
+                "description": "Issue a query to cpc endpoint, and get a json object or xml back.",
+                "operationId": "cpcGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "$ref": "#/parameters/q"
+                    },
+                    {
+                        "$ref": "#/parameters/f"
+                    },
+                    {
+                        "$ref": "#/parameters/o"
+                    },
+                    {
+                        "$ref": "#/parameters/s"
+                    },
+                    {
+                        "$ref": "#/parameters/format"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/cpc_subsectionsResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["post_endpoints"],
+                "summary": "Post a query object to the cpc endpoint",
+                "description": "Issue a query to patentsview.",
+                "operationId": "cpcPOST",
+                "consumes": ["application/json"],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "in": "body",
+                    "name": "CreatePostRequest",
+                    "description": "Query to be issued",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/CreatePostRequest"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/cpc_subsectionsResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            }
+        },
+        "/inventors/query": {
+            "get": {
+                "tags": [
+                    "get_endpoints"
+                ],
+                "summary": "Issue a query to inventors endpoint, and get a json object or xml back.",
+                "description": "Issue a query to inventors endpoint, and get a json object or xml back.",
+                "operationId": "inventorsGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "$ref": "#/parameters/q"
+                    },
+                    {
+                        "$ref": "#/parameters/f"
+                    },
+                    {
+                        "$ref": "#/parameters/o"
+                    },
+                    {
+                        "$ref": "#/parameters/s"
+                    },
+                    {
+                        "$ref": "#/parameters/format"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/inventorsResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["post_endpoints"],
+                "summary": "Post a query object to the inventors endpoint",
+                "description": "Issue a query to patentsview.",
+                "operationId": "inventorsPOST",
+                "consumes": ["application/json"],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "in": "body",
+                    "name": "CreatePostRequest",
+                    "description": "Query to be issued",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/CreatePostRequest"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/inventorsResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            }
+        },
+        "/locations/query": {
+            "get": {
+                "tags": [
+                    "get_endpoints"
+                ],
+                "summary": "Issue a query to locations endpoint, and get a json object or xml back.",
+                "description": "Issue a query to locations endpoint, and get a json object or xml back.",
+                "operationId": "locationsGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "$ref": "#/parameters/q"
+                    },
+                    {
+                        "$ref": "#/parameters/f"
+                    },
+                    {
+                        "$ref": "#/parameters/o"
+                    },
+                    {
+                        "$ref": "#/parameters/s"
+                    },
+                    {
+                        "$ref": "#/parameters/format"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/locationsResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["post_endpoints"],
+                "summary": "Post a query object to the locations endpoint",
+                "description": "Issue a query to patentsview.",
+                "operationId": "locationsPOST",
+                "consumes": ["application/json"],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "in": "body",
+                    "name": "CreatePostRequest",
+                    "description": "Query to be issued",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/CreatePostRequest"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/locationsResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            }
+        },
+        "/nber_subcategories/query": {
+            "get": {
+                "tags": [
+                    "get_endpoints"
+                ],
+                "summary": "Issue a query to nber endpoint, and get a json object or xml back.",
+                "description": "Issue a query to nber endpoint, and get a json object or xml back.",
+                "operationId": "nberGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "$ref": "#/parameters/q"
+                    },
+                    {
+                        "$ref": "#/parameters/f"
+                    },
+                    {
+                        "$ref": "#/parameters/o"
+                    },
+                    {
+                        "$ref": "#/parameters/s"
+                    },
+                    {
+                        "$ref": "#/parameters/format"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/nber_subcategoriesResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["post_endpoints"],
+                "summary": "Post a query object to the nber endpoint",
+                "description": "Issue a query to patentsview.",
+                "operationId": "nberPOST",
+                "consumes": ["application/json"],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "in": "body",
+                    "name": "CreatePostRequest",
+                    "description": "Query to be issued",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/CreatePostRequest"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/nber_subcategoriesResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            }
+        },
+        "/patents/query": {
+            "get": {
+                "tags": [
+                    "get_endpoints"
+                ],
+                "summary": "Issue a query to patents endpoint, and get a json object or xml back.",
+                "description": "Issue a query to patents endpoint, and get a json object or xml back.",
+                "operationId": "patentsGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "$ref": "#/parameters/q"
+                    },
+                    {
+                        "$ref": "#/parameters/f"
+                    },
+                    {
+                        "$ref": "#/parameters/o"
+                    },
+                    {
+                        "$ref": "#/parameters/s"
+                    },
+                    {
+                        "$ref": "#/parameters/format"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/patentsResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["post_endpoints"],
+                "summary": "Post a query object to the patents endpoint.",
+                "description": "q is required, f,o,s, format are optional",
+                "operationId": "patentsPOST",
+                "consumes": ["application/json"],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "in": "body",
+                    "name": "CreatePostRequest",
+                    "description": "Query to be issued",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/CreatePostRequest"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/patentsResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            }
+        },
+        "/uspc_mainclasses/query": {
+            "get": {
+                "tags": [
+                    "get_endpoints"
+                ],
+                "summary": "Issue a uspc to patent endpoint, and get a json object or xml back.",
+                "description": "Issue a uspc to patent endpoint, and get a json object or xml back.",
+                "operationId": "uspcGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "$ref": "#/parameters/q"
+                    },
+                    {
+                        "$ref": "#/parameters/f"
+                    },
+                    {
+                        "$ref": "#/parameters/o"
+                    },
+                    {
+                        "$ref": "#/parameters/s"
+                    },
+                    {
+                        "$ref": "#/parameters/format"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/uspc_mainclassesResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["post_endpoints"],
+                "summary": "Post a query object to the uspc endpoint",
+                "description": "Issue a query to patentsview.",
+                "operationId": "uspcPOST",
+                "consumes": ["application/json"],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "in": "body",
+                    "name": "CreatePostRequest",
+                    "description": "Query to be issued",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/CreatePostRequest"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/uspc_mainclassesResponse"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    }
+                }
+            }
+        }
+    },
+    "responses": {
+        "200": {
+            "description": "OK",
+            "schema": {
+                "type": "string"
+            }
+        },
+        "400": {
+            "description": "Returned when the query parameters are not valid, typically either because they are not in valid JSON format, or a specified field or operator is not valid for this endpoint.",
+            "headers": {
+                "X-Status-Reason": {
+                    "type": "string",
+                    "description": "uber helpful error string returned by the api that indicates what it did not like about your request."
+                }
+            }
+        },
+        "500": {
+            "description": "Technical difficulties. The api errored out while trying to process your request."
+        }
+    },
+    "definitions": {
+        "assigneesResponse": {
+            "type": "object",
+            "properties": {
+                "assignees": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "assignee_first_name": {
+                                "type": "string",
+                                "format": "nullable"
+                            },
+                            "assignee_first_seen_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "assignee_id": {
+                                "type": "string"
+                            },
+                            "assignee_key_id": {
+                                "type": "string"
+                            },
+                            "assignee_last_name": {
+                                "type": "string",
+                                "format": "nullable"
+                            },
+                            "assignee_last_seen_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "assignee_lastknown_city": {
+                                "type": "string"
+                            },
+                            "assignee_lastknown_country": {
+                                "type": "string"
+                            },
+                            "assignee_lastknown_latitude": {
+                                "type": "string"
+                            },
+                            "assignee_lastknown_location_id": {
+                                "type": "string"
+                            },
+                            "assignee_lastknown_longitude": {
+                                "type": "string"
+                            },
+                            "assignee_lastknown_state": {
+                                "type": "string"
+                            },
+                            "assignee_organization": {
+                                "type": "string"
+                            },
+                            "assignee_total_num_inventors": {
+                                "type": "string"
+                            },
+                            "assignee_total_num_patents": {
+                                "type": "string"
+                            },
+                            "assignee_type": {
+                                "type": "string"
+                            },
+                            "locations": {
+                                "$ref": "#/definitions/locations"
+                            },
+                            "patents": {
+                                "$ref": "#/definitions/patents"
+                            },
+                            "inventors": {
+                                "$ref": "#/definitions/inventors"
+                            },
+                            "rawinventors": {
+                                "$ref": "#/definitions/rawinventors"
+                            },
+                            "applications": {
+                                "$ref": "#/definitions/applications"
+                            },
+                            "IPCs": {
+                                "$ref": "#/definitions/IPCs"
+                            },
+                            "uspcs": {
+                                "$ref": "#/definitions/uspcs"
+                            },
+                            "cpcs": {
+                                "$ref": "#/definitions/cpcs"
+                            },
+                            "nbers": {
+                                "$ref": "#/definitions/nbers"
+                            },
+                            "years": {
+                                "$ref": "#/definitions/years"
+                            },
+                            "wipos": {
+                                "$ref": "#/definitions/wipos"
+                            },
+                            "gov_interests": {
+                                "$ref": "#/definitions/gov_interests"
+                            },
+                            "lawyers": {
+                                "$ref": "#/definitions/lawyers"
+                            },
+                            "examiners": {
+                                "$ref": "#/definitions/examiners"
+                            },
+                            "foreign_priority": {
+                                "$ref": "#/definitions/foreign_priority"
+                            },
+                            "pct_data": {
+                                "$ref": "#/definitions/pct_data"
+                            }
+                        }
+                    }
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "total_assignee_count": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "cpc_subsectionsResponse": {
+            "type": "object",
+            "properties": {
+                "cpc_subsections": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "cpc_first_seen_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "cpc_last_seen_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "cpc_subsection_id": {
+                                "type": "string"
+                            },
+                            "cpc_subsection_title": {
+                                "type": "string"
+                            },
+                            "cpc_total_num_assignees": {
+                                "type": "string"
+                            },
+                            "cpc_total_num_inventors": {
+                                "type": "string"
+                            },
+                            "cpc_total_num_patents": {
+                                "type": "string"
+                            },
+                            "cpc_subgroups": {
+                                "$ref": "#/definitions/cpc_subgroups"
+                            },
+                            "patents": {
+                                "$ref": "#/definitions/patents"
+                            },
+                            "assignees": {
+                                "$ref": "#/definitions/assignees"
+                            },
+                            "inventors": {
+                                "$ref": "#/definitions/inventors"
+                            },
+                            "rawinventors": {
+                                "$ref": "#/definitions/rawinventors"
+                            },
+                            "applications": {
+                                "$ref": "#/definitions/applications"
+                            },
+                            "IPCs": {
+                                "$ref": "#/definitions/IPCs"
+                            },
+                            "uspcs": {
+                                "$ref": "#/definitions/uspcs"
+                            },
+                            "nbers": {
+                                "$ref": "#/definitions/nbers"
+                            },
+                            "years": {
+                                "$ref": "#/definitions/years"
+                            },
+                            "wipos": {
+                                "$ref": "#/definitions/wipos"
+                            },
+                            "gov_interests": {
+                                "$ref": "#/definitions/gov_interests"
+                            },
+                            "lawyers": {
+                                "$ref": "#/definitions/lawyers"
+                            },
+                            "examiners": {
+                                "$ref": "#/definitions/examiners"
+                            },
+                            "foreign_priority": {
+                                "$ref": "#/definitions/foreign_priority"
+                            },
+                            "pct_data": {
+                                "$ref": "#/definitions/pct_data"
+                            }
+                        }
+                    }
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "total_cpc_subsection_count": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "inventorsResponse": {
+            "type": "object",
+            "properties": {
+                "inventors": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "inventor_first_name": {
+                                "type": "string"
+                            },
+                            "inventor_first_seen_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "inventor_id": {
+                                "type": "string"
+                            },
+                            "inventor_key_id": {
+                                "type": "string"
+                            },
+                            "inventor_last_name": {
+                                "type": "string"
+                            },
+                            "inventor_last_seen_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "inventor_lastknown_city": {
+                                "type": "string"
+                            },
+                            "inventor_lastknown_country": {
+                                "type": "string"
+                            },
+                            "inventor_lastknown_latitude": {
+                                "type": "string"
+                            },
+                            "inventor_lastknown_location_id": {
+                                "type": "string"
+                            },
+                            "inventor_lastknown_longitude": {
+                                "type": "string"
+                            },
+                            "inventor_lastknown_state": {
+                                "type": "string"
+                            },
+                            "inventor_total_num_patents": {
+                                "type": "string"
+                            },
+                            "rawinventors": {
+                                "$ref": "#/definitions/rawinventors"
+                            },
+                            "locations": {
+                                "$ref": "#/definitions/locations"
+                            },
+                            "patents": {
+                                "$ref": "#/definitions/patents"
+                            },
+                            "assignees": {
+                                "$ref": "#/definitions/assignees"
+                            },
+                            "applications": {
+                                "$ref": "#/definitions/applications"
+                            },
+                            "coinventors": {
+                                "$ref": "#/definitions/coinventors"
+                            },
+                            "IPCs": {
+                                "$ref": "#/definitions/IPCs"
+                            },
+                            "uspcs": {
+                                "$ref": "#/definitions/uspcs"
+                            },
+                            "cpcs": {
+                                "$ref": "#/definitions/cpcs"
+                            },
+                            "nbers": {
+                                "$ref": "#/definitions/nbers"
+                            },
+                            "years": {
+                                "$ref": "#/definitions/years"
+                            },
+                            "wipos": {
+                                "$ref": "#/definitions/wipos"
+                            },
+                            "gov_interests": {
+                                "$ref": "#/definitions/gov_interests"
+                            },
+                            "lawyers": {
+                                "$ref": "#/definitions/lawyers"
+                            },
+                            "examiners": {
+                                "$ref": "#/definitions/examiners"
+                            },
+                            "foreign_priority": {
+                                "$ref": "#/definitions/foreign_priority"
+                            },
+                            "pct_data": {
+                                "$ref": "#/definitions/pct_data"
+                            }
+                        }
+                    }
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "total_inventor_count": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "locationsResponse": {
+            "type": "object",
+            "properties": {
+                "locations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "location_city": {
+                                "type": "string"
+                            },
+                            "location_country": {
+                                "type": "string"
+                            },
+                            "location_county": {
+                                "type": "string",
+                                "format": "nullable"
+                            },
+                            "location_county_fips": {
+                                "type": "string",
+                                "format": "nullable"
+                            },
+                            "location_id": {
+                                "type": "string"
+                            },
+                            "location_key_id": {
+                                "type": "string"
+                            },
+                            "location_latitude": {
+                                "type": "string"
+                            },
+                            "location_longitude": {
+                                "type": "string"
+                            },
+                            "location_state": {
+                                "type": "string"
+                            },
+                            "location_state_fips": {
+                                "type": "string",
+                                "format": "nullable"
+                            },
+                            "location_total_num_assignees": {
+                                "type": "string"
+                            },
+                            "location_total_num_inventors": {
+                                "type": "string"
+                            },
+                            "location_total_num_patents": {
+                                "type": "string"
+                            },
+                            "patents": {
+                                "$ref": "#/definitions/patents"
+                            },
+                            "inventors": {
+                                "$ref": "#/definitions/inventors"
+                            },
+                            "rawinventors": {
+                                "$ref": "#/definitions/rawinventors"
+                            },
+                            "assignees": {
+                                "$ref": "#/definitions/assignees"
+                            },
+                            "applications": {
+                                "$ref": "#/definitions/applications"
+                            },
+                            "IPCs": {
+                                "$ref": "#/definitions/IPCs"
+                            },
+                            "application_citations": {
+                                "$ref": "#/definitions/application_citations"
+                            },
+                            "cited_patents": {
+                                "$ref": "#/definitions/cited_patents"
+                            },
+                            "citedby_patents": {
+                                "$ref": "#/definitions/citedby_patents"
+                            },
+                            "uspcs": {
+                                "$ref": "#/definitions/uspcs"
+                            },
+                            "cpcs": {
+                                "$ref": "#/definitions/cpcs"
+                            },
+                            "nbers": {
+                                "$ref": "#/definitions/nbers"
+                            },
+                            "wipos": {
+                                "$ref": "#/definitions/wipos"
+                            },
+                            "gov_interests": {
+                                "$ref": "#/definitions/gov_interests"
+                            },
+                            "lawyers": {
+                                "$ref": "#/definitions/lawyers"
+                            },
+                            "examiners": {
+                                "$ref": "#/definitions/examiners"
+                            },
+                            "foreign_priority": {
+                                "$ref": "#/definitions/foreign_priority"
+                            },
+                            "pct_data": {
+                                "$ref": "#/definitions/pct_data"
+                            }
+                        }
+                    }
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "total_location_count": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "nber_subcategoriesResponse": {
+            "type": "object",
+            "properties": {
+                "nber_subcategories": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "nber_category_id": {
+                                "type": "string"
+                            },
+                            "nber_category_title": {
+                                "type": "string"
+                            },
+                            "nber_first_seen_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "nber_last_seen_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "nber_subcategory_id": {
+                                "type": "string"
+                            },
+                            "nber_subcategory_title": {
+                                "type": "string"
+                            },
+                            "nber_total_num_assignees": {
+                                "type": "string"
+                            },
+                            "nber_total_num_inventors": {
+                                "type": "string"
+                            },
+                            "nber_total_num_patents": {
+                                "type": "string"
+                            },
+                            "patents": {
+                                "$ref": "#/definitions/patents"
+                            },
+                            "assignees": {
+                                "$ref": "#/definitions/assignees"
+                            },
+                            "inventors": {
+                                "$ref": "#/definitions/inventors"
+                            },
+                            "rawinventors": {
+                                "$ref": "#/definitions/rawinventors"
+                            },
+                            "applications": {
+                                "$ref": "#/definitions/applications"
+                            },
+                            "IPCs": {
+                                "$ref": "#/definitions/IPCs"
+                            },
+                            "cpcs": {
+                                "$ref": "#/definitions/cpcs"
+                            },
+                            "uspcs": {
+                                "$ref": "#/definitions/uspcs"
+                            },
+                            "years": {
+                                "$ref": "#/definitions/years"
+                            },
+                            "wipos": {
+                                "$ref": "#/definitions/wipos"
+                            },
+                            "gov_interests": {
+                                "$ref": "#/definitions/gov_interests"
+                            },
+                            "lawyers": {
+                                "$ref": "#/definitions/lawyers"
+                            },
+                            "examiners": {
+                                "$ref": "#/definitions/examiners"
+                            },
+                            "foreign_priority": {
+                                "$ref": "#/definitions/foreign_priority"
+                            },
+                            "pct_data": {
+                                "$ref": "#/definitions/pct_data"
+                            }
+                        }
+                    }
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "total_nber_subcategory_count": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "patentsResponse": {
+            "type": "object",
+            "properties": {
+                "patents": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "detail_desc_length": {
+                                "type": "string"
+                            },
+                            "patent_abstract": {
+                                "type": "string"
+                            },
+                            "patent_average_processing_time": {
+                                "type": "string"
+                            },
+                            "patent_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "patent_firstnamed_assignee_city": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_assignee_country": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_assignee_id": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_assignee_latitude": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_assignee_location_id": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_assignee_longitude": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_assignee_state": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_inventor_city": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_inventor_country": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_inventor_id": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_inventor_latitude": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_inventor_location_id": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_inventor_longitude": {
+                                "type": "string"
+                            },
+                            "patent_firstnamed_inventor_state": {
+                                "type": "string"
+                            },
+                            "patent_id": {
+                                "type": "string"
+                            },
+                            "patent_kind": {
+                                "type": "string"
+                            },
+                            "patent_num_cited_by_us_patents": {
+                                "type": "string"
+                            },
+                            "patent_num_claims": {
+                                "type": "string"
+                            },
+                            "patent_num_combined_citations": {
+                                "type": "string"
+                            },
+                            "patent_num_foreign_citations": {
+                                "type": "string"
+                            },
+                            "patent_num_us_application_citations": {
+                                "type": "string"
+                            },
+                            "patent_num_us_patent_citations": {
+                                "type": "string"
+                            },
+                            "patent_number": {
+                                "type": "string"
+                            },
+                            "patent_processing_time": {
+                                "type": "string"
+                            },
+                            "patent_title": {
+                                "type": "string"
+                            },
+                            "patent_type": {
+                                "type": "string"
+                            },
+                            "patent_year": {
+                                "type": "string"
+                            },
+                            "inventors": {
+                                "$ref": "#/definitions/inventors"
+                            },
+                            "rawinventors": {
+                                "$ref": "#/definitions/rawinventors"
+                            },
+                            "assignees": {
+                                "$ref": "#/definitions/assignees"
+                            },
+                            "applications": {
+                                "$ref": "#/definitions/applications"
+                            },
+                            "IPCs": {
+                                "$ref": "#/definitions/IPCs"
+                            },
+                            "application_citations": {
+                                "$ref": "#/definitions/application_citations"
+                            },
+                            "cited_patents": {
+                                "$ref": "#/definitions/cited_patents"
+                            },
+                            "citedby_patents": {
+                                "$ref": "#/definitions/citedby_patents"
+                            },
+                            "uspcs": {
+                                "$ref": "#/definitions/uspcs"
+                            },
+                            "cpcs": {
+                                "$ref": "#/definitions/cpcs"
+                            },
+                            "nbers": {
+                                "$ref": "#/definitions/nbers"
+                            },
+                            "wipos": {
+                                "$ref": "#/definitions/wipos"
+                            },
+                            "gov_interests": {
+                                "$ref": "#/definitions/gov_interests"
+                            },
+                            "lawyers": {
+                                "$ref": "#/definitions/lawyers"
+                            },
+                            "examiners": {
+                                "$ref": "#/definitions/examiners"
+                            },
+                            "foreign_priority": {
+                                "$ref": "#/definitions/foreign_priority"
+                            },
+                            "pct_data": {
+                                "$ref": "#/definitions/pct_data"
+                            }
+                        }
+                    }
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "total_patent_count": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "uspc_mainclassesResponse": {
+            "type": "object",
+            "properties": {
+                "uspc_mainclasses": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "uspc_first_seen_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "uspc_last_seen_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "uspc_mainclass_id": {
+                                "type": "string"
+                            },
+                            "uspc_mainclass_title": {
+                                "type": "string"
+                            },
+                            "uspc_total_num_assignees": {
+                                "type": "string"
+                            },
+                            "uspc_total_num_inventors": {
+                                "type": "string"
+                            },
+                            "uspc_total_num_patents": {
+                                "type": "string"
+                            },
+                            "uspc_subclasses": {
+                                "$ref": "#/definitions/uspc_subclasses"
+                            },
+                            "patents": {
+                                "$ref": "#/definitions/patents"
+                            },
+                            "assignees": {
+                                "$ref": "#/definitions/assignees"
+                            },
+                            "inventors": {
+                                "$ref": "#/definitions/inventors"
+                            },
+                            "rawinventors": {
+                                "$ref": "#/definitions/rawinventors"
+                            },
+                            "applications": {
+                                "$ref": "#/definitions/applications"
+                            },
+                            "IPCs": {
+                                "$ref": "#/definitions/IPCs"
+                            },
+                            "cpcs": {
+                                "$ref": "#/definitions/cpcs"
+                            },
+                            "nbers": {
+                                "$ref": "#/definitions/nbers"
+                            },
+                            "years": {
+                                "$ref": "#/definitions/years"
+                            },
+                            "wipos": {
+                                "$ref": "#/definitions/wipos"
+                            },
+                            "gov_interests": {
+                                "$ref": "#/definitions/gov_interests"
+                            },
+                            "lawyers": {
+                                "$ref": "#/definitions/lawyers"
+                            },
+                            "examiners": {
+                                "$ref": "#/definitions/examiners"
+                            },
+                            "foreign_priority": {
+                                "$ref": "#/definitions/foreign_priority"
+                            },
+                            "pct_data": {
+                                "$ref": "#/definitions/pct_data"
+                            }
+                        }
+                    }
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "total_uspc_mainclass_count": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "IPCs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "ipc_action_date": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "ipc_class": {
+                        "type": "string"
+                    },
+                    "ipc_classification_data_source": {
+                        "type": "string"
+                    },
+                    "ipc_classification_value": {
+                        "type": "string"
+                    },
+                    "ipc_first_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "ipc_last_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "ipc_main_group": {
+                        "type": "string"
+                    },
+                    "ipc_section": {
+                        "type": "string"
+                    },
+                    "ipc_subclass": {
+                        "type": "string"
+                    },
+                    "ipc_subgroup": {
+                        "type": "string"
+                    },
+                    "ipc_symbol_position": {
+                        "type": "string"
+                    },
+                    "ipc_total_num_assignees": {
+                        "type": "string"
+                    },
+                    "ipc_total_num_inventors": {
+                        "type": "string"
+                    },
+                    "ipc_version_indicator": {
+                        "type": "string",
+                        "format": "nullable"
+                    }
+                }
+            }
+        },
+        "application_citations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "appcit_app_number": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "appcit_category": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "appcit_date": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "appcit_kind": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "appcit_sequence": {
+                        "type": "string",
+                        "format": "nullable"
+                    }
+                }
+            }
+        },
+        "applications": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "app_country": {
+                        "type": "string"
+                    },
+                    "app_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "app_number": {
+                        "type": "string"
+                    },
+                    "app_type": {
+                        "type": "string"
+                    },
+                    "app_id": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "assignees": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "assignee_city": {
+                        "type": "string"
+                    },
+                    "assignee_country": {
+                        "type": "string"
+                    },
+                    "assignee_county": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "assignee_county_fips": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "assignee_first_name": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "assignee_first_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "assignee_id": {
+                        "type": "string"
+                    },
+                    "assignee_last_name": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "assignee_last_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "assignee_lastknown_city": {
+                        "type": "string"
+                    },
+                    "assignee_lastknown_country": {
+                        "type": "string"
+                    },
+                    "assignee_lastknown_latitude": {
+                        "type": "string"
+                    },
+                    "assignee_lastknown_location_id": {
+                        "type": "string"
+                    },
+                    "assignee_lastknown_longitude": {
+                        "type": "string"
+                    },
+                    "assignee_lastknown_state": {
+                        "type": "string"
+                    },
+                    "assignee_latitude": {
+                        "type": "string"
+                    },
+                    "assignee_location_id": {
+                        "type": "string"
+                    },
+                    "assignee_longitude": {
+                        "type": "string"
+                    },
+                    "assignee_num_patents_for_uspc_mainclass": {
+                        "type": "string"
+                    },
+                    "assignee_organization": {
+                        "type": "string"
+                    },
+                    "assignee_state": {
+                        "type": "string"
+                    },
+                    "assignee_state_fips": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "assignee_total_num_inventors": {
+                        "type": "string"
+                    },
+                    "assignee_total_num_patents": {
+                        "type": "string"
+                    },
+                    "assignee_type": {
+                        "type": "string"
+                    },
+                    "assignee_key_id": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "cited_patents": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "cited_patent_category": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "cited_patent_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "cited_patent_kind": {
+                        "type": "string"
+                    },
+                    "cited_patent_number": {
+                        "type": "string"
+                    },
+                    "cited_patent_sequence": {
+                        "type": "string"
+                    },
+                    "cited_patent_title": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "citedby_patents": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "citedby_patent_category": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "citedby_patent_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "citedby_patent_kind": {
+                        "type": "string"
+                    },
+                    "citedby_patent_number": {
+                        "type": "string"
+                    },
+                    "citedby_patent_title": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "coinventors": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "coinventor_city": {
+                        "type": "string"
+                    },
+                    "coinventor_country": {
+                        "type": "string"
+                    },
+                    "coinventor_first_name": {
+                        "type": "string"
+                    },
+                    "coinventor_first_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "coinventor_id": {
+                        "type": "string"
+                    },
+                    "coinventor_last_name": {
+                        "type": "string"
+                    },
+                    "coinventor_last_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "coinventor_lastknown_city": {
+                        "type": "string"
+                    },
+                    "coinventor_lastknown_country": {
+                        "type": "string"
+                    },
+                    "coinventor_lastknown_latitude": {
+                        "type": "string"
+                    },
+                    "coinventor_lastknown_location_id": {
+                        "type": "string"
+                    },
+                    "coinventor_lastknown_longitude": {
+                        "type": "string"
+                    },
+                    "coinventor_lastknown_state": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "coinventor_latitude": {
+                        "type": "string"
+                    },
+                    "coinventor_location_id": {
+                        "type": "string"
+                    },
+                    "coinventor_longitude": {
+                        "type": "string"
+                    },
+                    "coinventor_num_patents_for_inventor": {
+                        "type": "string"
+                    },
+                    "coinventor_total_num_patents": {
+                        "type": "string"
+                    },
+                    "coinventor_key_id": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "cpc_subgroups": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "cpc_category": {
+                        "type": "string"
+                    },
+                    "cpc_group_id": {
+                        "type": "string"
+                    },
+                    "cpc_group_title": {
+                        "type": "string"
+                    },
+                    "cpc_section_id": {
+                        "type": "string"
+                    },
+                    "cpc_subgroup_id": {
+                        "type": "string"
+                    },
+                    "cpc_subgroup_title": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "cpcs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "cpc_category": {
+                        "type": "string"
+                    },
+                    "cpc_first_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "cpc_group_id": {
+                        "type": "string"
+                    },
+                    "cpc_group_title": {
+                        "type": "string"
+                    },
+                    "cpc_last_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "cpc_section_id": {
+                        "type": "string"
+                    },
+                    "cpc_subgroup_id": {
+                        "type": "string"
+                    },
+                    "cpc_subgroup_title": {
+                        "type": "string"
+                    },
+                    "cpc_subsection_id": {
+                        "type": "string"
+                    },
+                    "cpc_subsection_title": {
+                        "type": "string"
+                    },
+                    "cpc_total_num_assignees": {
+                        "type": "string"
+                    },
+                    "cpc_total_num_inventors": {
+                        "type": "string"
+                    },
+                    "cpc_total_num_patents": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "examiners": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "examiner_first_name": {
+                        "type": "string"
+                    },
+                    "examiner_group": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "examiner_id": {
+                        "type": "string"
+                    },
+                    "examiner_last_name": {
+                        "type": "string"
+                    },
+                    "examiner_role": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "foreign_priority": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "forprior_country": {
+                        "type": "string"
+                    },
+                    "forprior_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "forprior_docnumber": {
+                        "type": "string"
+                    },
+                    "forprior_kind": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "forprior_sequence": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "gov_interests": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "govint_contract_award_number": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "govint_org_id": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "govint_org_level_one": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "govint_org_level_three": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "govint_org_level_two": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "govint_org_name": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "govint_raw_statement": {
+                        "type": "string",
+                        "format": "nullable"
+                    }
+                }
+            }
+        },
+        "inventors": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "inventor_city": {
+                        "type": "string"
+                    },
+                    "inventor_country": {
+                        "type": "string"
+                    },
+                    "inventor_county": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "inventor_county_fips": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "inventor_first_name": {
+                        "type": "string"
+                    },
+                    "inventor_first_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "inventor_id": {
+                        "type": "string"
+                    },
+                    "inventor_last_name": {
+                        "type": "string"
+                    },
+                    "inventor_last_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "inventor_lastknown_city": {
+                        "type": "string"
+                    },
+                    "inventor_lastknown_country": {
+                        "type": "string"
+                    },
+                    "inventor_lastknown_latitude": {
+                        "type": "string"
+                    },
+                    "inventor_lastknown_location_id": {
+                        "type": "string"
+                    },
+                    "inventor_lastknown_longitude": {
+                        "type": "string"
+                    },
+                    "inventor_lastknown_state": {
+                        "type": "string"
+                    },
+                    "inventor_latitude": {
+                        "type": "string"
+                    },
+                    "inventor_location_id": {
+                        "type": "string"
+                    },
+                    "inventor_longitude": {
+                        "type": "string"
+                    },
+                    "inventor_num_patents_for_uspc_mainclass": {
+                        "type": "string"
+                    },
+                    "inventor_state": {
+                        "type": "string"
+                    },
+                    "inventor_state_fips": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "inventor_total_num_patents": {
+                        "type": "string"
+                    },
+                    "inventor_key_id": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "lawyers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "lawyer_first_name": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "lawyer_first_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "lawyer_id": {
+                        "type": "string"
+                    },
+                    "lawyer_last_name": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "lawyer_last_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "lawyer_organization": {
+                        "type": "string"
+                    },
+                    "lawyer_sequence": {
+                        "type": "string"
+                    },
+                    "lawyer_total_num_assignees": {
+                        "type": "string"
+                    },
+                    "lawyer_total_num_inventors": {
+                        "type": "string"
+                    },
+                    "lawyer_total_num_patents": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "locations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "location_city": {
+                        "type": "string"
+                    },
+                    "location_country": {
+                        "type": "string"
+                    },
+                    "location_county": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "location_county_fips": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "location_id": {
+                        "type": "string"
+                    },
+                    "location_latitude": {
+                        "type": "string"
+                    },
+                    "location_longitude": {
+                        "type": "string"
+                    },
+                    "location_state": {
+                        "type": "string"
+                    },
+                    "location_state_fips": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "location_key_id": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "nbers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "nber_category_id": {
+                        "type": "string"
+                    },
+                    "nber_category_title": {
+                        "type": "string"
+                    },
+                    "nber_first_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "nber_last_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "nber_subcategory_id": {
+                        "type": "string"
+                    },
+                    "nber_subcategory_title": {
+                        "type": "string"
+                    },
+                    "nber_total_num_assignees": {
+                        "type": "string"
+                    },
+                    "nber_total_num_inventors": {
+                        "type": "string"
+                    },
+                    "nber_total_num_patents": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "patents": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "detail_desc_length": {
+                        "type": "string"
+                    },
+                    "patent_abstract": {
+                        "type": "string"
+                    },
+                    "patent_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "patent_firstnamed_assignee_city": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_assignee_country": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_assignee_id": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_assignee_latitude": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_assignee_location_id": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_assignee_longitude": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_assignee_state": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_inventor_city": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_inventor_country": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_inventor_id": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_inventor_latitude": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_inventor_location_id": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_inventor_longitude": {
+                        "type": "string"
+                    },
+                    "patent_firstnamed_inventor_state": {
+                        "type": "string"
+                    },
+                    "patent_id": {
+                        "type": "string"
+                    },
+                    "patent_kind": {
+                        "type": "string"
+                    },
+                    "patent_num_cited_by_us_patents": {
+                        "type": "string"
+                    },
+                    "patent_num_claims": {
+                        "type": "string"
+                    },
+                    "patent_num_combined_citations": {
+                        "type": "string"
+                    },
+                    "patent_num_foreign_citations": {
+                        "type": "string"
+                    },
+                    "patent_num_us_application_citations": {
+                        "type": "string"
+                    },
+                    "patent_num_us_patent_citations": {
+                        "type": "string"
+                    },
+                    "patent_number": {
+                        "type": "string"
+                    },
+                    "patent_title": {
+                        "type": "string"
+                    },
+                    "patent_type": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "pct_data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "pct_102_date": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "pct_371_date": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "pct_date": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "pct_docnumber": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "pct_doctype": {
+                        "type": "string",
+                        "format": "nullable"
+                    },
+                    "pct_kind": {
+                        "type": "string",
+                        "format": "nullable"
+                    }
+                }
+            }
+        },
+        "rawinventors": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "rawinventor_first_name": {
+                        "type": "string"
+                    },
+                    "rawinventor_last_name": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "uspc_subclasses": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "uspc_subclass_id": {
+                        "type": "string"
+                    },
+                    "uspc_subclass_title": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "uspcs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "uspc_first_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "uspc_last_seen_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "uspc_mainclass_id": {
+                        "type": "string"
+                    },
+                    "uspc_mainclass_title": {
+                        "type": "string"
+                    },
+                    "uspc_sequence": {
+                        "type": "string"
+                    },
+                    "uspc_subclass_id": {
+                        "type": "string"
+                    },
+                    "uspc_subclass_title": {
+                        "type": "string"
+                    },
+                    "uspc_total_num_assignees": {
+                        "type": "string"
+                    },
+                    "uspc_total_num_inventors": {
+                        "type": "string"
+                    },
+                    "uspc_total_num_patents": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "wipos": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "wipo_field_id": {
+                        "type": "string"
+                    },
+                    "wipo_field_title": {
+                        "type": "string"
+                    },
+                    "wipo_sector_title": {
+                        "type": "string"
+                    },
+                    "wipo_sequence": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "years": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "year_id": {
+                        "type": "string"
+                    },
+                    "year_num_patents_for_uspc_mainclass": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "CreatePostRequest": {
+            "type": "object",
+            "required": [
+                "q"
+            ],
+            "properties": {
+                "q": {
+                    "type": "object"
+                },
+                "f": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "s": {
+                    "type": "object"
+                },
+                "o": {
+                    "type": "object"
+                },
+                "format": {
+                    "type": "string",
+                    "default": "json",
+                    "enum": [
+                        "json",
+                        "xml"
+                    ]
+                }
+            }
+        }
+    },
+    "parameters": {
+        "q": {
+            "name": "q",
+            "in": "query",
+            "description": "Query to be issued",
+            "required": true,
+            "type": "string"
+        },
+        "f": {
+            "name": "f",
+            "in": "query",
+            "description": "fields to return",
+            "required": false,
+            "type": "string"
+        },
+        "o": {
+            "name": "o",
+            "in": "query",
+            "description": "options",
+            "required": false,
+            "type": "string"
+        },
+        "s": {
+            "name": "s",
+            "in": "query",
+            "description": "sort",
+            "required": false,
+            "type": "string"
+        },
+        "format": {
+            "name": "format",
+            "in": "query",
+            "description": "json|xml defaults to json",
+            "required": false,
+            "type": "string",
+            "enum": ["json", "xml"]
+        },
+        "post_input": {
+            "in": "body",
+            "name": "CreatePostRequest",
+            "description": "Query to be issued",
+            "required": true,
+            "schema": {
+                "$ref": "#/definitions/CreatePostRequest"
+            }
+        }
+    }
+}
