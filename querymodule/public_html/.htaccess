@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteBase /query-id-service
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+SetEnv CONFIG_PATH /code
