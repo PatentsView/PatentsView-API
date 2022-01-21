@@ -1212,7 +1212,7 @@
   },
   "patent_average_processing_time": {
     "entity_name": "patent",
-    "column_name": "patent.uspc_current_mainclass_average_patent_processing_days",
+    "column_name": "patent.cpc_current_group_average_patent_processing_days",
     "datatype": "int",
     "query": "y",
     "sort": "y"
