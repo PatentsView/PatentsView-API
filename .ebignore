@@ -6,3 +6,6 @@ experiments/
 build_artifacts/
 .idea
 **/*.log
+api_elastic.zip
+Archive.zip
+.git
