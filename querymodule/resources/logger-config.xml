@@ -6,8 +6,10 @@
     </appender>
 
     <appender name="logFile" class="LoggerAppenderDailyFile" threshold="info">
-        <layout class="LoggerLayoutSimple"/>
-        <param name="file" value="/tmp/file-%s.log"/>
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date %sid %file %line %logger %-5level %msg%n"/>
+        </layout>
+        <param name="file" value="/var/log/pvapi/file-%s.log"/>
         <param name="datePattern" value="Y-m-d"/>
     </appender>
 
