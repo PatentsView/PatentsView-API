@@ -30,7 +30,7 @@ class QueryException extends APIException
     {
         $this->code_mapping = array("QR1" => 400, "QR2" => 400, "QR3" => 400, "QR4" => 400, "QDI1" => 500,"QDI2" => 500, "QDS1" => 500, "QDIS1" => 500, "QDC1" => 500, "QDIS2" => 500, "QDIS3" => 500);
         $message = vsprintf($this->message[$code], $custom_message);
-        \ErrorHandler::getHandler()->getLogger()->debug($message);
+        \ErrorHandler::getHandler()->getLogger()->info($message);
         parent::__construct($message, $code, $previous);
     }
 }

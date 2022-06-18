@@ -60,7 +60,7 @@ class DatabaseQuery
 
             if (array_key_exists('per_page', $options))
                 if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1)) {
-                    $this->errorHandler->getLogger()->debug("Page size too big");
+                    $this->errorHandler->getLogger()->info("Page size too big");
                     throw new \Exceptions\QueryException("QR1", array($config->getMaxPageSize()));
 
                 } else
@@ -81,7 +81,7 @@ class DatabaseQuery
             if (array_key_exists('sort_by_subentity_counts', $options) && array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
                 $this->sort_by_subentity_counts = strtolower($options['sort_by_subentity_counts']);
             } elseif (array_key_exists('sort_by_subentity_counts', $options) && !array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
-                $this->errorHandler->getLogger()->debug(vsprintf("Sorting field %s is not in the output field list.", array($options['sort_by_subentity_counts'])));
+                $this->errorHandler->getLogger()->info(vsprintf("Sorting field %s is not in the output field list.", array($options['sort_by_subentity_counts'])));
                 throw new \Exceptions\QueryException("QR2", array($options['sort_by_subentity_counts']));
             }
         }
@@ -129,7 +129,7 @@ class DatabaseQuery
                 }
                 $county++;
                 if ($county == $maxTries) {
-                    $this->errorHandler->getLogger()->debug("Error during cache Load");
+                    $this->errorHandler->getLogger()->info("Error during cache Load");
                     throw new \Exceptions\QueryException("QDI1", array());
                 }
                 usleep(500000);
@@ -241,7 +241,7 @@ class DatabaseQuery
                     $whereEntity .= ' and ' . $whereClause;
                     $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
                     if ($countResults === false) {
-                        $this->errorHandler->getLogger()->debug($e);
+                        $this->errorHandler->getLogger()->info("Error in running sub-entity count");
                     }
                     $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
 
@@ -403,7 +403,7 @@ class DatabaseQuery
                 $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             } catch (PDOException $e) {
-                $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
+                $this->errorHandler->getLogger()->info("Failed to connect to database: $dbSettings[database].");
                 throw new \Exceptions\QueryException("QDC1", array());
             }
 
@@ -439,7 +439,7 @@ class DatabaseQuery
                 break;
             } catch (PDOException $e) {
                 if ($counto == $maxTriesy) {
-                    $this->errorHandler->getLogger()->debug("Error during cache row creation");
+                    $this->errorHandler->getLogger()->info("Error during cache row creation");
                     throw new \Exceptions\QueryException("QDI2", array());
                 }
                 usleep(1000000);
@@ -468,8 +468,9 @@ class DatabaseQuery
         $export_output = array();
         exec($cmd, $export_output, $export_command_status);
         if ($export_command_status != 0) {
-            $this->errorHandler->getLogger()->debug("Failure in exporting to text file." . implode("\n", $export_output));
-            $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . $cmd);
+            $this->errorHandler->getLogger()->info("Failure in exporting to text file." . implode("\n", $export_output));
+            $this->errorHandler->getLogger()->info("Failure in LOAD DATA INFILE");
+            $this->errorHandler->getLogger()->debug($cmd);
             throw new \Exceptions\QueryException("QDIS1", array());
         }
         $cmd2 = 'mysql --local-infile=1 -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
@@ -492,8 +493,9 @@ class DatabaseQuery
         exec($cmd2, $import_output, $import_command_status);
         if ($import_command_status != 0) {
 
-            $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . implode("\n", $import_output));
-            $this->errorHandler->getLogger()->debug("Failure in LOAD DATA INFILE" . $cmd2);
+            $this->errorHandler->getLogger()->info("Failure in LOAD DATA INFILE" . implode("\n", $import_output));
+            $this->errorHandler->getLogger()->info("Failure in LOAD DATA INFILE");
+            $this->errorHandler->getLogger()->debug($cmd2);
             throw new \Exceptions\QueryException("QDIS3", array());
 
 
