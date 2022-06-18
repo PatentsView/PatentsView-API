@@ -50,7 +50,7 @@ class DatabaseQuery
         $this->fieldSpecs = $fieldSpecs;
         $this->setupGroupVars();
         $this->whereFieldsUsed = $whereFieldsUsed;
-        $this->errorHandler->getLogger()->info("Beginning query processing");
+//        $this->errorHandler->getLogger()->info("Beginning query processing");
 
 
         if ($options != null) {
@@ -114,7 +114,7 @@ class DatabaseQuery
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%u', $whereHash);
 
-        $this->errorHandler->getLogger()->info("Beginning database query");
+//        $this->errorHandler->getLogger()->info("Beginning database query");
 
         $county = 0;
         $maxTries = 3;
@@ -167,7 +167,7 @@ class DatabaseQuery
             break;
 
         } while ($county < $maxTries);
-        $this->errorHandler->getLogger()->info("Caching complete");
+//        $this->errorHandler->getLogger()->info("Caching complete");
 
         // First find out how many there are in the complete set.
         $selectStringForEntity = 'count(QueryDefId) as total_found';
@@ -207,7 +207,7 @@ class DatabaseQuery
 
         $fromSubEntity = $this->buildFrom($allFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
         $fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
-        $this->errorHandler->getLogger()->info("Processing sub-entities");
+//        $this->errorHandler->getLogger()->info("Processing sub-entities");
 
 
         // Loop through the subentities and get them.
@@ -254,7 +254,7 @@ class DatabaseQuery
                 }
             }
         }
-        $this->errorHandler->getLogger()->info("Database query complete");
+//        $this->errorHandler->getLogger()->info("Database query complete");
 
         return $results;
     }
