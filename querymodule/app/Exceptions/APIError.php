@@ -13,7 +13,7 @@ use Exceptions\APIException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-final class APIError extends Error
+final class APIError extends \Exception
 {
     public function __invoke(Request $request, Response $response, APIException $exception)
     {
