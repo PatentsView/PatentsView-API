@@ -5,7 +5,7 @@
  * Date: 9/28/18
  * Time: 5:10 PM
  */
-putenv("CONFIG_PATH=//var/www/html/current");
+putenv("CONFIG_PATH=/var/app/current");
 require_once dirname(__FILE__) . '/../app/entitySpecs.php';
 require_once dirname(__FILE__) . '/../app/DatabaseQuery.php';
 require_once dirname(__FILE__) . '/../app/config.php';
