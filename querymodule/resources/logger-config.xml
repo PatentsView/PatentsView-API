@@ -5,7 +5,7 @@
         <layout class="LoggerLayoutSimple"/>
     </appender>
 
-    <appender name="logFile" class="LoggerAppenderDailyFile" threshold="info">
+    <appender name="logFile" class="LoggerAppenderDailyFile" threshold="debug">
         <layout class="LoggerLayoutPattern">
             <param name="conversionPattern" value="%date %sid %file %line %logger %-5level %msg%n"/>
         </layout>
