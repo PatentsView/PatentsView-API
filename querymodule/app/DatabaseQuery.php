@@ -438,7 +438,7 @@ class DatabaseQuery
 
         $sqlStatement = "INSERT INTO $insert";
         $this->logger->debug($sqlStatement);
-        $this->logger->debug($params);
+        $this->logger->debug(explode(",", $params));
 
         $counto = 0;
         $maxTriesy = 3;
