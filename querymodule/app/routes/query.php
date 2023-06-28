@@ -350,6 +350,13 @@ $app->post(
 );
 
 $app->get(
+    '/index.html',
+    function (Request $req, Response $res, $args = []) {
+
+        return $res->withStatus(301)->withHeader('Location', 'https://patentsview.org/apis/purpose');
+    }
+);
+$app->get(
     '/',
     function (Request $req, Response $res, $args = []) {
 

@@ -3,8 +3,9 @@ require_once dirname(__FILE__) . '/ErrorHandler.php';
 
 function getDBField(array $fieldSpecs, $apiFieldName, $columnFor = "column_name")
 {
+    global $config;
     if (!array_key_exists($apiFieldName, $fieldSpecs)) {
-        ErrorHandler::getHandler()->sendError(400, "Field name is invalid: $apiFieldName.",
+        ErrorHandler::getHandler()->sendError(400, "Field name is invalid: $apiFieldName.", $config,
             "Field name not in FIELD_SPECS: $apiFieldName.");
     }
     return $fieldSpecs[$apiFieldName][$columnFor];
@@ -44,7 +45,6 @@ $cpcgroup_entity_json = file_get_contents(dirname(__FILE__) . '/specs/cpc-group-
 $CPC_GROUP_ENTITY_SPECS = json_decode($cpcgroup_entity_json, true);
 $cpcgroup_field_json = file_get_contents(dirname(__FILE__) . '/specs/cpc-group-field-specs.json');
 $CPC_GROUP_FIELD_SPECS = json_decode($cpcgroup_field_json, true);
-
 
 
 $cpc_entity_json = file_get_contents(dirname(__FILE__) . '/specs/cpc-entity-specs.json');

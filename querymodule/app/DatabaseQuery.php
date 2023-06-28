@@ -20,6 +20,7 @@ class DatabaseQuery
 
     private $db = null;
     private $errorHandler = null;
+    private $logger = null;
 
     private $matchedSubentitiesOnly = false;
     private $include_subentity_total_counts = false;
@@ -50,7 +51,8 @@ class DatabaseQuery
         $this->fieldSpecs = $fieldSpecs;
         $this->setupGroupVars();
         $this->whereFieldsUsed = $whereFieldsUsed;
-//        $this->errorHandler->getLogger()->info("Beginning query processing");
+        $this->logger = $this->errorHandler->getLogger($config);
+//        $this->logger->info("Beginning query processing");
 
 
         if ($options != null) {
@@ -62,7 +64,7 @@ class DatabaseQuery
 
             if (array_key_exists('per_page', $options))
                 if (($options['per_page'] > $config->getMaxPageSize()) or ($options['per_page'] < 1)) {
-                    $this->errorHandler->getLogger()->error("Page size too big");
+                    $this->logger->error("Page size too big");
                     throw new \Exceptions\QueryException("QR1", array($config->getMaxPageSize()));
 
                 } else
@@ -83,7 +85,7 @@ class DatabaseQuery
             if (array_key_exists('sort_by_subentity_counts', $options) && array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
                 $this->sort_by_subentity_counts = strtolower($options['sort_by_subentity_counts']);
             } elseif (array_key_exists('sort_by_subentity_counts', $options) && !array_key_exists($options['sort_by_subentity_counts'], $selectFieldSpecs)) {
-                $this->errorHandler->getLogger()->error(vsprintf("Sorting field %s is not in the output field list.", array($options['sort_by_subentity_counts'])));
+                $this->logger->error(vsprintf("Sorting field %s is not in the output field list.", array($options['sort_by_subentity_counts'])));
                 throw new \Exceptions\QueryException("QR2", array($options['sort_by_subentity_counts']));
             }
         }
@@ -114,7 +116,7 @@ class DatabaseQuery
         $whereHash = crc32($stringToHash);   // Using crc32 rather than md5 since we only have 32-bits to work with.
         $queryDefId = sprintf('%u', $whereHash);
 
-//        $this->errorHandler->getLogger()->info("Beginning database query");
+//        $this->logger->info("Beginning database query");
 
         $county = 0;
         $maxTries = 3;
@@ -128,11 +130,11 @@ class DatabaseQuery
                 try {
                     $this->rollbackTransaction();
                 } catch (PDOException $e) {
-                    $this->errorHandler->getLogger()->debug($e->getMessage());
+                    $this->logger->debug($e->getMessage());
                 }
                 $county++;
                 if ($county == $maxTries) {
-                    $this->errorHandler->getLogger()->error("Error during cache Load");
+                    $this->logger->error("Error during cache Load");
                     throw new \Exceptions\QueryException("QDI1", array());
                 }
                 usleep(500000);
@@ -140,7 +142,7 @@ class DatabaseQuery
             }
             if (count($results) == 0) {
                 // Add an entry for the query
-                $this->errorHandler->getLogger()->info("Cache Miss");
+                $this->logger->info("Cache Miss");
 
                 $this->startTransaction();
                 $insertStatement = $this->supportDatabase . '.QueryDef (QueryDefId, QueryString) VALUES (:queryDefId, :whereClause)';
@@ -167,7 +169,7 @@ class DatabaseQuery
             break;
 
         } while ($county < $maxTries);
-//        $this->errorHandler->getLogger()->info("Caching complete");
+//        $this->logger->info("Caching complete");
 
         // First find out how many there are in the complete set.
         $selectStringForEntity = 'count(QueryDefId) as total_found';
@@ -207,7 +209,7 @@ class DatabaseQuery
 
         $fromSubEntity = $this->buildFrom($allFieldsUsed, array($entitySpecs[0]['keyId'] => $this->fieldSpecs[$entitySpecs[0]['keyId']]), $this->sortFieldsUsed);
         $fromSubEntity .= ' inner join ' . $this->supportDatabase . '.QueryResults qr on ' . getDBField($this->fieldSpecs, $this->entitySpecs[0]['keyId']) . '= qr.EntityId';
-//        $this->errorHandler->getLogger()->info("Processing sub-entities");
+//        $this->logger->info("Processing sub-entities");
 
 
         // Loop through the subentities and get them.
@@ -247,14 +249,14 @@ class DatabaseQuery
                     $whereEntity .= ' and ' . $whereClause;
                     $countResults = $this->runQuery($selectStringForEntity, $fromEntity, $whereEntity, null);
                     if ($countResults === false) {
-                        $this->errorHandler->getLogger()->error("Error in running sub-entity count");
+                        $this->logger->error("Error in running sub-entity count");
                     }
                     $this->entityTotalCounts[$entitySpec['entity_name']] = intval($countResults[0]['subentity_count']);
 
                 }
             }
         }
-//        $this->errorHandler->getLogger()->info("Database query complete");
+//        $this->logger->info("Database query complete");
 
         return $results;
     }
@@ -386,14 +388,14 @@ class DatabaseQuery
         if (strlen($where) > 0) $where = "WHERE $where ";
         if (strlen($order) > 0) $order = "ORDER BY $order";
         $sqlQuery = "SELECT $select FROM $from $where $order";
-        $this->errorHandler->getLogger()->debug($sqlQuery);
+        $this->logger->debug($sqlQuery);
 
         try {
             $st = $this->db->query("$sqlQuery", PDO::FETCH_ASSOC);
             $results = $st->fetchAll();
             $st->closeCursor();
         } catch (PDOException $e) {
-            $this->errorHandler->getLogger()->debug($e->getMessage());
+            $this->logger->debug($e->getMessage());
             return false;
         }
         //file_put_contents('php://stderr', print_r(count($results), TRUE));
@@ -404,6 +406,7 @@ class DatabaseQuery
     private function connectToDB()
     {
         global $config;
+        $logger = $this->errorHandler->getLogger($config);
         if ($this->db === null) {
             $dbSettings = $config->getDbSettings();
             try {
@@ -411,7 +414,7 @@ class DatabaseQuery
                 $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             } catch (PDOException $e) {
-                $this->errorHandler->getLogger()->error("Failed to connect to database: $dbSettings[database].");
+                $this->logger->error("Failed to connect to database: $dbSettings[database].");
                 throw new \Exceptions\QueryException("QDC1", array());
             }
 
@@ -434,20 +437,21 @@ class DatabaseQuery
         $this->connectToDB();
 
         $sqlStatement = "INSERT INTO $insert";
-        $this->errorHandler->getLogger()->debug($sqlStatement);
-        $this->errorHandler->getLogger()->debug($params);
+        $this->logger->debug($sqlStatement);
+        $this->logger->debug($params);
 
         $counto = 0;
         $maxTriesy = 3;
         do {
             try {
                 $st = $this->db->prepare($sqlStatement);
-                $results = $st->execute($params);
+                $st->execute($params);
                 $st->closeCursor();
                 break;
             } catch (PDOException $e) {
                 if ($counto == $maxTriesy) {
-                    $this->errorHandler->getLogger()->error("Error during cache row creation");
+                    $st->closeCursor();
+                    $this->logger->error("Error during cache row creation");
                     throw new \Exceptions\QueryException("QDI2", array());
                 }
                 usleep(1000000);
@@ -455,8 +459,6 @@ class DatabaseQuery
             }
             break;
         } while ($counto < $maxTriesy);
-
-        return $results;
     }
 
     private function runInsertSelect($insert, $select, $from, $where, $order, $dbSettings)
@@ -476,9 +478,9 @@ class DatabaseQuery
         $export_output = array();
         exec($cmd, $export_output, $export_command_status);
         if ($export_command_status != 0) {
-            $this->errorHandler->getLogger()->error("Failure in exporting to text file." . implode("\n", $export_output));
-            $this->errorHandler->getLogger()->error("Failure in LOAD DATA INFILE");
-            $this->errorHandler->getLogger()->debug($cmd);
+            $this->logger->error("Failure in exporting to text file." . implode("\n", $export_output));
+            $this->logger->error("Failure in LOAD DATA INFILE");
+            $this->logger->debug($cmd);
             throw new \Exceptions\QueryException("QDIS1", array());
         }
         $cmd2 = 'mysql --local-infile=1 -h' . escapeshellarg($dbSettings['host']) . ' -u' . escapeshellarg($dbSettings['user']) . ' -p' . escapeshellarg($dbSettings['password']) . ' ' . escapeshellarg($dbSettings['supportDatabase']) . ' -e "LOAD DATA LOCAL INFILE ' . "'" . $tmp_dir . $insertHash . ".txt'" . ' INTO TABLE QueryResults IGNORE 1 LINES; COMMIT;"';
@@ -501,9 +503,9 @@ class DatabaseQuery
         exec($cmd2, $import_output, $import_command_status);
         if ($import_command_status != 0) {
 
-            $this->errorHandler->getLogger()->error("Failure in LOAD DATA INFILE" . implode("\n", $import_output));
-            $this->errorHandler->getLogger()->error("Failure in LOAD DATA INFILE");
-            $this->errorHandler->getLogger()->debug($cmd2);
+            $this->logger->error("Failure in LOAD DATA INFILE" . implode("\n", $import_output));
+            $this->logger->error("Failure in LOAD DATA INFILE");
+            $this->logger->debug($cmd2);
             throw new \Exceptions\QueryException("QDIS3", array());
 
 
@@ -538,7 +540,7 @@ class DatabaseQuery
 
     private function buildSelectStringForEntityReturnApiField($entitySpec)
     {
-        $selectString = Array();
+        $selectString = array();
         foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
             if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
                 $selectString[] = $apiField;
