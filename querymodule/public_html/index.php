@@ -42,9 +42,9 @@ if (Config::MODE == 'development') {
 // Step 2: Instantiate a Slim application
 $app = new \Slim\App($appConfig);
 $c = $app->getContainer();
-$c['errorHandler'] = function ($c) {
-    return new Slim\Handlers\APIError();
-};
+//$c['errorHandler'] = function ($c) {
+ //  return new Slim\Handlers\APIError();
+//};
 
 // Step 3: Define the Slim application routes
 

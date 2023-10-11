@@ -6,16 +6,16 @@
  * Time: 3:44 PM
  */
 
-namespace Slim\Handlers;
+namespace Exceptions; 
 require_once dirname(__FILE__) . '/../ErrorHandler.php';
 
 use Exceptions\APIException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-final class APIError extends Error
+final class APIError 
 {
-    public function __invoke(Request $request, Response $response, APIException $exception)
+    public function __invoke(Request $request, Response $response, Exception $exception)
     {
         $status = $exception->getCode() ?: 500;
         $logger = \ErrorHandler::getHandler()->getLogger();
