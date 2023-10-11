@@ -2,8 +2,10 @@
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
-
+error_reporting(E_ALL);
 require_once(dirname(__FILE__) . "/Exceptions/QueryException.php");
+
+use Aws\DynamoDb\Marshaler;
 
 class DatabaseQuery
 {
@@ -20,6 +22,7 @@ class DatabaseQuery
 
     private $db = null;
     private $mongoClient = null;
+    private $dynamoClient = null;
     private $errorHandler = null;
 
     private $matchedSubentitiesOnly = false;
@@ -123,14 +126,19 @@ class DatabaseQuery
         $cache_collection = $mongoSettings["mongo_collection"];
         $document = null;
         try {
-            $document = $this->mongoClient->{$cache_collection}->findOne(['query_string' => $query_string]);
+            $marshaler = new Marshaler();
+            $dynamoSettings = $config->getDynamoSettings();
+            $key = $marshaler->marshalJson(json_encode(['query_string' => $query_string]));
+            $params = ['TableName' => $dynamoSettings['table'], "Key" => $key];
+            $udocument = $this->dynamoClient->getItem($params);
+
         } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
             $this->errorHandler->getLogger()->debug($e->getMessage());
         }
-
-        if ($document) {
-
+        if (array_key_exists("Item", $udocument)) {
+            $document = json_decode($marshaler->unmarshalJson($udocument['Item']));
             return $document;
+
         }
 
         $county = 0;
@@ -421,15 +429,13 @@ class DatabaseQuery
             }
 
         }
-        if ($this->mongoClient === null) {
-            $mongoSettings = $config->getMongoSettings();
-            $mongoURI = sprintf("mongodb://%s:%s@%s:%d/%s", $mongoSettings["mongo_user"], $mongoSettings["mongo_password"], $mongoSettings["mongo_host"], $mongoSettings["mongo_port"], $mongoSettings["mongo_db"]);
+        if ($this->dynamoClient === null) {
+            $dynamoSettings = $config->getDynamoSettings();
+            $sdk = new Aws\Sdk($dynamoSettings);
             try {
-                $mongoClient = new MongoDB\Client($mongoURI);
-                $this->mongoClient = $mongoClient->selectDatabase($mongoSettings["mongo_db"]);
-
-            } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
-                $this->errorHandler->getLogger()->debug("Failed to connect to database: $mongoSettings[database].");
+                $this->dynamoClient = $sdk->createDynamoDb();
+            } catch (Aws\DynamoDB\Exception\DynamoDbException $e) {
+                $this->errorHandler->getLogger()->debug("Failed to connect to dynamodb");
                 throw new \Exceptions\QueryException("QDC1", array());
             }
 
