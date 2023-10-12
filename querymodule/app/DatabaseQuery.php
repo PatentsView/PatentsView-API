@@ -387,7 +387,7 @@ class DatabaseQuery
 
         if (strlen($where) > 0) $where = "WHERE $where ";
         if (strlen($order) > 0) $order = "ORDER BY $order";
-        $sqlQuery = "SELECT $select FROM $from $where $order";
+        $sqlQuery = "SELECT /*+ MAX_EXECUTION_TIME(300000) */ $select FROM $from $where $order";
         $this->logger->debug($sqlQuery);
 
         try {
@@ -410,8 +410,7 @@ class DatabaseQuery
         if ($this->db === null) {
             $dbSettings = $config->getDbSettings();
             try {
-                $this->db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password']);
-                $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $this->db = new PDO("mysql:host=$dbSettings[host];dbname=$dbSettings[database];charset=utf8", $dbSettings['user'], $dbSettings['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 
             } catch (PDOException $e) {
                 $this->logger->error("Failed to connect to database: $dbSettings[database].");
@@ -438,7 +437,7 @@ class DatabaseQuery
 
         $sqlStatement = "INSERT INTO $insert";
         $this->logger->debug($sqlStatement);
-        $this->logger->debug(explode(",", $params));
+        $this->logger->debug(implode(",", $params));
 
         $counto = 0;
         $maxTriesy = 3;
@@ -510,7 +509,7 @@ class DatabaseQuery
 
 
         }
-        
+
         unlink($tmp_dir . $insertHash . '.txt');
         //$st = $this->db->prepare($sqlQuery);
         //$results = $st->execute();
