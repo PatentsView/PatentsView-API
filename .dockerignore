@@ -1,1 +1,10 @@
 profiler/*
+.ipynb_checkpoints/*
+.ebextensions
+.elasticbeanstalk
+.ipynb_checkpoints
+.platform
+build_artifacts
+user_contributions
+**/.DS_Store
+logs
