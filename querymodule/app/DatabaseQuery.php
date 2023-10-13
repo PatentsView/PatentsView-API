@@ -1,11 +1,10 @@
 <?php
-require_once dirname(__FILE__) . '/config.php';
+require_once dirname(__FILE__) . '/Config.php';
 require_once dirname(__FILE__) . '/entitySpecs.php';
 require_once dirname(__FILE__) . '/ErrorHandler.php';
-error_reporting(E_ALL);
+
 require_once(dirname(__FILE__) . "/Exceptions/QueryException.php");
 
-use Aws\DynamoDb\Marshaler;
 
 class DatabaseQuery
 {
@@ -126,20 +125,19 @@ class DatabaseQuery
         $cache_collection = $mongoSettings["mongo_collection"];
         $document = null;
         try {
-            $marshaler = new Marshaler();
-            $dynamoSettings = $config->getDynamoSettings();
-            $key = $marshaler->marshalJson(json_encode(['query_string' => $query_string]));
-            $params = ['TableName' => $dynamoSettings['table'], "Key" => $key];
-            $udocument = $this->dynamoClient->getItem($params);
-
+            $query = new MongoDB\Driver\Query(array('query_string' => $query_string), array('limit' => 1));
+            $cursor = $this->mongoClient->executeQuery("db.${cache_collection}", $query);
+            $document = $cursor->toArray();
         } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
+            $this->errorHandler->getLogger()->info("Unable to connect to cache");
             $this->errorHandler->getLogger()->debug($e->getMessage());
         }
-        if (array_key_exists("Item", $udocument)) {
-            $document = json_decode($marshaler->unmarshalJson($udocument['Item']));
-            return $document;
 
+        if ($document) {
+            $this->errorHandler->getLogger()->info("Cache Hit");
+            return $document;
         }
+        $this->errorHandler->getLogger()->info("Cache Miss");
 
         $county = 0;
         $maxTries = 3;
@@ -429,13 +427,14 @@ class DatabaseQuery
             }
 
         }
-        if ($this->dynamoClient === null) {
-            $dynamoSettings = $config->getDynamoSettings();
-            $sdk = new Aws\Sdk($dynamoSettings);
+        if ($this->mongoClient === null) {
+            $mongoSettings = $config->getMongoSettings();
+            $mongoURI = sprintf("mongodb://%s:%s@%s:%d/%s?authSource=admin", $mongoSettings["mongo_user"], $mongoSettings["mongo_password"], $mongoSettings["mongo_host"], $mongoSettings["mongo_port"], $mongoSettings["mongo_db"]);
             try {
-                $this->dynamoClient = $sdk->createDynamoDb();
-            } catch (Aws\DynamoDB\Exception\DynamoDbException $e) {
-                $this->errorHandler->getLogger()->debug("Failed to connect to dynamodb");
+                $this->mongoClient = new MongoDB\Driver\Manager($mongoURI);
+//                $this->mongoClient = $mongoClient->selectDatabase($mongoSettings["mongo_db"]);
+            } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
+                $this->errorHandler->getLogger()->debug("Failed to connect to database: $mongoSettings[database].");
                 throw new \Exceptions\QueryException("QDC1", array());
             }
 
@@ -604,8 +603,8 @@ class DatabaseQuery
 
     private function buildSelectStringForEntityReturnApiField($entitySpec)
     {
-        $selectString = Array();
-        $additional_joins = Array();
+        $selectString = array();
+        $additional_joins = array();
         foreach ($this->selectFieldSpecs as $apiField => $fieldInfo) {
             if ($fieldInfo['entity_name'] == $entitySpec['entity_name']) {
                 $selectString[] = $apiField;

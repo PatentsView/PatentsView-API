@@ -3,7 +3,7 @@ ini_set('max_execution_time', 400);
 // Step 1: Require the Slim Framework
 
 // config.php provides global configuration class instance (db details, solr details etc)
-require_once dirname(__FILE__) . '/../app/config.php';
+require_once dirname(__FILE__) . '/../app/Config.php';
 require __DIR__ . '/../vendor/autoload.php';
 require_once dirname(__FILE__) . '/../app/ErrorHandler.php';
 require_once dirname(__FILE__) . '/../app/Exceptions/APIError.php';
