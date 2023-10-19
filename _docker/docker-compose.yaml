@@ -1,0 +1,30 @@
+version: '3'
+services:
+  api:
+    #    volumes:
+    #      - '/Users/smadhavan/03_Code/P15 PatentsView/P15.07.03 PatentsView-API/:/var/www/html/api/'
+    ports:
+      - '8011:80'
+      - '4456:4456'
+    image: 743040338427.dkr.ecr.us-east-1.amazonaws.com/pv_legacy_api:cache_enabled
+    container_name: pv_legacy_api_container
+    env_file:
+      - .env
+  cache:
+    image: 743040338427.dkr.ecr.us-east-1.amazonaws.com/pv_legacy_webcache:20230629
+    container_name: pv_legacy_cache_container
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - cache_db_drive:/data/db
+    env_file:
+      - .env
+
+networks:
+  default:
+    name: pv-api-network
+    external: true
+
+volumes:
+  cache_db_drive:

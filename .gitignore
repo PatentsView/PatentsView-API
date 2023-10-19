@@ -2,7 +2,9 @@ querymodule/app/config.php
 querymodule/public_html/web.config
 .idea
 *.log
-app.ini
 querymodule/vendor/
 archive
 data
+**/.DS_Store
+experiments
+copilot

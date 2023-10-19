@@ -1,5 +1,7 @@
 FROM php:8.2-apache
 USER root
+RUN apt update -y
+RUN apt upgrade -y
 COPY install_composer.sh /usr/local/bin
 RUN chmod 775 /usr/local/bin/install_composer.sh
 COPY _docker/app/build_artifacts/localhost.conf /etc/apache2/sites-available/localhost.conf
