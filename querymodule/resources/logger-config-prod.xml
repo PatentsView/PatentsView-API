@@ -1,0 +1,15 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderConsole" threshold="info">
+        <layout class="LoggerLayoutSimple"/>
+    </appender>
+
+    <appender name="logFile" class="LoggerAppenderDailyFile">
+        <layout class="LoggerLayoutSimple"/>
+        <param name="file" value="/tmp/file-%s.log"/>
+        <param name="datePattern" value="Y-m-d"/>
+    </appender>
+    <root>
+        <appender_ref ref="default"/>
+        <appender_ref ref="logFile"/>
+    </root>
+</configuration>

@@ -31,7 +31,7 @@ $appConfig = [
     ],
 ];
 
-if (Config::MODE == 'development') {
+if ($config->getMode() == 'development') {
     $appConfig = [
         'settings' => [
             'displayErrorDetails' => true,

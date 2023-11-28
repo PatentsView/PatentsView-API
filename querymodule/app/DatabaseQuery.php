@@ -421,8 +421,8 @@ class DatabaseQuery
                 $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             } catch (PDOException $e) {
-                $this->errorHandler->getLogger()->debug("Failed to connect to database: $dbSettings[database].");
-                $this->rollbackTransaction();
+                $this->errorHandler->getLogger()->info("Failed to connect to database: $dbSettings[database].");
+                $this->errorHandler->getLogger()->info("Error message was: $e->getMessage().");
                 throw new \Exceptions\QueryException("QDC1", array());
             }
 
