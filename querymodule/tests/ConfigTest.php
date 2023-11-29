@@ -6,7 +6,7 @@
  * Time: 1:22 PM
  */
 
-require_once dirname(__FILE__) . '/../app/config.php';
+require_once dirname(__FILE__) . '/../app/Config.php';
 
 class ConfigTest extends PHPUnit_Framework_TestCase
 {

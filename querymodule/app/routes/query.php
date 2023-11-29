@@ -196,6 +196,7 @@ $app->get(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = checkGetParameters($req->getQueryParams());
 
         $results = executeQuery($CPC_GROUP_ENTITY_SPECS, $CPC_GROUP_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+
         if ($formatParam == "xml") {
             return $results = FormatResults($formatParam, $results, $CPC_GROUP_ENTITY_SPECS);
         } else {
@@ -214,6 +215,7 @@ $app->post(
         list($queryParam, $fieldsParam, $sortParam, $optionsParam, $formatParam) = CheckPostParameters($req->getBody());
 
         $results = executeQuery($CPC_GROUP_ENTITY_SPECS, $CPC_GROUP_FIELD_SPECS, $queryParam, $fieldsParam, $sortParam, $optionsParam);
+
         if ($formatParam == "xml") {
             return $results = FormatResults($formatParam, $results, $CPC_GROUP_ENTITY_SPECS);
         } else {

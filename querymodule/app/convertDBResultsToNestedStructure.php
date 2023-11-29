@@ -103,5 +103,5 @@ function convertDBResultsToNestedStructure(array $entitySpecs, array $dbResults 
     }
 
 
-    return array("status" => "success", "payload" => array($primaryEntityGroup['group_name'] => ${$primaryEntityGroup['group_name']}, 'count' => count(${$primaryEntityGroup['group_name']})));
+    return array($primaryEntityGroup['group_name'] => ${$primaryEntityGroup['group_name']}, 'count' => count(${$primaryEntityGroup['group_name']}));
 }
