@@ -129,7 +129,6 @@ class DatabaseQuery
             $query = new MongoDB\Driver\Query(array('query_string' => $query_string), array('limit' => 1));
             $cursor = $this->mongoClient->executeQuery("${cache_database}.${cache_collection}", $query);
             $document = json_decode(json_encode($cursor->toArray(), true), true);
-            $this->errorHandler->getLogger()->debug($document);
 
         } catch (MongoDB\Driver\Exception\AuthenticationException $e) {
             $this->errorHandler->getLogger()->info("Unable to connect to cache");

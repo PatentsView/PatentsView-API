@@ -35,6 +35,8 @@ function executeQuery(array $entitySpecs, array $fieldSpecs, array $queryParam =
         $entitySpecificWhereClauses, $qp->getOnlyAndsWereUsed(), $selectFieldSpecs, $sortParam, $optionsParam);
     if (array_key_exists("query_string", $dbResults)) {
         $results = $dbResults;
+        unset($results["query_string"]);
+        unset($results["_id"]);
     } else {
         $count_results = array();
         foreach ($dbQuery->getTotalCounts() as $entityName => $count)
