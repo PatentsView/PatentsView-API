@@ -424,7 +424,7 @@ class DatabaseQuery
 
             } catch (PDOException $e) {
                 $this->errorHandler->getLogger()->info("Failed to connect to database: $dbSettings[database].");
-                $this->errorHandler->getLogger()->info("Error message was: $e->getMessage().");
+                $this->errorHandler->getLogger()->info("Error message was: {$e->getMessage()}.");
                 throw new \Exceptions\QueryException("QDC1", array());
             }
 
