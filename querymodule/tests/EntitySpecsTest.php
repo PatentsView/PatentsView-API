@@ -8,7 +8,7 @@
 putenv("CONFIG_PATH=/var/app/current");
 require_once dirname(__FILE__) . '/../app/entitySpecs.php';
 require_once dirname(__FILE__) . '/../app/DatabaseQuery.php';
-require_once dirname(__FILE__) . '/../app/config.php';
+require_once dirname(__FILE__) . '/../app/Config.php';
 
 class EntitySpecsTest extends PHPUnit_Framework_TestCase
 {

@@ -27,6 +27,9 @@ require_once dirname(__FILE__) . '/../AddEmailDatabase.php';
 //     $app->response->status(503);
 // })->conditions(array('method' => '.+'));
 //Add to capture the email info
+$app->get('/health', function (Request $req, Response $res, $args = []) {
+    return $res->withStatus(200);
+});
 $app->post(
     '/addemail',
     function (Request $req, Response $res, $args = []) {

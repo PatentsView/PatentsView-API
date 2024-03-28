@@ -19,3 +19,13 @@ build_artifacts/
 .ebextensions/*
 .elasticbeanstalk/*
 .platform/*
+
+archive
+data
+**/.DS_Store
+experiments
+copilot
+querymodule/sessionmanager-bundle
+build_artifacts
+cache-db-disk
+docker-entrypoint-initdb.d
