@@ -21,8 +21,6 @@ final class Config
     private $page_size;
     private $result_size;
 
-    private $log_path;
-
     private function __construct()
     {
         // TODO: Wrap this in Try catch
@@ -47,15 +45,10 @@ final class Config
         $this->page_size = getenv('API_PAGE_SIZE');
         $this->result_size = getenv('API_RESULT_SIZE');
         $this->temp_dir = getenv("API_TEMP_PATH");
-        $this->log_path = getenv("API_LOG_PATH");
         $env_mode = getenv("ENV");
         $this->environment_mode = ($env_mode === null || trim($env_mode) === '') ? 'production' : $env_mode;
     }
 
-    public function getLogPath()
-    {
-        return $this->log_path;
-    }
 
     public
     static function getInstance()

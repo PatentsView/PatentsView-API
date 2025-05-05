@@ -5,7 +5,7 @@
 
     <appender name="logFile" class="LoggerAppenderDailyFile">
         <layout class="LoggerLayoutSimple"/>
-        <param name="file" value="/tmp/file-%s.log"/>
+        <param name="file" value="/var/log/pvapi/file-%s.log"/>
         <param name="datePattern" value="Y-m-d"/>
     </appender>
     <root>

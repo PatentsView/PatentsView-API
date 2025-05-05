@@ -2,7 +2,7 @@
     "require": {
         "slim/slim": "^3.0",
         "apache/log4php": "^2.3",
-        "mongodb/mongodb": "^1.4",
+        "mongodb/mongodb": "^2.0",
         "aws/aws-sdk-php": "^3.140",
       "ext-pdo": "*",
         "ext-mongodb": "*"
